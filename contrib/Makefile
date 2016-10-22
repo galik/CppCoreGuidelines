@@ -1,6 +1,16 @@
 
 
-CXXFLAGS += -std=c++11
+CXXFLAGS += \
+	-std=c++14 \
+	-Wconversion \
+	-Wall -Wextra \
+	-pedantic-errors \
+	-Wstrict-aliasing \
+	-Wno-unused-parameter
 
-all: add-github-syntax-highlights
+PROGRAMS := add-github-syntax-highlights
 
+all: $(PROGRAMS)
+
+clean:
+	$(RM) $(PROGRAMS)
