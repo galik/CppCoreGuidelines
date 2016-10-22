@@ -41,7 +41,7 @@ int main(int, char** argv)
 				else // there should only be a maximum of 2 file names
 				{
 					STD_ERR("Unknown parameter: " << *arg);
-					return usage(EXIT_FAILURE);
+					return usage(argv[0], EXIT_FAILURE);
 				}
 			}
 		}
