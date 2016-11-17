@@ -13318,7 +13318,7 @@ Sync_queue<Message> work;
 void master(istream& is)
 {
     for (Message m; is >> m; )
-        work.put(n);
+        work.put(m);
 }
 
 void worker()
