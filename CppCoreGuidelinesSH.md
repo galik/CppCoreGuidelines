@@ -3051,7 +3051,7 @@ In traditional C and C++ code, plain `T*` is used for many weakly-related purpos
 * Identify an array with a length specified separately
 * Identify a location in an array
 
-The makes it hard to understand what code does and is supposed to do.
+This makes it hard to understand what the code does and is supposed to do.
 It complicates checking and tool support.
 
 ##### Example
@@ -6358,7 +6358,7 @@ Designing rules for classes in a hierarchy summary:
 
 * [C.126: An abstract class typically doesn't need a constructor](#Rh-abstract-ctor)
 * [C.127: A class with a virtual function should have a virtual or protected destructor](#Rh-dtor)
-* [C.128: Use `override` to make overriding explicit in large class hierarchies](#Rh-override)
+* [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](#Rh-override)
 * [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](#Rh-kind)
 * [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](#Rh-copy)
 * [C.131: Avoid trivial getters and setters](#Rh-get)
@@ -9442,7 +9442,7 @@ Expression rules:
 * [ES.55: Avoid the need for range checking](#Res-range-checking)
 * [ES.56: Avoid `std::move()` in application code](#Res-move)
 * [ES.60: Avoid `new` and `delete` outside resource management functions](#Res-new)
-* [ES.61: delete arrays using `delete[]` and non-arrays using `delete`](#Res-del)
+* [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](#Res-del)
 * [ES.62: Don't compare pointers into different arrays](#Res-arr2)
 * [ES.63: Don't slice](#Res-slice)
 
@@ -9452,7 +9452,7 @@ Statement rules:
 * [ES.71: Prefer a range-`for`-statement to a `for`-statement when there is a choice](#Res-for-range)
 * [ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable](#Res-for-while)
 * [ES.73: Prefer a `while`-statement to a `for`-statement when there is no obvious loop variable](#Res-while-for)
-* [ES.74: Prefer to declare a loop variable in the initializer part of as `for`-statement](#Res-for-init)
+* [ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement](#Res-for-init)
 * [ES.75: Avoid `do`-statements](#Res-do)
 * [ES.76: Avoid `goto`](#Res-goto)
 * [ES.77: ??? `continue`](#Res-continue)
@@ -9550,7 +9550,7 @@ Not easy. ??? Look for messy loops, nested loops, long functions, absence of fun
 
 ## ES.dcl: Declarations
 
-A declaration is a statement. a declaration introduces a name into a scope and may cause the construction of a named object.
+A declaration is a statement. A declaration introduces a name into a scope and may cause the construction of a named object.
 
 ### <a name="Res-scope"></a>ES.5: Keep scopes small
 
@@ -10406,7 +10406,7 @@ If `leak == true` the object pointed to by `p2` is leaked and the object pointed
 
 Look for raw pointers that are targets of `new`, `malloc()`, or functions that may return such pointers.
 
-### <a name="Res-const"></a>ES.25: Declare objects `const` or `constexpr` unless you want to modify its value later on
+### <a name="Res-const"></a>ES.25: Declare an object `const` or `constexpr` unless you want to modify its value later on
 
 ##### Reason
 
@@ -10561,8 +10561,8 @@ Hard. At best a heuristic. Look for an uninitialized variable followed by a loop
 
 Macros are a major source of bugs.
 Macros don't obey the usual scope and type rules.
-Macros ensure that the human reader see something different from what the compiler sees.
-Macros complicates tool building.
+Macros ensure that the human reader sees something different from what the compiler sees.
+Macros complicate tool building.
 
 ##### Example, bad
 
@@ -10578,7 +10578,7 @@ This rule does not ban the use of macros for "configuration control" use in `#if
 
 ##### Enforcement
 
-Scream when you see a macro that isn't just use for source control (e.g., `#ifdef`)
+Scream when you see a macro that isn't just used for source control (e.g., `#ifdef`)
 
 ### <a name="Res-macros2"></a>ES.31: Don't use macros for constants or "functions"
 
@@ -10713,7 +10713,7 @@ Statements control the flow of control (except for function calls and exception 
 
 * Readability.
 * Efficiency: A `switch` compares against constants and is usually better optimized than a series of tests in an `if`-`then`-`else` chain.
-* a `switch` is enables some heuristic consistency checking. For example, have all values of an `enum` been covered? If not, is there a `default`?
+* A `switch` enables some heuristic consistency checking. For example, have all values of an `enum` been covered? If not, is there a `default`?
 
 ##### Example
 
@@ -10847,7 +10847,7 @@ while (i < vec.size()) {
 
 ???
 
-### <a name="Res-for-init"></a>ES.74: Prefer to declare a loop variable in the initializer part of as `for`-statement
+### <a name="Res-for-init"></a>ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement
 
 ##### Reason
 
@@ -11109,10 +11109,10 @@ while ((cin >> c1, cin >> c2), c1 == c2)
 // better, but possibly still too complicated
 for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
 
-// OK: iff i and j are not aliased
+// OK: if i and j are not aliased
 int x = ++i + ++j;
 
-// OK: iff i != j and i != k
+// OK: if i != j and i != k
 v[i] = v[j] + v[k];
 
 // bad: multiple assignments "hidden" in subexpressions
@@ -11746,7 +11746,7 @@ There can be code in the `...` part that causes the `delete` never to happen.
 
 Flag naked `new`s and naked `delete`s.
 
-### <a name="Res-del"></a>ES.61: delete arrays using `delete[]` and non-arrays using `delete`
+### <a name="Res-del"></a>ES.61: Delete arrays using `delete[]` and non-arrays using `delete`
 
 ##### Reason
 
@@ -11821,7 +11821,7 @@ The first defense against this is to [define the base class `Shape` not to allow
 
 ##### Alternative
 
-If you mean to slice, define an explicit operations to do so.
+If you mean to slice, define an explicit operation to do so.
 This saves readers from confusion.
 For example:
 
@@ -11929,7 +11929,7 @@ void test()
 
 ```
 Here we have been very explicit about what's happening,
-but if you had see `us-(s+2)` or `s+=2; ... us-s` would you reliably have suspected that the result would print as `4294967294`?
+but if you had seen `us-(s+2)` or `s+=2; ... us-s`, would you reliably have suspected that the result would print as `4294967294`?
 
 ##### Exception
 
@@ -12507,7 +12507,7 @@ Concurrency and parallelism rule summary:
 * [CP.2: Avoid data races](#Rconc-races)
 * [CP.3: Minimize explicit sharing of writable data](#Rconc-data)
 * [CP.4: Think in terms of tasks, rather than threads](#Rconc-task)
-* [CP.8 Don't try to use `volatile` for synchronization](#Rconc-volatile)
+* [CP.8: Don't try to use `volatile` for synchronization](#Rconc-volatile)
 
 See also:
 
@@ -12729,7 +12729,7 @@ This is a potent argument for using higher level, more applications-oriented lib
 
 ???
 
-### <a name="Rconc-volatile"></a>CP.8 Don't try to use `volatile` for synchronization
+### <a name="Rconc-volatile"></a>CP.8: Don't try to use `volatile` for synchronization
 
 ##### Reason
 
@@ -12807,7 +12807,7 @@ Concurrency rule summary:
 * [CP.26: Prefer `gsl::detached_thread` over `std::thread` if you plan to `detach()`](#Rconc-detached_thread)
 * [CP.27: Use plain `std::thread` for `thread`s that detach based on a run-time condition (only)](#Rconc-thread)
 * [CP.28: Remember to join scoped `thread`s that are not `detach()`ed](#Rconc-join-undetached)
-* [CP.30: Do not pass pointers to local variables to non-`raii_thread's](#Rconc-pass)
+* [CP.30: Do not pass pointers to local variables to non-`raii_thread`s](#Rconc-pass)
 * [CP.31: Pass small amounts of data between threads by value, rather than by reference or pointer](#Rconc-data-by-value)
 * [CP.32: To share ownership between unrelated `thread`s use `shared_ptr`](#Rconc-shared)
 * [CP.40: Minimize context switching](#Rconc-switch)
@@ -13174,7 +13174,7 @@ int main()
 * Flag `detach`s for `detached_thread`s
 
 
-### <a name="RRconc-pass"></a>CP.30: Do not pass pointers to local variables to non-`raii_thread's
+### <a name="RRconc-pass"></a>CP.30: Do not pass pointers to local variables to non-`raii_thread`s
 
 ##### Reason
 
@@ -13678,7 +13678,7 @@ If you are doing lock-free programming for performance, you need to check for re
 Instruction reordering (static and dynamic) makes it hard for us to think effectively at this level (especially if you use relaxed memory models).
 Experience, (semi)formal models and model checking can be useful.
 Testing - often to an extreme extent - is essential.
-"Don't fly too close to the wind."
+"Don't fly too close to the sun."
 
 ##### Enforcement
 
@@ -13966,7 +13966,7 @@ If `use()` could handle the failure to construct `bar` it can take control using
 In either case, `Foo`'s constructor correctly destroys constructed members before passing control to whatever tried to create a `Foo`.
 Note that there is no return value that could contain an error code.
 
-The `File_handle` constructor might defined like this:
+The `File_handle` constructor might be defined like this:
 
 ```cpp
 File_handle::File_handle(const string& name, const string& mode)
@@ -14589,9 +14589,9 @@ In the absence of appropriate time estimation tools, this is hard to guarantee f
 Such systems (e.g. flight control software) typically also ban the use of dynamic (heap) memory.
 
 So, the primary guideline for error handling is "use exceptions and [RAII](#Re-raii)."
-This section deals with the cases where you either do not have an efficient implementation or exceptions
+This section deals with the cases where you either do not have an efficient implementation of exceptions,
 or have such a rat's nest of old-style code
-(e.g., lots of pointers, ill-defined ownership, and lots of unsystematic error handling based on tests of errors codes)
+(e.g., lots of pointers, ill-defined ownership, and lots of unsystematic error handling based on tests of error codes)
 that it is infeasible to introduce simple and systematic exception handling.
 
 Before condemning exceptions or complaining too much about their cost, consider examples of the use of [error codes](#Re-no-throw-codes).
@@ -14623,7 +14623,7 @@ error_indicator func(zstring arg)
 }
 
 ```
-The problem is of course that the caller now have to remember to test the return value.
+The problem is of course that the caller now has to remember to test the return value.
 
 **See also**: [Discussion](#Sd-???).
 
@@ -14887,7 +14887,7 @@ Constant rule summary:
 
 ##### Reason
 
-Immutable objects are easier to reason about, so make object non-`const` only when there is a need to change their value.
+Immutable objects are easier to reason about, so make objects non-`const` only when there is a need to change their value.
 Prevents accidental or hard-to-notice change of value.
 
 ##### Example
@@ -16859,7 +16859,7 @@ List<string> ls;
 
 ```
 Now there is only one copy of the operations linking and unlinking elements of a `List`.
-The `Link` and `List` classes does nothing but type manipulation.
+The `Link` and `List` classes do nothing but type manipulation.
 
 Instead of using a separate "base" type, another common technique is to specialize for `void` or `void*` and have the general template for `T` be just the safely-encapsulated casts to and from the core `void` implementation.
 
@@ -18024,7 +18024,7 @@ The positive arguments for alternatives to these non-rules are listed in the rul
 Non-rule summary:
 
 * [NR.1: Don't: All declarations should be at the top of a function](#Rnr-top)
-* [NR.2: Don't: Have only a single single `return`-statement in a function](#Rnr-single-return)
+* [NR.2: Don't: Have only a single `return`-statement in a function](#Rnr-single-return)
 * [NR.3: Don't: Don't use exceptions](#Rnr-no-exceptions)
 * [NR.4: Don't: Place each class declaration in its own source file](#Rnr-lots-of-files)
 * [NR.5: Don't: Don't do substantive work in a constructor; instead use two-phase initialization](#Rnr-two-phase-init)
@@ -18054,7 +18054,7 @@ Fortunately, compilers catch many "used before set" errors.
 * [Always initialize an object](#Res-always)
 * [ES.21: Don't introduce a variable (or constant) before you need to use it](#Res-introduce)
 
-### <a name="Rnr-single-return"></a>NR.2: Don't: Have only a single single `return`-statement in a function
+### <a name="Rnr-single-return"></a>NR.2: Don't: Have only a single `return`-statement in a function
 
 ##### Reason (not to follow this rule)
 
@@ -19212,14 +19212,14 @@ IDEs and tools can help (as well as hinder).
 
 Naming and layout rules:
 
-* [NL 1: Don't say in comments what can be clearly stated in code](#Rl-comments)
+* [NL.1: Don't say in comments what can be clearly stated in code](#Rl-comments)
 * [NL.2: State intent in comments](#Rl-comments-intent)
 * [NL.3: Keep comments crisp](#Rl-comments-crisp)
 * [NL.4: Maintain a consistent indentation style](#Rl-indent)
 * [NL.5: Don't encode type information in names](#Rl-name-type)
 * [NL.7: Make the length of a name roughly proportional to the length of its scope](#Rl-name-length)
 * [NL.8: Use a consistent naming style](#Rl-name)
-* [NL 9: Use `ALL_CAPS` for macro names only](#Rl-all-caps)
+* [NL.9: Use `ALL_CAPS` for macro names only](#Rl-all-caps)
 * [NL.10: Avoid CamelCase](#Rl-camel)
 * [NL.15: Use spaces sparingly](#Rl-space)
 * [NL.16: Use a conventional class member declaration order](#Rl-order)
@@ -19334,7 +19334,7 @@ Use a tool.
 
 ##### Rationale
 
-If names reflects type rather than functionality, it becomes hard to change the types used to provide that functionality.
+If names reflect types rather than functionality, it becomes hard to change the types used to provide that functionality.
 Also, if the type of a variable is changed, code using it will have to be modified.
 Minimize unintentional conversions.
 
@@ -19419,7 +19419,7 @@ The use of `p` for pointer and `x` for a floating-point variable is conventional
 
 ##### Note
 
-Where are many styles and when you use multiple libraries, you can't follow all their differences conventions.
+There are many styles and when you use multiple libraries, you can't follow all their different conventions.
 Choose a "house style", but leave "imported" libraries with their original style.
 
 ##### Example
@@ -19465,11 +19465,11 @@ int mean_time_between_failures {12}; // make up your mind
 
 Would be possible except for the use of libraries with varying conventions.
 
-### <a name="Rl-all-caps"></a>NL 9: Use `ALL_CAPS` for macro names only
+### <a name="Rl-all-caps"></a>NL.9: Use `ALL_CAPS` for macro names only
 
 ##### Reason
 
-To avoid confusing macros from names that obeys scope and type rules.
+To avoid confusing macros with names that obey scope and type rules.
 
 ##### Example
 
@@ -19692,7 +19692,7 @@ Impossible in the face of history.
 ##### Reason
 
 Readability.
-Not everyone has screens and printers that makes it easy to distinguish all characters.
+Not everyone has screens and printers that make it easy to distinguish all characters.
 We easily confuse similarly spelled and slightly misspelled words.
 
 ##### Example
