@@ -10348,7 +10348,7 @@ auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
 Use `={...}` if you really want an `initializer_list<T>`
 
 ```cpp
-auto fib10 = {0, 1, 2, 3, 5, 8, 13, 25, 38, 63};   // fib10 is a list
+auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
 
 ```
 ##### Note
@@ -10768,8 +10768,8 @@ for (int i = 0; i < v.size(); ++i) // possible side-effect: can't be a range-for
     cout << f(v, &v[i]) << '\n';
 
 for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
-    if (i % 2)
-        ++i;   // skip even elements
+    if (i % 2 == 0)
+        continue;   // skip even elements
     else
         cout << v[i] << '\n';
 }
@@ -16394,7 +16394,7 @@ public:
 
     // ...
 private:
-    Node* head;
+    Link* head;
 };
 
 List<int> lst1;
@@ -16423,7 +16423,7 @@ public:
 
     // ...
 private:
-    Node* head;
+    Link* head;
 };
 
 List<int> lst1;
@@ -16757,12 +16757,12 @@ void maul2(Fruit* p)
     *p = Pear{};   // put a Pear into *p
 }
 
-vector<Apple> va = { an_apple, another_apple };   // aa contains Apples (obviously!)
+vector<Apple> va = { an_apple, another_apple };   // va contains Apples (obviously!)
 
-maul2(aa);       // error: cannot convert a vector<Apple> to a Fruit*
-maul2(&aa[0]);   // you asked for it
+maul2(va);       // error: cannot convert a vector<Apple> to a Fruit*
+maul2(&va[0]);   // you asked for it
 
-Apple& a0 = &aa[0];   // a Pear?
+Apple& a0 = &va[0];   // a Pear?
 
 ```
 Note that the assignment in `maul2()` violated the no-slicing [Rule](#???).
@@ -20430,7 +20430,7 @@ To avoid extremely hard-to-find errors. Dereferencing such a pointer is undefine
 ```cpp
 string* bad()   // really bad
 {
-    vector<string> v = { "this", "will", "cause" "trouble" };
+    vector<string> v = { "This", "will", "cause", "trouble", "!" };
     // leaking a pointer into a destroyed member of a destroyed object (v)
     return &v[0];
 }
@@ -20439,7 +20439,7 @@ void use()
 {
     string* p = bad();
     vector<int> xx = {7, 8, 9};
-    // undefined behavior: x may not be "this"
+    // undefined behavior: x may not be the string "This"
     string x = *p;
     // undefined behavior: we don't know what (if anything) is allocated a location p
     *p = "Evil!";
