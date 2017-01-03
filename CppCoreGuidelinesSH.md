@@ -556,7 +556,7 @@ Look for common patterns for which there are better alternatives
 * `f(T*, int)` interfaces vs. `f(span<T>)` interfaces
 * loop variables in too large a scope
 * naked `new` and `delete`
-* functions with many arguments of built-in types
+* functions with many parameters of built-in types
 
 There is a huge scope for cleverness and semi-automated program transformation.
 
@@ -975,7 +975,7 @@ X waste(const char* p)
     // ... manipulate buffer ...
     X x;
     x.ch = 'a';
-    x.s = string(n);    // give x.s space for *ps
+    x.s = string(n);    // give x.s space for *p
     for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
     delete buf;
     return x;
@@ -989,7 +989,7 @@ void driver()
 
 ```
 Yes, this is a caricature, but we have seen every individual mistake in production code, and worse.
-Note that the layout of `X` guarantees that at least 6 bytes (and most likely more) bytes are wasted.
+Note that the layout of `X` guarantees that at least 6 bytes (and most likely more) are wasted.
 The spurious definition of copy operations disables move semantics so that the return operation is slow
 (please note that the Return Value Optimization, RVO, is not guaranteed here).
 The use of `new` and `delete` for `buf` is redundant; if we really needed a local string, we should use a local `string`.
@@ -1072,7 +1072,7 @@ for (int x; cin >> x; ) {
 
 The standards library and the GSL are examples of this philosophy.
 For example, instead of messing with the arrays, unions, cast, tricky lifetime issues, `gsl::owner`, etc.
-that is needed to implement key abstractions, such as `vector`, `span`, `lock_guard`, and `future`, we use the libraries
+that are needed to implement key abstractions, such as `vector`, `span`, `lock_guard`, and `future`, we use the libraries
 designed and implemented by people with more time and expertise than we usually have.
 Similarly, we can and should design and implement more specialized libraries, rather than leaving the users (often ourselves)
 with the challenge of repeatedly getting low-level code well.
@@ -1099,7 +1099,7 @@ Interface rule summary:
 * [I.7: State postconditions](#Ri-post)
 * [I.8: Prefer `Ensures()` for expressing postconditions](#Ri-ensures)
 * [I.9: If an interface is a template, document its parameters using concepts](#Ri-concepts)
-* [I.10: Use exceptions to signal a failure to perform a required tasks](#Ri-except)
+* [I.10: Use exceptions to signal a failure to perform a required task](#Ri-except)
 * [I.11: Never transfer ownership by a raw pointer (`T*`)](#Ri-raw)
 * [I.12: Declare a pointer that must not be null as `not_null`](#Ri-nullptr)
 * [I.13: Do not pass an array as a single pointer](#Ri-array)
@@ -1201,7 +1201,7 @@ Global constants are useful.
 
 The rule against global variables applies to namespace scope variables as well.
 
-**Alternative**: If you use global (more generally namespace scope data) to avoid copying, consider passing the data as an object by reference to `const`.
+**Alternative**: If you use global (more generally namespace scope) data to avoid copying, consider passing the data as an object by reference to `const`.
 Another solution is to define the data as the state of some object and the operations as member functions.
 
 **Warning**: Beware of data races: If one thread can access nonlocal data (or data passed by reference) while another thread executes the callee, we can have a data race.
@@ -1561,7 +1561,7 @@ void manipulate(Record& r)    // postcondition: m is unlocked upon exit
 }
 
 ```
-The bug is now obvious (but only to a human reading comments)
+The bug is now obvious (but only to a human reading comments).
 
 Better still, use [RAII](#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
 
@@ -1644,7 +1644,7 @@ Iter find(Iter first, Iter last, Val v)
 Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.
 For now, the concept TS is supported only in GCC 6.1.
 
-**See also**: See [generic programming](#SS-GP) and [concepts](#SS-t-concepts).
+**See also**: [Generic programming](#SS-GP) and [concepts](#SS-t-concepts).
 
 ##### Enforcement
 
@@ -1672,7 +1672,7 @@ explicit thread(F&& f, Args&&... args);
 What is an error?
 
 An error means that the function cannot achieve its advertised purpose (including establishing postconditions).
-Calling code that ignores the error could lead to wrong results or undefined systems state.
+Calling code that ignores an error could lead to wrong results or undefined systems state.
 For example, not being able to connect to a remote server is not by itself an error:
 the server can refuse a connection for all kinds of reasons, so the natural thing is to return a result that the caller always has to check.
 However, if failing to make a connection is considered an error, then a failure should throw an exception.
@@ -1695,7 +1695,7 @@ if (error_code == 0) {
 // ... use val ...
 
 ```
-This style unfortunately leads to uninitialized variable.
+This style unfortunately leads to uninitialized variables.
 A facility [structured bindings](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0144r1.pdf) to deal with that will become available in C++17.
 
 ```cpp
@@ -1704,7 +1704,6 @@ if (error_code == 0) {
     // ... handle the error or exit ...
 }
 // ... use val ...
-
 
 ```
 ##### Note
@@ -1759,7 +1758,7 @@ vector<double> compute(args)  // good
 However that is less elegant and less efficient unless reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from [guideline support library](#S-gsl):
+In that case, mark owning pointers using `owner` from the [guideline support library](#S-gsl):
 
 ```cpp
 owner<X*> compute(args)    // It is now clear that ownership is transferred
@@ -1813,11 +1812,11 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](#S-gsl)
+`not_null` is defined in the [guideline support library](#S-gsl).
 
 ##### Note
 
-The assumption that the pointer to `char` pointed to a C-style string (a zero-terminated string of characters) was still implicit, and a potential source of confusion and errors. Use `zstring` in preference to `const char*`.
+The assumption that the pointer to `char` pointed to a C-style string (a zero-terminated string of characters) was still implicit, and a potential source of confusion and errors. Use `czstring` in preference to `const char*`.
 
 ```cpp
 // we can assume that p cannot be nullptr
@@ -1987,7 +1986,7 @@ There are functions that are best expressed with four individual arguments, but 
 
 ##### Enforcement
 
-* Warn when a functions declares two iterators (including pointers) of the same type instead of a range or a view.
+* Warn when a function declares two iterators (including pointers) of the same type instead of a range or a view.
 * (Not enforceable) This is a philosophical guideline that is infeasible to check directly.
 
 ### <a name="Ri-unrelated"></a>I.24: Avoid adjacent unrelated parameters of the same type
@@ -19098,9 +19097,9 @@ The names are mostly ISO standard-library style (lower case and underscore):
 * `T&`      // The `T&` is not an owner and can never be a "null reference"; references are always bound to objects.
 
 The "raw-pointer" notation (e.g. `int*`) is assumed to have its most common meaning; that is, a pointer points to an object, but does not own it.
-Owners should be converted to resource handles (e.g., `unique_ptr` or `vector<T>`) or marked `owner<T*>`
+Owners should be converted to resource handles (e.g., `unique_ptr` or `vector<T>`) or marked `owner<T*>`.
 
-* `owner<T*>`   // a `T*`that owns the object pointed/referred to; may be `nullptr`.
+* `owner<T*>`   // a `T*` that owns the object pointed/referred to; may be `nullptr`.
 * `owner<T&>`   // a `T&` that owns the object pointed/referred to.
 
 `owner` is used to mark owning pointers in code that cannot be upgraded to use proper resource handles.
@@ -19119,7 +19118,7 @@ If something is not supposed to be `nullptr`, say so:
 * `not_null<T>`   // `T` is usually a pointer type (e.g., `not_null<int*>` and `not_null<owner<Foo*>>`) that may not be `nullptr`.
   `T` can be any type for which `==nullptr` is meaningful.
 
-* `span<T>`       // `[`p`:`p+n`), constructor from `{p, q}` and `{p, n}`; `T` is the pointer type
+* `span<T>`       // `[`p`:`p+n`)`, constructor from `{p, q}` and `{p, n}`; `T` is the pointer type
 * `span_p<T>`     // `{p, predicate}` \[`p`:`q`) where `q` is the first element for which `predicate(*p)` is true
 * `string_span`   // `span<char>`
 * `cstring_span`  // `span<const char>`
@@ -19157,8 +19156,8 @@ Use `not_null<zstring>` for C-style strings that cannot be `nullptr`. ??? Do we 
 
 These assertions is currently macros (yuck!) and must appear in function definitions (only)
 pending standard commission decisions on contracts and assertion syntax.
-See [the contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf) uses the attribute syntax,
-for example, `Expects(p!=nullptr)` will become`[[expects: p!=nullptr]]`.
+See [the contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf); using the attribute syntax,
+for example, `Expects(p!=nullptr)` will become `[[expects: p!=nullptr]]`.
 
 ## <a name="SS-utilities"></a>GSL.util: Utilities
 
@@ -19182,9 +19181,9 @@ Most of the concepts below are defined in [the Ranges TS](http://www.open-std.or
 * `String`   // ???
 * `Number`   // ???
 * `Sortable`
-* `Pointer`  // A type with `*`, `->`, `==`, and default construction (default construction is assumed to set the singular "null" value); see [smart pointers](#Rr-smartptrconcepts)
-* `Unique_ptr`  // A type that matches `Pointer`, has move (not copy), and matches the Lifetime profile criteria for a `unique` owner type; see [smart pointers](#Rr-smartptrconcepts)
-* `Shared_ptr`   // A type that matches `Pointer`, has copy, and matches the Lifetime profile criteria for a `shared` owner type; see [smart pointers](#Rr-smartptrconcepts)
+* `Pointer`  // A type with `*`, `->`, `==`, and default construction (default construction is assumed to set the singular "null" value); see [smart pointers](#SS-gsl-smartptrconcepts)
+* `Unique_ptr`  // A type that matches `Pointer`, has move (not copy), and matches the Lifetime profile criteria for a `unique` owner type; see [smart pointers](#SS-gsl-smartptrconcepts)
+* `Shared_ptr`   // A type that matches `Pointer`, has copy, and matches the Lifetime profile criteria for a `shared` owner type; see [smart pointers](#SS-gsl-smartptrconcepts)
 * `EqualityComparable`   // ???Must we suffer CaMelcAse???
 * `Convertible`
 * `Common`
