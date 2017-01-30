@@ -6556,7 +6556,7 @@ struct B {
     // ... no user-written destructor, defaults to public nonvirtual ...
 };
 
-// bad: class with a resource derived from a class without a virtual destructor
+// bad: derived from a class without a virtual destructor
 struct D : B {
     string s {"default"};
 };
@@ -6565,7 +6565,7 @@ void use()
 {
     auto p = make_unique<D>();
     // ...
-} // calls B::~B only, leaks the string
+} // undefined behavior. May call B::~B only and leak the string
 
 ```
 ##### Note
@@ -6894,9 +6894,9 @@ class Point {
     int y;
 public:
     Point(int xx, int yy) : x{xx}, y{yy} { }
-    int get_x() { return x; }
+    int get_x() const { return x; }
     void set_x(int xx) { x = xx; }
-    int get_y() { return y; }
+    int get_y() const { return y; }
     void set_y(int yy) { y = yy; }
     // no behavioral member functions
 };
