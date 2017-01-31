@@ -1663,7 +1663,7 @@ so the default is "no ownership transfer."
 
 * (Simple) Warn on `delete` of a raw pointer that is not an `owner`.
 * (Simple) Warn on failure to either `reset` or explicitly `delete` an `owner` pointer on every code path.
-* (Simple) Warn if the return value of `new` or a function call with return value of pointer type is assigned to a raw pointer.
+* (Simple) Warn if the return value of `new` or a function call with an `owner` return value is assigned to a raw pointer or non-`owner` reference.
 
 ### <a name="Ri-nullptr"></a>I.12: Declare a pointer that must not be null as `not_null`
 
@@ -1926,7 +1926,7 @@ This will force every derived class to compute a center -- even if that's non-tr
 
 ##### Enforcement
 
-(Simple) Warn if a pointer to a class `C` is assigned to a pointer to a base of `C` and the base class contains data members.
+(Simple) Warn if a pointer/reference to a class `C` is assigned to a pointer/reference to a base of `C` and the base class contains data members.
 
 ### <a name="Ri-abi"></a>I.26: If you want a cross-compiler ABI, use a C-style subset
 
@@ -3774,17 +3774,17 @@ Concrete types are also often referred to as value types to distinguish them fro
 
 Concrete type rule summary:
 
-* [C.10: Prefer a concrete type over more complicated classes](#Rc-concrete)
+* [C.10: Prefer a concrete types over class hierarchies](#Rc-concrete)
 * [C.11: Make concrete types regular](#Rc-regular)
 
-### <a name="Rc-concrete"></a>C.10 Prefer a concrete type over more complicated classes
+### <a name="Rc-concrete"></a>C.10 Prefer a concrete types over class hierarchies
 
 ##### Reason
 
 A concrete type is fundamentally simpler than a hierarchy:
 easier to design, easier to implement, easier to use, easier to reason about, smaller, and faster.
 You need a reason (use cases) for using a hierarchy.
-
+n
 ##### Example
 
     class Point1 {
@@ -3913,10 +3913,10 @@ Copy and move rules:
 
 * [C.60: Make copy assignment non-`virtual`, take the parameter by `const&`, and return by non-`const&`](#Rc-copy-assignment)
 * [C.61: A copy operation should copy](#Rc-copy-semantic)
-* [C.62: Make copy assignment safe for self-assignment](#Rc-move-self)
+* [C.62: Make copy assignment safe for self-assignment](#Rc-copy-self)
 * [C.63: Make move assignment non-`virtual`, take the parameter by `&&`, and return by non-`const&`](#Rc-move-assignment)
 * [C.64: A move operation should move and leave its source in a valid state](#Rc-move-semantic)
-* [C.65: Make move assignment safe for self-assignment](#Rc-copy-self)
+* [C.65: Make move assignment safe for self-assignment](#Rc-move-self)
 * [C.66: Make move operations `noexcept`](#Rc-move-noexcept)
 * [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](#Rc-copy-virtual)
 
@@ -6084,7 +6084,7 @@ A class with a virtual function is usually (and in general) used via a pointer t
 
     void use()
     {
-        auto p = make_unique<D>();
+        unique_ptr<B> p = make_unique<D>();
         // ...
     } // undefined behavior. May call B::~B only and leak the string
 
@@ -8736,7 +8736,7 @@ Expression rules:
 * [ES.49: If you must use a cast, use a named cast](#Res-casts-named)
 * [ES.50: Don't cast away `const`](#Res-casts-const)
 * [ES.55: Avoid the need for range checking](#Res-range-checking)
-* [ES.56: Avoid `std::move()` in application code](#Res-move)
+* [ES.56: Write `std::move()` only when you need to explicitly move an object to another scope](#Res-move)
 * [ES.60: Avoid `new` and `delete` outside resource management functions](#Res-new)
 * [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](#Res-del)
 * [ES.62: Don't compare pointers into different arrays](#Res-arr2)
@@ -9613,7 +9613,7 @@ not. Unfortunately, it may be impossible to detect when a non-`const` was not
 
 ##### Reason
 
-Readability.
+Readability and safety.
 
 ##### Example, bad
 
@@ -9622,6 +9622,26 @@ Readability.
         int i;
         for (i = 0; i < 20; ++i) { /* ... */ }
         for (i = 0; i < 200; ++i) { /* ... */ } // bad: i recycled
+    }
+
+##### Note
+
+As an optimization, you may want to reuse a buffer as a scratchpad, but even then prefer to limit the variables's scope as much as possible and be careful not to cause bugs from data left in a recycled buffer as this is a common source of security bugs.
+
+    {
+        std::string buffer;             // to avoid reallocations on every loop iteration
+        for (auto& o : objects)
+        {
+            // First part of the work.
+            generateFirstString(buffer, o);
+            writeToFile(buffer);
+
+            // Second part of the work.
+            generateSecondString(buffer, o);
+            writeToFile(buffer);
+
+            // etc...
+        }
     }
 
 ##### Enforcement
@@ -16068,8 +16088,8 @@ Source file rule summary:
 * [SF.3: Use `.h` files for all declarations used in multiple source files](#Rs-declaration-header)
 * [SF.4: Include `.h` files before other declarations in a file](#Rs-include-order)
 * [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](#Rs-consistency)
-* [SF.6: Use `using`-directives for transition, for foundation libraries (such as `std`), or within a local scope](#Rs-using)
-* [SF.7: Don't put a `using`-directive in a header file](#Rs-using-directive)
+* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope](#Rs-using)
+* [SF.7: Don't write `using namespace` in a header file](#Rs-using-directive)
 * [SF.8: Use `#include` guards for all `.h` files](#Rs-guards)
 * [SF.9: Avoid cyclic dependencies among source files](#Rs-cycles)
 
@@ -16271,7 +16291,7 @@ The argument-type error for `bar` cannot be caught until link time because of th
 
 ???
 
-### <a name="Rs-using"></a>SF.6: Use `using`-directives for transition, for foundation libraries (such as `std`), or within a local scope
+### <a name="Rs-using"></a>SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope
 
 ##### Reason
 
@@ -16285,7 +16305,7 @@ The argument-type error for `bar` cannot be caught until link time because of th
 
 ???
 
-### <a name="Rs-using-directive"></a>SF.7: Don't put a `using`-directive in a header file
+### <a name="Rs-using-directive"></a>SF.7: Don't write `using namespace` in a header file
 
 ##### Reason
 
@@ -16293,11 +16313,22 @@ Doing so takes away an `#include`r's ability to effectively disambiguate and to 
 
 ##### Example
 
-    ???
+    // bad.h
+    #include <iostream>
+    using namespace std; // bad
+
+    // user.cpp
+    #include "bad.h"
+    
+    bool copy( /*... some parameters ...*/);    // some function that happens to be named copy
+
+    int main() {
+        copy( /*...*/ );    // now overloads local ::copy and std::copy, could be ambiguous
+    }
 
 ##### Enforcement
 
-???
+Flag `using namespace` at global scope in a header file.
 
 ### <a name="Rs-guards"></a>SF.8: Use `#include` guards for all `.h` files
 
