@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-December 12, 2016
+February 1, 2017
 
 Editors:
 
@@ -6889,7 +6889,7 @@ A trivial getter or setter adds no semantic value; the data item could just as w
 ##### Example
 
 ```cpp
-class Point {
+class Point {   // Bad: verbose
     int x;
     int y;
 public:
@@ -6906,11 +6906,13 @@ Consider making such a class a `struct` -- that is, a behaviorless bunch of vari
 
 ```cpp
 struct Point {
-    int x = 0;
-    int y = 0;
+    int x {0};
+    int y {0};
 };
 
 ```
+Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](#Rc-initialize).
+
 ##### Note
 
 A getter or a setter that converts from an internal type to an interface type is not trivial (it provides a form of information hiding).
@@ -10095,7 +10097,7 @@ widget j = init.second;
 Obviously, what we really would like is a construct that initialized n variables from a `tuple`. For example:
 
 ```cpp
-auto {i, j} = make_related_widgets(cond);    // Not C++14
+auto [i,j] = make_related_widgets(cond);    // C++17, not C++14
 
 ```
 Today, we might approximate that using `tie()`:
@@ -14964,7 +14966,30 @@ void f(const Point& pt) {
 ```
 ##### Note
 
-[Do not cast away `const`](#Res-casts-const).
+It is not inherently bad to pass a pointer or reference to non-const,
+but that should be done only when the called function is supposed to modify the object.
+A reader of code must assume that a funtion that takes a "plain" `T*` or `T&` will modify the object referred to.
+If it doesn't now, it might do so later without forcing recompilation.
+
+##### Note
+
+There are code/libraries that are offer functions that declare a`T*` even though
+those function do not modify that `T`.
+This is a problem for people modernizing code.
+You can
+
+* update the library to be `const`-correct; preferred long-term solution
+* "cast away `const`"; [best avoided](#Res-casts-const).
+* provide a wrapper function; for example
+
+```cpp
+void f(int* p);   // old code: f() does not mpdify `*p`
+void f(const int* p) { f(const_cast<int*>(p); } // wrapper
+
+```
+Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be be modified,
+e.g. because it is in a library that you cannot modify.
+
 
 ##### Enforcement
 
@@ -20722,10 +20747,11 @@ A relatively informal definition of terms used in the guidelines
 This is our to-do list.
 Eventually, the entries will become rules or parts of rules.
 Alternatively, we will decide that no change is needed and delete the entry.
-
 * No long-distance friendship
 * Should physical design (what's in a file) and large-scale design (libraries, groups of libraries) be addressed?
 * Namespaces
+* Don't place using directives in headers
+* Avoid using directives in the global scope (except for std, and other "fundamental" namespaces (e.g. experimental))
 * How granular should namespaces be? All classes/functions designed to work together and released together (as defined in Sutter/Alexandrescu) or something narrower or wider?
 * Should there be inline namespaces (à la `std::literals::*_literals`)?
 * Avoid implicit conversions
