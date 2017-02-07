@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-February 1, 2017
+February 6, 2017
 
 Editors:
 
@@ -7076,14 +7076,56 @@ This a relatively rare use because implementation can often be organized into a 
 
 ##### Reason
 
-???
+Without a using declaration, member functions in the derived class hide the entire inherited overload sets.
 
-##### Example
+##### Example, bad
 
 ```cpp
-???
+#include <iostream>
+class B {
+public:
+    virtual int f(int i) { std::cout << "f(int): "; return i; }
+    virtual double f(double d) { std::cout << "f(double): "; return d; }
+};
+class D: public B {
+public:
+    int f(int i) override { std::cout << "f(int): "; return i+1; }
+};
+int main()
+{
+    D d;
+    std::cout << d.f(2) << '\n';   // prints "f(int): 3"
+    std::cout << d.f(2.3) << '\n'; // prints "f(int): 3"
+}
 
 ```
+##### Example, good
+
+```cpp
+class D: public B {
+public:
+    int f(int i) override { std::cout << "f(int): "; return i+1; }
+    using B::f; // exposes f(double)
+};
+
+```
+##### Note
+
+This issue affects both virtual and non-virtual member functions
+
+For variadic bases, C++17 introduced a variadic form of the using-declaration,
+
+```cpp
+template <class... Ts>
+struct Overloader : Ts... {
+    using Ts::operator()...; // exposes operator() from every base
+};
+
+```
+##### Enforcement
+
+Diagnose name hiding
+
 ### <a name="Rh-final"></a>C.139: Use `final` sparingly
 
 ##### Reason
@@ -12675,16 +12717,16 @@ this can be a security risk.
 
 ##### Enforcement
 
-Some is possible, do at least something.
-There are commercial and open-source tools that try to address this problem, but static tools often have many false positives and run-time tools often have a significant cost.
-We hope for better tools.
+When possible, rely on tooling enforcement, but be aware that any tooling
+solution has costs and blind spots. Defense in depth (multiple tools, multiple
+approaches) is particularly valuable here.
 
-Help the tools:
+There are other ways you can mitigate the chance of data races:
 
-* less global data
-* fewer `static` variables
-* more use of stack memory (and don't pass pointers around too much)
-* more immutable data (literals, `constexpr`, and `const`)
+* Avoid global data
+* Avoid `static` variables
+* More use of value types on the stack (and don't pass pointers around too much)
+* More use of immutable data (literals, `constexpr`, and `const`)
 
 ### <a name="Rconc-data"></a>CP.3: Minimize explicit sharing of writable data
 
@@ -13786,7 +13828,7 @@ Double-checked locking is easy to mess up. If you really need to write your own 
 
 ##### Example, bad
 
-Even if the following example works correctly on most hardware platforms, it is not guaranteed to work by the C++ standard. The x_init.load(memory_order_relaxed) call may see a value from outside of the lock guard. 
+Even if the following example works correctly on most hardware platforms, it is not guaranteed to work by the C++ standard. The x_init.load(memory_order_relaxed) call may see a value from outside of the lock guard.
 
 ```cpp
 atomic<bool> x_init;
