@@ -1034,7 +1034,7 @@ We typically have better things to do than repeatedly do routine tasks.
 
 ##### Example
 
-Run a static analyser to verify that your code follows the guidelines you want it to follow.
+Run a static analyzer to verify that your code follows the guidelines you want it to follow.
 
 ##### Note
 
@@ -2396,7 +2396,7 @@ The C++ standard library does that implicitly for all functions in the C standar
 
 ##### Note
 
-`constexpr` functions can when evaluated at run time, so yu may need `noexcept` for some of those.
+`constexpr` functions can throw when evaluated at run time, so you may need `noexcept` for some of those.
 
 ##### Example
 
@@ -3742,7 +3742,7 @@ This rule becomes even better if C++ gets ["uniform function call"](http://www.o
 
 ##### Exception
 
-The language requires `virtual` funtions to be members, and not all `virtual` functions directly access data.
+The language requires `virtual` functions to be members, and not all `virtual` functions directly access data.
 In particular, members of an abstract class rarely do.
 
 Note [multimethods](https://parasol.tamu.edu/~yuriys/papers/OMM10.pdf).
@@ -9795,7 +9795,7 @@ Readability and safety.
 
 ##### Note
 
-As an optimization, you may want to reuse a buffer as a scratchpad, but even then prefer to limit the variables's scope as much as possible and be careful not to cause bugs from data left in a recycled buffer as this is a common source of security bugs.
+As an optimization, you may want to reuse a buffer as a scratch pad, but even then prefer to limit the variable's scope as much as possible and be careful not to cause bugs from data left in a recycled buffer as this is a common source of security bugs.
 
     {
         std::string buffer;             // to avoid reallocations on every loop iteration
@@ -11976,7 +11976,7 @@ There are many tools "out there", both commercial and open-source tools, both re
 Unfortunately people's needs and constraints differ so dramatically that we cannot make specific recommendations,
 but we can mention:
 
- * Static enforcement tools: both [clang](http://clang.llvm.org/docs/ThreadSafetyAnalysis.html)
+* Static enforcement tools: both [clang](http://clang.llvm.org/docs/ThreadSafetyAnalysis.html)
  and some older versions of [GCC](https://gcc.gnu.org/wiki/ThreadSafetyAnnotation)
  have some support for static annotation of thread safety properties.
  Consistent use of this technique turns many classes of thread-safety errors into compile-time errors.
@@ -12804,7 +12804,7 @@ Read up on the ABA problem.
 
 ##### Exception
 
-[Atomic variables](#???) can be used simply and safely.
+[Atomic variables](#???) can be used simply and safely, as long as you are using the sequentially consistent memory model (memory_order_seq_cst), which is the default.
 
 ##### Note
 
@@ -13996,7 +13996,7 @@ This gives a more precise statement of design intent, better readability, more e
 
 It is not inherently bad to pass a pointer or reference to non-const,
 but that should be done only when the called function is supposed to modify the object.
-A reader of code must assume that a funtion that takes a "plain" `T*` or `T&` will modify the object referred to.
+A reader of code must assume that a function that takes a "plain" `T*` or `T&` will modify the object referred to.
 If it doesn't now, it might do so later without forcing recompilation.
 
 ##### Note
@@ -14010,7 +14010,7 @@ You can
 * "cast away `const`"; [best avoided](#Res-casts-const).
 * provide a wrapper function; for example
 
-    void f(int* p);   // old code: f() does not mpdify `*p`
+    void f(int* p);   // old code: f() does not modify `*p`
     void f(const int* p) { f(const_cast<int*>(p); } // wrapper
 
 Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be be modified,
@@ -14646,7 +14646,7 @@ Concepts with multiple operations have far lower chance of accidentally matching
 * Flag uses of `enable_if` that appears to simulate single-operation `concepts`.
 
 
-### <a name="ations"></a>T.21: Require a complete set of operations for a concept
+### <a name="RT-operations"></a>T.21: Require a complete set of operations for a concept
 
 ##### Reason
 
@@ -19409,6 +19409,7 @@ A relatively informal definition of terms used in the guidelines
 This is our to-do list.
 Eventually, the entries will become rules or parts of rules.
 Alternatively, we will decide that no change is needed and delete the entry.
+
 * No long-distance friendship
 * Should physical design (what's in a file) and large-scale design (libraries, groups of libraries) be addressed?
 * Namespaces
@@ -19427,7 +19428,6 @@ Alternatively, we will decide that no change is needed and delete the entry.
 * Never pass a pointer down the call stack
 * falling through a function bottom
 * Should there be guidelines to choose between polymorphisms? YES. classic (virtual functions, reference semantics) vs. Sean Parent style (value semantics, type-erased, kind of like `std::function`)  vs. CRTP/static? YES Perhaps even vs. tag dispatch?
-* Speaking of virtual functions, should non-virtual interface be promoted? YES. (public non-virtual `foo()` calling private/protected `do_foo()`)? Not a new thing, seeing as locales/streams use it, but it seems to be under-emphasized.
 * should virtual calls be banned from ctors/dtors in your guidelines? YES. A lot of people ban them, even though I think it's a big strength of C++ that they are ??? -preserving (D disappointed me so much when it went the Java way). WHAT WOULD BE A GOOD EXAMPLE?
 * Speaking of lambdas, what would weigh in on the decision between lambdas and (local?) classes in algorithm calls and other callback scenarios?
 * And speaking of `std::bind`, Stephen T. Lavavej criticizes it so much I'm starting to wonder if it is indeed going to fade away in future. Should lambdas be recommended instead?
