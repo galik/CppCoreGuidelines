@@ -97,7 +97,7 @@ Definitions of terms used to express and discuss the rules, that are not languag
 This document is a set of guidelines for using C++ well.
 The aim of this document is to help people to use modern C++ effectively.
 By "modern C++" we mean C++11 and C++14 (and soon C++17).
-In other words, what would you like your code to look like in 5 years' time, given that you can start now? In 10 years' time?
+In other words, what would you like your code to look like in 5 years time, given that you can start now? In 10 years time?
 
 The guidelines are focused on relatively higher-level issues, such as interfaces, resource management, memory management, and concurrency.
 Such rules affect application architecture and library design.
@@ -1273,7 +1273,7 @@ Very hard in general.
 
 * Look for classes with names that include `singleton`.
 * Look for classes for which only a single object is created (by counting objects or by examining constructors).
-* If a class X has a public static function that contains a function-local static of the class' type X and returns a pointer or reference to it, ban that.
+* If a class X has a public static function that contains a function-local static of the class's type X and returns a pointer or reference to it, ban that.
 
 ### <a name="Ri-typed"></a>I.4: Make interfaces precisely and strongly typed
 
