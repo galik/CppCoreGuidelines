@@ -3314,6 +3314,8 @@ int length(not_null<zstring> p);
 
 Using `unique_ptr` is the cheapest way to pass a pointer safely.
 
+See also [C.50](#Rc-factory) regarding when to return a `shared_ptr` from a factory.
+
 ##### Example
 
 ```cpp
@@ -5462,6 +5464,10 @@ public:
 
 If the state of a base class object must depend on the state of a derived part of the object, we need to use a virtual function (or equivalent) while minimizing the window of opportunity to misuse an imperfectly constructed object.
 
+##### Note
+
+The return type of the factory should normally be `unique_ptr` by default; if some uses are shared, the caller can `move` the `unique_ptr` into a `shared_ptr`. However, if the factory author knows that all uses of the returned object will be shared uses, return `shared_ptr` and use `make_shared` in the body to save an allocation.
+
 ##### Example, bad
 
 ```cpp
@@ -5498,7 +5504,7 @@ public:
     virtual void f() = 0;
 
     template<class T>
-    static shared_ptr<T> Create()  // interface for creating objects
+    static shared_ptr<T> Create()  // interface for creating shared objects
     {
         auto p = make_shared<T>();
         p->PostInitialize();
@@ -5506,7 +5512,7 @@ public:
     }
 };
 
-class D : public B { /* ... */ };            // some derived class
+class D : public B { /* ... */ };  // some derived class
 
 shared_ptr<D> p = D::Create<D>();  // creating a D object
 
@@ -9832,6 +9838,27 @@ void use()
 
 * Flag loop variables declared before the loop and not used after the loop
 * (hard) Flag loop variables declared before the loop and used after the loop for an unrelated purpose.
+
+##### C++17 example
+
+Note: C++17 also adds `if` and `switch` initializer statements. These require C++17 support.
+
+```cpp
+map<int,string> mymap;
+
+if (auto result = mymap.insert(value); result.second) {
+    // insert succeeded, and result is valid for this block
+    use(result.first);  // ok
+    // ...
+} // result is destroyed here
+
+```
+##### C++17 enforcement (if using a C++17 compiler)
+
+* Flag selection/loop variables declared before the body and not used after the body
+* (hard) Flag selection/loop variables declared before the body and used after the body for an unrelated purpose.
+
+
 
 ### <a name="Res-name-length"></a>ES.7: Keep common and local names short, and keep uncommon and nonlocal names longer
 
@@ -19399,7 +19426,7 @@ These types allow the user to distinguish between owning and non-owning pointers
 
 These "views" are never owners.
 
-References are never owners.
+References are never owners. Note: References have many opportunities to outlive the objects they refer to (returning a local variable by reference, holding a reference to an element of a vector and doing `push_back`, binding to `std::max(x,y+1)`, etc. The Lifetime safety profile aims to address those things, but even so `owner<T&>` does not make sense and is discouraged.
 
 The names are mostly ISO standard-library style (lower case and underscore):
 
@@ -19410,7 +19437,6 @@ The "raw-pointer" notation (e.g. `int*`) is assumed to have its most common mean
 Owners should be converted to resource handles (e.g., `unique_ptr` or `vector<T>`) or marked `owner<T*>`.
 
 * `owner<T*>`   // a `T*` that owns the object pointed/referred to; may be `nullptr`.
-* `owner<T&>`   // a `T&` that owns the object pointed/referred to.
 
 `owner` is used to mark owning pointers in code that cannot be upgraded to use proper resource handles.
 Reasons for that include:
