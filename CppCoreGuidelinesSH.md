@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-February 11, 2017
+March 15, 2017
 
 
 Editors:
@@ -18797,9 +18797,11 @@ Type safety profile summary:
 * [Type.2: Don't use `static_cast` downcasts. Use `dynamic_cast` instead](#Pro-type-downcast)
 * [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](#Pro-type-constcast)
 * [Type.4: Don't use C-style `(T)expression` casts that would perform a `static_cast` downcast, `const_cast`, or `reinterpret_cast`](#Pro-type-cstylecast)
+* [Type.4.1: Don't use `T(expression)` for casting](#Pro-fct-style-cast)
 * [Type.5: Don't use a variable before it has been initialized](#Pro-type-init)
 * [Type.6: Always initialize a member variable](#Pro-type-memberinit)
-* [Type.7: Don't use `T(expression)` for casting`](#Pro-fct-style-cast)
+* [Type.7: Avoid accessing members of raw unions. Prefer `variant` instead](#Pro-fct-style-cast)
+* [Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead](#Pro-type-varargs)
 
 ### <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`.
 
@@ -19008,7 +19010,7 @@ f(j); // undefined behavior
 
 Issue a diagnostic for any use of a C-style `(T)expression` cast that would invoke a `static_cast` downcast, `const_cast`, or `reinterpret_cast`. To fix: Use a `dynamic_cast`, `const`-correct declaration, or `variant`, respectively.
 
-### <a name="Pro-fct-style-cast"></a>Type.7: Don't use `T(expression)` for casting`
+### <a name="Pro-fct-style-cast"></a>Type.4.1: Don't use `T(expression)` for casting.
 
 ##### Reason
 
