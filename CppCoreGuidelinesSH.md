@@ -19138,6 +19138,14 @@ The following are under consideration but not yet in the rules below, and may be
 
 An implementation of this profile shall recognize the following patterns in source code as non-conforming and issue a diagnostic.
 
+Bounds safety profile summary:
+
+* [Bounds.1: Don't use pointer arithmetic. Use `span` instead](#Pro-bounds-arithmetic)
+* [Bounds.2: Only index into arrays using constant expressions](#Pro-bounds-arrayindex)
+* [Bounds.3: No array-to-pointer decay](#Pro-bounds-decay)
+* [Bounds.4: Don't use standard library functions and types that are not bounds-checked](#Pro-bounds-stdlib)
+
+
 ### <a name="Pro-bounds-arithmetic"></a>Bounds.1: Don't use pointer arithmetic. Use `span` instead.
 
 ##### Reason
@@ -19394,7 +19402,7 @@ void f(std::vector<int>& v, std::array<int, 12> a, int i)
 
 ## <a name="SS-lifetime"></a>Pro.lifetime: Lifetime safety profile
 
-???
+See /docs folder for the initial design. The formal rules are in progress (as of March 2017).
 
 # <a name="S-gsl"></a>GSL: Guideline support library
 
