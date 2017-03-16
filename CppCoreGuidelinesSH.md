@@ -8646,7 +8646,7 @@ Here, we ignore such cases.
   * [R.2: In interfaces, use raw pointers to denote individual objects (only)](#Rr-use-ptr)
   * [R.3: A raw pointer (a `T*`) is non-owning](#Rr-ptr)
   * [R.4: A raw reference (a `T&`) is non-owning](#Rr-ref)
-  * [R.5: Prefer scoped objects](#Rr-scoped)
+  * [R.5: Prefer scoped objects, don't heap-allocate unnecessarily](#Rr-scoped)
   * [R.6: Avoid non-`const` global variables](#Rr-global)
 
 * Allocation and deallocation rule summary:
@@ -8927,7 +8927,7 @@ void f()
 
 See [the raw pointer rule](#Rr-ptr)
 
-### <a name="Rr-scoped"></a>R.5: Don't heap-allocate unnecessarily
+### <a name="Rr-scoped"></a>R.5: Prefer scoped objects, don't heap-allocate unnecessarily
 
 ##### Reason
 
@@ -9399,7 +9399,7 @@ Using `unique_ptr` in this way both documents and enforces the function call's o
 ```cpp
 void sink(unique_ptr<widget>); // consumes the widget
 
-void sink(widget*);            // just uses the widget
+void uses(widget*);            // just uses the widget
 
 ```
 ##### Example, bad
@@ -9412,7 +9412,6 @@ void thinko(const unique_ptr<widget>&); // usually not what you want
 
 * (Simple) Warn if a function takes a `Unique_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
 * (Simple) ((Foundation)) Warn if a function takes a `Unique_ptr<T>` parameter by reference to `const`. Suggest taking a `const T*` or `const T&` instead.
-* (Simple) ((Foundation)) Warn if a function takes a `Unique_ptr<T>` parameter by rvalue reference. Suggest using pass by value instead.
 
 ### <a name="Rr-reseat"></a>R.33: Take a `unique_ptr<widget>&` parameter to express that a function reseats the`widget`
 
@@ -9422,7 +9421,7 @@ Using `unique_ptr` in this way both documents and enforces the function call's r
 
 ##### Note
 
-"reseat" means "making a reference or a smart pointer refer to a different object."
+"reseat" means "making a pointer or a smart pointer refer to a different object."
 
 ##### Example
 
@@ -9440,7 +9439,6 @@ void thinko(const unique_ptr<widget>&); // usually not what you want
 
 * (Simple) Warn if a function takes a `Unique_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
 * (Simple) ((Foundation)) Warn if a function takes a `Unique_ptr<T>` parameter by reference to `const`. Suggest taking a `const T*` or `const T&` instead.
-* (Simple) ((Foundation)) Warn if a function takes a `Unique_ptr<T>` parameter by rvalue reference. Suggest using pass by value instead.
 
 ### <a name="Rr-sharedptrparam-owner"></a>R.34: Take a `shared_ptr<widget>` parameter to express that a function is part owner
 
@@ -9453,9 +9451,9 @@ This makes the function's ownership sharing explicit.
 ```cpp
 void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
-void reseat(shared_ptr<widget>&);          // "might" reseat ptr
-
 void may_share(const shared_ptr<widget>&); // "might" retain refcount
+
+void reseat(shared_ptr<widget>&);          // "might" reseat ptr
 
 ```
 ##### Enforcement
