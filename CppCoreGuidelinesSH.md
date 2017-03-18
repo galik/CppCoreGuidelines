@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-March 15, 2017
+March 17, 2017
 
 
 Editors:
@@ -15168,11 +15168,9 @@ Prevents accidental or hard-to-notice change of value.
 ##### Example
 
 ```cpp
-for (const string& s : c) cout << s << '\n';    // just reading: const
+for (const int i : c) cout << i << '\n';    // just reading: const
 
-for (string& s : c) cout << s << '\n';    // BAD: just reading
-
-for (string& s : c) cin >> s;  // needs to write: non-const
+for (int i : c) cout << i << '\n';          // BAD: just reading
 
 ```
 ##### Exception
