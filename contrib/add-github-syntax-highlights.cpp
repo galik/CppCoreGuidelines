@@ -11,8 +11,9 @@
 #include <sstream>
 #include <iostream>
 
-#define STD_OUT(m) do{std::cout << m << '\n';}while(0)
-#define STD_ERR(m) do{std::cerr << m << '\n';}while(0)
+#define con_out(m) do{std::cout << m << '\n';}while(0)
+#define con_err(m) do{std::cerr << m << '\n';}while(0)
+
 #define throw_runtime(m) do{std::ostringstream o;o<<m;throw std::runtime_error(o.str());}while(0)
 #define throw_errno(m) throw_runtime(m << ": " << std::strerror(errno))
 
@@ -40,7 +41,7 @@ int main(int, char** argv)
 					o_file_name = *arg;
 				else // there should only be a maximum of 2 file names
 				{
-					STD_ERR("Unknown parameter: " << *arg);
+					con_err("Unknown parameter: " << *arg);
 					return usage(argv[0], EXIT_FAILURE);
 				}
 			}
@@ -69,12 +70,12 @@ int main(int, char** argv)
 	}
 	catch(std::exception const& e)
 	{
-		STD_ERR(e.what());
+		con_err(e.what());
 		return EXIT_FAILURE;
 	}
 	catch(...)
 	{
-		STD_ERR("Unknown exception.");
+		con_err("Unknown exception.");
 		return EXIT_FAILURE;
 	}
 
@@ -86,19 +87,19 @@ int usage(std::string prog, int error_code)
 	if(auto pos = prog.rfind('/') + 1)
 		prog.erase(0, pos);
 
-	STD_OUT("");
-	STD_OUT("Usage: " << prog << " [OPTIONS] [<input> [<output>]]");
-	STD_OUT("");
-	STD_OUT("                If no input file <input> is specified");
-	STD_OUT("                  the input is taken from the standard input.");
-	STD_OUT("");
-	STD_OUT("                If no output file <output> is specified");
-	STD_OUT("                  the output is sent to the standard output.");
-	STD_OUT("");
-	STD_OUT("OPTIONS");
-	STD_OUT("");
-	STD_OUT(" -h|--help    - Print this help massage.");
-	STD_OUT("");
+	con_out("");
+	con_out("Usage: " << prog << " [OPTIONS] [<input> [<output>]]");
+	con_out("");
+	con_out("                If no input file <input> is specified");
+	con_out("                  the input is taken from the standard input.");
+	con_out("");
+	con_out("                If no output file <output> is specified");
+	con_out("                  the output is sent to the standard output.");
+	con_out("");
+	con_out("OPTIONS");
+	con_out("");
+	con_out(" -h|--help    - Print this help massage.");
+	con_out("");
 
 	return error_code;
 }
