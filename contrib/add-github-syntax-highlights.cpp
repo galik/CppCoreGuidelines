@@ -1,4 +1,7 @@
 /*
+ * This file is released into the PUBLIC DOMAIN to be
+ * copied and used in any manner whatsoever.
+ *
  * add-github-syntax-highlights.cpp
  *
  *  Created on: Oct 20, 2016
@@ -17,7 +20,7 @@
 #define throw_runtime(m) do{std::ostringstream o;o<<m;throw std::runtime_error(o.str());}while(0)
 #define throw_errno(m) throw_runtime(m << ": " << std::strerror(errno))
 
-int usage(std::string prog, int error_code = EXIT_SUCCESS);
+int usage(std::string prog, int error_code);
 
 void process_markdown(std::istream& is, std::ostream& os);
 
@@ -31,7 +34,7 @@ int main(int, char** argv)
 		for(auto arg = argv + 1; *arg; ++arg)
 		{
 			if(!std::strcmp(*arg, "-h") || !std::strcmp(*arg, "--help"))
-				return usage(argv[0]);
+				return usage(argv[0], EXIT_SUCCESS);
 			else
 			{
 				// not a recognized option, treat it like a file name
