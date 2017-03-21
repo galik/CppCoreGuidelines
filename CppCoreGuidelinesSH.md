@@ -19210,9 +19210,9 @@ void f(span<int> a) // BETTER: use span in the function declaration
 {
     if (a.length() < 2) return;
 
-    int n = *a++; // OK
+    int n = a[0]; // OK
 
-    span<int> q = a + 1; // OK
+    span<int> q = a.subspan(1); // OK 
 
     if (a.length() < 6) return;
 
@@ -19295,6 +19295,16 @@ void f1()
     span<int> av = arr;
     for (int i = 0; i < COUNT; ++i)
         av[i] = i;
+}
+
+// ALTERNATIVE Aa: Use a span and range-for
+void f1a()
+{
+     int arr[COUNT];
+     span<int,COUNT> av = arr;
+     int i = 0;
+     for (auto& e : av)
+         e = i++;
 }
 
 // ALTERNATIVE B: Use at() for access
