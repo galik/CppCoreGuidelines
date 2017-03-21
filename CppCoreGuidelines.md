@@ -18550,8 +18550,8 @@ Consistency in large code bases.
     const int x = 7;    // OK
     int const y = 9;    // bad
 
-    const int *const p = nullptr;   // OK, constant pointer to constant int
-    int const *const p = nullptr;   // bad, constant pointer to constant int
+    const int* const p = nullptr;   // OK, constant pointer to constant int
+    int const* const p = nullptr;   // bad, constant pointer to constant int
 
 ##### Note
 
