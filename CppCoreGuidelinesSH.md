@@ -17155,8 +17155,8 @@ It could be a base class:
 
 ```cpp
 struct Link_base {   // stable
-    Link* suc;
-    Link* pre;
+    Link_base* suc;
+    Link_base* pre;
 };
 
 template<typename T>   // templated wrapper to add type safety
