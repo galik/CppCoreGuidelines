@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-March 20, 2017
+March 27, 2017
 
 
 Editors:
@@ -9397,14 +9397,14 @@ Any type (including primary template or specialization) that overloads unary `*`
 
 ```cpp
 // use Boost's intrusive_ptr
-#include<boost/intrusive_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
 void f(boost::intrusive_ptr<widget> p)  // error under rule 'sharedptrparam'
 {
     p->foo();
 }
 
 // use Microsoft's CComPtr
-#include<atlbase.h>
+#include <atlbase.h>
 void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
 {
     p->foo();
@@ -10918,7 +10918,7 @@ Requires messy cast-and-macro-laden code to get working right.
 ##### Example
 
 ```cpp
-#include<cstdarg>
+#include <cstdarg>
 
 // "severity" followed by a zero-terminated list of char*s; write the C-style strings to cerr
 void error(int severity ...)
@@ -10959,7 +10959,7 @@ This is basically the way `printf` is implemented.
 ##### Enforcement
 
 * Flag definitions of C-style variadic functions.
-* Flag `#include<cstdarg>` and `#include<stdarg.h>`
+* Flag `#include <cstdarg>` and `#include <stdarg.h>`
 
 ## ES.stmt: Statements
 
@@ -13101,7 +13101,7 @@ This section focuses on relatively ad-hoc uses of multiple threads communicating
 Concurrency rule summary:
 
 * [CP.20: Use RAII, never plain `lock()`/`unlock()`](#Rconc-raii)
-* [CP.21: Use `std::lock()` to acquire multiple `mutex`es](#Rconc-lock)
+* [CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es](#Rconc-lock)
 * [CP.22: Never call unknown code while holding a lock (e.g., a callback)](#Rconc-unknown)
 * [CP.23: Think of a joining `thread` as a scoped container](#Rconc-join)
 * [CP.24: Think of a detached `thread` as a global container](#Rconc-detach)
@@ -13160,11 +13160,11 @@ void do_stuff()
 Flag calls of member `lock()` and `unlock()`.  ???
 
 
-### <a name="Rconc-lock"></a>CP.21: Use `std::lock()` to acquire multiple `mutex`es
+### <a name="Rconc-lock"></a>CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es
 
 ##### Reason
 
-To avoid deadlocks on multiple `mutex`s
+To avoid deadlocks on multiple `mutex`es.
 
 ##### Example
 
@@ -13184,14 +13184,24 @@ Instead, use `lock()`:
 
 ```cpp
 // thread 1
-lock_guard<mutex> lck1(m1, defer_lock);
-lock_guard<mutex> lck2(m2, defer_lock);
 lock(lck1, lck2);
+lock_guard<mutex> lck1(m1, adopt_lock);
+lock_guard<mutex> lck2(m2, adopt_lock);
 
 // thread 2
-lock_guard<mutex> lck2(m2, defer_lock);
-lock_guard<mutex> lck1(m1, defer_lock);
 lock(lck2, lck1);
+lock_guard<mutex> lck2(m2, adopt_lock);
+lock_guard<mutex> lck1(m1, adopt_lock);
+
+```
+or (better, but C++17 only):
+
+```cpp
+// thread 1
+scoped_lock<mutex, mutex> lck1(m1, m2);
+
+// thread 2
+scoped_lock<mutex, mutex> lck2(m2, m1);
 
 ```
 Here, the writers of `thread1` and `thread2` are still not agreeing on the order of the `mutex`es, but order no longer matters.
@@ -13201,10 +13211,10 @@ Here, the writers of `thread1` and `thread2` are still not agreeing on the order
 In real code, `mutex`es are rarely named to conveniently remind the programmer of an intended relation and intended order of acquisition.
 In real code, `mutex`es are not always conveniently acquired on consecutive lines.
 
-I'm really looking forward to be able to write plain
+In C++17 it's possible to write plain
 
 ```cpp
-lock_guard lck1(m1, defer_lock);
+lock_guard lck1(m1, adopt_lock);
 
 ```
 and have the `mutex` type deduced.
@@ -13344,6 +13354,12 @@ By "OK" we mean that the object will be in scope ("live") for as long as a `thre
 By "bad" we mean that a `thread` may use a pointer after the pointed-to object is destroyed.
 The fact that `thread`s run concurrently doesn't affect the lifetime or ownership issues here;
 these `thread`s can be seen as just a function object called from `some_fct`.
+
+##### Note
+
+Even objects with static storage duration can be problematic if used from detached threads: if the
+thread continues until the end of the program, it might be running concurrently with the destruction
+of objects with static storage duration, and thus accesses to such objects might race.
 
 ##### Enforcement
 
@@ -13800,11 +13816,14 @@ Flag all unnamed `lock_guard`s and `unique_lock`s.
 
 
 
-### <a name="Rconc-mutex"></a>P.50: Define a `mutex` together with the data it guards
+### <a name="Rconc-mutex"></a>P.50: Define a `mutex` together with the data it guards. Use `synchronized_value<T>` where possible
 
 ##### Reason
 
-It should be obvious to a reader that the data is to be guarded and how.
+It should be obvious to a reader that the data is to be guarded and how. This decreases the chance of the wrong mutex being locked, or the mutex not being locked. 
+
+Using a `synchronized_value<T>` ensures that the data has a mutex, and the right mutex is locked when the data is accessed.
+See the [WG21 proposal](http://wg21.link/p0290)) to add `synchronized_value` to a future TS or revision of the C++ standard.
 
 ##### Example
 
@@ -13812,6 +13831,13 @@ It should be obvious to a reader that the data is to be guarded and how.
 struct Record {
     std::mutex m;   // take this mutex before accessing other members
     // ...
+};
+
+class MyClass {
+    struct DataRecord {
+       // ...
+    };
+    synchronized_value<DataRecord> data; // Protect the data with a mutex
 };
 
 ```
@@ -17810,7 +17836,7 @@ int a;   // a definition
 void foo() { ++a; }
 
 ```
-`#include<foo.h>` twice in a program and you get a linker error for two one-definition-rule violations.
+`#include <foo.h>` twice in a program and you get a linker error for two one-definition-rule violations.
 
 ##### Enforcement
 
@@ -17833,11 +17859,11 @@ namespace Foo {
 }
 
 // file1.cpp:
-#include<file.h>
+#include <file.h>
 // ... more ...
 
  // file2.cpp:
-#include<file.h>
+#include <file.h>
 // ... more ...
 
 ```
@@ -17893,9 +17919,9 @@ Minimize context dependencies and increase readability.
 ##### Example
 
 ```cpp
-#include<vector>
-#include<algorithm>
-#include<string>
+#include <vector>
+#include <algorithm>
+#include <string>
 
 // ... my code here ...
 
@@ -17903,12 +17929,12 @@ Minimize context dependencies and increase readability.
 ##### Example, bad
 
 ```cpp
-#include<vector>
+#include <vector>
 
 // ... my code here ...
 
-#include<algorithm>
-#include<string>
+#include <algorithm>
+#include <string>
 
 ```
 ##### Note
@@ -17962,7 +17988,7 @@ int bar(long);
 int foobar(int);
 
 // foo.cpp:
-#include<foo.h>
+#include <foo.h>
 
 void foo(int) { /* ... */ }
 int bar(double) { /* ... */ }
@@ -19923,7 +19949,7 @@ int main(int argc, char * argv [ ])
 ##### Example
 
 ```cpp
-#include<map>
+#include <map>
 
 int main(int argc, char* argv[])
 {
