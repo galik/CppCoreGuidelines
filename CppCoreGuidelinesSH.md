@@ -2009,9 +2009,13 @@ Having many arguments opens opportunities for confusion. Passing lots of argumen
 The two most common reasons why functions have too many parameters are:
 
 ```cpp
-1. *Missing an abstraction.* There is an abstraction missing, so that a compound value is being passed as individual elements instead of as a single object that enforces an invariant. This not only expands the parameter list, but it leads to errors because the component values are no longer protected by an enforced invariant.
+1. *Missing an abstraction.* There is an abstraction missing, so that a compound value is being
+passed as individual elements instead of as a single object that enforces an invariant.
+This not only expands the parameter list, but it leads to errors because the component values
+are no longer protected by an enforced invariant.
 
-2. *Violating "one function, one responsibility."* The function is trying to do more than one job and should probably be refactored.
+2. *Violating "one function, one responsibility."* The function is trying to do more than one
+job and should probably be refactored.
 
 ```
 ##### Example
@@ -19238,7 +19242,7 @@ void f(span<int> a) // BETTER: use span in the function declaration
 
     int n = a[0]; // OK
 
-    span<int> q = a.subspan(1); // OK 
+    span<int> q = a.subspan(1); // OK
 
     if (a.length() < 6) return;
 
@@ -19327,7 +19331,7 @@ void f1()
 void f1a()
 {
      int arr[COUNT];
-     span<int,COUNT> av = arr;
+     span<int, COUNT> av = arr;
      int i = 0;
      for (auto& e : av)
          e = i++;
