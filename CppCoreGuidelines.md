@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-March 27, 2017
+April 2, 2017
 
 
 Editors:
@@ -2899,14 +2899,22 @@ However, we prefer to be explicit, rather than subtle.
 
 ##### Note
 
-In many cases, it may be useful to return a specific, user-defined "Value or error" type.
+In many cases, it may be useful to return a specific, user-defined type.
 For example:
 
-    struct
+    struct Distance {
+        int value;
+        int unit = 1;   // 1 means meters
+    };
+
+    Distance d1 = measure(obj1);        // access d1.value and d1.unit
+    auto d2 = measure(obj2);            // access d2.value and d2.unit
+    auto [value, unit] = measure(obj3);   // access value and unit; somewhat redundant to people who know measure()
+    auto [x,y] = measure(obj4);         // don't; it's likely to be confusing
 
 The overly-generic `pair` and `tuple` should be used only when the value returned represents to independent entities rather than an abstraction.
 
-type along the lines of `variant<T, error_code>`, rather than using the generic `tuple`.
+Another example, use a specific type along the lines of `variant<T, error_code>`, rather than using the generic `tuple`.
 
 ##### Enforcement
 
@@ -6447,7 +6455,6 @@ To make this interface useful, we must provide its implementation classes (here,
 Now `Shape` is a poor example of a class with an implementation,
 but bear with us because this is just a simple example of a technique aimed at more complex hierarchies.
 
-
     class Impl::Circle : public Circle, public Impl::Shape {   // implementation
     public:
         // constructors, destructor
@@ -6560,7 +6567,7 @@ Note that we can put default initializers on member variables: [C.49: Prefer ini
 
 ##### Note
 
-A getter or a setter that converts from an internal type to an interface type is not trivial (it provides a form of information hiding).
+The key to this rule is whether the semantics of the getter/setter are trivial. While it is not a complete definition of "trivial", consider whether there would be any difference beyond syntax if the getter/setter was a public data member instead. Examples of non-trival semantics would be: maintaining a class invariant or converting between an internal type and an interface type.
 
 ##### Enforcement
 
@@ -6696,6 +6703,13 @@ If the operations are virtual the use of inheritance is necessary, if not using 
 ##### Note
 
 This a relatively rare use because implementation can often be organized into a single-rooted hierarchy.
+
+##### Example
+
+Sometimes, an "implementation attribute" is more like a "mixin" that determine the behavior of an implementation and inject
+members to enable the implementation of the policies it requires. 
+For example, see `std::enable_shared_from_this`
+or various bases from boost.intrusive (e.g. `list_base_hook` or `intrusive_ref_counter`).
 
 ##### Enforcement
 
@@ -9315,9 +9329,15 @@ or:
     // better: base * pow(FLT_RADIX, exponent); FLT_RADIX is usually 2
     double scalbn(double base, int exponent);
 
+##### Example
+
+    int a=7, b=9, c, d=10, e=3;
+
+In a long list of declarators is is easy to overlook an uninitializeed variable.
+
 ##### Enforcement
 
-Flag non-function arguments with multiple declarators involving declarator operators (e.g., `int* p, q;`)
+Flag variable and constant declarations with multiple declarators (e.g., `int* p, q;`)
 
 ### <a name="Res-auto"></a>ES.11: Use `auto` to avoid redundant repetition of type names
 
@@ -16393,7 +16413,7 @@ Source file rule summary:
 * [SF.3: Use `.h` files for all declarations used in multiple source files](#Rs-declaration-header)
 * [SF.4: Include `.h` files before other declarations in a file](#Rs-include-order)
 * [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](#Rs-consistency)
-* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope](#Rs-using)
+* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)](#Rs-using)
 * [SF.7: Don't write `using namespace` in a header file](#Rs-using-directive)
 * [SF.8: Use `#include` guards for all `.h` files](#Rs-guards)
 * [SF.9: Avoid cyclic dependencies among source files](#Rs-cycles)
@@ -16596,19 +16616,60 @@ The argument-type error for `bar` cannot be caught until link time because of th
 
 ???
 
-### <a name="Rs-using"></a>SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope
+### <a name="Rs-using"></a>SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)
 
 ##### Reason
 
- ???
+ `using namespace` can lead to name clashes, so it should be used sparingly.
+ However, it is not always possible to qualify every name from a namespace in user code (e.g., during transition)
+ and sometimes a namespace is so fundamental and prevalent in a code base, that consistent qualification would be verbose and distracting.
 
 ##### Example
 
-    ???
+    #include<string>
+    #include<vector>
+    #include<iostream>
+    #include<memory>
+    #include<algorithm>
+
+    using namespace std;
+
+    // ...
+
+Here (obviously), the standard library is used pervasively and apparantly no other library is used, so requiring `std::` everywhere
+could be distracting.
+
+##### Example
+
+The use of `using namespace std;` leaves the programmer open to a name clash with a name from the standard library
+
+    #include<cmath>
+    using namespace std;
+
+    int g(int x)
+    {
+        int sqrt = 7;
+        // ...
+        return sqrt(x); // error
+    }
+
+However, this is not particularly likely to lead to a resolution that is not an error and
+people who use `using namespace std` are supposed to know about `std` and about this risk.
+
+##### Note
+
+A `.cpp` file is a form of local scope.
+There is little difference in the opportunities for name clashes in an N-line `.cpp` containing a `using namespace X`,
+an N-line function containing a `using namespace X`,
+and M functions each containing a `using namespace X`with N lines of code in total.
+
+##### Note
+
+[Don't write `using namespace` in a header file](#Rs-using-directive).
 
 ##### Enforcement
 
-???
+Flag multiple `using namespace` directives for different namespaces in a single sourcefile.
 
 ### <a name="Rs-using-directive"></a>SF.7: Don't write `using namespace` in a header file
 
