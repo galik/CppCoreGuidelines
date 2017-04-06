@@ -12253,11 +12253,11 @@ If a `thread` joins, we can safely pass pointers to objects in the scope of the 
     void some_fct(int* p)
     {
         int x = 77;
-        raii_thread t0(f, &x);           // OK
-        raii_thread t1(f, p);            // OK
-        raii_thread t2(f, &glob);        // OK
+        gsl::raii_thread t0(f, &x);           // OK
+        gsl::raii_thread t1(f, p);            // OK
+        gsl::raii_thread t2(f, &glob);        // OK
         auto q = make_unique<int>(99);
-        raii_thread t3(f, q.get());      // OK
+        gsl::raii_thread t3(f, q.get());      // OK
         // ...
     }
 
@@ -12293,16 +12293,11 @@ If a `thread` is detached, we can safely pass pointers to static and free store 
     void some_fct(int* p)
     {
         int x = 77;
-        std::thread t0(f, &x);           // bad
-        std::thread t1(f, p);            // bad
-        std::thread t2(f, &glob);        // OK
+        gsl::detached_thread t0(f, &x);           // bad
+        gsl::detached_thread t1(f, p);            // bad
+        gsl::detached_thread t2(f, &glob);        // OK
         auto q = make_unique<int>(99);
-        std::thread t3(f, q.get());      // bad
-        // ...
-        t0.detach();
-        t1.detach();
-        t2.detach();
-        t3.detach();
+        gsl::detached_thread t3(f, q.get());      // bad
         // ...
     }
 
