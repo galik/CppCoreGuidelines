@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-April 4, 2017
+April 9, 2017
 
 
 Editors:
@@ -10608,21 +10608,18 @@ struct S {
 ```
 ##### Note
 
-Initialization of a variable declared using `auto` with a single value, e.g., `{v}`, had surprising results until recently:
+Initialization of a variable declared using `auto` with a single value, e.g., `{v}`, had surprising results until C++17.
+The C++17 rules are somewhat less surprising:
 
 ```cpp
 auto x1 {7};        // x1 is an int with the value 7
-// x2 is an initializer_list<int> with an element 7
-// (this will will change to "element 7" in C++17)
-auto x2 = {7};
+auto x2 = {7};  // x2 is an initializer_list<int> with an element 7
 
 auto x11 {7, 8};    // error: two initializers
 auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
 
 ```
-##### Exception
-
-Use `={...}` if you really want an `initializer_list<T>`
+So use `={...}` if you really want an `initializer_list<T>`
 
 ```cpp
 auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
@@ -10671,13 +10668,17 @@ void use(bool leak)
 {
     auto p1 = make_unique<int>(7);   // OK
     int* p2 = new int{7};            // bad: might leak
-    // ...
+    // ... no assignment to p2 ...
     if (leak) return;
+    // ... no assignment to p2 ...
+    vector<int> v(7);
+    v.at(7) = 0;                    // exception thrown
     // ...
 }
 
 ```
 If `leak == true` the object pointed to by `p2` is leaked and the object pointed to by `p1` is not.
+The same is the case when `at()` throws.
 
 ##### Enforcement
 
@@ -11281,6 +11282,7 @@ consider `gsl::finally()` as a cleaner and more reliable alternative to `goto ex
 ##### Reason
 
  In a non-trivial loop body, it is easy to overlook a `break` or a `continue`.
+
  A `break` in a loop has a dramatically different meaning than a `break` in a `switch`-statement
  (and you can have `switch`-statement in a loop and a loop in a `switch`-case).
 
@@ -11825,14 +11827,36 @@ Flag uses of `0` and `NULL` for pointers. The transformation may be helped by si
 
 ##### Reason
 
-Casts are a well-known source of errors. Makes some optimizations unreliable.
+Casts are a well-known source of errors. Make some optimizations unreliable.
 
-##### Example
+##### Example, bad
 
 ```cpp
-???
+double d = 2;
+```
+	auto p = (long*)&d;
+	auto q = (long long*)&d;
+	cout << d << ' ' << *p << ' ' << *q << '\n';
+
+What would you think this fragment prints? The result is at best implementation defined. I got
+
+```cpp
+2 0 4611686018427387904
 
 ```
+Adding 
+
+	*q = 666;
+	cout << d << ' ' << *p << ' ' << *q << '\n';
+
+I got 
+
+```cpp
+3.29048e-321 666 666
+
+```
+Surprised? I'm just glad I didn't crash the program.
+
 ##### Note
 
 Programmer who write casts typically assumes that they know what they are doing.
@@ -11877,17 +11901,31 @@ The named casts are:
 ##### Example
 
 ```cpp
-???
+class B { /* ... */ };
+class D { /* ... */ };
+
+template<typename D> D* upcast(B* pb)
+{
+    D* pd0 = pb;                        // error: no implicit conversion from B* to D*
+    D* pd1 = (D*)pb;                    // legal, but what is done?
+    D* pd2 = static_cast<D*>(pb);       // error: D is not derived from B
+    D* pd3 = reinterpret_cast<D*>(pb);  // OK: on your head be it!
+    D* pd4 = dynamic_cast<D*>(pb);      // OK: return nullptr
+    // ...
+}
 
 ```
+The example was synthesized from real-world bugs where `D` used to be derived from `B`, but someone refactored the hierarchy.
+The C-style cast is dangerous because it can do any kind of conversion, depriving us of any protection from mistakes (now or in the future).
+
 ##### Note
 
 When converting between types with no information loss (e.g. from `float` to
 `double` or `int64` from `int32`), brace initialization may be used instead.
 
 ```cpp
-double d{some_float};
-int64_t i{some_int32};
+double d {some_float};
+int64_t i {some_int32};
 
 ```
 This makes it clear that the type conversion was intended and also prevents
