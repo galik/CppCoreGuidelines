@@ -9688,9 +9688,9 @@ Statement rules:
 * [ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement](#Res-for-init)
 * [ES.75: Avoid `do`-statements](#Res-do)
 * [ES.76: Avoid `goto`](#Res-goto)
-* [ES.77: ??? `continue`](#Res-continue)
+* [ES.77: Minimize the use of 'break' and `continue` in loops](#Res-continue)
 * [ES.78: Always end a non-empty `case` with a `break`](#Res-break)
-* [ES.79: ??? `default`](#Res-default)
+* [ES.79: Use `default` to handle common cases (only)](#Res-default)
 * [ES.85: Make empty statements visible](#Res-empty)
 * [ES.86: Avoid modifying loop control variables inside the body of raw for-loops](#Res-loop-counter)
 
@@ -10066,6 +10066,15 @@ char *p, c, a[7], *pp[7], **aa[10];   // yuck!
 
 A function declaration can contain several function argument declarations.
 
+##### Exception
+
+A structured binding (C++17) is specifically designed to introduce several variables:
+
+```cpp
+auto [iter,inserted] = m.insert_or_assign(k,val);
+if (inserted) { /* new entry was inserted */ }
+
+```
 ##### Example
 
 ```cpp
@@ -10107,7 +10116,7 @@ double scalbn(double base, int exponent);
 int a=7, b=9, c, d=10, e=3;
 
 ```
-In a long list of declarators is is easy to overlook an uninitializeed variable.
+In a long list of declarators is is easy to overlook an uninitialized variable.
 
 ##### Enforcement
 
@@ -10160,6 +10169,12 @@ When concepts become available, we can (and should) be more specific about the t
 ```cpp
 // ...
 ForwardIterator p = algo(x, y, z);
+
+```
+##### Example (C++17)
+```cpp
+
+auto [ quotient,remainder ] = div(123456,73);   // break out the members of the div_t result
 
 ```
 ##### Enforcement
@@ -10827,12 +10842,14 @@ If at all possible, reduce the conditions to a simple set of alternatives (e.g.,
 ##### Example
 
 ```cpp
-owner<istream&> in = [&]{
+bool owned = false;
+owner<istream*> inp = [&]{
     switch (source) {
-    case default:       owned = false; return cin;
-    case command_line:  owned = true;  return *new istringstream{argv[2]};
-    case file:          owned = true;  return *new ifstream{argv[2]};
+    case default:       owned = false; return &cin;
+    case command_line:  owned = true;  return new istringstream{argv[2]};
+    case file:          owned = true;  return new ifstream{argv[2]};
 }();
+istream& in = *inp;
 
 ```
 ##### Enforcement
@@ -11119,17 +11136,31 @@ while (i < vec.size()) {
 
 ##### Reason
 
- ???
+Readability.
 
 ##### Example
 
 ```cpp
-???
+int events = 0;
+for (; wait_for_event(); ++events) {  // bad, confusing
+    // ...
+}
+
+```
+The "event loop" is misleading because the `events` counter has nothing to do with the loop cindition (`wait_for_1vent()`).
+Better
+
+```cpp
+int events = 0;
+while (wait_for_event()) {      // better
+    ++events;
+    // ...
+}
 
 ```
 ##### Enforcement
 
-???
+Flag actions in `for`-initializers and `for`-increments that do not relate to the `for`-condition.
 
 ### <a name="Res-for-init"></a>ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement
 
@@ -11158,6 +11189,14 @@ for (j = 0; j < 100; ++j) {
 ```
 **See also**: [Don't use a variable for two unrelated purposes](#Res-recycle)
 
+##### Example
+
+```cpp
+for (string s; cin>>s; ) {
+    cout << s << '\n';
+}
+
+```
 ##### Enforcement
 
 Warn when a variable modified inside the `for`-statement is declared outside the loop and not being used outside the loop.
@@ -11170,7 +11209,7 @@ is only accessible in the loop body unblocks optimizations such as hoisting, str
 ##### Reason
 
 Readability, avoidance of errors.
-The termination condition is at the end (where it can be overlooked) and the condition is not checked the first time through. ???
+The termination condition is at the end (where it can be overlooked) and the condition is not checked the first time through.
 
 ##### Example
 
@@ -11182,9 +11221,13 @@ do {
 } while (x < 0);
 
 ```
+##### Note
+
+Yes, there are genuine examples where a `do`-statement is a clear statement of a solution, but also many bugs.
+
 ##### Enforcement
 
-???
+Flag `do`-statements.
 
 ### <a name="Res-goto"></a>ES.76: Avoid `goto`
 
@@ -11194,15 +11237,20 @@ Readability, avoidance of errors. There are better control structures for humans
 
 ##### Exception
 
-Breaking out of a nested loop. In that case, always jump forwards.
-
-##### Example
+Breaking out of a nested loop.
+In that case, always jump forwards.
 
 ```cpp
-???
+for (int i = 0; i<imax; ++i)
+    for (int j = 0; j<jmax; ++j ) {
+        if (a[i][j]>elem_max) goto finished;
+        // ...
+    }
+finished:
+// ...
 
 ```
-##### Example
+##### Example, bad
 
 There is a fair amount of use of the C goto-exit idiom:
 
@@ -11219,17 +11267,22 @@ exit:
 }
 
 ```
-This is an ad-hoc simulation of destructors. Declare your resources with handles with destructors that clean up.
+This is an ad-hoc simulation of destructors.
+Declare your resources with handles with destructors that clean up.
+If for some reason you cannot handle all cleanup with destructors for the variables used,
+consider `gsl::finally()` as a cleaner and more reliable alternative to `goto exit`
 
 ##### Enforcement
 
 * Flag `goto`. Better still flag all `goto`s that do not jump from a nested loop to the statement immediately after a nest of loops.
 
-### <a name="Res-continue"></a>ES.77: ??? `continue`
+### <a name="Res-continue"></a>ES.77: Minimize the use of 'break' and `continue` in loops
 
 ##### Reason
 
- ???
+ In a non-trivial loop body, it is easy to overlook a `break` or a `continue`.
+ A `break` in a loop has a dramatically different meaning than a `break` in a `switch`-statement
+ (and you can have `switch`-statement in a loop and a loop in a `switch`-case).
 
 ##### Example
 
@@ -11237,6 +11290,25 @@ This is an ad-hoc simulation of destructors. Declare your resources with handles
 ???
 
 ```
+##### Alternative
+
+Often, a loop that requires a `break` is a god candidate for a function (algorithm), in which case the `break` becomes a `return`.
+
+```cpp
+???
+
+```
+Often. a loop that that uses `continue` can equivalently and as clearly be expressed by an `if`-statement. 
+
+```cpp
+???
+
+```
+##### Note
+
+If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](#Res-loop-counter) or a [`goto`](#Res-goto):
+
+
 ##### Enforcement
 
 ???
@@ -11281,8 +11353,23 @@ case Error:
 }
 
 ```
-There is a proposal for a `[[fallthrough]]` annotation.
+In C++17, use a `[[fallthrough]]` annotation:
 
+```cpp
+switch (eventType)
+{
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    [[fallthrough]]         // C++17
+case Error:
+    display_error_window(); // Bad
+    break;
+}
+
+```
 ##### Note
 
 Multiple case labels of a single statement is OK:
@@ -11301,21 +11388,84 @@ case 'f':
 
 Flag all fallthroughs from non-empty `case`s.
 
-### <a name="Res-default"></a>ES.79: ??? `default`
+### <a name="Res-default"></a>ES.79: Use `default` to handle common cases (only)
 
 ##### Reason
 
- ???
+ Code clarity.
+ Improved opportunities for error detection.
 
 ##### Example
 
 ```cpp
-???
+enum E { a, b, c , d };
+
+void f1(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        take_the default_action();
+        break;
+    }
+}
 
 ```
+Here it is clear that there is a default action and that cases `a` and `b` are special.
+
+##### Example
+
+But what if there is no default action and you mean to handle only specific cases?
+In that case, have an empty default or else it is impossible to know if you meant to handle all cases:
+
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        // do nothing for the rest of the cases
+        break;
+    }
+}
+
+```
+If you leave out the `default`, a maintainer and or a compiler may reasonably assume that you intended to handle all cases:
+
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+    case c:
+        do_something_else();
+        break;
+    }
+}
+
+```
+Did you forget case `d` or deliberately leave it out?
+Forgetting a case typically happens when a case is added to an enumeration and the person doing so fails to add it to every
+switch over the enumerators.
+
 ##### Enforcement
 
-???
+Flag `switch`-statements over an enumeration that don't handle all enumerators and do not have a `default`.
+This may yield too many false positives in some code bases; if so, flag only `switch`es that handle most but not all cases
+(that was the strategy of the very first C++ compiler).
 
 ### <a name="Res-empty"></a>ES.85: Make empty statements visible
 
@@ -11413,6 +11563,12 @@ Some of these expressions are unconditionally bad (e.g., they rely on undefined 
 
 ##### Note
 
+C++17 tightens up the rules for the order of evaluation
+(left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified; [see ES.43](#Res-order)),
+but that doesn't change the fact that complicated expressions are potentially confusing.
+
+##### Note
+
 A programmer should know and use the basic rules for expressions.
 
 ##### Example
@@ -11506,6 +11662,13 @@ We need a heuristic limiting the complexity of pointer arithmetic statement.
 You have no idea what such code does. Portability.
 Even if it does something sensible for you, it may do something different on another compiler (e.g., the next release of your compiler) or with a different optimizer setting.
 
+##### Note
+
+C++17 tightens up the rules for the order of evaluation:
+left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified.
+
+However, remember that your code may be compiled with a pre-C++17 compiler (e.g., through cut-and-paste) so don't be too clever.
+
 ##### Example
 
 ```cpp
@@ -11513,16 +11676,6 @@ v[i] = ++i;   //  the result is undefined
 
 ```
 A good rule of thumb is that you should not read a value twice in an expression where you write to it.
-
-##### Example
-
-```cpp
-???
-
-```
-##### Note
-
-What is safe?
 
 ##### Enforcement
 
@@ -11533,6 +11686,10 @@ Can be detected by a good analyzer.
 ##### Reason
 
 Because that order is unspecified.
+
+##### Note
+
+C++17 tightens up the rules for the order of evaluation, but the order of evaluation of function arguments is still unspecified.
 
 ##### Example
 
