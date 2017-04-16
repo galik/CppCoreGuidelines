@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-April 9, 2017
+April 16, 2017
 
 
 Editors:
@@ -2078,7 +2078,7 @@ Parameter passing semantic rules:
 * [F.22: Use `T*` or `owner<T*>` or a smart pointer to designate a single object](#Rf-ptr)
 * [F.23: Use a `not_null<T>` to indicate "null" is not a valid value](#Rf-nullptr)
 * [F.24: Use a `span<T>` or a `span_p<T>` to designate a half-open sequence](#Rf-range)
-* [F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string](#Rf-string)
+* [F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string](#Rf-zstring)
 * [F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed](#Rf-unique_ptr)
 * [F.27: Use a `shared_ptr<T>` to share ownership](#Rf-shared_ptr)
 
@@ -3066,7 +3066,7 @@ Passing a `span` object as an argument is exactly as efficient as passing a pair
 
 (Complex) Warn where accesses to pointer parameters are bounded by other parameters that are integral types and suggest they could use `span` instead.
 
-### <a name="Rf-string"></a>F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string
+### <a name="Rf-zstring"></a>F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string
 
 ##### Reason
 
@@ -17097,7 +17097,277 @@ If you have a good reason to use another container, use that instead. For exampl
 
 ## <a name="SS-string"></a>SL.str: String
 
+Text manipulation is a huge topic.
+`std::string` doesn't cover all of it.
+This section primarily tries to clarify `std::string`'s relation to `char*`, `zstring`, `string_view`, and `gsl::string_span`.
+The important issue of non-ASCII charactersets and encodings (e.g., `wchar_t`, unicode, and UTF-8) will be covered elswhere.
+
+See also [regular expressions](#SS-regex).
+
+Here, we use "sequence of characters" or "string" to refer to a sequence of charaters meant to be read as text (somehow, eventually).
+We don't consider 
+
+String summary:
+
+* [SL.str.1: Use `std::string` to own character sequences](#Rstr-string)
+* [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](#Rstr-view)
+* [SL.str.3: Use `zstring` or `czstring` to refere to a C-style, zero-terminated, sequence of characters](#Rstr-zstring)
+* [SL.str.4: Use `char*` to refer to a single character](#Rstr-char*)
+* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](#Rstr-byte)
+
+* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive sting operations](#Rstr-locale)
+* [Sl.str.11: Use `gsl::string_span` rather than `std::view` when you need to mutate a string](#Rstr-span)
+* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](#Rstr-s)
+
+See also
+
+* [F.24 span](#Rf-range)
+* [F.25 zstring](#Rf-zstring)
+
+
+### <a name="Rstr-string"></a>SL.str.1: Use `std::string` to own character sequences
+
+##### Reason
+
+`string` correctly handles allocation, ownership, copying, gradual expansion, and offers a variety of useful operations.
+
+##### Example
+
+    vector<string> read_until(const string& terminator)
+    {
+        vector<string> res;
+        for (string s; cin>>s && s!=terminator; ) // read a word
+            res.push_back(s);
+        return res;
+    }
+
+Note how `>>` and `!=` are provided for `string` (as examples of a useful operations) and there there are no explicit
+allocations, deallocations, or range checks (`string` takes care of those).
+
+In C++17, we might use `string_view` as the argument, rather than `const string *` to allow more flexibility to callers:
+
+    vector<string> read_until(string_view terminator)   // C++17
+    {
+        vector<string> res;
+        for (string s; cin>>s && s!=terminator; ) // read a word
+            res.push_back(s);
+        return res;
+    }
+
+The `gsl::string_span` is a current alternative offering most of the benefits of `string_span` for simple examples:
+
+    vector<string> read_until(string_span terminator)
+    {
+        vector<string> res;
+        for (string s; cin>>s && s!=terminator; ) // read a word
+            res.push_back(s);
+        return res;
+    }
+
+##### Example, bad
+
+Don't use C-style strings for operations that require non-trivial memory management
+
+    char* cat(const char* s1, const char* s2)   // beware!
+        // return s1 + '.' + s2
+    {
+        int l1 = strlen(s1);
+        int l2 = strlen(s2);
+        char* p = (char*)malloc(l1+l2+2);
+        strcpy(p,s1,l1);
+        p[l1] = '.';
+        strcpy(p+l1+1,s2,l2);
+        p[l1+l2+1] = 0;
+        return res;
+    }
+
+Did we get that right?
+Will the caller remember to `free()` the returned pointer?
+Will this code pass a security review?
+
+##### Note
+
+Do not assume that `string` is slower than lower-level techniques without measurement and remember than not all code is performance critical.
+[Don't optimize prematurely](#Rper-Knuth)
+
+##### Enforcement
+
 ???
+
+### <a name="Rstr-view"></a>SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences
+
+##### Reason
+
+`std::string_view` or `gsl::string_span` provides simple and (potentially) safe access to character sequences independently of how
+those sequences are allocated and stored.
+
+##### Example
+
+    vector<string> read_until(string_span terminator);
+
+    void user(zstring p, const string& s, string_span ss)
+    {
+        auto v1 = read_until(p);
+        auto v2 = read_until(s);
+        auto v3 = read_until(ss);
+        // ...
+    }
+
+##### Note
+
+???
+
+##### Enforcement
+
+???
+    
+### <a name="Rstr-zstring"></a>SL.str.3: Use `zstring` or `czstring` to refere to a C-style, zero-terminated, sequence of characters
+
+##### Reason
+
+Readability.
+Statement of intent.
+A plain `char*` can be a pointer to a single character, a pointer to an arry of characters, a pointer to a C-style (zero terminated) string, or event to a small integer.
+Distinguishing these alternatives prevents misunderstandings and bugs.
+
+##### Example
+
+    void f1(const char* s); // s is probably a string
+
+All we know is that it is supposet ot bet the nullptr or point to at least one character
+
+    void f1(zstring s);     // s is a C-style string or the nullptr
+    void f1(czstring s);    // s is a C-style string that is not the nullptr
+    void f1(std::byte* s);  // s is a pointer to a byte (C++17)
+
+##### Note
+
+Don't convert a C-style string to `string` unless there is a reason to.
+
+##### Note
+
+Linke any other "plain pointer", a `zstring` should not represent ownership.
+
+##### Note
+
+There are billions of lines of C++ "out there", most use `char*` and `const char*` without documenting intent.
+They are use in a wide varity of ways, including to represent ownership and as generic pointers to memory (instead of `void*`).
+It is hard to separate these uses, so this guideline is hard to follow.
+This is one of the major sources of bugs in C and C++ programs, so it it worth while to follow this guideline wherever feasible..
+
+##### Enforcement
+
+* Flag uses of `[]` on a `char*`
+* Flag uses of `delete` on a `char*`
+* Flag uses of `free()` on a `char*`
+    
+### <a name="Rstr-char*"></a>SL.str.4: Use `char*` to refer to a single character
+
+##### Reason
+
+The variety of uses of `char*` in current code is a major source of errors.
+
+##### Example, bad
+
+    char arr[] = {'a', 'b', 'c'};
+
+    void print(const char* p)
+    {
+        cout << p << '\n';
+    }
+
+    void use()
+    {
+        print(arr);   // run-time error; potentially very bad
+    }
+
+The array `arr` is not a C-style string because it is not zero-terminated.
+
+##### Alternative
+
+See [`zstring`](#Rstr-zstring), [`string`](#Rstr-string), and [`string_span`](#Rstr-view).
+
+##### Enforcement
+  
+* Flag uses of `[]` on a `char*`
+    
+### <a name="Rstr-byte"></a>Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters
+
+##### Reason
+
+Use of `char*` to represent a pinter to something that is not necessarily a character cause confusion
+and disable valuable optimizations.
+
+##### Example
+
+    ???
+
+##### Note
+
+C++17
+
+##### Enforcement
+
+???
+    
+
+### <a name="Rstr-locale"></a>Sl.str.10: Use `std::string` when you need to perform locale-sensitive sting operations
+
+##### Reason
+
+`std::string` support standard-library [`locale` facilities](#Rstr-locale)
+
+##### Example
+
+    ???
+
+##### Note
+
+???
+
+##### Enforcement
+
+???
+### <a name="Rstr-span"></a>Sl.str.11: Use `gsl::string_span` rather than `std::view` when you need to mutate a string
+
+##### Reason
+
+`std::string_view` is read-only.
+
+##### Example
+
+???
+
+##### Note
+
+???
+
+##### Enforcement
+
+The compile will flag attempts to write to a `string_view`.
+
+### <a name="Rstr-s"></a>Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s
+
+##### Reason
+
+Direct expression of an idea minimizes mistakes.
+
+##### Example
+
+    auto pp1 = make_pair("Tokyo",9.00);         // {C-style string,double} intended?
+    pair<string,double> pp2 = {"Tokyo",9.00};   // a bit verbose
+    auto pp3 = make_pair("Tokyo"s,9.00);        // {std::string,double}    // C++17
+    pair pp4 = {"Tokyo"s,9.00};                 // {std::string,double}    // C++17
+
+
+##### Note
+
+C++17
+
+##### Enforcement
+
+???
+
 
 ## <a name="SS-io"></a>SL.io: Iostream
 
@@ -17619,9 +17889,31 @@ and see the contributor list on the github.
 
 # <a name="S-profile"></a>Pro: Profiles
 
-A "profile" is a set of deterministic and portably enforceable subset rules (i.e., restrictions) that are designed to achieve a specific guarantee. "Deterministic" means they require only local analysis and could be implemented in a compiler (though they don't need to be). "Portably enforceable" means they are like language rules, so programmers can count on enforcement tools giving the same answer for the same code.
+Ideally, we would follow all of the guidelines.
+That would give the cleanest, most regular, least error-prone, and often the fastest code.
+Unfortunately, that is usually impossible because we have to fit our code into large code bases and use existing libraries.
+Often, such code has been written over decades and does not follow these guidelines.
+We must aim for [gradual adoption](#S-modernizing).
 
-Code written to be warning-free using such a language profile is considered to conform to the profile. Conforming code is considered to be safe by construction with regard to the safety properties targeted by that profile. Conforming code will not be the root cause of errors for that property, although such errors may be introduced into a program by other code, libraries or the external environment. A profile may also introduce additional library types to ease conformance and encourage correct code.
+Whatever strategy for gradual adoption we adopt, we need to be able to apply sets of related guidelines to address some set
+of problems first and leave the rest until later.
+A similar idea of "related guidelines" become important when some, but not all, guidelines are considered relevant to a code base
+or if a set of specialized guidelines are to be applied for a specialized application area.
+We call such a set of related guidelines a "profile".
+We aim for such a set of guidelines to be coherent so that they together help us reach a specific goal, such a "absence of range errors"
+or "static type safety."
+Each profile is designed to eliminate a class of errors.
+Enforcement of "random" rules in isolation is more likely to be disruptive to a code base than delivering a definite improvement.
+
+A "profile" is a set of deterministic and portably enforceable subset rules (i.e., restrictions) that are designed to achieve a specific guarantee.
+"Deterministic" means they require only local analysis and could be implemented in a compiler (though they don't need to be).
+"Portably enforceable" means they are like language rules, so programmers can count on different enforcement tools giving the same answer for the same code.
+
+Code written to be warning-free using such a language profile is considered to conform to the profile.
+Conforming code is considered to be safe by construction with regard to the safety properties targeted by that profile.
+Conforming code will not be the root cause of errors for that property,
+although such errors may be introduced into a program by other code, libraries or the external environment.
+A profile may also introduce additional library types to ease conformance and encourage correct code.
 
 Profiles summary:
 
@@ -17634,9 +17926,9 @@ Candidates include:
 
 * narrowing arithmetic promotions/conversions (likely part of a separate safe-arithmetic profile)
 * arithmetic cast from negative floating point to unsigned integral type (ditto)
-* selected undefined behavior: ??? start with Gaby's UB list
-* selected unspecified behavior: ??? a portability concern?
-* `const` violations
+* selected undefined behavior: Start with Gaby Dos Reis's UB list developed for the WG21 study group
+* selected unspecified behavior: Addessing portability concerns.
+* `const` violations: Mostly done by compilers already, but we can catch inappropriate casting and underuse of `cost`.
 
 To suppress enforcement of a profile check, place a `suppress` annotation on a language contract. For example:
 
@@ -17648,7 +17940,7 @@ To suppress enforcement of a profile check, place a `suppress` annotation on a l
 Now `raw_find()` can scramble memory to its heart's content.
 Obviously, suppression should be very rare.
 
-## <a name="SS-type"></a>Pro.safety: Type safety profile
+## <a name="SS-type"></a>Pro.safety: Type-safety profile
 
 This profile makes it easier to construct code that uses types correctly and avoids inadvertent type punning.
 It does so by focusing on removing the primary sources of type violations, including unsafe uses of casts and unions.
@@ -17671,6 +17963,13 @@ Type safety profile summary:
 * [Type.6: Always initialize a member variable](#Pro-type-memberinit)
 * [Type.7: Avoid accessing members of raw unions. Prefer `variant` instead](#Pro-fct-style-cast)
 * [Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead](#Pro-type-varargs)
+
+##### Impact
+
+With the type-safety profile you can trust that every operation is applied to a valid object.
+Exception may be thrown to indicate errors that cannot be detected statically (at compile time).
+Note that this type-safety can be complete only if we also have [Bounds safety](#SS-bounds) and [Lifetime safety](#SS-lifetime).
+Without those guarantees, a region of memory could be accesses independently which object, objects, or parts of objects are stored in it.
 
 ### <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`.
 
