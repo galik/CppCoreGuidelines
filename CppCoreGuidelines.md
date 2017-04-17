@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-April 16, 2017
+April 17, 2017
 
 
 Editors:
@@ -60,37 +60,92 @@ Supporting sections:
 * [Glossary](#S-glossary)
 * [To-do: Unclassified proto-rules](#S-unclassified)
 
-or look at a specific language feature
+You can sample rules for a specific language feature:
 
-* [assignment](#S-???)
-* [`class`](#S-class)
-* [constructor](#SS-ctor)
-* [derived `class`](#SS-hier)
-* [destructor](#SS-dtor)
-* [exception](#S-errors)
-* [`for`](#S-???)
-* [`inline`](#S-class)
-* [initialization](#S-???)
-* [lambda expression](#SS-lambdas)
-* [operator](#S-???)
-* [`public`, `private`, and `protected`](#S-???)
-* [`static_assert`](#S-???)
-* [`struct`](#S-class)
-* [`template`](#S-???)
-* [`unsigned`](#S-???)
-* [`virtual`](#SS-hier)
+* assignment:
+[and regular types](#Rc-regular) --
+[prefer initialization](#Rc-initialize) --
+[copy semantics](#Rc-copy-semantics) --
+[move semantics](#Rc-move-semantics) --
+[and other operations](Rc-matched) --
+[default](#Rc-eqdefault)
+* `class`:
+[data](#Rc-org) --
+[invariant](#Rc-struct) --
+[members](#Rc-member) --
+[helper functions](#Rc-helper) --
+[concrete types](#SS-concrete) --
+[constructors, assignments, and destructors](#S-ctor) --
+[hierarchies](#SS-hier) --
+[operators](#SS-overload) --
+* constructor:
+[invariant](#Rc-struct) --
+[establish invariant](#Rc-ctor) --
+[`throw` in constructor](#Rc-throw) --
+[default](#Rc-default0) --
+[not needed](#Rc-default) --
+[`explicit`](#Rc-explicit) --
+[delegating](#Rc-delegating) --
+[and `virtual`](#RC-ctor-virtual)
+* derived `class`:
+[when to use](#Rh-domain) --
+[as interface](#Rh-abstract) --
+[and destructors](#Rh-dtor) --
+[copy](#Rh-copy) --
+[getters and setters](#Rh-get) --
+[`protected`](#Rh-protected) --
+[multiple inheritance](#Rh-mi-interface) --
+[overloading member functions](#Rh-using) --
+[slicing](#Rc-copy-virtual) --
+[`dynamic_cast`](#Rh-dynamic_cast)
+* destructor:
+[and constructors](#Rc-matched) --
+[when needed?](#Rc-dtor) --
+[may not fail](#Rc-dtor-fail)
+* exception:
+[???](#S-errors)
+* `for`:
+[range-for and for](#Res-for-range) --
+[for and while](#Res-for-while) --
+[for-initializer](#Res-for-init) --
+[empty body](#Res-empty) --
+[loop variable](#Res-loop-counter) --
+[loop variable type ???](#Res-???)
+* `inline`:
+[???](#S-class)
+* initialization:
+[???](#S-???)
+* lambda expression:
+[???](#SS-lambdas)
+* operator:
+[???](#S-???)
+* `public`, `private`, and `protected`:
+[???]](#S-???)
+* `static_assert`:
+[???](#S-???)
+* `struct`:
+[for organizing data](#Rc-org) --
+[use if no invariant](#Rc-struct) --
+[no private members](#Rc-class)
+* `template`:
+[???](#S-???)
+* `unsigned`:
+[???](#S-???)
+* `virtual`:
+[???](#SS-hier)
 
-Definitions of terms used to express and discuss the rules, that are not language-technical, but refer to design and programming techniques
+You can look at design concepts used to express the rules:
 
-* error
-* exception
-* failure
-* invariant
-* leak
-* precondition
-* postcondition
-* resource
-* exception guarantee
+* assertion: ???
+* error: ???
+* exception: [exception guarantee[(???)]
+* failure: ???
+* invariant: ???
+* leak: ???
+* library: ???
+* precondition: ???
+* postcondition: ???
+* resource: ???
 
 # <a name="S-abstract"></a>Abstract
 
@@ -99,7 +154,7 @@ The aim of this document is to help people to use modern C++ effectively.
 By "modern C++" we mean C++11 and C++14 (and soon C++17).
 In other words, what would you like your code to look like in 5 years' time, given that you can start now? In 10 years' time?
 
-The guidelines are focused on relatively higher-level issues, such as interfaces, resource management, memory management, and concurrency.
+The guidelines are focused on relatively high-level issues, such as interfaces, resource management, memory management, and concurrency.
 Such rules affect application architecture and library design.
 Following the rules will lead to code that is statically type safe, has no resource leaks, and catches many more programming logic errors than is common in code today.
 And it will run fast -- you can afford to do things right.
@@ -2819,7 +2874,7 @@ The argument against is prevents (very frequent) use of move semantics.
 ##### Reason
 
 A return value is self-documenting as an "output-only" value.
-Note that C++ does have multiple return values, by convention of using a `tuple`,
+Note that C++ does have multiple return values, by convention of using a `tuple` (including `pair`),
 possibly with the extra convenience of `tie` at the call site.
 
 ##### Example
@@ -3535,6 +3590,25 @@ There is not a choice when a set of functions are used to do a semantically equi
 
 For efficiency and correctness, you nearly always want to capture by reference when using the lambda locally. This includes when writing or calling parallel algorithms that are local because they join before returning.
 
+##### Discussion
+
+The efficiency consideration is that most types are cheaper to pass by reference than by value.
+
+The correctness consideration is that many calls want to perform side effects on the original object at the call site (see example below). Passing by value prevents this.
+
+##### Note
+
+Unfortunately, there is no simple way to capture by reference to `const` to get the efficiency for a local call but also prevent side effects.
+
+##### Example
+
+Here, a large object (a network message) is passed to an iterative algorithm, and is it not efficient or correct to copy the message (which may not be copyable):
+
+    std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
+    {
+        socket.send(message);
+    });
+
 ##### Example
 
 This is a simple three-stage parallel pipeline. Each `stage` object encapsulates a worker thread and a queue, has a `process` function to enqueue work, and in its destructor automatically blocks waiting for the queue to empty before ending the thread.
@@ -3549,7 +3623,7 @@ This is a simple three-stage parallel pipeline. Each `stage` object encapsulates
 
 ##### Enforcement
 
-???
+Flag a lambda that captures by reference, but is used other than locally within the function scope or passed to a function by reference. (Note: This rule is an approximation, but does flag passing by pointer as those are more likely to be stored by the callee, writing to a heap location accessed via a parameter, returning the lambda, etc. The Lifetime rules will also provide general rules that flag escaping pointers and references including via lambdas.)
 
 ### <a name="Rf-value-capture"></a>F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread
 
@@ -3651,7 +3725,8 @@ Subsections:
 
 ##### Reason
 
-Ease of comprehension. If data is related (for fundamental reasons), that fact should be reflected in code.
+Ease of comprehension.
+If data is related (for fundamental reasons), that fact should be reflected in code.
 
 ##### Example
 
@@ -17513,10 +17588,28 @@ This leads to longer programs and more errors caused by uninitialized and wrongl
 
 ##### Example, bad
 
-    ???
+   int use(int x)
+   {
+       int i;
+       char c;
+       double d;
+
+       // ... some stuff ...
+
+       if (x<i) {
+           // ...
+           i=  f(x,d);
+       }
+       if (i<x) {
+           // ...
+           i = g(x,c);
+       }
+       return i;
+   }
 
 The larger the distance between the uninitialized variable and its use, the larger the chance of a bug.
 Fortunately, compilers catch many "used before set" errors.
+Unfortunately, compilers cannot catch all such errors and unfortunately, the bugs aren't always as simple to spot as in this small example.
 
 
 ##### Alternative
@@ -19260,11 +19353,11 @@ Because `isocpp` is the Standard C++ Foundation; the committee's repositories ar
 
 ### <a name="Faq-cpp98"></a>FAQ.8: Will there be a C++98 version of these Guidelines? a C++11 version?
 
-No. These guidelines are about how to best use Standard C++14 (and, if you have an implementation available, the Concepts Lite Technical Specification) and write code assuming you have a modern conforming compiler.
+No. These guidelines are about how to best use Standard C++14 (and, if you have an implementation available, the Concepts Technical Specification) and write code assuming you have a modern conforming compiler.
 
 ### <a name="Faq-language-extensions"></a>FAQ.9: Do these guidelines propose new language features?
 
-No. These guidelines are about how to best use Standard C++14 + the Concepts Lite Technical Specification, and they limit themselves to recommending only those features.
+No. These guidelines are about how to best use Standard C++14 + the Concepts Technical Specification, and they limit themselves to recommending only those features.
 
 ### <a name="Faq-markdown"></a>FAQ.10: What version of Markdown do these guidelines use?
 
@@ -20081,7 +20174,6 @@ Alternatively, we will decide that no change is needed and delete the entry.
 * No long-distance friendship
 * Should physical design (what's in a file) and large-scale design (libraries, groups of libraries) be addressed?
 * Namespaces
-* Don't place using directives in headers
 * Avoid using directives in the global scope (except for std, and other "fundamental" namespaces (e.g. experimental))
 * How granular should namespaces be? All classes/functions designed to work together and released together (as defined in Sutter/Alexandrescu) or something narrower or wider?
 * Should there be inline namespaces (à la `std::literals::*_literals`)?
