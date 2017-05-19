@@ -98,7 +98,15 @@ struct sect
 //	std::map<std::string, sect> const& ids,
 //	std::string const& dir, std::string const& text);
 
-std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text);
+//std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text);
+
+std::string& replace_all(std::string& s, std::string const& from, std::string const& to)
+{
+	if(!from.empty())
+		for(std::size_t pos = 0; (pos = s.find(from, pos) + 1); pos += to.size())
+			s.replace(--pos, from.size(), to);
+	return s;
+}
 
 std::string urlencode(std::string const& url)
 {
@@ -179,8 +187,6 @@ int main(int, char* argv[])
 			beg = itr->position();
 		}
 
-//		return 0;
-
 		std::map<std::string, std::string> links;
 
 		// build link database
@@ -200,17 +206,20 @@ int main(int, char* argv[])
 		// rewrite links
 		for(auto const& p: names)
 		{
-//			std::cout << p.first << '\n';
-//			std::cout << '\t' << p.second.name << '\n';
 			std::string text = doc.substr(p.second.beg, p.second.end - p.second.beg);
-			text = rewrite_links(links, std::move(text));
+//			text = rewrite_links(links, std::move(text));
+			for(auto const& link: links)
+				text = replace_all(text, link.first, link.second);
 			write(path, p.second.name, text);
 
 		}
 
 		// # Bibliography
 		std::string text = doc.substr(beg, doc.size() - beg);
-		text = rewrite_links(links, std::move(text));
+//		text = rewrite_links(links, std::move(text));
+		for(auto const& link: links)
+			text = replace_all(text, link.first, link.second);
+
 		write(path, (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md", text);
 
 	}
@@ -228,108 +237,11 @@ int main(int, char* argv[])
 	return EXIT_SUCCESS;
 }
 
-std::string& replace_all(std::string& s, std::string const& from, std::string const& to)
-{
-	if(!from.empty())
-		for(std::size_t pos = 0; (pos = s.find(from, pos) + 1); pos += to.size())
-			s.replace(--pos, from.size(), to);
-	return s;
-}
-
 
 std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text)
 {
-//	std::regex const e_links{R"~(\[[^\]]+\]\(#([\w -]+)\))~"};
-//
-//	std::sregex_iterator itr{std::begin(text), std::end(text), e_links};
-//	std::sregex_iterator itr_end;
-//
-//	for(; itr != itr_end; ++itr)
-//	{
-//
-//	}
-
-	for(auto const link: links)
+	for(auto const& link: links)
 		text = replace_all(text, link.first, link.second);
 
 	return text;
 }
-
-//std::string rewrite_links(std::map<std::string, sect> const& names,
-//	std::map<std::string, sect> const& ids,
-//	std::string const& dir, std::string const& text)
-//{
-//
-//	// #1 id
-//	// #2 name
-//	// #3 long_id (primary key)
-//
-//	// [ISO C++ standard library](#S-stdlib)
-//
-//	// * [NL: Naming and layout](#S-naming)
-//
-//	std::string path = dir + path_separator();
-//
-//	std::map<std::string, std::string> subs;
-//
-//	std::regex const re_link{R"~(\[[^\]]+\]\(#([\w-]+)\))~"};
-//
-//	std::sregex_iterator itr(std::begin(text), std::end(text), re_link);
-//	std::sregex_iterator itr_end;
-//
-//	con_out("Scanning for links:");
-//
-//	for(; itr != itr_end; ++itr)
-//	{
-//		std::string long_id = itr->str(1);
-//		bug_var(itr->str());
-//		bug_var(long_id);
-//
-////		for(auto i = 0U; i < itr->size(); ++i)
-////			std::cout << "match: " << i << ": " << itr->str(i) << '\n';
-//
-//		auto found = names.find(long_id);
-//
-//		if(found != std::end(names))
-//			// whole file name
-//			subs[long_id] = path + names.at(long_id).name;
-//		else
-//		{
-//			// link to within a file
-//			auto pos = long_id.find('-');
-//			bug_var(pos);
-//
-//			if(pos != std::string::npos)
-//			{
-//				auto id = long_id.substr(0, pos);
-//
-//				bug_var(id);
-//
-//				auto found = ids.find(id);
-//
-//				if(found == std::end(ids))
-//				{
-//					con_out("id missing: " << id << " from " << long_id);
-//					continue;
-//				}
-//
-//				bug("======================================================")
-//				subs[long_id] = path + found->second.name + '#' + long_id;
-//				bug_var(subs.size());
-//			}
-//		}
-//	}
-//
-//	bug("== subs ===========================================");
-//	for(auto const& s: subs)
-//	{
-//		bug("");
-//		bug_var(s.first);
-//		bug_var(s.second);
-////		std::cout << s.first << ": " << s.second << '\n';
-//	}
-//
-//	bug("");
-//
-//	return text; //{};
-//}
