@@ -15,6 +15,11 @@
 #include <set>
 #include <vector>
 
+#define con_out(m) do{ std::cout << m << '\n'; }while(0)
+#define con_err(m) do{ std::cerr << m << '\n'; }while(0)
+#define bug(m) con_out(m);
+#define bug_var(v) bug(#v ": " << v);
+
 constexpr char path_separator()
 {
 #if defined _WIN32 || defined __CYGWIN__
@@ -78,6 +83,23 @@ void write(std::string const& dir, std::string const& filename, std::string cons
 		throw std::runtime_error(std::string(std::strerror(errno)) + ": " + filename);
 }
 
+using pos_type = decltype(std::sregex_iterator()->position());
+
+struct sect
+{
+	std::string id;
+	std::string long_id;
+	std::string name;
+	pos_type beg;
+	pos_type end;
+};
+
+//std::string rewrite_links(std::map<std::string, sect> const& names,
+//	std::map<std::string, sect> const& ids,
+//	std::string const& dir, std::string const& text);
+
+std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text);
+
 int main(int, char* argv[])
 {
 	auto prog = get_prog_name(argv[0]);
@@ -96,45 +118,88 @@ int main(int, char* argv[])
 			return oss.str();
 		}();
 
+		std::map<std::string, sect> names; // long_id -> sect
+		std::map<std::string, sect> ids; // id -> sect
+
 		std::sregex_iterator itr(std::begin(doc), std::end(doc), re_sec_text);
 		std::sregex_iterator const itr_end;
 
 		unsigned idx = 0;
-		std::string previous_name = "";
-		decltype(itr->position()) previous_position = 0;
+		std::string name = "";
+		pos_type beg = 0;
 
 		for(; itr != itr_end; ++itr, ++idx)
 		{
-			std::cout << '\n';
+//			std::cout << '\n';
+			std::cout << "found: " << itr->str(3) << '\n';
 
-			for(auto i = 0U; i < itr->size(); ++i)
-				std::cout << "match: " << i << ": " << itr->str(i) << '\n';
+//			for(auto i = 0U; i < itr->size(); ++i)
+//				std::cout << "match: " << i << ": " << itr->str(i) << '\n';
 
 			// #1 long_id
 			// #2 id
 			// #3 name
 			// #4 "Bibliography"
 
-			if(!previous_position)
+			bug_var(beg);
+
+			if(beg)
 			{
-				previous_name = (idx < 10 ? "0":"") + std::to_string(idx) + "-" + itr->str(2) + "-" + itr->str(3) + ".md";
-				previous_position = itr->position();
+				auto& section = names[itr->str(1)];
+
+				section.id = itr->str(2);
+				section.long_id = itr->str(1);
+				section.name = name;
+				section.beg = beg;
+				section.end = itr->position();
+
+				bug("== adding: ============")
+				bug_var(section.id);
+				ids[section.id] = section;
 			}
-			else
+
+			name = (idx < 10 ? "0":"") + std::to_string(idx)
+				+ "-" + itr->str(2)
+				+ "-" + itr->str(3)
+				+ ".md";
+
+			beg = itr->position();
+		}
+
+//		return 0;
+
+		std::map<std::string, std::string> links;
+
+		// build link database
+		std::regex const e_anchors{R"~(<a\s+name="([^"]+)"></a>)~"};
+		for(auto const& p: names)
+		{
+			std::sregex_iterator itr{std::next(std::begin(doc), p.second.beg),
+				std::next(std::begin(doc), p.second.end), e_anchors};
+			std::sregex_iterator itr_end;
+
+			for(; itr != itr_end; ++itr)
 			{
-				// extract from previous position to this one
-
-				std::string text = doc.substr(previous_position, itr->position() - previous_position);
-				write(path, previous_name, text);
-
-				previous_name = (idx < 10 ? "0":"") + std::to_string(idx) + "-" + itr->str(2) + "-" + itr->str(3) + ".md";
-				previous_position = itr->position();
+				links['#' + itr->str(1)] = path + path_separator() + p.second.name + '#' + itr->str(1);
 			}
 		}
 
+		// rewrite links
+		for(auto const& p: names)
+		{
+//			std::cout << p.first << '\n';
+//			std::cout << '\t' << p.second.name << '\n';
+			std::string text = doc.substr(p.second.beg, p.second.end - p.second.beg);
+			text = rewrite_links(links, std::move(text));
+			write(path, p.second.name, text);
+
+		}
+
 		// # Bibliography
-		std::string text = doc.substr(previous_position, doc.size() - previous_position);
-		write(path, "Bibliography.md", text);
+		std::string text = doc.substr(beg, doc.size() - beg);
+		text = rewrite_links(links, std::move(text));
+		write(path, (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md", text);
+
 	}
 	catch(std::exception const& e)
 	{
@@ -149,3 +214,109 @@ int main(int, char* argv[])
 
 	return EXIT_SUCCESS;
 }
+
+std::string& replace_all(std::string& s, std::string const& from, std::string const& to)
+{
+	if(!from.empty())
+		for(std::size_t pos = 0; (pos = s.find(from, pos) + 1); pos += to.size())
+			s.replace(--pos, from.size(), to);
+	return s;
+}
+
+
+std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text)
+{
+//	std::regex const e_links{R"~(\[[^\]]+\]\(#([\w -]+)\))~"};
+//
+//	std::sregex_iterator itr{std::begin(text), std::end(text), e_links};
+//	std::sregex_iterator itr_end;
+//
+//	for(; itr != itr_end; ++itr)
+//	{
+//
+//	}
+
+	for(auto const link: links)
+		text = replace_all(text, link.first, link.second);
+
+	return text;
+}
+
+//std::string rewrite_links(std::map<std::string, sect> const& names,
+//	std::map<std::string, sect> const& ids,
+//	std::string const& dir, std::string const& text)
+//{
+//
+//	// #1 id
+//	// #2 name
+//	// #3 long_id (primary key)
+//
+//	// [ISO C++ standard library](#S-stdlib)
+//
+//	// * [NL: Naming and layout](#S-naming)
+//
+//	std::string path = dir + path_separator();
+//
+//	std::map<std::string, std::string> subs;
+//
+//	std::regex const re_link{R"~(\[[^\]]+\]\(#([\w-]+)\))~"};
+//
+//	std::sregex_iterator itr(std::begin(text), std::end(text), re_link);
+//	std::sregex_iterator itr_end;
+//
+//	con_out("Scanning for links:");
+//
+//	for(; itr != itr_end; ++itr)
+//	{
+//		std::string long_id = itr->str(1);
+//		bug_var(itr->str());
+//		bug_var(long_id);
+//
+////		for(auto i = 0U; i < itr->size(); ++i)
+////			std::cout << "match: " << i << ": " << itr->str(i) << '\n';
+//
+//		auto found = names.find(long_id);
+//
+//		if(found != std::end(names))
+//			// whole file name
+//			subs[long_id] = path + names.at(long_id).name;
+//		else
+//		{
+//			// link to within a file
+//			auto pos = long_id.find('-');
+//			bug_var(pos);
+//
+//			if(pos != std::string::npos)
+//			{
+//				auto id = long_id.substr(0, pos);
+//
+//				bug_var(id);
+//
+//				auto found = ids.find(id);
+//
+//				if(found == std::end(ids))
+//				{
+//					con_out("id missing: " << id << " from " << long_id);
+//					continue;
+//				}
+//
+//				bug("======================================================")
+//				subs[long_id] = path + found->second.name + '#' + long_id;
+//				bug_var(subs.size());
+//			}
+//		}
+//	}
+//
+//	bug("== subs ===========================================");
+//	for(auto const& s: subs)
+//	{
+//		bug("");
+//		bug_var(s.first);
+//		bug_var(s.second);
+////		std::cout << s.first << ": " << s.second << '\n';
+//	}
+//
+//	bug("");
+//
+//	return text; //{};
+//}
