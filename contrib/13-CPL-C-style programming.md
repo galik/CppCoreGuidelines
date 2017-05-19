@@ -6,9 +6,9 @@ Many attempts have been made to keep them compatible, but neither is a subset of
 
 C rule summary:
 
-* [CPL.1: Prefer C++ to C](./13-CPL-C-style programming.md#Rcpl-C)
-* [CPL.2: If you must use C, use the common subset of C and C++, and compile the C code as C++](./13-CPL-C-style programming.md#Rcpl-subset)
-* [CPL.3: If you must use C for interfaces, use C++ in the code using such interfaces](./13-CPL-C-style programming.md#Rcpl-interface)
+* [CPL.1: Prefer C++ to C](13%2dCPL%2dC%2dstyle%20programming%2emd#Rcpl-C)
+* [CPL.2: If you must use C, use the common subset of C and C++, and compile the C code as C++](13%2dCPL%2dC%2dstyle%20programming%2emd#Rcpl-subset)
+* [CPL.3: If you must use C for interfaces, use C++ in the code using such interfaces](13%2dCPL%2dC%2dstyle%20programming%2emd#Rcpl-interface)
 
 ### <a name="Rcpl-C"></a>CPL.1: Prefer C++ to C
 

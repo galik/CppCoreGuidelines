@@ -26,12 +26,12 @@ We expect different organizations to provide additions, typically with more rest
 
 Reference sections:
 
-* [RF.rules: Coding rules](./18-RF-References.md#SS-rules)
-* [RF.books: Books with coding guidelines](./18-RF-References.md#SS-books)
-* [RF.C++: C++ Programming (C++11/C++14)](./18-RF-References.md#SS-Cplusplus)
-* [RF.web: Websites](./18-RF-References.md#SS-web)
-* [RS.video: Videos about "modern C++"](./18-RF-References.md#SS-vid)
-* [RF.man: Manuals](./18-RF-References.md#SS-man)
+* [RF.rules: Coding rules](18%2dRF%2dReferences%2emd#SS-rules)
+* [RF.books: Books with coding guidelines](18%2dRF%2dReferences%2emd#SS-books)
+* [RF.C++: C++ Programming (C++11/C++14)](18%2dRF%2dReferences%2emd#SS-Cplusplus)
+* [RF.web: Websites](18%2dRF%2dReferences%2emd#SS-web)
+* [RS.video: Videos about "modern C++"](18%2dRF%2dReferences%2emd#SS-vid)
+* [RF.man: Manuals](18%2dRF%2dReferences%2emd#SS-man)
 
 ## <a name="SS-rules"></a>RF.rules: Coding rules
 

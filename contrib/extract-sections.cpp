@@ -100,6 +100,19 @@ struct sect
 
 std::string rewrite_links(std::map<std::string, std::string> const& links, std::string text);
 
+std::string urlencode(std::string const& url)
+{
+	static const std::string plain = "";
+	std::ostringstream oss;
+	std::string::const_iterator i = url.begin();
+	for(; i != url.end(); ++i)
+	{
+		if(std::isalnum(*i) || plain.find(*i) != std::string::npos) { oss << *i; }
+		else { oss << "%" << std::hex << int(*i); }
+	}
+	return oss.str();
+}
+
 int main(int, char* argv[])
 {
 	auto prog = get_prog_name(argv[0]);
@@ -180,7 +193,7 @@ int main(int, char* argv[])
 
 			for(; itr != itr_end; ++itr)
 			{
-				links['#' + itr->str(1)] = path + path_separator() + p.second.name + '#' + itr->str(1);
+				links['#' + itr->str(1)] = urlencode(p.second.name) + '#' + itr->str(1);
 			}
 		}
 

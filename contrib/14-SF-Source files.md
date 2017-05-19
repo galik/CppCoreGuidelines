@@ -5,20 +5,20 @@ Use header files to represent interfaces and to emphasize logical structure.
 
 Source file rule summary:
 
-* [SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention](./14-SF-Source files.md#Rs-file-suffix)
-* [SF.2: A `.h` file may not contain object definitions or non-inline function definitions](./14-SF-Source files.md#Rs-inline)
-* [SF.3: Use `.h` files for all declarations used in multiple source files](./14-SF-Source files.md#Rs-declaration-header)
-* [SF.4: Include `.h` files before other declarations in a file](./14-SF-Source files.md#Rs-include-order)
-* [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](./14-SF-Source files.md#Rs-consistency)
-* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)](./14-SF-Source files.md#Rs-using)
-* [SF.7: Don't write `using namespace` in a header file](./14-SF-Source files.md./14-SF-Source files.md#Rs-using-directive)
-* [SF.8: Use `#include` guards for all `.h` files](./14-SF-Source files.md#Rs-guards)
-* [SF.9: Avoid cyclic dependencies among source files](./14-SF-Source files.md#Rs-cycles)
-* [SF.10: Avoid dependencies on implicitly `#included` names](./14-SF-Source files.md#Rs-implicit)
+* [SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention](14%2dSF%2dSource%20files%2emd#Rs-file-suffix)
+* [SF.2: A `.h` file may not contain object definitions or non-inline function definitions](14%2dSF%2dSource%20files%2emd#Rs-inline)
+* [SF.3: Use `.h` files for all declarations used in multiple source files](14%2dSF%2dSource%20files%2emd#Rs-declaration-header)
+* [SF.4: Include `.h` files before other declarations in a file](14%2dSF%2dSource%20files%2emd#Rs-include-order)
+* [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](14%2dSF%2dSource%20files%2emd#Rs-consistency)
+* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)](14%2dSF%2dSource%20files%2emd#Rs-using)
+* [SF.7: Don't write `using namespace` in a header file](14%2dSF%2dSource%20files%2emd14%2dSF%2dSource%20files%2emd#Rs-using-directive)
+* [SF.8: Use `#include` guards for all `.h` files](14%2dSF%2dSource%20files%2emd#Rs-guards)
+* [SF.9: Avoid cyclic dependencies among source files](14%2dSF%2dSource%20files%2emd#Rs-cycles)
+* [SF.10: Avoid dependencies on implicitly `#included` names](14%2dSF%2dSource%20files%2emd#Rs-implicit)
 
-* [SF.20: Use `namespace`s to express logical structure](./14-SF-Source files.md#Rs-namespace)
-* [SF.21: Don't use an unnamed (anonymous) namespace in a header](./14-SF-Source files.md#Rs-unnamed)
-* [SF.22: Use an unnamed (anonymous) namespace for all internal/nonexported entities](./14-SF-Source files.md./14-SF-Source files.md#Rs-unnamed2)
+* [SF.20: Use `namespace`s to express logical structure](14%2dSF%2dSource%20files%2emd#Rs-namespace)
+* [SF.21: Don't use an unnamed (anonymous) namespace in a header](14%2dSF%2dSource%20files%2emd#Rs-unnamed)
+* [SF.22: Use an unnamed (anonymous) namespace for all internal/nonexported entities](14%2dSF%2dSource%20files%2emd14%2dSF%2dSource%20files%2emd#Rs-unnamed2)
 
 ### <a name="Rs-file-suffix"></a>SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention
 
@@ -263,7 +263,7 @@ and M functions each containing a `using namespace X`with N lines of code in tot
 
 ##### Note
 
-[Don't write `using namespace` in a header file](./14-SF-Source files.md./14-SF-Source files.md#Rs-using-directive).
+[Don't write `using namespace` in a header file](14%2dSF%2dSource%20files%2emd14%2dSF%2dSource%20files%2emd#Rs-using-directive).
 
 ##### Enforcement
 
@@ -321,7 +321,7 @@ Flag `.h` files without `#include` guards.
 Some implementations offer vendor extensions like `#pragma once` as alternative to include guards.
 It is not standard and it is not portable.  It injects the hosting machine's filesystem semantics
 into your program, in addition to locking you down to a vendor.
-Our recommendation is to write in ISO C++: See [rule P.2](./01-P-Philosophy.md#Rp-Cplusplus).
+Our recommendation is to write in ISO C++: See [rule P.2](01%2dP%2dPhilosophy%2emd#Rp-Cplusplus).
 
 ### <a name="Rs-cycles"></a>SF.9: Avoid cyclic dependencies among source files
 

@@ -5,24 +5,24 @@ Class hierarchies are used to organize related classes into hierarchical structu
 
 Class rule summary:
 
-* [C.1: Organize related data into structures (`struct`s or `class`es)](./04-C-Classes and Class Hierarchies.md#Rc-org)
-* [C.2: Use `class` if the class has an invariant; use `struct` if the data members can vary independently](./04-C-Classes and Class Hierarchies.md#Rc-struct)
-* [C.3: Represent the distinction between an interface and an implementation using a class](./04-C-Classes and Class Hierarchies.md#Rc-interface)
-* [C.4: Make a function a member only if it needs direct access to the representation of a class](./04-C-Classes and Class Hierarchies.md#Rc-member)
-* [C.5: Place helper functions in the same namespace as the class they support](./04-C-Classes and Class Hierarchies.md#Rc-helper)
-* [C.7: Don't define a class or enum and declare a variable of its type in the same statement](./04-C-Classes and Class Hierarchies.md#Rc-standalone)
-* [C.8: Use `class` rather than `struct` if any member is non-public](./04-C-Classes and Class Hierarchies.md#Rc-class)
-* [C.9: Minimize exposure of members](./04-C-Classes and Class Hierarchies.md#Rc-private)
+* [C.1: Organize related data into structures (`struct`s or `class`es)](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-org)
+* [C.2: Use `class` if the class has an invariant; use `struct` if the data members can vary independently](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-struct)
+* [C.3: Represent the distinction between an interface and an implementation using a class](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-interface)
+* [C.4: Make a function a member only if it needs direct access to the representation of a class](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-member)
+* [C.5: Place helper functions in the same namespace as the class they support](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-helper)
+* [C.7: Don't define a class or enum and declare a variable of its type in the same statement](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-standalone)
+* [C.8: Use `class` rather than `struct` if any member is non-public](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-class)
+* [C.9: Minimize exposure of members](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-private)
 
 Subsections:
 
-* [C.concrete: Concrete types](./15-SL-The Standard Library.md./04-C-Classes and Class Hierarchies.md#SS-concrete)
-* [C.ctor: Constructors, assignments, and destructors](./04-C-Classes and Class Hierarchies.md#S-ctor)
-* [C.con: Containers and other resource handles](./15-SL-The Standard Library.md./04-C-Classes and Class Hierarchies.md#SS-containers)
-* [C.lambdas: Function objects and lambdas](./04-C-Classes and Class Hierarchies.md#SS-lambdas)
-* [C.hier: Class hierarchies (OOP)](./04-C-Classes and Class Hierarchies.md#SS-hier)
-* [C.over: Overloading and overloaded operators](./04-C-Classes and Class Hierarchies.md#SS-overload)
-* [C.union: Unions](./04-C-Classes and Class Hierarchies.md#SS-union)
+* [C.concrete: Concrete types](15%2dSL%2dThe%20Standard%20Library%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-concrete)
+* [C.ctor: Constructors, assignments, and destructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#S-ctor)
+* [C.con: Containers and other resource handles](15%2dSL%2dThe%20Standard%20Library%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-containers)
+* [C.lambdas: Function objects and lambdas](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-lambdas)
+* [C.hier: Class hierarchies (OOP)](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-hier)
+* [C.over: Overloading and overloaded operators](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-overload)
+* [C.union: Unions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-union)
 
 ### <a name="Rc-org"></a>C.1: Organize related data into structures (`struct`s or `class`es)
 
@@ -91,10 +91,10 @@ If a class has any `private` data, a user cannot completely initialize an object
 Hence, the class definer will provide a constructor and must specify its meaning.
 This effectively means the definer need to define an invariant.
 
-* See also [define a class with private data as `class`](./04-C-Classes and Class Hierarchies.md#Rc-class).
-* See also [Prefer to place the interface first in a class](./21-NL-Naming and layout rules.md#Rl-order).
-* See also [minimize exposure of members](./04-C-Classes and Class Hierarchies.md#Rc-private).
-* See also [Avoid `protected` data](./04-C-Classes and Class Hierarchies.md#Rh-protected).
+* See also [define a class with private data as `class`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-class).
+* See also [Prefer to place the interface first in a class](21%2dNL%2dNaming%20and%20layout%20rules%2emd#Rl-order).
+* See also [minimize exposure of members](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-private).
+* See also [Avoid `protected` data](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-protected).
 
 ##### Enforcement
 
@@ -214,7 +214,7 @@ Placing them in the same namespace as the class makes their relationship to the 
 
 ##### Note
 
-This is especially important for [overloaded operators](./04-C-Classes and Class Hierarchies.md#Ro-namespace).
+This is especially important for [overloaded operators](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-namespace).
 
 ##### Enforcement
 
@@ -267,7 +267,7 @@ All of this decreases readability and complicates maintenance.
 
 ##### Note
 
-Prefer to place the interface first in a class [see](./21-NL-Naming and layout rules.md#Rl-order).
+Prefer to place the interface first in a class [see](21%2dNL%2dNaming%20and%20layout%20rules%2emd#Rl-order).
 
 ##### Enforcement
 
@@ -353,15 +353,15 @@ For example, a derived class might be allowed to skip a run-time check because i
 
 ##### Note
 
-[`protected` data is a bad idea](./04-C-Classes and Class Hierarchies.md#Rh-protected).
+[`protected` data is a bad idea](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-protected).
 
 ##### Note
 
-Prefer the order `public` members before `protected` members before `private` members [see](./21-NL-Naming and layout rules.md#Rl-order).
+Prefer the order `public` members before `protected` members before `private` members [see](21%2dNL%2dNaming%20and%20layout%20rules%2emd#Rl-order).
 
 ##### Enforcement
 
-* [Flag protected data](./04-C-Classes and Class Hierarchies.md#Rh-protected).
+* [Flag protected data](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-protected).
 * Flag mixtures of `public` and private `data`
 
 ## <a name="SS-concrete"></a>C.concrete: Concrete types
@@ -376,8 +376,8 @@ Concrete types are also often referred to as value types to distinguish them fro
 
 Concrete type rule summary:
 
-* [C.10: Prefer concrete types over class hierarchies](./04-C-Classes and Class Hierarchies.md#Rc-concrete)
-* [C.11: Make concrete types regular](./04-C-Classes and Class Hierarchies.md#Rc-regular)
+* [C.10: Prefer concrete types over class hierarchies](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-concrete)
+* [C.11: Make concrete types regular](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-regular)
 
 ### <a name="Rc-concrete"></a>C.10 Prefer concrete types over class hierarchies
 
@@ -480,59 +480,59 @@ By default, C++ treats classes as value-like types, but not all types are value-
 
 Set of default operations rules:
 
-* [C.20: If you can avoid defining any default operations, do](./04-C-Classes and Class Hierarchies.md#Rc-zero)
-* [C.21: If you define or `=delete` any default operation, define or `=delete` them all](./04-C-Classes and Class Hierarchies.md#Rc-five)
-* [C.22: Make default operations consistent](./04-C-Classes and Class Hierarchies.md#Rc-matched)
+* [C.20: If you can avoid defining any default operations, do](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-zero)
+* [C.21: If you define or `=delete` any default operation, define or `=delete` them all](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-five)
+* [C.22: Make default operations consistent](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-matched)
 
 Destructor rules:
 
-* [C.30: Define a destructor if a class needs an explicit action at object destruction](./04-C-Classes and Class Hierarchies.md#Rc-dtor)
-* [C.31: All resources acquired by a class must be released by the class's destructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-release)
-* [C.32: If a class has a raw pointer (`T*`) or reference (`T&`), consider whether it might be owning](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-ptr)
-* [C.33: If a class has an owning pointer member, define or `=delete` a destructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-ptr2)
-* [C.34: If a class has an owning reference member, define or `=delete` a destructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-ref)
-* [C.35: A base class with a virtual function needs a virtual destructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-virtual)
-* [C.36: A destructor may not fail](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-fail)
-* [C.37: Make destructors `noexcept`](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-noexcept)
+* [C.30: Define a destructor if a class needs an explicit action at object destruction](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor)
+* [C.31: All resources acquired by a class must be released by the class's destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-release)
+* [C.32: If a class has a raw pointer (`T*`) or reference (`T&`), consider whether it might be owning](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-ptr)
+* [C.33: If a class has an owning pointer member, define or `=delete` a destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-ptr2)
+* [C.34: If a class has an owning reference member, define or `=delete` a destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-ref)
+* [C.35: A base class with a virtual function needs a virtual destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-virtual)
+* [C.36: A destructor may not fail](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-fail)
+* [C.37: Make destructors `noexcept`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-noexcept)
 
 Constructor rules:
 
-* [C.40: Define a constructor if a class has an invariant](./04-C-Classes and Class Hierarchies.md#Rc-ctor)
-* [C.41: A constructor should create a fully initialized object](./04-C-Classes and Class Hierarchies.md#Rc-complete)
-* [C.42: If a constructor cannot construct a valid object, throw an exception](./04-C-Classes and Class Hierarchies.md#Rc-throw)
-* [C.43: Ensure that a class has a default constructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-default0)
-* [C.44: Prefer default constructors to be simple and non-throwing](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-default00)
-* [C.45: Don't define a default constructor that only initializes data members; use member initializers instead](./04-C-Classes and Class Hierarchies.md#Rc-default)
-* [C.46: By default, declare single-argument constructors `explicit`](./04-C-Classes and Class Hierarchies.md#Rc-explicit)
-* [C.47: Define and initialize member variables in the order of member declaration](./04-C-Classes and Class Hierarchies.md#Rc-order)
-* [C.48: Prefer in-class initializers to member initializers in constructors for constant initializers](./04-C-Classes and Class Hierarchies.md#Rc-in-class-initializer)
-* [C.49: Prefer initialization to assignment in constructors](./04-C-Classes and Class Hierarchies.md#Rc-initialize)
-* [C.50: Use a factory function if you need "virtual behavior" during initialization](./04-C-Classes and Class Hierarchies.md#Rc-factory)
-* [C.51: Use delegating constructors to represent common actions for all constructors of a class](./04-C-Classes and Class Hierarchies.md#Rc-delegating)
-* [C.52: Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization](./04-C-Classes and Class Hierarchies.md#Rc-inheriting)
+* [C.40: Define a constructor if a class has an invariant](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-ctor)
+* [C.41: A constructor should create a fully initialized object](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-complete)
+* [C.42: If a constructor cannot construct a valid object, throw an exception](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-throw)
+* [C.43: Ensure that a class has a default constructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-default0)
+* [C.44: Prefer default constructors to be simple and non-throwing](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-default00)
+* [C.45: Don't define a default constructor that only initializes data members; use member initializers instead](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-default)
+* [C.46: By default, declare single-argument constructors `explicit`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-explicit)
+* [C.47: Define and initialize member variables in the order of member declaration](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-order)
+* [C.48: Prefer in-class initializers to member initializers in constructors for constant initializers](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-in-class-initializer)
+* [C.49: Prefer initialization to assignment in constructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-initialize)
+* [C.50: Use a factory function if you need "virtual behavior" during initialization](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-factory)
+* [C.51: Use delegating constructors to represent common actions for all constructors of a class](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-delegating)
+* [C.52: Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-inheriting)
 
 Copy and move rules:
 
-* [C.60: Make copy assignment non-`virtual`, take the parameter by `const&`, and return by non-`const&`](./04-C-Classes and Class Hierarchies.md#Rc-copy-assignment)
-* [C.61: A copy operation should copy](./04-C-Classes and Class Hierarchies.md#Rc-copy-semantic)
-* [C.62: Make copy assignment safe for self-assignment](./04-C-Classes and Class Hierarchies.md#Rc-copy-self)
-* [C.63: Make move assignment non-`virtual`, take the parameter by `&&`, and return by non-`const&`](./04-C-Classes and Class Hierarchies.md#Rc-move-assignment)
-* [C.64: A move operation should move and leave its source in a valid state](./04-C-Classes and Class Hierarchies.md#Rc-move-semantic)
-* [C.65: Make move assignment safe for self-assignment](./04-C-Classes and Class Hierarchies.md#Rc-move-self)
-* [C.66: Make move operations `noexcept`](./04-C-Classes and Class Hierarchies.md#Rc-move-noexcept)
-* [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](./04-C-Classes and Class Hierarchies.md#Rc-copy-virtual)
+* [C.60: Make copy assignment non-`virtual`, take the parameter by `const&`, and return by non-`const&`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-assignment)
+* [C.61: A copy operation should copy](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-semantic)
+* [C.62: Make copy assignment safe for self-assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-self)
+* [C.63: Make move assignment non-`virtual`, take the parameter by `&&`, and return by non-`const&`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-assignment)
+* [C.64: A move operation should move and leave its source in a valid state](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-semantic)
+* [C.65: Make move assignment safe for self-assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-self)
+* [C.66: Make move operations `noexcept`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-noexcept)
+* [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-virtual)
 
 Other default operations rules:
 
-* [C.80: Use `=default` if you have to be explicit about using the default semantics](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-eqdefault)
-* [C.81: Use `=delete` when you want to disable default behavior (without wanting an alternative)](./04-C-Classes and Class Hierarchies.md#Rc-delete)
-* [C.82: Don't call virtual functions in constructors and destructors](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-ctor-virtual)
-* [C.83: For value-like types, consider providing a `noexcept` swap function](./04-C-Classes and Class Hierarchies.md#Rc-swap)
-* [C.84: A `swap` may not fail](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-swap-fail)
-* [C.85: Make `swap` `noexcept`](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-swap-noexcept)
-* [C.86: Make `==` symmetric with respect of operand types and `noexcept`](./04-C-Classes and Class Hierarchies.md#Rc-eq)
-* [C.87: Beware of `==` on base classes](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-eq-base)
-* [C.89: Make a `hash` `noexcept`](./04-C-Classes and Class Hierarchies.md#Rc-hash)
+* [C.80: Use `=default` if you have to be explicit about using the default semantics](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-eqdefault)
+* [C.81: Use `=delete` when you want to disable default behavior (without wanting an alternative)](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-delete)
+* [C.82: Don't call virtual functions in constructors and destructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-ctor-virtual)
+* [C.83: For value-like types, consider providing a `noexcept` swap function](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-swap)
+* [C.84: A `swap` may not fail](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-swap-fail)
+* [C.85: Make `swap` `noexcept`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-swap-noexcept)
+* [C.86: Make `==` symmetric with respect of operand types and `noexcept`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-eq)
+* [C.87: Beware of `==` on base classes](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-eq-base)
+* [C.89: Make a `hash` `noexcept`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-hash)
 
 ## <a name="SS-defop"></a>C.defop: Default Operations
 
@@ -650,9 +650,9 @@ These operations disagree about copy semantics. This will lead to confusion and 
 ## <a name="SS-dtor"></a>C.dtor: Destructors
 
 "Does this class need a destructor?" is a surprisingly powerful design question.
-For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](./04-C-Classes and Class Hierarchies.md#Rc-zero);
+For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-zero);
 that is, its members can take care of themselves as concerns destruction.
-If the answer is "yes", much of the design of the class follows (see [the rule of five](./04-C-Classes and Class Hierarchies.md#Rc-five)).
+If the answer is "yes", much of the design of the class follows (see [the rule of five](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-five)).
 
 ### <a name="Rc-dtor"></a>C.30: Define a destructor if a class needs an explicit action at object destruction
 
@@ -746,10 +746,10 @@ For resources represented as classes with a complete set of default operations, 
 
 ##### Note
 
-What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-fail).
+What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-fail).
 If it does nevertheless, we have a problem that has no really good solution.
 For starters, the writer of a destructor does not know why the destructor is called and cannot "refuse to act" by throwing an exception.
-See [discussion](./25-Appendix C-Discussion.md#Sd-never-fail).
+See [discussion](25%2dAppendix%20C%2dDiscussion%2emd#Sd-never-fail).
 To make the problem worse, many "close/release" operations are not retryable.
 Many have tried to solve this problem, but no general solution is known.
 If at all possible, consider failure to close/cleanup a fundamental design error and terminate.
@@ -801,7 +801,7 @@ An owned object must be `deleted` upon destruction of the object that owns it.
 ##### Example
 
 A pointer member may represent a resource.
-[A `T*` should not do so](./06-R-Resource management.md#Rr-ptr), but in older code, that's common.
+[A `T*` should not do so](06%2dR%2dResource%20management%2emd#Rr-ptr), but in older code, that's common.
 Consider a `T*` a possible owner and therefore suspect.
 
     template<typename T>
@@ -818,7 +818,7 @@ Consider a `T*` a possible owner and therefore suspect.
         auto p2 = p1;
     }
 
-Note that if you define a destructor, you must define or delete [all default operations](./04-C-Classes and Class Hierarchies.md#Rc-five):
+Note that if you define a destructor, you must define or delete [all default operations](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-five):
 
     template<typename T>
     class Smart_ptr2 {
@@ -871,7 +871,7 @@ That would sometimes require non-trivial code changes and may affect ABIs.
 
 A reference member may represent a resource.
 It should not do so, but in older code, that's common.
-See [pointer members and destructors](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-ptr).
+See [pointer members and destructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-ptr).
 Also, copying may lead to slicing.
 
 ##### Example, bad
@@ -885,7 +885,7 @@ Also, copying may lead to slicing.
         // ...
     };
 
-The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-ptr):
+The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-ptr):
 If the `Handle` owns the object referred to by `s` it must have a destructor.
 
 ##### Example
@@ -909,7 +909,7 @@ Independently of whether `Handle` owns its `Shape`, we must consider the default
 
 That `x = y` is highly suspect.
 Assigning a `Triangle` to a `Circle`?
-Unless `Shape` has its [copy assignment `=deleted`](./04-C-Classes and Class Hierarchies.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
+Unless `Shape` has its [copy assignment `=deleted`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
 
 ##### Note
 
@@ -934,7 +934,7 @@ In general, the writer of a base class does not know the appropriate action to b
 
 ##### Discussion
 
-See [this in the Discussion section](./25-Appendix C-Discussion.md#Sd-dtor).
+See [this in the Discussion section](25%2dAppendix%20C%2dDiscussion%2emd#Sd-dtor).
 
 ##### Example, bad
 
@@ -1010,7 +1010,7 @@ Many have tried to devise a fool-proof scheme for dealing with failure in destru
 None have succeeded to come up with a general scheme.
 This can be a real practical problem: For example, what about a socket that won't close?
 The writer of a destructor does not know why the destructor is called and cannot "refuse to act" by throwing an exception.
-See [discussion](./25-Appendix C-Discussion.md#Sd-dtor).
+See [discussion](25%2dAppendix%20C%2dDiscussion%2emd#Sd-dtor).
 To make the problem worse, many "close/release" operations are not retryable.
 If at all possible, consider failure to close/cleanup a fundamental design error and terminate.
 
@@ -1040,7 +1040,7 @@ If a destructor uses operations that may fail, it can catch exceptions and in so
 
 ##### Reason
 
- [A destructor may not fail](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
+ [A destructor may not fail](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
 
 ##### Note
 
@@ -1104,9 +1104,9 @@ The C++11 initializer list rule eliminates the need for many constructors. For e
     Rec2 r2 {"Bar"};
 
 The `Rec2` constructor is redundant.
-Also, the default for `int` would be better done as a [member initializer](./04-C-Classes and Class Hierarchies.md#Rc-in-class-initializer).
+Also, the default for `int` would be better done as a [member initializer](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-in-class-initializer).
 
-**See also**: [construct valid object](./04-C-Classes and Class Hierarchies.md#Rc-complete) and [constructor throws](./04-C-Classes and Class Hierarchies.md#Rc-throw).
+**See also**: [construct valid object](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-complete) and [constructor throws](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-throw).
 
 ##### Enforcement
 
@@ -1143,7 +1143,7 @@ Compilers do not read comments.
 
 ##### Exception
 
-If a valid object cannot conveniently be constructed by a constructor, [use a factory function](./04-C-Classes and Class Hierarchies.md#Rc-factory).
+If a valid object cannot conveniently be constructed by a constructor, [use a factory function](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-factory).
 
 ##### Enforcement
 
@@ -1152,8 +1152,8 @@ If a valid object cannot conveniently be constructed by a constructor, [use a fa
 
 ##### Note
 
-If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-release).
-The idiom of having constructors acquire resources and destructors release them is called [RAII](./06-R-Resource management.md#Rr-raii) ("Resource Acquisition Is Initialization").
+If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-release).
+The idiom of having constructors acquire resources and destructors release them is called [RAII](06%2dR%2dResource%20management%2emd#Rr-raii) ("Resource Acquisition Is Initialization").
 
 ### <a name="Rc-throw"></a>C.42: If a constructor cannot construct a valid object, throw an exception
 
@@ -1227,16 +1227,16 @@ Leaving behind an invalid object and relying on users to consistently check an `
 ##### Exception
 
 There are domains, such as some hard-real-time systems (think airplane controls) where (without additional tool support) exception handling is not sufficiently predictable from a timing perspective.
-There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](./06-R-Resource management.md#Rr-raii).
+There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](06%2dR%2dResource%20management%2emd#Rr-raii).
 
 **Alternative**: If you feel tempted to use some "post-constructor initialization" or "two-stage initialization" idiom, try not to do that.
-If you really have to, look at [factory functions](./04-C-Classes and Class Hierarchies.md#Rc-factory).
+If you really have to, look at [factory functions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-factory).
 
 ##### Note
 
 One reason people have used `init()` functions rather than doing the initialization work in a constructor has been to avoid code replication.
-[Delegating constructors](./04-C-Classes and Class Hierarchies.md#Rc-delegating) and [default member initialization](./04-C-Classes and Class Hierarchies.md#Rc-in-class-initializer) do that better.
-Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](./07-ES-Expressions and Statements.md#Res-init)
+[Delegating constructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-delegating) and [default member initialization](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-in-class-initializer) do that better.
+Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](07%2dES%2dExpressions%20and%20Statements%2emd#Res-init)
 
 ##### Enforcement
 
@@ -1427,7 +1427,7 @@ If you really want an implicit conversion from the constructor argument type to 
 
     Complex z = 10.7;   // unsurprising conversion
 
-**See also**: [Discussion of implicit conversions](./04-C-Classes and Class Hierarchies.md#Ro-conversion).
+**See also**: [Discussion of implicit conversions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-conversion).
 
 ##### Enforcement
 
@@ -1455,7 +1455,7 @@ To minimize confusion and errors. That is the order in which the initialization 
 
 (Simple) A member initializer list should mention the members in the same order they are declared.
 
-**See also**: [Discussion](./25-Appendix C-Discussion.md#Sd-order)
+**See also**: [Discussion](25%2dAppendix%20C%2dDiscussion%2emd#Sd-order)
 
 ### <a name="Rc-in-class-initializer"></a>C.48: Prefer in-class initializers to member initializers in constructors for constant initializers
 
@@ -1599,7 +1599,7 @@ By providing the factory function `Create()`, we make construction (on the free 
 
 Conventional factory functions allocate on the free store, rather than on the stack or in an enclosing object.
 
-**See also**: [Discussion](./25-Appendix C-Discussion.md#Sd-factory)
+**See also**: [Discussion](25%2dAppendix%20C%2dDiscussion%2emd#Sd-factory)
 
 ### <a name="Rc-delegating"></a>C.51: Use delegating constructors to represent common actions for all constructors of a class
 
@@ -1642,7 +1642,7 @@ The common action gets tedious to write and may accidentally not be common.
         // ...
     };
 
-**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](./04-C-Classes and Class Hierarchies.md#Rc-in-class-initializer).
+**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-in-class-initializer).
 
 ##### Enforcement
 
@@ -1746,10 +1746,10 @@ But what if you can get significantly better performance by not making a tempora
         return *this;
     }
 
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](./04-C-Classes and Class Hierarchies.md#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
-See [copy constructor vs. `clone()`](./04-C-Classes and Class Hierarchies.md#Rc-copy-virtual).
+See [copy constructor vs. `clone()`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-virtual).
 
 ##### Enforcement
 
@@ -1859,7 +1859,7 @@ The default assignment generated from members that handle self-assignment correc
 
 ##### Note
 
-You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](./04-C-Classes and Class Hierarchies.md#Rc-swap)).
+You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-swap)).
 
     class Foo {
         string s;
@@ -1901,11 +1901,11 @@ Consider:
 
 It is simple and efficient.
 
-**See**: [The rule for copy-assignment](./04-C-Classes and Class Hierarchies.md#Rc-copy-assignment).
+**See**: [The rule for copy-assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-assignment).
 
 ##### Enforcement
 
-Equivalent to what is done for [copy-assignment](./04-C-Classes and Class Hierarchies.md#Rc-copy-assignment).
+Equivalent to what is done for [copy-assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-assignment).
 
 * (Simple) An assignment operator should not be virtual. Here be dragons!
 * (Simple) An assignment operator should return `T&` to enable chaining, not alternatives like `const T&` which interfere with composability and putting objects in containers.
@@ -1990,7 +1990,7 @@ If `x = x` changes the value of `x`, people will be surprised and bad errors may
         return *this;
     }
 
-The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](./04-C-Classes and Class Hierarchies.md#Rc-copy-self) is even more relevant for self-move.
+The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-self) is even more relevant for self-move.
 
 ##### Note
 
@@ -2103,7 +2103,7 @@ It's good to return a smart pointer, but unlike with raw pointers the return typ
 
 ##### Exception
 
-If you need covariant return types, return an `owner<derived*>`. See [C.130](./04-C-Classes and Class Hierarchies.md#Rh-copy).
+If you need covariant return types, return an `owner<derived*>`. See [C.130](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-copy).
 
 ##### Enforcement
 
@@ -2247,7 +2247,7 @@ Worse, a direct or indirect call to an unimplemented pure virtual function from 
 
 Note that calling a specific explicitly qualified function is not a virtual call even if the function is `virtual`.
 
-**See also** [factory functions](./04-C-Classes and Class Hierarchies.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
+**See also** [factory functions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
 
 ##### Note
 
@@ -2263,7 +2263,7 @@ However, experience shows that such calls are rarely needed, easily confuse main
 
 ##### Reason
 
-A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](./10-E-Error handling.md#Re-never-fail).
+A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](10%2dE%2dError%20handling%2emd#Re-never-fail).
 
 ##### Example, good
 
@@ -2317,7 +2317,7 @@ This is not just slow, but if a memory allocation occurs for the elements in `tm
 
 ##### Reason
 
- [A `swap` may not fail](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-swap-fail).
+ [A `swap` may not fail](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-swap-fail).
 If a `swap` tries to exit with an exception, it's a bad design error and the program had better terminate.
 
 ##### Enforcement
@@ -2470,20 +2470,20 @@ Summary of container rules:
 * ???
 * [C.109: If a resource handle has pointer semantics, provide `*` and `->`](#rcon-ptr)
 
-**See also**: [Resources](./06-R-Resource management.md#S-resource)
+**See also**: [Resources](06%2dR%2dResource%20management%2emd#S-resource)
 
 ## <a name="SS-lambdas"></a>C.lambdas: Function objects and lambdas
 
 A function object is an object supplying an overloaded `()` so that you can call it.
 A lambda expression (colloquially often shortened to "a lambda") is a notation for generating a function object.
-Function objects should be cheap to copy (and therefore [passed by value](./03-F-Functions.md#Rf-in)).
+Function objects should be cheap to copy (and therefore [passed by value](03%2dF%2dFunctions%2emd#Rf-in)).
 
 Summary:
 
-* [F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)](./03-F-Functions.md#Rf-capture-vs-overload)
-* [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](./03-F-Functions.md#Rf-reference-capture)
-* [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](./03-F-Functions.md#Rf-value-capture)
-* [ES.28: Use lambdas for complex initialization, especially of `const` variables](./07-ES-Expressions and Statements.md#Res-lambda-init)
+* [F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)](03%2dF%2dFunctions%2emd#Rf-capture-vs-overload)
+* [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](03%2dF%2dFunctions%2emd#Rf-reference-capture)
+* [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](03%2dF%2dFunctions%2emd#Rf-value-capture)
+* [ES.28: Use lambdas for complex initialization, especially of `const` variables](07%2dES%2dExpressions%20and%20Statements%2emd#Res-lambda-init)
 
 ## <a name="SS-hier"></a>C.hier: Class hierarchies (OOP)
 
@@ -2493,38 +2493,38 @@ There are two major uses for hierarchies, often named implementation inheritance
 
 Class hierarchy rule summary:
 
-* [C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)](./04-C-Classes and Class Hierarchies.md#Rh-domain)
-* [C.121: If a base class is used as an interface, make it a pure abstract class](./04-C-Classes and Class Hierarchies.md#Rh-abstract)
-* [C.122: Use abstract classes as interfaces when complete separation of interface and implementation is needed](./04-C-Classes and Class Hierarchies.md#Rh-separation)
+* [C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-domain)
+* [C.121: If a base class is used as an interface, make it a pure abstract class](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-abstract)
+* [C.122: Use abstract classes as interfaces when complete separation of interface and implementation is needed](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-separation)
 
 Designing rules for classes in a hierarchy summary:
 
-* [C.126: An abstract class typically doesn't need a constructor](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rh-abstract-ctor)
-* [C.127: A class with a virtual function should have a virtual or protected destructor](./04-C-Classes and Class Hierarchies.md#Rh-dtor)
-* [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](./04-C-Classes and Class Hierarchies.md#Rh-override)
-* [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](./04-C-Classes and Class Hierarchies.md#Rh-kind)
-* [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](./04-C-Classes and Class Hierarchies.md#Rh-copy)
-* [C.131: Avoid trivial getters and setters](./04-C-Classes and Class Hierarchies.md#Rh-get)
-* [C.132: Don't make a function `virtual` without reason](./04-C-Classes and Class Hierarchies.md#Rh-virtual)
-* [C.133: Avoid `protected` data](./04-C-Classes and Class Hierarchies.md#Rh-protected)
-* [C.134: Ensure all non-`const` data members have the same access level](./04-C-Classes and Class Hierarchies.md#Rh-public)
-* [C.135: Use multiple inheritance to represent multiple distinct interfaces](./04-C-Classes and Class Hierarchies.md#Rh-mi-interface)
-* [C.136: Use multiple inheritance to represent the union of implementation attributes](./04-C-Classes and Class Hierarchies.md#Rh-mi-implementation)
-* [C.137: Use `virtual` bases to avoid overly general base classes](./04-C-Classes and Class Hierarchies.md#Rh-vbase)
-* [C.138: Create an overload set for a derived class and its bases with `using`](./04-C-Classes and Class Hierarchies.md#Rh-using)
-* [C.139: Use `final` sparingly](./04-C-Classes and Class Hierarchies.md#Rh-final)
-* [C.140: Do not provide different default arguments for a virtual function and an overrider](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rh-virtual-default-arg)
+* [C.126: An abstract class typically doesn't need a constructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-abstract-ctor)
+* [C.127: A class with a virtual function should have a virtual or protected destructor](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-dtor)
+* [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-override)
+* [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-kind)
+* [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-copy)
+* [C.131: Avoid trivial getters and setters](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-get)
+* [C.132: Don't make a function `virtual` without reason](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-virtual)
+* [C.133: Avoid `protected` data](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-protected)
+* [C.134: Ensure all non-`const` data members have the same access level](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-public)
+* [C.135: Use multiple inheritance to represent multiple distinct interfaces](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-mi-interface)
+* [C.136: Use multiple inheritance to represent the union of implementation attributes](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-mi-implementation)
+* [C.137: Use `virtual` bases to avoid overly general base classes](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-vbase)
+* [C.138: Create an overload set for a derived class and its bases with `using`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-using)
+* [C.139: Use `final` sparingly](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-final)
+* [C.140: Do not provide different default arguments for a virtual function and an overrider](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-virtual-default-arg)
 
 Accessing objects in a hierarchy rule summary:
 
-* [C.145: Access polymorphic objects through pointers and references](./04-C-Classes and Class Hierarchies.md#Rh-poly)
-* [C.146: Use `dynamic_cast` where class hierarchy navigation is unavoidable](./04-C-Classes and Class Hierarchies.md#Rh-dynamic_cast)
-* [C.147: Use `dynamic_cast` to a reference type when failure to find the required class is considered an error](./04-C-Classes and Class Hierarchies.md#Rh-ref-cast)
-* [C.148: Use `dynamic_cast` to a pointer type when failure to find the required class is considered a valid alternative](./04-C-Classes and Class Hierarchies.md#Rh-ptr-cast)
-* [C.149: Use `unique_ptr` or `shared_ptr` to avoid forgetting to `delete` objects created using `new`](./04-C-Classes and Class Hierarchies.md#Rh-smart)
-* [C.150: Use `make_unique()` to construct objects owned by `unique_ptr`s](./04-C-Classes and Class Hierarchies.md#Rh-make_unique)
-* [C.151: Use `make_shared()` to construct objects owned by `shared_ptr`s](./04-C-Classes and Class Hierarchies.md#Rh-make_shared)
-* [C.152: Never assign a pointer to an array of derived class objects to a pointer to its base](./04-C-Classes and Class Hierarchies.md#Rh-array)
+* [C.145: Access polymorphic objects through pointers and references](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-poly)
+* [C.146: Use `dynamic_cast` where class hierarchy navigation is unavoidable](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-dynamic_cast)
+* [C.147: Use `dynamic_cast` to a reference type when failure to find the required class is considered an error](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-ref-cast)
+* [C.148: Use `dynamic_cast` to a pointer type when failure to find the required class is considered a valid alternative](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-ptr-cast)
+* [C.149: Use `unique_ptr` or `shared_ptr` to avoid forgetting to `delete` objects created using `new`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-smart)
+* [C.150: Use `make_unique()` to construct objects owned by `unique_ptr`s](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-make_unique)
+* [C.151: Use `make_shared()` to construct objects owned by `shared_ptr`s](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-make_shared)
+* [C.152: Never assign a pointer to an array of derived class objects to a pointer to its base](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-array)
 
 ### <a name="Rh-domain"></a>C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)
 
@@ -2694,7 +2694,7 @@ Flag abstract classes with constructors.
 
 ##### Reason
 
-A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Rc-dtor-virtual).
+A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-dtor-virtual).
 
 ##### Example, bad
 
@@ -2779,7 +2779,7 @@ in particular to allow derived classes to be added and changed without affecting
 * implementation inheritance is the use of inheritance to simplify implementation of new facilities
 by making useful operations available for implementers of related new operations (sometimes called "programming by difference").
 
-A pure interface class is simply a set of pure virtual functions; see [I.25](./02-I-Interfaces.md#Ri-abstract).
+A pure interface class is simply a set of pure virtual functions; see [I.25](02%2dI%2dInterfaces%2emd#Ri-abstract).
 
 In early OOP (e.g., in the 1980s and 1990s), implementation inheritance and interface inheritance were often mixed
 and bad habits die hard.
@@ -2998,7 +2998,7 @@ Copying a base is usually slicing. If you really need copy semantics, copy deepl
         virtual ~Derived() override;
     };
 
-Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](./04-C-Classes and Class Hierarchies.md#Rc-copy-virtual).
+Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-virtual).
 
 ##### Enforcement
 
@@ -3032,7 +3032,7 @@ Consider making such a class a `struct` -- that is, a behaviorless bunch of vari
         int y {0};
     };
 
-Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](./04-C-Classes and Class Hierarchies.md#Rc-initialize).
+Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-initialize).
 
 ##### Note
 
@@ -3102,8 +3102,8 @@ The protected data has de facto become global to a large body of code.
 
 Protected data often looks tempting to enable arbitrary improvements through derivation.
 Often, what you get is unprincipled changes and errors.
-[Prefer `private` data](./04-C-Classes and Class Hierarchies.md#Rc-private) with a well-specified and enforced invariant.
-Alternative, and often better, [keep data out of any class used as an interface](./04-C-Classes and Class Hierarchies.md#Rh-abstract).
+[Prefer `private` data](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-private) with a well-specified and enforced invariant.
+Alternative, and often better, [keep data out of any class used as an interface](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-abstract).
 
 ##### Note
 
@@ -3137,7 +3137,7 @@ Data members in category B should be `private` or `const`. This is because encap
 Most classes are either all A or all B:
 
 * *All public*: If you're writing an aggregate bundle-of-variables without an invariant across those variables, then all the variables should be `public`.
-  [By convention, declare such classes `struct` rather than `class`](./04-C-Classes and Class Hierarchies.md#Rc-struct)
+  [By convention, declare such classes `struct` rather than `class`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-struct)
 * *All private*: If you're writing a type that maintains an invariant, then all the non-`const` variables should be private -- it should be encapsulated.
 
 ##### Exception
@@ -3249,7 +3249,7 @@ Factoring out `Utility` makes sense if many derived classes share significant "i
 ##### Note
 
 Obviously, the example is too "theoretical", but it is hard to find a *small* realistic example.
-`Interface` is the root of an [interface hierarchy](./04-C-Classes and Class Hierarchies.md#Rh-abstract)
+`Interface` is the root of an [interface hierarchy](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-abstract)
 and `Utility` is the root of an [implementation hierarchy](Rh-kind).
 Here is [a slightly more realistic example](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) with an explanation.
 
@@ -3538,7 +3538,7 @@ Casting to a reference expresses that you intend to end up with a valid object, 
 
 The `dynamic_cast` conversion allows to test whether a pointer is pointing at a polymorphic object that has a given class in its hierarchy. Since failure to find the class merely returns a null value, it can be tested during run-time. This allows writing code that can choose alternative paths depending on the results.
 
-Contrast with [C.147](./04-C-Classes and Class Hierarchies.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
+Contrast with [C.147](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
 
 ##### Example
 
@@ -3674,16 +3674,16 @@ You cannot overload function objects.
 
 Overload rule summary:
 
-* [C.160: Define operators primarily to mimic conventional usage](./04-C-Classes and Class Hierarchies.md#Ro-conventional)
-* [C.161: Use nonmember functions for symmetric operators](./04-C-Classes and Class Hierarchies.md#Ro-symmetric)
-* [C.162: Overload operations that are roughly equivalent](./04-C-Classes and Class Hierarchies.md#Ro-equivalent)
-* [C.163: Overload only for operations that are roughly equivalent](./04-C-Classes and Class Hierarchies.md./04-C-Classes and Class Hierarchies.md#Ro-equivalent-2)
-* [C.164: Avoid conversion operators](./04-C-Classes and Class Hierarchies.md#Ro-conversion)
-* [C.165: Use `using` for customization points](./04-C-Classes and Class Hierarchies.md#Ro-custom)
-* [C.166: Overload unary `&` only as part of a system of smart pointers and references](./04-C-Classes and Class Hierarchies.md#Ro-address-of)
-* [C.167: Use an operator for an operation with its conventional meaning](./04-C-Classes and Class Hierarchies.md#Ro-overload)
-* [C.168: Define overloaded operators in the namespace of their operands](./04-C-Classes and Class Hierarchies.md#Ro-namespace)
-* [C.170: If you feel like overloading a lambda, use a generic lambda](./04-C-Classes and Class Hierarchies.md#Ro-lambda)
+* [C.160: Define operators primarily to mimic conventional usage](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-conventional)
+* [C.161: Use nonmember functions for symmetric operators](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-symmetric)
+* [C.162: Overload operations that are roughly equivalent](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-equivalent)
+* [C.163: Overload only for operations that are roughly equivalent](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-equivalent-2)
+* [C.164: Avoid conversion operators](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-conversion)
+* [C.165: Use `using` for customization points](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-custom)
+* [C.166: Overload unary `&` only as part of a system of smart pointers and references](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-address-of)
+* [C.167: Use an operator for an operation with its conventional meaning](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-overload)
+* [C.168: Define overloaded operators in the namespace of their operands](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-namespace)
+* [C.170: If you feel like overloading a lambda, use a generic lambda](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-lambda)
 
 ### <a name="Ro-conventional"></a>C.160: Define operators primarily to mimic conventional usage
 
@@ -3702,7 +3702,7 @@ Minimize surprises.
         // ...
     };
 
-Here, the conventional semantics is maintained: [Copies compare equal](./04-C-Classes and Class Hierarchies.md#SS-copy).
+Here, the conventional semantics is maintained: [Copies compare equal](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-copy).
 
 ##### Example, bad
 
@@ -3710,8 +3710,8 @@ Here, the conventional semantics is maintained: [Copies compare equal](./04-C-Cl
 
 ##### Note
 
-Non-member operators should be either friends or defined in [the same namespace as their operands](./04-C-Classes and Class Hierarchies.md#Ro-namespace).
-[Binary operators should treat their operands equivalently](./04-C-Classes and Class Hierarchies.md#Ro-symmetric).
+Non-member operators should be either friends or defined in [the same namespace as their operands](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-namespace).
+[Binary operators should treat their operands equivalently](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ro-symmetric).
 
 ##### Enforcement
 
@@ -3966,7 +3966,7 @@ This may be something best avoided.
 
 ##### See also
 
-This is a special case of the rule that [helper functions should be defined in the same namespace as their class](./04-C-Classes and Class Hierarchies.md#Rc-helper).
+This is a special case of the rule that [helper functions should be defined in the same namespace as their class](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-helper).
 
 ##### Enforcement
 
@@ -4042,10 +4042,10 @@ A type that is a `union` plus an indicator of which member is currently held is 
 
 Union rule summary:
 
-* [C.180: Use `union`s to save Memory](./04-C-Classes and Class Hierarchies.md#Ru-union)
-* [C.181: Avoid "naked" `union`s](./04-C-Classes and Class Hierarchies.md#Ru-naked)
-* [C.182: Use anonymous `union`s to implement tagged unions](./04-C-Classes and Class Hierarchies.md#Ru-anonymous)
-* [C.183: Don't use a `union` for type punning](./04-C-Classes and Class Hierarchies.md#Ru-pun)
+* [C.180: Use `union`s to save Memory](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ru-union)
+* [C.181: Avoid "naked" `union`s](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ru-naked)
+* [C.182: Use anonymous `union`s to implement tagged unions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ru-anonymous)
+* [C.183: Don't use a `union` for type punning](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ru-pun)
 * ???
 
 ### <a name="Ru-union"></a>C.180: Use `union`s to save memory
@@ -4067,7 +4067,7 @@ Consequently, it can be used to save memory when we have several objects that ar
     v.d = 987.654;  // now v holds a double
     cout << v.d << '\n';    // write 987.654
 
-But heed the warning: [Avoid "naked" `union`s](./04-C-Classes and Class Hierarchies.md#Ru-naked)
+But heed the warning: [Avoid "naked" `union`s](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Ru-naked)
 
 ##### Example
 

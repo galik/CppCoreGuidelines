@@ -5,35 +5,35 @@ Having good (easy-to-understand, encouraging efficient use, not error-prone, sup
 
 Interface rule summary:
 
-* [I.1: Make interfaces explicit](./02-I-Interfaces.md#Ri-explicit)
-* [I.2: Avoid global variables](./02-I-Interfaces.md#Ri-global)
-* [I.3: Avoid singletons](./02-I-Interfaces.md#Ri-singleton)
-* [I.4: Make interfaces precisely and strongly typed](./02-I-Interfaces.md#Ri-typed)
-* [I.5: State preconditions (if any)](./02-I-Interfaces.md#Ri-pre)
-* [I.6: Prefer `Expects()` for expressing preconditions](./02-I-Interfaces.md#Ri-expects)
-* [I.7: State postconditions](./02-I-Interfaces.md#Ri-post)
-* [I.8: Prefer `Ensures()` for expressing postconditions](./02-I-Interfaces.md#Ri-ensures)
-* [I.9: If an interface is a template, document its parameters using concepts](./02-I-Interfaces.md#Ri-concepts)
-* [I.10: Use exceptions to signal a failure to perform a required task](./02-I-Interfaces.md#Ri-except)
-* [I.11: Never transfer ownership by a raw pointer (`T*`)](./02-I-Interfaces.md#Ri-raw)
-* [I.12: Declare a pointer that must not be null as `not_null`](./02-I-Interfaces.md#Ri-nullptr)
-* [I.13: Do not pass an array as a single pointer](./02-I-Interfaces.md#Ri-array)
-* [I.22: Avoid complex initialization of global objects](./02-I-Interfaces.md./02-I-Interfaces.md#Ri-global-init)
-* [I.23: Keep the number of function arguments low](./02-I-Interfaces.md#Ri-nargs)
-* [I.24: Avoid adjacent unrelated parameters of the same type](./02-I-Interfaces.md#Ri-unrelated)
-* [I.25: Prefer abstract classes as interfaces to class hierarchies](./02-I-Interfaces.md#Ri-abstract)
-* [I.26: If you want a cross-compiler ABI, use a C-style subset](./02-I-Interfaces.md#Ri-abi)
-* [I.30: Encapsulate rule violations](./02-I-Interfaces.md#Ri-encapsulate)
+* [I.1: Make interfaces explicit](02%2dI%2dInterfaces%2emd#Ri-explicit)
+* [I.2: Avoid global variables](02%2dI%2dInterfaces%2emd#Ri-global)
+* [I.3: Avoid singletons](02%2dI%2dInterfaces%2emd#Ri-singleton)
+* [I.4: Make interfaces precisely and strongly typed](02%2dI%2dInterfaces%2emd#Ri-typed)
+* [I.5: State preconditions (if any)](02%2dI%2dInterfaces%2emd#Ri-pre)
+* [I.6: Prefer `Expects()` for expressing preconditions](02%2dI%2dInterfaces%2emd#Ri-expects)
+* [I.7: State postconditions](02%2dI%2dInterfaces%2emd#Ri-post)
+* [I.8: Prefer `Ensures()` for expressing postconditions](02%2dI%2dInterfaces%2emd#Ri-ensures)
+* [I.9: If an interface is a template, document its parameters using concepts](02%2dI%2dInterfaces%2emd#Ri-concepts)
+* [I.10: Use exceptions to signal a failure to perform a required task](02%2dI%2dInterfaces%2emd#Ri-except)
+* [I.11: Never transfer ownership by a raw pointer (`T*`)](02%2dI%2dInterfaces%2emd#Ri-raw)
+* [I.12: Declare a pointer that must not be null as `not_null`](02%2dI%2dInterfaces%2emd#Ri-nullptr)
+* [I.13: Do not pass an array as a single pointer](02%2dI%2dInterfaces%2emd#Ri-array)
+* [I.22: Avoid complex initialization of global objects](02%2dI%2dInterfaces%2emd02%2dI%2dInterfaces%2emd#Ri-global-init)
+* [I.23: Keep the number of function arguments low](02%2dI%2dInterfaces%2emd#Ri-nargs)
+* [I.24: Avoid adjacent unrelated parameters of the same type](02%2dI%2dInterfaces%2emd#Ri-unrelated)
+* [I.25: Prefer abstract classes as interfaces to class hierarchies](02%2dI%2dInterfaces%2emd#Ri-abstract)
+* [I.26: If you want a cross-compiler ABI, use a C-style subset](02%2dI%2dInterfaces%2emd#Ri-abi)
+* [I.30: Encapsulate rule violations](02%2dI%2dInterfaces%2emd#Ri-encapsulate)
 
 See also
 
-* [F: Functions](./03-F-Functions.md#S-functions)
-* [C.concrete: Concrete types](./15-SL-The Standard Library.md./04-C-Classes and Class Hierarchies.md#SS-concrete)
-* [C.hier: Class hierarchies](./04-C-Classes and Class Hierarchies.md#SS-hier)
-* [C.over: Overloading and overloaded operators](./04-C-Classes and Class Hierarchies.md#SS-overload)
-* [C.con: Containers and other resource handles](./15-SL-The Standard Library.md./04-C-Classes and Class Hierarchies.md#SS-containers)
-* [E: Error handling](./10-E-Error handling.md#S-errors)
-* [T: Templates and generic programming](./12-T-Templates and generic programming.md#S-templates)
+* [F: Functions](03%2dF%2dFunctions%2emd#S-functions)
+* [C.concrete: Concrete types](15%2dSL%2dThe%20Standard%20Library%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-concrete)
+* [C.hier: Class hierarchies](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-hier)
+* [C.over: Overloading and overloaded operators](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-overload)
+* [C.con: Containers and other resource handles](15%2dSL%2dThe%20Standard%20Library%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-containers)
+* [E: Error handling](10%2dE%2dError%20handling%2emd#S-errors)
+* [T: Templates and generic programming](12%2dT%2dTemplates%20and%20generic%20programming%2emd#S-templates)
 
 ### <a name="Ri-explicit"></a>I.1: Make interfaces explicit
 
@@ -121,7 +121,7 @@ Every pointer or reference to mutable data is a potential data race.
 
 You cannot have a race condition on immutable data.
 
-**References**: See the [rules for calling functions](./03-F-Functions.md#SS-call).
+**References**: See the [rules for calling functions](03%2dF%2dFunctions%2emd#SS-call).
 
 ##### Enforcement
 
@@ -306,7 +306,7 @@ Some preconditions can be expressed as assertions. For example:
 
 Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but that's not easily done. For now, we place it in the definition (function body).
 
-**References**: `Expects()` is described in [GSL](./20-GSL-Guideline support library.md#S-gsl).
+**References**: `Expects()` is described in [GSL](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl).
 
 ##### Note
 
@@ -435,7 +435,7 @@ Stating the postcondition would have made it clear:
 
 The bug is now obvious (but only to a human reading comments).
 
-Better still, use [RAII](./06-R-Resource management.md#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
+Better still, use [RAII](06%2dR%2dResource%20management%2emd#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
 
     void manipulate(Record& r)    // best
     {
@@ -476,7 +476,7 @@ To make it clear that the condition is a postcondition and to enable tool use.
 Postconditions can be stated in many ways, including comments, `if`-statements, and `assert()`.
 This can make them hard to distinguish from ordinary code, hard to update, hard to manipulate by tools, and may have the wrong semantics.
 
-**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](./06-R-Resource management.md#Rr-raii).
+**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](06%2dR%2dResource%20management%2emd#Rr-raii).
 
 ##### Note
 
@@ -510,7 +510,7 @@ Use the ISO Concepts TS style of requirements specification. For example:
 Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.
 For now, the concept TS is supported only in GCC 6.1.
 
-**See also**: [Generic programming](./12-T-Templates and generic programming.md#SS-GP) and [concepts](#SS-t-concepts).
+**See also**: [Generic programming](12%2dT%2dTemplates%20and%20generic%20programming%2emd#SS-GP) and [concepts](#SS-t-concepts).
 
 ##### Enforcement
 
@@ -574,9 +574,9 @@ We don't consider "performance" a valid reason not to use exceptions.
 * Often, cleaner code yields better performance with exceptions (simplifying the tracing of paths through the program and their optimization).
 * A good rule for performance critical code is to move checking outside the critical part of the code ([checking](#Rper-checking)).
 * In the longer term, more regular code gets better optimized.
-* Always carefully [measure](./08-Per-Performance.md#Rper-measure) before making performance claims.
+* Always carefully [measure](08%2dPer%2dPerformance%2emd#Rper-measure) before making performance claims.
 
-**See also**: [I.5](./02-I-Interfaces.md#Ri-pre) and [I.7](./02-I-Interfaces.md#Ri-post) for reporting precondition and postcondition violations.
+**See also**: [I.5](02%2dI%2dInterfaces%2emd#Ri-pre) and [I.7](02%2dI%2dInterfaces%2emd#Ri-post) for reporting precondition and postcondition violations.
 
 ##### Enforcement
 
@@ -610,12 +610,12 @@ Consider returning the result by value (use move semantics if the result is larg
         return res;
     }
 
-**Alternative**: [Pass ownership](./06-R-Resource management.md./06-R-Resource management.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
+**Alternative**: [Pass ownership](06%2dR%2dResource%20management%2emd06%2dR%2dResource%20management%2emd#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
 However, that is less elegant and often less efficient than returning the object itself,
 so use smart pointers only if reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from the [guideline support library](./20-GSL-Guideline support library.md#S-gsl):
+In that case, mark owning pointers using `owner` from the [guideline support library](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl):
 
     owner<X*> compute(args)    // It is now clear that ownership is transferred
     {
@@ -636,7 +636,7 @@ caller, so that its lifetime is handled by the caller. Viewed another way:
 ownership transferring APIs are relatively rare compared to pointer-passing APIs,
 so the default is "no ownership transfer."
 
-**See also**: [Argument passing](./03-F-Functions.md#Rf-conventional), [use of smart pointer arguments](./06-R-Resource management.md./06-R-Resource management.md#Rr-smartptrparam), and [value return](#Rf-T-return).
+**See also**: [Argument passing](03%2dF%2dFunctions%2emd#Rf-conventional), [use of smart pointer arguments](06%2dR%2dResource%20management%2emd06%2dR%2dResource%20management%2emd#Rr-smartptrparam), and [value return](#Rf-T-return).
 
 ##### Enforcement
 
@@ -665,7 +665,7 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](./20-GSL-Guideline support library.md#S-gsl).
+`not_null` is defined in the [guideline support library](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl).
 
 ##### Note
 
@@ -980,9 +980,9 @@ We might write
     }
     istream& in = *inp;
 
-This violated the ruly [against uninitialized variables](./07-ES-Expressions and Statements.md#Res-always),
-the rule against [ignoring ownership](./02-I-Interfaces.md#Ri-raw),
-and the rule [against magic constants](./07-ES-Expressions and Statements.md#Res-magic) .
+This violated the ruly [against uninitialized variables](07%2dES%2dExpressions%20and%20Statements%2emd#Res-always),
+the rule against [ignoring ownership](02%2dI%2dInterfaces%2emd#Ri-raw),
+and the rule [against magic constants](07%2dES%2dExpressions%20and%20Statements%2emd#Res-magic) .
 In particular, someone has to remember to somewhere write
 
     if (owned) delete inp;

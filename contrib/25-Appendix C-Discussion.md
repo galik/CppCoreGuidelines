@@ -94,7 +94,7 @@ If the requirements above are met, the design guarantees that `PostInitialize` h
 
 In summary, no post-construction technique is perfect. The worst techniques dodge the whole issue by simply asking the caller to invoke the post-constructor manually. Even the best require a different syntax for constructing objects (easy to check at compile time) and/or cooperation from derived class authors (impossible to check at compile time).
 
-**References**: [\[Alexandrescu01\]](#Alexandrescu01) §3, [\[Boost\]](./18-RF-References.md#Boost), [\[Dewhurst03\]](#Dewhurst03) §75, [\[Meyers97\]](#Meyers97) §46, [\[Stroustrup00\]](#Stroustrup00) §15.4.3, [\[Taligent94\]](#Taligent94)
+**References**: [\[Alexandrescu01\]](#Alexandrescu01) §3, [\[Boost\]](18%2dRF%2dReferences%2emd#Boost), [\[Dewhurst03\]](#Dewhurst03) §75, [\[Meyers97\]](#Meyers97) §46, [\[Stroustrup00\]](#Stroustrup00) §15.4.3, [\[Taligent94\]](#Taligent94)
 
 ### <a name="Sd-dtor"></a>Discussion: Make base class destructors public and virtual, or protected and nonvirtual
 
@@ -347,14 +347,14 @@ In a class holding a reference, you likely need to write the copy constructor an
 
 Resource management rule summary:
 
-* [Provide strong resource safety; that is, never leak anything that you think of as a resource](./25-Appendix C-Discussion.md#Cr-safety)
-* [Never throw while holding a resource not owned by a handle](./25-Appendix C-Discussion.md#Cr-never)
-* [A "raw" pointer or reference is never a resource handle](./25-Appendix C-Discussion.md#Cr-raw)
-* [Never let a pointer outlive the object it points to](./25-Appendix C-Discussion.md#Cr-outlive)
-* [Use templates to express containers (and other resource handles)](./25-Appendix C-Discussion.md#Cr-templates)
-* [Return containers by value (relying on move or copy elision for efficiency)](./25-Appendix C-Discussion.md#Cr-value-return)
-* [If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations](./25-Appendix C-Discussion.md#Cr-handle)
-* [If a class is a container, give it an initializer-list constructor](./25-Appendix C-Discussion.md#Cr-list)
+* [Provide strong resource safety; that is, never leak anything that you think of as a resource](25%2dAppendix%20C%2dDiscussion%2emd#Cr-safety)
+* [Never throw while holding a resource not owned by a handle](25%2dAppendix%20C%2dDiscussion%2emd#Cr-never)
+* [A "raw" pointer or reference is never a resource handle](25%2dAppendix%20C%2dDiscussion%2emd#Cr-raw)
+* [Never let a pointer outlive the object it points to](25%2dAppendix%20C%2dDiscussion%2emd#Cr-outlive)
+* [Use templates to express containers (and other resource handles)](25%2dAppendix%20C%2dDiscussion%2emd#Cr-templates)
+* [Return containers by value (relying on move or copy elision for efficiency)](25%2dAppendix%20C%2dDiscussion%2emd#Cr-value-return)
+* [If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations](25%2dAppendix%20C%2dDiscussion%2emd#Cr-handle)
+* [If a class is a container, give it an initializer-list constructor](25%2dAppendix%20C%2dDiscussion%2emd#Cr-list)
 
 ### <a name="Cr-safety"></a>Provide strong resource safety; that is, never leak anything that you think of as a resource
 
@@ -488,7 +488,7 @@ To provide statically type-safe manipulation of elements.
 
 ##### Reason
 
-To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime. See also [F.20, the general item about "out" output values](./03-F-Functions.md#Rf-out).
+To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime. See also [F.20, the general item about "out" output values](03%2dF%2dFunctions%2emd#Rf-out).
 
 ##### Example
 
@@ -501,7 +501,7 @@ To simplify code and eliminate a need for explicit memory management. To bring a
 
 ##### Exception
 
-See the Exceptions in [F.20](./03-F-Functions.md#Rf-out).
+See the Exceptions in [F.20](03%2dF%2dFunctions%2emd#Rf-out).
 
 ##### Enforcement
 
@@ -530,7 +530,7 @@ Now `Named` has a default constructor, a destructor, and efficient copy and move
 
 ##### Enforcement
 
-In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](./04-C-Classes and Class Hierarchies.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
+In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
 
 ### <a name="Cr-list"></a>If a class is a container, give it an initializer-list constructor
 
