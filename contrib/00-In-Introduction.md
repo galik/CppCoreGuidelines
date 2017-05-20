@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-introduction"></a>In: Introduction
 
 This is a set of core guidelines for modern C++, C++14, taking likely future enhancements and ISO Technical Specifications (TSs) into account.
@@ -29,7 +33,7 @@ Remember:
 
 Take the time to understand the implications of a guideline rule on your program.
 
-These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](#Stroustrup05)).
+These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](27%2dBibliography%2emd#Stroustrup05)).
 They do not simply define a subset of C++ to be used (for reliability, safety, performance, or whatever).
 Instead, they strongly recommend the use of a few simple "extensions" ([library components](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl))
 that make the use of the most error-prone features of C++ redundant, so that they can be banned (in our set of rules).
@@ -210,4 +214,8 @@ These sections are not orthogonal.
 
 Each section (e.g., "P" for "Philosophy") and each subsection (e.g., "C.hier" for "Class Hierarchies (OOP)") have an abbreviation for ease of searching and reference.
 The main section abbreviations are also used in rule numbers (e.g., "C.11" for "Make concrete types regular").
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-A"></a>A: Architectural Ideas
 
 This section contains ideas about higher-level architectural ideas and libraries.
@@ -45,4 +49,8 @@ For example:
 
 However, a library should not depend on another that depends on it.
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

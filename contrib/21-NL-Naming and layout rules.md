@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-naming"></a>NL: Naming and layout rules
 
 Consistent naming and layout are helpful.
@@ -577,4 +581,8 @@ As ever, remember that the aim of these naming and layout rules is consistency a
 ##### Enforcement
 
 Flag `const` used as a suffix for a type.
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

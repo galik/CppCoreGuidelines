@@ -2,6 +2,7 @@
 
 CXXFLAGS += \
 	-std=c++14 \
+	-g3 -O0 \
 	-Wconversion \
 	-Wall -Wextra \
 	-pedantic-errors \
@@ -11,9 +12,9 @@ CXXFLAGS += \
 PROGRAMS := \
 	extract-sections
 
-all: $(PROGRAMS) run
+all: $(PROGRAMS)
 
-run:
+run: all
 	./extract-sections ../CppCoreGuidelines.md
 
 clean:

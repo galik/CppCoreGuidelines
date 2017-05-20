@@ -48,7 +48,11 @@ void write(std::string const& dir, std::string const& filename, std::string cons
 {
 	auto pathname = dir + path_separator() + filename;
 	std::cout << "generating: " << pathname << '\n';
-	if(!(std::ofstream(pathname) << text))
+
+	std::ostringstream index;
+	index << "\n\n[INDEX](00-In-Introduction.md#SS-sec)\n\n";
+
+	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
 		throw std::runtime_error(std::string(std::strerror(errno)) + ": " + filename);
 }
 
@@ -59,7 +63,7 @@ struct section
 	std::string id;
 	std::string long_id;
 	std::string name;
-	pos_type beg;
+	pos_type beg; // offsets into the document
 	pos_type end;
 };
 
@@ -76,10 +80,11 @@ std::string urlencode(std::string const& url)
 	static const std::string plain = "";
 	std::ostringstream oss;
 	std::string::const_iterator i = url.begin();
-	for(; i != url.end(); ++i)
+//	for(; i != url.end(); ++i)
+	for(auto c: url)
 	{
-		if(std::isalnum(*i) || plain.find(*i) != std::string::npos) { oss << *i; }
-		else { oss << "%" << std::hex << int(*i); }
+		if(std::isalnum(c) || plain.find(c) != std::string::npos) { oss << c; }
+		else { oss << "%" << std::hex << int(c); }
 	}
 	return oss.str();
 }
@@ -126,26 +131,49 @@ int main(int, char* argv[])
 			// #3 name
 			// #4 "Bibliography"
 
-			bug_var(beg);
+			auto long_id = itr->str(4).empty() ? itr->str(1) : itr->str(4);
 
 			if(beg)
 			{
-				auto& section = names[itr->str(1)];
+				auto& section = names[long_id];
 
-				section.id = itr->str(2);
-				section.long_id = itr->str(1);
+				section.id = itr->str(2).empty() ? std::string("") : itr->str(2);
+				section.long_id = long_id;
 				section.name = name;
 				section.beg = beg;
 				section.end = itr->position();
 			}
 
+
+			if(itr->str(4) == "Bibliography")
+			{
+				auto& section = names["bibliography"];
+
+				section.id = "Bib";
+				section.long_id = "bibliography";
+				section.name = (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md";
+				section.beg = beg = itr->position();
+				section.end = doc.size();
+			}
+
 			name = (idx < 10 ? "0":"") + std::to_string(idx)
-				+ "-" + itr->str(2)
-				+ "-" + itr->str(3)
+				+ (itr->str(2).empty() ? std::string("") : "-" + itr->str(2))
+				+ (itr->str(3).empty() ? std::string("") : "-" + itr->str(3))
 				+ ".md";
 
 			beg = itr->position();
 		}
+
+//		if(beg)
+//		{
+//			auto& section = names["Bibliography"];
+//
+//			section.id = "Bib";
+//			section.long_id = "bibliography";
+//			section.name = name;
+//			section.beg = beg;
+//			section.end = itr->position();
+//		}
 
 		std::map<std::string, std::string> links;
 
@@ -176,12 +204,12 @@ int main(int, char* argv[])
 		}
 
 		// # Bibliography
-		std::string text = doc.substr(beg, doc.size() - beg);
-
-		for(auto const& link: links)
-			text = replace_all(text, link.first, link.second);
-
-		write(path, (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md", text);
+//		std::string text = doc.substr(beg, doc.size() - beg);
+//
+//		for(auto const& link: links)
+//			text = replace_all(text, link.first, link.second);
+//
+//		write(path, (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md", text);
 	}
 	catch(std::exception const& e)
 	{

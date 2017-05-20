@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-not"></a>NR: Non-Rules and myths
 
 This section contains rules and guidelines that are popular somewhere, but that we deliberately don't recommend.
@@ -276,4 +280,8 @@ and spot the bug.
 
 * [Make member data `public` or (preferably) `private`](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-protected)
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

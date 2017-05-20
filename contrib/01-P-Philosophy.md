@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-philosophy"></a>P: Philosophy
 
 The rules in this section are very general.
@@ -739,4 +743,8 @@ By default use
 If no well-designed, well-documented, and well-supported library exists for an important domain,
 maybe you should design and implement it, and then use it.
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

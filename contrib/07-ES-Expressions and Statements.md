@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-expr"></a>ES: Expressions and Statements
 
 Expressions and statements are the lowest and most direct way of expressing actions and computation. Declarations in local scopes are statements.
@@ -2642,4 +2646,8 @@ This also applies to `%`.
 ##### Enforcement
 
 * Flag division by an integral value that could be zero
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

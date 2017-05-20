@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-gsl"></a>GSL: Guideline support library
 
 The GSL is a small library of facilities designed to support this set of guidelines.
@@ -140,4 +144,8 @@ Most of the concepts below are defined in [the Ranges TS](http://www.open-std.or
 ### <a name="SS-gsl-smartptrconcepts"></a>Smart pointer concepts
 
 Described in [Lifetimes paper](https://github.com/isocpp/CppCoreGuidelines/blob/master/docs/Lifetimes%20I%20and%20II%20-%20v0.9.1.pdf).
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

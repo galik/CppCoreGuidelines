@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-profile"></a>Pro: Profiles
 
 Ideally, we would follow all of the guidelines.
@@ -789,4 +793,8 @@ To resolve the problem, either extend the lifetime of the object the pointer is 
 * Issue a diagnostic for any function argument that is a pointer that could have been invalidated (could point to an object that was destroyed) along a local code path leading to the dereference. To fix: Extend the lifetime of the pointed-to object, or move the function call to before the pointed-to object's lifetime ends.
 
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

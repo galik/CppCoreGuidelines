@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-interfaces"></a>I: Interfaces
 
 An interface is a contract between two parts of a program. Precisely stating what is expected of a supplier of a service and a user of that service is essential.
@@ -1017,4 +1021,8 @@ Presumably, a bit of checking for potential errors would be added in real code.
 
 * Hard, it is hard to decide what rule-breaking code is essential
 * flag rule suppression that enable rule-violations to cross interfaces
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

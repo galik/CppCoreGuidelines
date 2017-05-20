@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-functions"></a>F: Functions
 
 A function specifies an action or a computation that takes the system from one consistent state to the next. It is the fundamental building block of programs.
@@ -1596,4 +1600,8 @@ This is under active discussion in standardization, and may be addressed in a fu
 ##### Enforcement
 
 * Flag any lambda capture-list that specifies a default capture and also captures `this` (whether explicitly or via default capture)
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

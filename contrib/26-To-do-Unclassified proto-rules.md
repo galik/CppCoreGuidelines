@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-unclassified"></a>To-do: Unclassified proto-rules
 
 This is our to-do list.
@@ -54,4 +58,8 @@ Alternatively, we will decide that no change is needed and delete the entry.
 * individual `shared_ptr` objects are not thread-safe: different threads can call non-`const` member functions on *different* `shared_ptr`s that refer to the same shared object, but one thread cannot call a non-`const` member function of a `shared_ptr` object while another thread accesses that same `shared_ptr` object (if you need that, consider `atomic_shared_ptr` instead)
 
 * rules for arithmetic
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

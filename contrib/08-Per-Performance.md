@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-performance"></a>Per: Performance
 
 ??? should this section be in the main guide???
@@ -61,8 +65,7 @@ If your program spends most of its time waiting for the web or for a human, opti
 Put another way: If your program spends 4% of its processing time doing
 computation A and 40% of its time doing computation B, a 50% improvement on A is
 only as impactful as a 5% improvement on B. (If you don't even know how much
-time is spent on A or B, see <a href="08%2dPer%2dPerformance%2emd#Rper-reason">Per.1</a> and <a
-href="08%2dPer%2dPerformance%2emd#Rper-Knuth">Per.2</a>.)
+time is spent on A or B, see [Per.1](08%2dPer%2dPerformance%2emd#Rper-reason) and [Per.2](08%2dPer%2dPerformance%2emd#Rper-Knuth).)
 
 ### <a name="Rper-simple"></a>Per.4: Don't assume that complicated code is necessarily faster than simple code
 
@@ -365,4 +368,8 @@ Performance is very sensitive to cache performance and cache algorithms favor si
 ### <a name="Rper-context"></a>Per.30: Avoid context switches on the critical path
 
 ???
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

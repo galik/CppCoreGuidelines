@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-stdlib"></a>SL: The Standard Library
 
 Using only the bare language, every task is tedious (in any language).
@@ -570,4 +574,8 @@ a `longjmp` ignores destructors, thus invalidating all resource-management strat
 Flag all occurrences of `longjmp`and `setjmp`
 
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

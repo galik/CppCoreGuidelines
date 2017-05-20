@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-enum"></a>Enum: Enumerations
 
 Enumerations are used to define sets of integer values and for defining types for such sets of values.
@@ -250,4 +254,8 @@ and where consecutive values are undesirable (e.g., to get separate bits as in `
 * Flag duplicate enumerator values
 * Flag explicitly specified all-consecutive enumerator values
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

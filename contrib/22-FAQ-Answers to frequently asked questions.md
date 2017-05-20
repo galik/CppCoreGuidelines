@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-faq"></a>FAQ: Answers to frequently asked questions
 
 This section covers answers to frequently asked questions about these guidelines.
@@ -94,4 +98,8 @@ No. It is a placeholder for language support for contract preconditions.
 ### <a name="Faq-gsl-ensures"></a>FAQ.60: Is `Ensures` the same as `assert`?
 
 No. It is a placeholder for language support for contract postconditions.
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

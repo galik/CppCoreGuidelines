@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-concurrency"></a>CP: Concurrency and Parallelism
 
 We often want our computers to do many tasks at the same time (or at least make them appear to do them at the same time).
@@ -1396,4 +1400,8 @@ In C++, unlike in some other languages, `volatile` has [nothing to do with synch
 
 ???UNIX signal handling???. May be worth reminding how little is async-signal-safe, and how to communicate with a signal handler (best is probably "not at all")
 
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-resource"></a>R: Resource management
 
 This section contains rules related to resources.
@@ -867,4 +871,8 @@ The fix is simple -- take a local copy of the pointer to "keep a ref count" for 
 ##### Enforcement
 
 * (Simple) Warn if a pointer or reference obtained from a smart pointer variable (`Unique_ptr` or `Shared_ptr`) that is nonlocal, or that is local but potentially aliased, is used in a function call. If the smart pointer is a `Shared_ptr` then suggest taking a local copy of the smart pointer and obtain a pointer or reference from that instead.
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

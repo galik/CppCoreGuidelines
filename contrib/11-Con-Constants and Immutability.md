@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-const"></a>Con: Constants and Immutability
 
 You can't have a race condition on a constant.
@@ -188,4 +192,8 @@ See F.4.
 ##### Enforcement
 
 * Flag `const` definitions with constant expression initializers.
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

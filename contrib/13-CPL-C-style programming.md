@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-cpl"></a>CPL: C-style programming
 
 C and C++ are closely related languages.
@@ -89,4 +93,8 @@ You can call C++ from C:
 ##### Enforcement
 
 None needed
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-errors"></a>E: Error handling
 
 Error handling involves:
@@ -972,7 +976,7 @@ The policy of letting exceptions propagate until they reach a function that pote
 ##### Note
 
 No. This would not be any better had exception specifications been statically enforced.
-For example, see [Stroustrup94](#Stroustrup94).
+For example, see [Stroustrup94](27%2dBibliography%2emd#Stroustrup94).
 
 ##### Note
 
@@ -1008,4 +1012,8 @@ The "catch everything" handler ensured that the `std::exception`-handler will ne
 ##### Enforcement
 
 Flag all "hiding handlers".
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 

@@ -1,3 +1,7 @@
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
+
 # <a name="S-discussion"></a>Appendix C: Discussion
 
 This section contains follow-up material on rules and sets of rules.
@@ -27,7 +31,7 @@ If the class definition and the constructor body are in separate files, the long
 
 **References**:
 
-[\[Cline99\]](#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](#Koenig97) §4, [\[Lakos96\]](#Lakos96) §10.3.5, [\[Meyers97\]](#Meyers97) §13, [\[Murray93\]](#Murray93) §2.1.3, [\[Sutter00\]](#Sutter00) §47
+[\[Cline99\]](27%2dBibliography%2emd#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) §4, [\[Lakos96\]](27%2dBibliography%2emd#Lakos96) §10.3.5, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §13, [\[Murray93\]](27%2dBibliography%2emd#Murray93) §2.1.3, [\[Sutter00\]](27%2dBibliography%2emd#Sutter00) §47
 
 ### <a name="TBD"></a>Use of `=`, `{}`, and `()` as initializers
 
@@ -39,7 +43,7 @@ If your design wants virtual dispatch into a derived class from a base class con
 
 * *Pass the buck:* Just document that user code must call the post-initialization function right after constructing an object.
 * *Post-initialize lazily:* Do it during the first call of a member function. A Boolean flag in the base class tells whether or not post-construction has taken place yet.
-* *Use virtual base class semantics:* Language rules dictate that the constructor most-derived class decides which base constructor will be invoked; you can use that to your advantage. (See [\[Taligent94\]](#Taligent94).)
+* *Use virtual base class semantics:* Language rules dictate that the constructor most-derived class decides which base constructor will be invoked; you can use that to your advantage. (See [\[Taligent94\]](27%2dBibliography%2emd#Taligent94).)
 * *Use a factory function:* This way, you can easily force a mandatory invocation of a post-constructor function.
 
 Here is an example of the last option:
@@ -94,7 +98,7 @@ If the requirements above are met, the design guarantees that `PostInitialize` h
 
 In summary, no post-construction technique is perfect. The worst techniques dodge the whole issue by simply asking the caller to invoke the post-constructor manually. Even the best require a different syntax for constructing objects (easy to check at compile time) and/or cooperation from derived class authors (impossible to check at compile time).
 
-**References**: [\[Alexandrescu01\]](#Alexandrescu01) §3, [\[Boost\]](18%2dRF%2dReferences%2emd#Boost), [\[Dewhurst03\]](#Dewhurst03) §75, [\[Meyers97\]](#Meyers97) §46, [\[Stroustrup00\]](#Stroustrup00) §15.4.3, [\[Taligent94\]](#Taligent94)
+**References**: [\[Alexandrescu01\]](27%2dBibliography%2emd#Alexandrescu01) §3, [\[Boost\]](18%2dRF%2dReferences%2emd#Boost), [\[Dewhurst03\]](27%2dBibliography%2emd#Dewhurst03) §75, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §46, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §15.4.3, [\[Taligent94\]](27%2dBibliography%2emd#Taligent94)
 
 ### <a name="Sd-dtor"></a>Discussion: Make base class destructors public and virtual, or protected and nonvirtual
 
@@ -165,7 +169,7 @@ In this rare case, you could make the destructor public and nonvirtual but clear
 
 In general, however, avoid concrete base classes (see Item 35). For example, `unary_function` is a bundle-of-typedefs that was never intended to be instantiated standalone. It really makes no sense to give it a public destructor; a better design would be to follow this Item's advice and give it a protected nonvirtual destructor.
 
-**References**: [\[C++CS\]](#C++CS) Item 50, [\[Cargill92\]](#Cargill92) pp. 77-79, 207, [\[Cline99\]](#Cline99) §21.06, 21.12-13, [\[Henricson97\]](#Henricson97) pp. 110-114, [\[Koenig97\]](#Koenig97) Chapters 4, 11, [\[Meyers97\]](#Meyers97) §14, [\[Stroustrup00\]](#Stroustrup00) §12.4.2, [\[Sutter02\]](#Sutter02) §27, [\[Sutter04\]](#Sutter04) §18
+**References**: [\[C++CS\]](#C++CS) Item 50, [\[Cargill92\]](27%2dBibliography%2emd#Cargill92) pp. 77-79, 207, [\[Cline99\]](27%2dBibliography%2emd#Cline99) §21.06, 21.12-13, [\[Henricson97\]](27%2dBibliography%2emd#Henricson97) pp. 110-114, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) Chapters 4, 11, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §14, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §12.4.2, [\[Sutter02\]](27%2dBibliography%2emd#Sutter02) §27, [\[Sutter04\]](27%2dBibliography%2emd#Sutter04) §18
 
 ### <a name="Sd-noexcept"></a>Discussion: Usage of noexcept
 
@@ -257,7 +261,7 @@ Fortunately, when releasing a resource, the scope for failure is definitely smal
 
 When using exceptions as your error handling mechanism, always document this behavior by declaring these functions `noexcept`. (See Item 75.)
 
-**References**: [\[C++CS\]](#C++CS) Item 51; [\[C++03\]](#C++03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](#Meyers96) §11, [\[Stroustrup00\]](#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](#Sutter00) §8, §16, [\[Sutter02\]](#Sutter02) §18-19
+**References**: [\[C++CS\]](#C++CS) Item 51; [\[C++03\]](#C++03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](27%2dBibliography%2emd#Meyers96) §11, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](27%2dBibliography%2emd#Sutter00) §8, §16, [\[Sutter02\]](27%2dBibliography%2emd#Sutter02) §18-19
 
 ## <a name="Sd-consistent"></a>Define Copy, move, and destroy consistently
 
@@ -343,7 +347,7 @@ Prefer compiler-generated (including `=default`) special members; only these can
 In rare cases, classes that have members of strange types (such as reference members) are an exception because they have peculiar copy semantics.
 In a class holding a reference, you likely need to write the copy constructor and the assignment operator, but the default destructor already does the right thing. (Note that using a reference member is almost always wrong.)
 
-**References**: [\[C++CS\]](#C++CS) Item 52; [\[Cline99\]](#Cline99) §30.01-14, [\[Koenig97\]](#Koenig97) §4, [\[Stroustrup00\]](#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](#SuttHysl04b)
+**References**: [\[C++CS\]](#C++CS) Item 52; [\[Cline99\]](27%2dBibliography%2emd#Cline99) §30.01-14, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) §4, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](27%2dBibliography%2emd#SuttHysl04b)
 
 Resource management rule summary:
 
@@ -698,4 +702,8 @@ In particular, an object of a regular type can be copied and the result of a cop
 * *variable*: a named object of a given type; contains a value unless uninitialized.
 * *virtual function*: a member function that can be overridden in a derived class.
 * *word*: a basic unit of memory in a computer, often the unit used to hold an integer.
+
+
+
+[INDEX](00-In-Introduction.md#SS-sec)
 
