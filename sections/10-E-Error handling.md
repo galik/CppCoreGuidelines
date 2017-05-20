@@ -504,7 +504,7 @@ Instead, use a reference:
 
     catch (exception& e) { /* ... */ }
 
-of - typically better stil - a `const` reference:
+of - typically better still - a `const` reference:
 
     catch (const exception& e) { /* ... */ }
 

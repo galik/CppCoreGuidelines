@@ -359,6 +359,10 @@ Once language support becomes available (e.g., see the [contract proposal](http:
 
 `Expects()` can also be used to check a condition in the middle of an algorithm.
 
+##### Note
+
+No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](07-ES-Expressions%20and%20Statements.md#Res-nonnegative).
+
 ##### Enforcement
 
 (Not enforceable) Finding the variety of ways preconditions can be asserted is not feasible. Warning about those that can be easily identified (`assert()`) has questionable value in the absence of a language facility.
@@ -984,7 +988,7 @@ We might write
     }
     istream& in = *inp;
 
-This violated the ruly [against uninitialized variables](07-ES-Expressions%20and%20Statements.md#Res-always),
+This violated the rule [against uninitialized variables](07-ES-Expressions%20and%20Statements.md#Res-always),
 the rule against [ignoring ownership](02-I-Interfaces.md#Ri-raw),
 and the rule [against magic constants](07-ES-Expressions%20and%20Statements.md#Res-magic) .
 In particular, someone has to remember to somewhere write
@@ -993,27 +997,27 @@ In particular, someone has to remember to somewhere write
 
 We could handle this particular example by using `unique_ptr` with a special deleter that does nothing for `cin`,
 but that's complicated for novices (who can easily encounter this problem) and the example is an example of a more general
-problem where a property that we would like to consider static (here, ownership) needs infrequesntly be addressed
+problem where a property that we would like to consider static (here, ownership) needs infrequently be addressed
 at run time.
 The common, most frequent, and safest examples can be handled statically, so we don't want to add cost and complexity to those.
 But we must also cope with the uncommon, less-safe, and necessarily more expensive cases.
 Such examples are discussed in [[Str15]](http://www.stroustrup.com/resource-model.pdf).
 
-So, we write a class 
+So, we write a class
 
     class Istream { [[gsl::suppress(lifetime)]]
     public:
-        enum Opt { from_line=1 };
+        enum Opt { from_line = 1 };
         Istream() { }
         Istream(zstring p) :owned{true}, inp{new ifstream{p}} {}            // read from file
-        Istream(zstring p,Opt) :owned{true}, inp{new istringstream{p}} {}   // read from command line
+        Istream(zstring p, Opt) :owned{true}, inp{new istringstream{p}} {}  // read from command line
         ~Itream() { if (owned) delete inp; }
         operator istream& () { return *inp; }
     private:
         bool owned = false;
         istream* inp = &cin;
     };
-    
+
 Now, the dynamic nature of `istream` ownership has been encapsulated.
 Presumably, a bit of checking for potential errors would be added in real code.
 
