@@ -47,12 +47,7 @@ std::string get_prog_name(std::string const& pathname)
 	return pathname.substr(pos + 1);
 }
 
-std::string get_path_name(std::string const& pathname)
-{
-	std::cout << "pathname: " << pathname << '\n';
-	return pathname.substr(0, pathname.find_last_of(path_separator()));
-}
-
+/// for all substrings `from` in `s` replace them with `to`
 std::string& replace_all(std::string& s, std::string const& from, std::string const& to)
 {
 	if(!from.empty())
@@ -74,6 +69,7 @@ std::string urlencode(std::string const& url)
 		else
 			oss << "%" << std::uppercase << std::hex << int(c);
 	}
+
 	return oss.str();
 }
 
@@ -199,11 +195,12 @@ int main(int, char* argv[])
 
 		auto links = build_link_database(doc, sections);
 
-		// rewrite links
 		for(auto const& s: sections)
 		{
+			// extract section text from document
 			std::string text = doc.substr(s.second.beg, s.second.end - s.second.beg);
 
+			// rewrite links
 			for(auto const& link: links)
 				text = replace_all(text, link.first, link.second);
 
