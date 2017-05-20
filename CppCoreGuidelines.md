@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-May 16, 2017
+May 19, 2017
 
 
 Editors:
@@ -1533,6 +1533,10 @@ Once language support becomes available (e.g., see the [contract proposal](http:
 
 `Expects()` can also be used to check a condition in the middle of an algorithm.
 
+##### Note
+
+No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](#Res-nonnegative).
+
 ##### Enforcement
 
 (Not enforceable) Finding the variety of ways preconditions can be asserted is not feasible. Warning about those that can be easily identified (`assert()`) has questionable value in the absence of a language facility.
@@ -2158,7 +2162,7 @@ We might write
     }
     istream& in = *inp;
 
-This violated the ruly [against uninitialized variables](#Res-always),
+This violated the rule [against uninitialized variables](#Res-always),
 the rule against [ignoring ownership](#Ri-raw),
 and the rule [against magic constants](#Res-magic) .
 In particular, someone has to remember to somewhere write
@@ -2167,27 +2171,27 @@ In particular, someone has to remember to somewhere write
 
 We could handle this particular example by using `unique_ptr` with a special deleter that does nothing for `cin`,
 but that's complicated for novices (who can easily encounter this problem) and the example is an example of a more general
-problem where a property that we would like to consider static (here, ownership) needs infrequesntly be addressed
+problem where a property that we would like to consider static (here, ownership) needs infrequently be addressed
 at run time.
 The common, most frequent, and safest examples can be handled statically, so we don't want to add cost and complexity to those.
 But we must also cope with the uncommon, less-safe, and necessarily more expensive cases.
 Such examples are discussed in [[Str15]](http://www.stroustrup.com/resource-model.pdf).
 
-So, we write a class 
+So, we write a class
 
     class Istream { [[gsl::suppress(lifetime)]]
     public:
-        enum Opt { from_line=1 };
+        enum Opt { from_line = 1 };
         Istream() { }
         Istream(zstring p) :owned{true}, inp{new ifstream{p}} {}            // read from file
-        Istream(zstring p,Opt) :owned{true}, inp{new istringstream{p}} {}   // read from command line
+        Istream(zstring p, Opt) :owned{true}, inp{new istringstream{p}} {}  // read from command line
         ~Itream() { if (owned) delete inp; }
         operator istream& () { return *inp; }
     private:
         bool owned = false;
         istream* inp = &cin;
     };
-    
+
 Now, the dynamic nature of `istream` ownership has been encapsulated.
 Presumably, a bit of checking for potential errors would be added in real code.
 
@@ -4297,7 +4301,7 @@ Constructor rules:
 * [C.40: Define a constructor if a class has an invariant](#Rc-ctor)
 * [C.41: A constructor should create a fully initialized object](#Rc-complete)
 * [C.42: If a constructor cannot construct a valid object, throw an exception](#Rc-throw)
-* [C.43: Ensure that a class has a default constructor](#Rc-default0)
+* [C.43: Ensure that a value type class has a default constructor](#Rc-default0)
 * [C.44: Prefer default constructors to be simple and non-throwing](#Rc-default00)
 * [C.45: Don't define a default constructor that only initializes data members; use member initializers instead](#Rc-default)
 * [C.46: By default, declare single-argument constructors `explicit`](#Rc-explicit)
@@ -5026,7 +5030,9 @@ Leaving behind an invalid object and relying on users to consistently check an `
 There are domains, such as some hard-real-time systems (think airplane controls) where (without additional tool support) exception handling is not sufficiently predictable from a timing perspective.
 There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](#Rr-raii).
 
-**Alternative**: If you feel tempted to use some "post-constructor initialization" or "two-stage initialization" idiom, try not to do that.
+##### Alternative
+
+If you feel tempted to use some "post-constructor initialization" or "two-stage initialization" idiom, try not to do that.
 If you really have to, look at [factory functions](#Rc-factory).
 
 ##### Note
@@ -5037,13 +5043,22 @@ Another reason is been to delay initialization until an object is needed; the so
 
 ##### Enforcement
 
-### <a name="Rc-default0"></a>C.43: Ensure that a class has a default constructor
+???
+
+### <a name="Rc-default0"></a>C.43: Ensure that a value type class has a default constructor
 
 ##### Reason
 
 Many language and library facilities rely on default constructors to initialize their elements, e.g. `T a[10]` and `std::vector<T> v(10)`.
+A default constructor often simplifies the task of defining a suitable [moved-from state](#???).
 
-##### Example , bad
+##### Note
+
+We have not (yet) formally defined [value type](#SS-concrete), but think of it as a class that behaves much as an `int`:
+it can be copied using `=` and usually compared using `==`.
+It is closely related to the notion of Regular type from [EoP](http://elementsofprogramming.com/) and [the Palo Alto TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
+
+##### Example
 
     class Date { // BAD: no default constructor
     public:
@@ -5055,17 +5070,17 @@ Many language and library facilities rely on default constructors to initialize 
     vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
 
 The default constructor is only auto-generated if there is no user-declared constructor, hence it's impossible to initialize the vector `vd1` in the example above.
+The absense of a default value can cause surprises for users and complicate its use, so if one can be reasonably defined, it should be.
 
+`Date` is chosen to encourage thought:
 There is no "natural" default date (the big bang is too far back in time to be useful for most people), so this example is non-trivial.
 `{0, 0, 0}` is not a valid date in most calendar systems, so choosing that would be introducing something like floating-point's `NaN`.
 However, most realistic `Date` classes have a "first date" (e.g. January 1, 1970 is popular), so making that the default is usually trivial.
 
-##### Example
-
     class Date {
     public:
         Date(int dd, int mm, int yyyy);
-        Date() = default; // See also C.45
+        Date() = default; // [See also](#Rc-default)
         // ...
     private:
         int dd = 1;
@@ -5112,9 +5127,41 @@ Assuming that you want initialization, an explicit default initialization can he
         int i {};   // default initialize (to 0)
     };
 
+##### Example
+
+There are classses that simply don't have a reasonable default.
+
+A class designed to be useful only as a base does not need a default constructor because it cannot be constructed by itself:
+
+    struct Shape {  // pure interface: all members are pure virtual functions
+            void draw() = 0;
+            void rotate(int) = 0;
+            // ...
+    };
+
+A class that represent a unmodifiable 
+
+    lock_guard g {mx};  // guard the mutex mx
+    lock_guard g2;      // error: guarding nothing
+
+##### Note
+
+A class that has a "special state" that must be handled separately from other states by member functions or users causes extra work
+(and most likely more errors). For example
+
+    ofstream out {"Foobar"};
+    // ...
+    out << log(time,transaction);
+
+If `Foobar` couldn't be opened for writing and `out` wasn't set to throw exceptions upon errors, the output operations become no-ops.
+The implementation must take care of that case, and users must remember to test for success.
+
+Pointers, even smart pointers, that can point to nothing (null pointers) are an example of this.
+Having a default constructor is not a panacea; ideally it defaults to a meaningful state such as `std::string`s `""` and `std::vector`s `{}`.
+
 ##### Enforcement
 
-* Flag classes without a default constructor
+* Flag classes that are copyable by `=` or comparable with `==` without a default constructor
 
 ### <a name="Rc-default00"></a>C.44: Prefer default constructors to be simple and non-throwing
 
@@ -6110,7 +6157,7 @@ This is not just slow, but if a memory allocation occurs for the elements in `tm
 
 (Simple) When a class has a `swap` member function, it should be declared `noexcept`.
 
-### <a name="Rc-swap-noexcept"></a>: C.85: Make `swap` `noexcept`
+### <a name="Rc-swap-noexcept"></a>C.85: Make `swap` `noexcept`
 
 ##### Reason
 
@@ -7130,7 +7177,7 @@ This rule is about using `final` on classes with virtual functions meant to be i
 ##### Note
 
 Capping an individual virtual function with `final` is error-prone as `final` can easily be overlooked when defining/overriding a set of functions.
-Fortunately, the compiler catches such mistakes: You cannot re-declare/re-open a `final` member a derived class.
+Fortunately, the compiler catches such mistakes: You cannot re-declare/re-open a `final` member in a derived class.
 
 ##### Note
 
@@ -9310,6 +9357,8 @@ Arithmetic rules:
 * [ES.103: Don't overflow](#Res-overflow)
 * [ES.104: Don't underflow](#Res-underflow)
 * [ES.105: Don't divide by zero](#Res-zero)
+* [ES.106: Don't try to avoid negative values by using `unsigned`](#Res-nonnegative)
+* [ES.107: Don't use `unsigned` for subscripts](#Res-subscripts)
 
 ### <a name="Res-lib"></a>ES.1: Prefer the standard library to other libraries and to "handcrafted code"
 
@@ -11875,6 +11924,126 @@ This also applies to `%`.
 
 * Flag division by an integral value that could be zero
 
+
+### <a name="Res-nonnegative"></a>ES.106: Don't try to avoid negative values by using `unsigned`
+
+##### Reason
+
+Choosing `unsigned` implies many changes to the usual behavior of integers, including modulo arithmetic,
+can suppress warnings related to overflow,
+and opens the door for errors related to signed/unsigned mixes.
+Using `unsigned` doesn't actually eliminate the possibility of negative values.
+
+##### Example
+
+    unsigned int u1 = -2;   // OK: the value of u1 is 4294967294
+    int i1 = -2;
+    unsigned int u2 = i1;   // OK: the value of u2 is -2
+    int i2 = u2;            // OK: the value of i2 is -2
+
+These problems with such (perfectly legal) constructs are hard to spot in real code and are the source of many real-world errors.
+Consider:
+
+    unsigned area(unsigned height, unsigned width) { return height*width; } // [see also](#Ri-expects)
+    // ...
+    int height;
+    cin >> height;
+    auto a = area(height, 2);   // if the input is -2 a becomes 4294967292
+
+Remember that `-1` when assigned to an `unsigned int` becomes the largest `unsigned int`.
+Also, since unsigned arithmetic is modulo arithmetic the multiplication didn't overflow, it wrapped around.
+
+##### Example
+
+    unsigned max = 100000;    // "accidental typo", I mean to say 10'000
+    unsigned short x = 100;
+    while (x < max) x += 100; // infinite loop
+
+Had `x` been a signed `short`, we could have warned about the undefined behavior upon overflow.
+
+##### Alternatives
+
+* use signed integers and check for `x >= 0`
+* use a positive integer type
+* use an integer subrange type
+* `Assert(-1 < x)`
+
+For example
+
+    struct Positive {
+        int val;
+        Positive(int x) :val{x} { Assert(0 < x); }
+        operator int() { return val; }
+    };
+
+    int f(Positive arg) {return arg };
+
+    int r1 = f(2);
+    int r2 = f(-2);  // throws
+
+##### Note
+
+???
+
+##### Enforcement
+
+Hard: there is a lot of code using `unsigned` and we don't offer a practical positive number type.
+
+
+### <a name="Res-subscripts"></a>ES.107: Don't use `unsigned` for subscripts
+
+##### Reason
+
+To avoid signed/unsigned confusion.
+To enable better optimization.
+To enable better error detection.
+
+##### Example, bad
+
+    vector<int> vec {1, 2, 3, 4, 5};
+
+    for (int i=0; i < vec.size(); i+=2)                    // mix int and unsigned
+        cout << vec[i] << '\n';
+    for (unsigned i=0; i < vec.size(); i+=2)               // risk wraparound
+        cout << vec[i] << '\n';
+    for (vector<int>::size_type i=0; i < vec.size(); i+=2) // verbose
+        cout << vec[i] << '\n';
+    for (auto i=0; i < vec.size(); i+=2)                   // mix int and unsigned
+        cout << vec[i] << '\n';
+
+##### Note
+
+The built-in array uses signed subscripts.
+The standard-library containers use unsigned subscripts.
+Thus, no perfect and fully compatible solution is possible.
+Given the known problems with unsigned and signed/unsigned mixtures, better stick to (signed) integers.
+
+##### Example
+
+    template<typename T>
+    struct My_container {
+    public:
+        // ...
+        T& operator[](int i);    // not unsigned
+        // ...
+    };
+
+##### Example
+
+    ??? demonstrate improved code generation and potential for error detection ???
+
+##### Alternatives
+
+Alternatives for users
+
+* use algorithms
+* use range-for
+* use iterators/pointers
+
+##### Enforcement
+
+Very tricky as long as the standard-library containers get it wrong.
+
 # <a name="S-performance"></a>Per: Performance
 
 ??? should this section be in the main guide???
@@ -14143,7 +14312,7 @@ Instead, use a reference:
 
     catch (exception& e) { /* ... */ }
 
-of - typically better stil - a `const` reference:
+of - typically better still - a `const` reference:
 
     catch (const exception& e) { /* ... */ }
 
@@ -17422,15 +17591,15 @@ Avoid accidentally becoming dependent on implementation details and logically se
 
 ##### Example
 
-    #include<iostream>
+    #include <iostream>
     using namespace std;
 
     void use()                  // bad
     {
         string s;
         cin >> s;               // fine
-        getline(cin,s);         // error: getline() not defined
-        if (s=="surprise") {    // error == not defined
+        getline(cin, s);        // error: getline() not defined
+        if (s == "surprise") {  // error == not defined
             // ...
         }
     }
@@ -17442,16 +17611,16 @@ or even an occasional "`string`s cannot be compared with `==`).
 
 The solution is to explicitly `#include<string>`:
 
-    #include<iostream>
-    #include<string>
+    #include <iostream>
+    #include <string>
     using namespace std;
 
     void use()
     {
         string s;
         cin >> s;               // fine
-        getline(cin,s);         // fine
-        if (s=="surprise") {    // fine
+        getline(cin, s);        // fine
+        if (s == "surprise") {  // fine
             // ...
         }
     }
@@ -17463,12 +17632,12 @@ For example:
 
     // basic_std_lib.h:
 
-    #include<vector>
-    #include<string>
-    #include<map>
-    #include<iostream>
-    #include<random>
-    #include<vector>
+    #include <vector>
+    #include <string>
+    #include <map>
+    #include <iostream>
+    #include <random>
+    #include <vector>
 
 a user can now get that set of declarations with a single `#include`"
 
