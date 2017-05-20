@@ -15,18 +15,18 @@ So, it is likely that this library section of the guidelines will eventually gro
 
 C++ Standard library component summary:
 
-* [SL.con: Containers](15%2dSL%2dThe%20Standard%20Library%2emd#SS-con)
-* [SL.str: String](15%2dSL%2dThe%20Standard%20Library%2emd#SS-string)
-* [SL.io: Iostream](15%2dSL%2dThe%20Standard%20Library%2emd#SS-io)
-* [SL.regex: Regex](15%2dSL%2dThe%20Standard%20Library%2emd#SS-regex)
-* [SL.chrono: Time](15%2dSL%2dThe%20Standard%20Library%2emd#SS-chrono)
-* [SL.C: The C standard library](15%2dSL%2dThe%20Standard%20Library%2emd#SS-clib)
+* [SL.con: Containers](15-SL-The+Standard+Library.md#SS-con)
+* [SL.str: String](15-SL-The+Standard+Library.md#SS-string)
+* [SL.io: Iostream](15-SL-The+Standard+Library.md#SS-io)
+* [SL.regex: Regex](15-SL-The+Standard+Library.md#SS-regex)
+* [SL.chrono: Time](15-SL-The+Standard+Library.md#SS-chrono)
+* [SL.C: The C standard library](15-SL-The+Standard+Library.md#SS-clib)
 
 Standard-library rule summary:
 
-* [SL.1: Use libraries wherever possible](15%2dSL%2dThe%20Standard%20Library%2emd#Rsl-lib)
-* [SL.2: Prefer the standard library to other libraries](15%2dSL%2dThe%20Standard%20Library%2emd#Rsl-sl)
-* [SL.3: Do not add non-standard entities to namespace `std`](15%2dSL%2dThe%20Standard%20Library%2emd#sl-std)
+* [SL.1: Use libraries wherever possible](15-SL-The+Standard+Library.md#Rsl-lib)
+* [SL.2: Prefer the standard library to other libraries](15-SL-The+Standard+Library.md#Rsl-sl)
+* [SL.3: Do not add non-standard entities to namespace `std`](15-SL-The+Standard+Library.md#sl-std)
 * ???
 
 ### <a name="Rsl-lib"></a>SL.1:  Use libraries wherever possible
@@ -68,8 +68,8 @@ Possible, but messy and likely to cause problems with platforms.
 
 Container rule summary:
 
-* [SL.con.1: Prefer using STL `array` or `vector` instead of a C array](15%2dSL%2dThe%20Standard%20Library%2emd#Rsl-arrays)
-* [SL.con.2: Prefer using STL `vector` by default unless you have a reason to use a different container](15%2dSL%2dThe%20Standard%20Library%2emd#Rsl-vector)
+* [SL.con.1: Prefer using STL `array` or `vector` instead of a C array](15-SL-The+Standard+Library.md#Rsl-arrays)
+* [SL.con.2: Prefer using STL `vector` by default unless you have a reason to use a different container](15-SL-The+Standard+Library.md#Rsl-vector)
 *  ???
 
 ### <a name="Rsl-arrays"></a>SL.con.1: Prefer using STL `array` or `vector` instead of a C array
@@ -130,27 +130,27 @@ Text manipulation is a huge topic.
 This section primarily tries to clarify `std::string`'s relation to `char*`, `zstring`, `string_view`, and `gsl::string_span`.
 The important issue of non-ASCII character sets and encodings (e.g., `wchar_t`, Unicode, and UTF-8) will be covered elsewhere.
 
-See also [regular expressions](15%2dSL%2dThe%20Standard%20Library%2emd#SS-regex).
+See also [regular expressions](15-SL-The+Standard+Library.md#SS-regex).
 
 Here, we use "sequence of characters" or "string" to refer to a sequence of characters meant to be read as text (somehow, eventually).
 We don't consider 
 
 String summary:
 
-* [SL.str.1: Use `std::string` to own character sequences](15%2dSL%2dThe%20Standard%20Library%2emd15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-string)
-* [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-view)
-* [SL.str.3: Use `zstring` or `czstring` to refer to a C-style, zero-terminated, sequence of characters](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-zstring)
-* [SL.str.4: Use `char*` to refer to a single character](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-char*)
-* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-byte)
+* [SL.str.1: Use `std::string` to own character sequences](15-SL-The+Standard+Library.md#Rstr-string)
+* [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](15-SL-The+Standard+Library.md#Rstr-view)
+* [SL.str.3: Use `zstring` or `czstring` to refer to a C-style, zero-terminated, sequence of characters](15-SL-The+Standard+Library.md#Rstr-zstring)
+* [SL.str.4: Use `char*` to refer to a single character](15-SL-The+Standard+Library.md#Rstr-char*)
+* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](15-SL-The+Standard+Library.md#Rstr-byte)
 
-* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-locale)
-* [Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](15%2dSL%2dThe%20Standard%20Library%2emd15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-span)
-* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-s)
+* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations](15-SL-The+Standard+Library.md#Rstr-locale)
+* [Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](15-SL-The+Standard+Library.md#Rstr-span)
+* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](15-SL-The+Standard+Library.md#Rstr-s)
 
 See also
 
-* [F.24 span](03%2dF%2dFunctions%2emd#Rf-range)
-* [F.25 zstring](03%2dF%2dFunctions%2emd#Rf-zstring)
+* [F.24 span](03-F-Functions.md#Rf-range)
+* [F.25 zstring](03-F-Functions.md#Rf-zstring)
 
 
 ### <a name="Rstr-string"></a>SL.str.1: Use `std::string` to own character sequences
@@ -216,7 +216,7 @@ Will this code pass a security review?
 ##### Note
 
 Do not assume that `string` is slower than lower-level techniques without measurement and remember than not all code is performance critical.
-[Don't optimize prematurely](08%2dPer%2dPerformance%2emd#Rper-Knuth)
+[Don't optimize prematurely](08-Per-Performance.md#Rper-Knuth)
 
 ##### Enforcement
 
@@ -313,7 +313,7 @@ The array `arr` is not a C-style string because it is not zero-terminated.
 
 ##### Alternative
 
-See [`zstring`](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-zstring), [`string`](15%2dSL%2dThe%20Standard%20Library%2emd15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-string), and [`string_span`](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-view).
+See [`zstring`](15-SL-The+Standard+Library.md#Rstr-zstring), [`string`](15-SL-The+Standard+Library.md#Rstr-string), and [`string_span`](15-SL-The+Standard+Library.md#Rstr-view).
 
 ##### Enforcement
   
@@ -343,7 +343,7 @@ C++17
 
 ##### Reason
 
-`std::string` supports standard-library [`locale` facilities](15%2dSL%2dThe%20Standard%20Library%2emd#Rstr-locale)
+`std::string` supports standard-library [`locale` facilities](15-SL-The+Standard+Library.md#Rstr-locale)
 
 ##### Example
 
@@ -407,11 +407,11 @@ and user-defines extensions, such as streaming across networks (asio: not yet st
 
 Iostream rule summary:
 
-* [SL.io.1: Use character-level input only when you have to](15%2dSL%2dThe%20Standard%20Library%2emd#Rio-low)
-* [SL.io.2: When reading, always consider ill-formed input](15%2dSL%2dThe%20Standard%20Library%2emd#Rio-validate)
-* [SL.io.3: Prefer iostreams for I/O](15%2dSL%2dThe%20Standard%20Library%2emd#Rio-streams)
-* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](15%2dSL%2dThe%20Standard%20Library%2emd#Rio-sync) 
-* [SL.io.50: Avoid `endl`](15%2dSL%2dThe%20Standard%20Library%2emd#Rio-endl)
+* [SL.io.1: Use character-level input only when you have to](15-SL-The+Standard+Library.md#Rio-low)
+* [SL.io.2: When reading, always consider ill-formed input](15-SL-The+Standard+Library.md#Rio-validate)
+* [SL.io.3: Prefer iostreams for I/O](15-SL-The+Standard+Library.md#Rio-streams)
+* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](15-SL-The+Standard+Library.md#Rio-sync) 
+* [SL.io.50: Avoid `endl`](15-SL-The+Standard+Library.md#Rio-endl)
 * [???](#???)
 
 ### <a name="Rio-low"></a>SL.io.1: Use character-level input only when you have to
@@ -559,7 +559,7 @@ It provides clocks for registering `time_points`.
 
 C standard library rule summary:
 
-* [S.C.1: Don't use setjmp/longjmp](15%2dSL%2dThe%20Standard%20Library%2emd#Rclib-jmp)
+* [S.C.1: Don't use setjmp/longjmp](15-SL-The+Standard+Library.md#Rclib-jmp)
 * [???](#???)
 * [???](#???)
 

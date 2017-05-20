@@ -13,52 +13,52 @@ Function rule summary:
 
 Function definition rules:
 
-* [F.1: "Package" meaningful operations as carefully named functions](03%2dF%2dFunctions%2emd#Rf-package)
-* [F.2: A function should perform a single logical operation](03%2dF%2dFunctions%2emd#Rf-logical)
-* [F.3: Keep functions short and simple](03%2dF%2dFunctions%2emd#Rf-single)
-* [F.4: If a function may have to be evaluated at compile time, declare it `constexpr`](03%2dF%2dFunctions%2emd#Rf-constexpr)
-* [F.5: If a function is very small and time-critical, declare it inline](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-inline)
-* [F.6: If your function may not throw, declare it `noexcept`](03%2dF%2dFunctions%2emd#Rf-noexcept)
-* [F.7: For general use, take `T*` or `T&` arguments rather than smart pointers](03%2dF%2dFunctions%2emd#Rf-smart)
-* [F.8: Prefer pure functions](03%2dF%2dFunctions%2emd#Rf-pure)
-* [F.9: Unused parameters should be unnamed](03%2dF%2dFunctions%2emd#Rf-unused)
+* [F.1: "Package" meaningful operations as carefully named functions](03-F-Functions.md#Rf-package)
+* [F.2: A function should perform a single logical operation](03-F-Functions.md#Rf-logical)
+* [F.3: Keep functions short and simple](03-F-Functions.md#Rf-single)
+* [F.4: If a function may have to be evaluated at compile time, declare it `constexpr`](03-F-Functions.md#Rf-constexpr)
+* [F.5: If a function is very small and time-critical, declare it inline](03-F-Functions.md#Rf-inline)
+* [F.6: If your function may not throw, declare it `noexcept`](03-F-Functions.md#Rf-noexcept)
+* [F.7: For general use, take `T*` or `T&` arguments rather than smart pointers](03-F-Functions.md#Rf-smart)
+* [F.8: Prefer pure functions](03-F-Functions.md#Rf-pure)
+* [F.9: Unused parameters should be unnamed](03-F-Functions.md#Rf-unused)
 
 Parameter passing expression rules:
 
-* [F.15: Prefer simple and conventional ways of passing information](03%2dF%2dFunctions%2emd#Rf-conventional)
-* [F.16: For "in" parameters, pass cheaply-copied types by value and others by reference to `const`](03%2dF%2dFunctions%2emd#Rf-in)
-* [F.17: For "in-out" parameters, pass by reference to non-`const`](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-inout)
-* [F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter](03%2dF%2dFunctions%2emd#Rf-consume)
-* [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](03%2dF%2dFunctions%2emd#Rf-forward)
-* [F.20: For "out" output values, prefer return values to output parameters](03%2dF%2dFunctions%2emd#Rf-out)
-* [F.21: To return multiple "out" values, prefer returning a tuple or struct](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-out-multi)
-* [F.60: Prefer `T*` over `T&` when "no argument" is a valid option](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-ptr-ref)
+* [F.15: Prefer simple and conventional ways of passing information](03-F-Functions.md#Rf-conventional)
+* [F.16: For "in" parameters, pass cheaply-copied types by value and others by reference to `const`](03-F-Functions.md#Rf-in)
+* [F.17: For "in-out" parameters, pass by reference to non-`const`](03-F-Functions.md#Rf-inout)
+* [F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter](03-F-Functions.md#Rf-consume)
+* [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](03-F-Functions.md#Rf-forward)
+* [F.20: For "out" output values, prefer return values to output parameters](03-F-Functions.md#Rf-out)
+* [F.21: To return multiple "out" values, prefer returning a tuple or struct](03-F-Functions.md#Rf-out-multi)
+* [F.60: Prefer `T*` over `T&` when "no argument" is a valid option](03-F-Functions.md#Rf-ptr-ref)
 
 Parameter passing semantic rules:
 
-* [F.22: Use `T*` or `owner<T*>` or a smart pointer to designate a single object](03%2dF%2dFunctions%2emd#Rf-ptr)
-* [F.23: Use a `not_null<T>` to indicate "null" is not a valid value](03%2dF%2dFunctions%2emd#Rf-nullptr)
-* [F.24: Use a `span<T>` or a `span_p<T>` to designate a half-open sequence](03%2dF%2dFunctions%2emd#Rf-range)
-* [F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string](03%2dF%2dFunctions%2emd#Rf-zstring)
-* [F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed](03%2dF%2dFunctions%2emd#Rf-unique_ptr)
-* [F.27: Use a `shared_ptr<T>` to share ownership](03%2dF%2dFunctions%2emd#Rf-shared_ptr)
+* [F.22: Use `T*` or `owner<T*>` or a smart pointer to designate a single object](03-F-Functions.md#Rf-ptr)
+* [F.23: Use a `not_null<T>` to indicate "null" is not a valid value](03-F-Functions.md#Rf-nullptr)
+* [F.24: Use a `span<T>` or a `span_p<T>` to designate a half-open sequence](03-F-Functions.md#Rf-range)
+* [F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string](03-F-Functions.md#Rf-zstring)
+* [F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed](03-F-Functions.md#Rf-unique_ptr)
+* [F.27: Use a `shared_ptr<T>` to share ownership](03-F-Functions.md#Rf-shared_ptr)
 
 Value return semantic rules:
 
-* [F.42: Return a `T*` to indicate a position (only)](03%2dF%2dFunctions%2emd#Rf-return-ptr)
-* [F.43: Never (directly or indirectly) return a pointer or a reference to a local object](03%2dF%2dFunctions%2emd#Rf-dangle)
-* [F.44: Return a `T&` when copy is undesirable and "returning no object" isn't an option](03%2dF%2dFunctions%2emd#Rf-return-ref)
-* [F.45: Don't return a `T&&`](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-return-ref-ref)
-* [F.46: `int` is the return type for `main()`](03%2dF%2dFunctions%2emd#Rf-main)
-* [F.47: Return `T&` from assignment operators.](03%2dF%2dFunctions%2emd#Rf-assignment-op)
+* [F.42: Return a `T*` to indicate a position (only)](03-F-Functions.md#Rf-return-ptr)
+* [F.43: Never (directly or indirectly) return a pointer or a reference to a local object](03-F-Functions.md#Rf-dangle)
+* [F.44: Return a `T&` when copy is undesirable and "returning no object" isn't an option](03-F-Functions.md#Rf-return-ref)
+* [F.45: Don't return a `T&&`](03-F-Functions.md#Rf-return-ref-ref)
+* [F.46: `int` is the return type for `main()`](03-F-Functions.md#Rf-main)
+* [F.47: Return `T&` from assignment operators.](03-F-Functions.md#Rf-assignment-op)
 
 Other function rules:
 
-* [F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)](03%2dF%2dFunctions%2emd#Rf-capture-vs-overload)
-* [F.51: Where there is a choice, prefer default arguments over overloading](03%2dF%2dFunctions%2emd#Rf-default-args)
-* [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](03%2dF%2dFunctions%2emd#Rf-reference-capture)
-* [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](03%2dF%2dFunctions%2emd#Rf-value-capture)
-* [F.54: If you capture `this`, capture all variables explicitly (no default capture)](03%2dF%2dFunctions%2emd#Rf-this-capture)
+* [F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)](03-F-Functions.md#Rf-capture-vs-overload)
+* [F.51: Where there is a choice, prefer default arguments over overloading](03-F-Functions.md#Rf-default-args)
+* [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](03-F-Functions.md#Rf-reference-capture)
+* [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](03-F-Functions.md#Rf-value-capture)
+* [F.54: If you capture `this`, capture all variables explicitly (no default capture)](03-F-Functions.md#Rf-this-capture)
 
 Functions have strong similarities to lambdas and function objects so see also Section ???.
 
@@ -111,12 +111,12 @@ The shortest code is not always the best for performance or maintainability.
 
 Loop bodies, including lambdas used as loop bodies, rarely need to be named.
 However, large loop bodies (e.g., dozens of lines or dozens of pages) can be a problem.
-The rule [Keep functions short](03%2dF%2dFunctions%2emd#Rf-single) implies "Keep loop bodies short."
+The rule [Keep functions short](03-F-Functions.md#Rf-single) implies "Keep loop bodies short."
 Similarly, lambdas used as callback arguments are sometimes non-trivial, yet unlikely to be re-usable.
 
 ##### Enforcement
 
-* See [Keep functions short](03%2dF%2dFunctions%2emd#Rf-single)
+* See [Keep functions short](03-F-Functions.md#Rf-single)
 * Flag identical and very similar lambdas used in different places.
 
 ### <a name="Rf-logical"></a>F.2: A function should perform a single logical operation
@@ -435,7 +435,7 @@ Destructors, `swap` functions, move operations, and default constructors should 
 
 ##### Reason
 
-Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](06%2dR%2dResource%20management%2emd06%2dR%2dResource%20management%2emd#Rr-smartptrparam)).
+Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](06-R-Resource+management.md#Rr-smartptrparam)).
 Passing by smart pointer restricts the use of a function to callers that use smart pointers.
 Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost.
 
@@ -466,15 +466,15 @@ Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost
         // ...
     };
 
-See further in [R.30](06%2dR%2dResource%20management%2emd06%2dR%2dResource%20management%2emd#Rr-smartptrparam).
+See further in [R.30](06-R-Resource+management.md#Rr-smartptrparam).
 
 ##### Note
 
 We can catch dangling pointers statically, so we don't need to rely on resource management to avoid violations from dangling pointers.
 
-**See also**: [when to prefer `T*` and when to prefer `T&`](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-ptr-ref).
+**See also**: [when to prefer `T*` and when to prefer `T&`](03-F-Functions.md#Rf-ptr-ref).
 
-**See also**: Discussion of [smart pointer use](06%2dR%2dResource%20management%2emd#Rr-summary-smartptrs).
+**See also**: Discussion of [smart pointer use](06-R-Resource+management.md#Rr-summary-smartptrs).
 
 ##### Enforcement
 
@@ -572,10 +572,10 @@ When copying is cheap, nothing beats the simplicity and safety of copying, and f
 
 For advanced uses (only), where you really need to optimize for rvalues passed to "input-only" parameters:
 
-* If the function is going to unconditionally move from the argument, take it by `&&`. See [F.18](03%2dF%2dFunctions%2emd#Rf-consume).
+* If the function is going to unconditionally move from the argument, take it by `&&`. See [F.18](03-F-Functions.md#Rf-consume).
 * If the function is going to keep a copy of the argument, in addition to passing by `const&` (for lvalues),
-  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "consume"; see [F.18](03%2dF%2dFunctions%2emd#Rf-consume).
-* In special cases, such as multiple "input + copy" parameters, consider using perfect forwarding. See [F.19](03%2dF%2dFunctions%2emd#Rf-forward).
+  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "consume"; see [F.18](03-F-Functions.md#Rf-consume).
+* In special cases, such as multiple "input + copy" parameters, consider using perfect forwarding. See [F.19](03-F-Functions.md#Rf-forward).
 
 ##### Example
 
@@ -590,7 +590,7 @@ Avoid "esoteric techniques" such as:
 
 * Passing arguments as `T&&` "for efficiency".
   Most rumors about performance advantages from passing by `&&` are false or brittle (but see [F.25](#Rf-pass-ref-move).)
-* Returning `const T&` from assignments and similar operations (see [F.47](03%2dF%2dFunctions%2emd#Rf-assignment-op).)
+* Returning `const T&` from assignments and similar operations (see [F.47](03-F-Functions.md#Rf-assignment-op).)
 
 ##### Example
 
@@ -672,7 +672,7 @@ It's efficient and eliminates bugs at the call site: `X&&` binds to rvalues, whi
     }
 
 Note that the `std::move(v)` makes it possible for `store_somewhere()` to leave `v` in a moved-from state.
-[That could be dangerous](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-semantic).
+[That could be dangerous](04-C-Classes+and+Class+Hierarchies.md#Rc-move-semantic).
 
 
 ##### Exception
@@ -721,7 +721,7 @@ A return value is self-documenting, whereas a `&` could be either in-out or out-
 
 This includes large objects like standard containers that use implicit move operations for performance and to avoid explicit memory management.
 
-If you have multiple values to return, [use a tuple](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-out-multi) or similar multi-member type.
+If you have multiple values to return, [use a tuple](03-F-Functions.md#Rf-out-multi) or similar multi-member type.
 
 ##### Example
 
@@ -755,7 +755,7 @@ The argument against is prevents (very frequent) use of move semantics.
 
 * For non-value types, such as types in an inheritance hierarchy, return the object by `unique_ptr` or `shared_ptr`.
 * If a type is expensive to move (e.g., `array<BigPOD>`), consider allocating it on the free store and return a handle (e.g., `unique_ptr`), or passing it in a reference to non-`const` target object to fill (to be used as an out-parameter).
-* To reuse an object that carries capacity (e.g., `std::string`, `std::vector`) across multiple calls to the function in an inner loop: [treat it as an in/out parameter and pass by reference](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-out-multi).
+* To reuse an object that carries capacity (e.g., `std::string`, `std::vector`) across multiple calls to the function in an inner loop: [treat it as an in/out parameter and pass by reference](03-F-Functions.md#Rf-out-multi).
 
 ##### Example
 
@@ -822,7 +822,7 @@ With C++17 we should be able to use "structured bindings" to declare and initial
 ##### Exception
 
 Sometimes, we need to pass an object to a function to manipulate its state.
-In such cases, passing the object by reference [`T&`](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-inout) is usually the right technique.
+In such cases, passing the object by reference [`T&`](03-F-Functions.md#Rf-inout) is usually the right technique.
 Explicitly passing an in-out parameter back out again as a return value is often not necessary.
 For example:
 
@@ -931,7 +931,7 @@ better
 
 **Also**: Assume that a `T*` obtained from a smart pointer to `T` (e.g., `unique_ptr<T>`) points to a single element.
 
-**See also**: [Support library](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl).
+**See also**: [Support library](20-GSL-Guideline+support+library.md#S-gsl).
 
 ##### Enforcement
 
@@ -1021,7 +1021,7 @@ A `span<T>` object does not own its elements and is so small that it can be pass
 
 Passing a `span` object as an argument is exactly as efficient as passing a pair of pointer arguments or passing a pointer and an integer count.
 
-**See also**: [Support library](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl).
+**See also**: [Support library](20-GSL-Guideline+support+library.md#S-gsl).
 
 ##### Enforcement
 
@@ -1052,7 +1052,7 @@ When I call `length(s)` should I test for `s == nullptr` first? Should the imple
 
 `zstring` do not represent ownership.
 
-**See also**: [Support library](20%2dGSL%2dGuideline%20support%20library%2emd#S-gsl).
+**See also**: [Support library](20-GSL-Guideline+support+library.md#S-gsl).
 
 ### <a name="Rf-unique_ptr"></a>F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed
 
@@ -1060,7 +1060,7 @@ When I call `length(s)` should I test for `s == nullptr` first? Should the imple
 
 Using `unique_ptr` is the cheapest way to pass a pointer safely.
 
-See also [C.50](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-factory) regarding when to return a `shared_ptr` from a factory.
+See also [C.50](04-C-Classes+and+Class+Hierarchies.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
 
 ##### Example
 
@@ -1173,11 +1173,11 @@ Importantly, that does not imply a transfer of ownership of the pointed-to objec
 ##### Note
 
 Positions can also be transferred by iterators, indices, and references.
-A reference is often a superior alternative to a pointer [if there is no need to use `nullptr`](03%2dF%2dFunctions%2emd03%2dF%2dFunctions%2emd#Rf-ptr-ref) or [if the object referred to should not change](???).
+A reference is often a superior alternative to a pointer [if there is no need to use `nullptr`](03-F-Functions.md#Rf-ptr-ref) or [if the object referred to should not change](???).
 
 ##### Note
 
-Do not return a pointer to something that is not in the caller's scope; see [F.43](03%2dF%2dFunctions%2emd#Rf-dangle).
+Do not return a pointer to something that is not in the caller's scope; see [F.43](03-F-Functions.md#Rf-dangle).
 
 **See also**: [discussion of dangling pointer prevention](#???).
 
@@ -1484,7 +1484,7 @@ There is not a choice when a set of functions are used to do a semantically equi
 ##### See also
 
 
-[Default arguments for virtual functions](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rh-virtual-default-arg)
+[Default arguments for virtual functions](04-C-Classes+and+Class+Hierarchies.md#Rh-virtual-default-arg)
 
 ##### Enforcement
 

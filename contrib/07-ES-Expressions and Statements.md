@@ -6,82 +6,82 @@
 
 Expressions and statements are the lowest and most direct way of expressing actions and computation. Declarations in local scopes are statements.
 
-For naming, commenting, and indentation rules, see [NL: Naming and layout](21%2dNL%2dNaming%20and%20layout%20rules%2emd#S-naming).
+For naming, commenting, and indentation rules, see [NL: Naming and layout](21-NL-Naming+and+layout+rules.md#S-naming).
 
 General rules:
 
-* [ES.1: Prefer the standard library to other libraries and to "handcrafted code"](07%2dES%2dExpressions%20and%20Statements%2emd#Res-lib)
-* [ES.2: Prefer suitable abstractions to direct use of language features](07%2dES%2dExpressions%20and%20Statements%2emd#Res-abstr)
+* [ES.1: Prefer the standard library to other libraries and to "handcrafted code"](07-ES-Expressions+and+Statements.md#Res-lib)
+* [ES.2: Prefer suitable abstractions to direct use of language features](07-ES-Expressions+and+Statements.md#Res-abstr)
 
 Declaration rules:
 
-* [ES.5: Keep scopes small](07%2dES%2dExpressions%20and%20Statements%2emd#Res-scope)
-* [ES.6: Declare names in for-statement initializers and conditions to limit scope](07%2dES%2dExpressions%20and%20Statements%2emd#Res-cond)
-* [ES.7: Keep common and local names short, and keep uncommon and nonlocal names longer](07%2dES%2dExpressions%20and%20Statements%2emd#Res-name-length)
-* [ES.8: Avoid similar-looking names](07%2dES%2dExpressions%20and%20Statements%2emd#Res-name-similar)
-* [ES.9: Avoid `ALL_CAPS` names](07%2dES%2dExpressions%20and%20Statements%2emd#Res-not-CAPS)
-* [ES.10: Declare one name (only) per declaration](07%2dES%2dExpressions%20and%20Statements%2emd#Res-name-one)
-* [ES.11: Use `auto` to avoid redundant repetition of type names](07%2dES%2dExpressions%20and%20Statements%2emd#Res-auto)
-* [ES.12: Do not reuse names in nested scopes](07%2dES%2dExpressions%20and%20Statements%2emd#Res-reuse)
-* [ES.20: Always initialize an object](07%2dES%2dExpressions%20and%20Statements%2emd#Res-always)
-* [ES.21: Don't introduce a variable (or constant) before you need to use it](07%2dES%2dExpressions%20and%20Statements%2emd#Res-introduce)
-* [ES.22: Don't declare a variable until you have a value to initialize it with](07%2dES%2dExpressions%20and%20Statements%2emd#Res-init)
-* [ES.23: Prefer the `{}`-initializer syntax](07%2dES%2dExpressions%20and%20Statements%2emd#Res-list)
-* [ES.24: Use a `unique_ptr<T>` to hold pointers](07%2dES%2dExpressions%20and%20Statements%2emd#Res-unique)
-* [ES.25: Declare an object `const` or `constexpr` unless you want to modify its value later on](07%2dES%2dExpressions%20and%20Statements%2emd#Res-const)
-* [ES.26: Don't use a variable for two unrelated purposes](07%2dES%2dExpressions%20and%20Statements%2emd#Res-recycle)
-* [ES.27: Use `std::array` or `stack_array` for arrays on the stack](07%2dES%2dExpressions%20and%20Statements%2emd#Res-stack)
-* [ES.28: Use lambdas for complex initialization, especially of `const` variables](07%2dES%2dExpressions%20and%20Statements%2emd#Res-lambda-init)
-* [ES.30: Don't use macros for program text manipulation](07%2dES%2dExpressions%20and%20Statements%2emd#Res-macros)
-* [ES.31: Don't use macros for constants or "functions"](07%2dES%2dExpressions%20and%20Statements%2emd07%2dES%2dExpressions%20and%20Statements%2emd#Res-macros2)
-* [ES.32: Use `ALL_CAPS` for all macro names](07%2dES%2dExpressions%20and%20Statements%2emd#Res-ALL_CAPS)
-* [ES.33: If you must use macros, give them unique names](07%2dES%2dExpressions%20and%20Statements%2emd#Res-MACROS)
-* [ES.34: Don't define a (C-style) variadic function](07%2dES%2dExpressions%20and%20Statements%2emd#Res-ellipses)
+* [ES.5: Keep scopes small](07-ES-Expressions+and+Statements.md#Res-scope)
+* [ES.6: Declare names in for-statement initializers and conditions to limit scope](07-ES-Expressions+and+Statements.md#Res-cond)
+* [ES.7: Keep common and local names short, and keep uncommon and nonlocal names longer](07-ES-Expressions+and+Statements.md#Res-name-length)
+* [ES.8: Avoid similar-looking names](07-ES-Expressions+and+Statements.md#Res-name-similar)
+* [ES.9: Avoid `ALL_CAPS` names](07-ES-Expressions+and+Statements.md#Res-not-CAPS)
+* [ES.10: Declare one name (only) per declaration](07-ES-Expressions+and+Statements.md#Res-name-one)
+* [ES.11: Use `auto` to avoid redundant repetition of type names](07-ES-Expressions+and+Statements.md#Res-auto)
+* [ES.12: Do not reuse names in nested scopes](07-ES-Expressions+and+Statements.md#Res-reuse)
+* [ES.20: Always initialize an object](07-ES-Expressions+and+Statements.md#Res-always)
+* [ES.21: Don't introduce a variable (or constant) before you need to use it](07-ES-Expressions+and+Statements.md#Res-introduce)
+* [ES.22: Don't declare a variable until you have a value to initialize it with](07-ES-Expressions+and+Statements.md#Res-init)
+* [ES.23: Prefer the `{}`-initializer syntax](07-ES-Expressions+and+Statements.md#Res-list)
+* [ES.24: Use a `unique_ptr<T>` to hold pointers](07-ES-Expressions+and+Statements.md#Res-unique)
+* [ES.25: Declare an object `const` or `constexpr` unless you want to modify its value later on](07-ES-Expressions+and+Statements.md#Res-const)
+* [ES.26: Don't use a variable for two unrelated purposes](07-ES-Expressions+and+Statements.md#Res-recycle)
+* [ES.27: Use `std::array` or `stack_array` for arrays on the stack](07-ES-Expressions+and+Statements.md#Res-stack)
+* [ES.28: Use lambdas for complex initialization, especially of `const` variables](07-ES-Expressions+and+Statements.md#Res-lambda-init)
+* [ES.30: Don't use macros for program text manipulation](07-ES-Expressions+and+Statements.md#Res-macros)
+* [ES.31: Don't use macros for constants or "functions"](07-ES-Expressions+and+Statements.md#Res-macros2)
+* [ES.32: Use `ALL_CAPS` for all macro names](07-ES-Expressions+and+Statements.md#Res-ALL_CAPS)
+* [ES.33: If you must use macros, give them unique names](07-ES-Expressions+and+Statements.md#Res-MACROS)
+* [ES.34: Don't define a (C-style) variadic function](07-ES-Expressions+and+Statements.md#Res-ellipses)
 
 Expression rules:
 
-* [ES.40: Avoid complicated expressions](07%2dES%2dExpressions%20and%20Statements%2emd#Res-complicated)
-* [ES.41: If in doubt about operator precedence, parenthesize](07%2dES%2dExpressions%20and%20Statements%2emd#Res-parens)
-* [ES.42: Keep use of pointers simple and straightforward](07%2dES%2dExpressions%20and%20Statements%2emd#Res-ptr)
-* [ES.43: Avoid expressions with undefined order of evaluation](07%2dES%2dExpressions%20and%20Statements%2emd#Res-order)
-* [ES.44: Don't depend on order of evaluation of function arguments](07%2dES%2dExpressions%20and%20Statements%2emd07%2dES%2dExpressions%20and%20Statements%2emd#Res-order-fct)
-* [ES.45: Avoid "magic constants"; use symbolic constants](07%2dES%2dExpressions%20and%20Statements%2emd#Res-magic)
-* [ES.46: Avoid narrowing conversions](07%2dES%2dExpressions%20and%20Statements%2emd#Res-narrowing)
-* [ES.47: Use `nullptr` rather than `0` or `NULL`](07%2dES%2dExpressions%20and%20Statements%2emd#Res-nullptr)
-* [ES.48: Avoid casts](07%2dES%2dExpressions%20and%20Statements%2emd#Res-casts)
-* [ES.49: If you must use a cast, use a named cast](07%2dES%2dExpressions%20and%20Statements%2emd07%2dES%2dExpressions%20and%20Statements%2emd#Res-casts-named)
-* [ES.50: Don't cast away `const`](07%2dES%2dExpressions%20and%20Statements%2emd07%2dES%2dExpressions%20and%20Statements%2emd#Res-casts-const)
-* [ES.55: Avoid the need for range checking](07%2dES%2dExpressions%20and%20Statements%2emd#Res-range-checking)
-* [ES.56: Write `std::move()` only when you need to explicitly move an object to another scope](07%2dES%2dExpressions%20and%20Statements%2emd#Res-move)
-* [ES.60: Avoid `new` and `delete` outside resource management functions](07%2dES%2dExpressions%20and%20Statements%2emd#Res-new)
-* [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](07%2dES%2dExpressions%20and%20Statements%2emd#Res-del)
-* [ES.62: Don't compare pointers into different arrays](07%2dES%2dExpressions%20and%20Statements%2emd#Res-arr2)
-* [ES.63: Don't slice](07%2dES%2dExpressions%20and%20Statements%2emd#Res-slice)
+* [ES.40: Avoid complicated expressions](07-ES-Expressions+and+Statements.md#Res-complicated)
+* [ES.41: If in doubt about operator precedence, parenthesize](07-ES-Expressions+and+Statements.md#Res-parens)
+* [ES.42: Keep use of pointers simple and straightforward](07-ES-Expressions+and+Statements.md#Res-ptr)
+* [ES.43: Avoid expressions with undefined order of evaluation](07-ES-Expressions+and+Statements.md#Res-order)
+* [ES.44: Don't depend on order of evaluation of function arguments](07-ES-Expressions+and+Statements.md#Res-order-fct)
+* [ES.45: Avoid "magic constants"; use symbolic constants](07-ES-Expressions+and+Statements.md#Res-magic)
+* [ES.46: Avoid narrowing conversions](07-ES-Expressions+and+Statements.md#Res-narrowing)
+* [ES.47: Use `nullptr` rather than `0` or `NULL`](07-ES-Expressions+and+Statements.md#Res-nullptr)
+* [ES.48: Avoid casts](07-ES-Expressions+and+Statements.md#Res-casts)
+* [ES.49: If you must use a cast, use a named cast](07-ES-Expressions+and+Statements.md#Res-casts-named)
+* [ES.50: Don't cast away `const`](07-ES-Expressions+and+Statements.md#Res-casts-const)
+* [ES.55: Avoid the need for range checking](07-ES-Expressions+and+Statements.md#Res-range-checking)
+* [ES.56: Write `std::move()` only when you need to explicitly move an object to another scope](07-ES-Expressions+and+Statements.md#Res-move)
+* [ES.60: Avoid `new` and `delete` outside resource management functions](07-ES-Expressions+and+Statements.md#Res-new)
+* [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](07-ES-Expressions+and+Statements.md#Res-del)
+* [ES.62: Don't compare pointers into different arrays](07-ES-Expressions+and+Statements.md#Res-arr2)
+* [ES.63: Don't slice](07-ES-Expressions+and+Statements.md#Res-slice)
 
 Statement rules:
 
-* [ES.70: Prefer a `switch`-statement to an `if`-statement when there is a choice](07%2dES%2dExpressions%20and%20Statements%2emd#Res-switch-if)
-* [ES.71: Prefer a range-`for`-statement to a `for`-statement when there is a choice](07%2dES%2dExpressions%20and%20Statements%2emd#Res-for-range)
-* [ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable](07%2dES%2dExpressions%20and%20Statements%2emd#Res-for-while)
-* [ES.73: Prefer a `while`-statement to a `for`-statement when there is no obvious loop variable](07%2dES%2dExpressions%20and%20Statements%2emd#Res-while-for)
-* [ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement](07%2dES%2dExpressions%20and%20Statements%2emd#Res-for-init)
-* [ES.75: Avoid `do`-statements](07%2dES%2dExpressions%20and%20Statements%2emd#Res-do)
-* [ES.76: Avoid `goto`](07%2dES%2dExpressions%20and%20Statements%2emd#Res-goto)
-* [ES.77: Minimize the use of `break` and `continue` in loops](07%2dES%2dExpressions%20and%20Statements%2emd#Res-continue)
-* [ES.78: Always end a non-empty `case` with a `break`](07%2dES%2dExpressions%20and%20Statements%2emd#Res-break)
-* [ES.79: Use `default` to handle common cases (only)](07%2dES%2dExpressions%20and%20Statements%2emd#Res-default)
-* [ES.84: Don't (try to) declare a local variable with no name](07%2dES%2dExpressions%20and%20Statements%2emd#Res-noname)
-* [ES.85: Make empty statements visible](07%2dES%2dExpressions%20and%20Statements%2emd#Res-empty)
-* [ES.86: Avoid modifying loop control variables inside the body of raw for-loops](07%2dES%2dExpressions%20and%20Statements%2emd#Res-loop-counter)
+* [ES.70: Prefer a `switch`-statement to an `if`-statement when there is a choice](07-ES-Expressions+and+Statements.md#Res-switch-if)
+* [ES.71: Prefer a range-`for`-statement to a `for`-statement when there is a choice](07-ES-Expressions+and+Statements.md#Res-for-range)
+* [ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable](07-ES-Expressions+and+Statements.md#Res-for-while)
+* [ES.73: Prefer a `while`-statement to a `for`-statement when there is no obvious loop variable](07-ES-Expressions+and+Statements.md#Res-while-for)
+* [ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement](07-ES-Expressions+and+Statements.md#Res-for-init)
+* [ES.75: Avoid `do`-statements](07-ES-Expressions+and+Statements.md#Res-do)
+* [ES.76: Avoid `goto`](07-ES-Expressions+and+Statements.md#Res-goto)
+* [ES.77: Minimize the use of `break` and `continue` in loops](07-ES-Expressions+and+Statements.md#Res-continue)
+* [ES.78: Always end a non-empty `case` with a `break`](07-ES-Expressions+and+Statements.md#Res-break)
+* [ES.79: Use `default` to handle common cases (only)](07-ES-Expressions+and+Statements.md#Res-default)
+* [ES.84: Don't (try to) declare a local variable with no name](07-ES-Expressions+and+Statements.md#Res-noname)
+* [ES.85: Make empty statements visible](07-ES-Expressions+and+Statements.md#Res-empty)
+* [ES.86: Avoid modifying loop control variables inside the body of raw for-loops](07-ES-Expressions+and+Statements.md#Res-loop-counter)
 
 Arithmetic rules:
 
-* [ES.100: Don't mix signed and unsigned arithmetic](07%2dES%2dExpressions%20and%20Statements%2emd#Res-mix)
-* [ES.101: Use unsigned types for bit manipulation](07%2dES%2dExpressions%20and%20Statements%2emd#Res-unsigned)
-* [ES.102: Use signed types for arithmetic](07%2dES%2dExpressions%20and%20Statements%2emd#Res-signed)
-* [ES.103: Don't overflow](07%2dES%2dExpressions%20and%20Statements%2emd#Res-overflow)
-* [ES.104: Don't underflow](07%2dES%2dExpressions%20and%20Statements%2emd#Res-underflow)
-* [ES.105: Don't divide by zero](07%2dES%2dExpressions%20and%20Statements%2emd#Res-zero)
+* [ES.100: Don't mix signed and unsigned arithmetic](07-ES-Expressions+and+Statements.md#Res-mix)
+* [ES.101: Use unsigned types for bit manipulation](07-ES-Expressions+and+Statements.md#Res-unsigned)
+* [ES.102: Use signed types for arithmetic](07-ES-Expressions+and+Statements.md#Res-signed)
+* [ES.103: Don't overflow](07-ES-Expressions+and+Statements.md#Res-overflow)
+* [ES.104: Don't underflow](07-ES-Expressions+and+Statements.md#Res-underflow)
+* [ES.105: Don't divide by zero](07-ES-Expressions+and+Statements.md#Res-zero)
 
 ### <a name="Res-lib"></a>ES.1: Prefer the standard library to other libraries and to "handcrafted code"
 
@@ -766,7 +766,7 @@ or maybe:
         return p.second;
     }();
 
-**See also**: [ES.28](07%2dES%2dExpressions%20and%20Statements%2emd#Res-lambda-init)
+**See also**: [ES.28](07-ES-Expressions+and+Statements.md#Res-lambda-init)
 
 ##### Enforcement
 
@@ -824,7 +824,7 @@ This would be fine if there was a default initialization for `SomeLargeType` tha
 Otherwise, a programmer might very well wonder if every possible path through the maze of conditions has been covered.
 If not, we have a "use before set" bug. This is a maintenance trap.
 
-For initializers of moderate complexity, including for `const` variables, consider using a lambda to express the initializer; see [ES.28](07%2dES%2dExpressions%20and%20Statements%2emd#Res-lambda-init).
+For initializers of moderate complexity, including for `const` variables, consider using a lambda to express the initializer; see [ES.28](07-ES-Expressions+and+Statements.md#Res-lambda-init).
 
 ##### Enforcement
 
@@ -1163,7 +1163,7 @@ Macros do not obey scope rules.
 
 ##### Note
 
-Avoid macros if you can: [ES.30](07%2dES%2dExpressions%20and%20Statements%2emd#Res-macros), [ES.31](07%2dES%2dExpressions%20and%20Statements%2emd07%2dES%2dExpressions%20and%20Statements%2emd#Res-macros2), and [ES.32](07%2dES%2dExpressions%20and%20Statements%2emd#Res-ALL_CAPS).
+Avoid macros if you can: [ES.30](07-ES-Expressions+and+Statements.md#Res-macros), [ES.31](07-ES-Expressions+and+Statements.md#Res-macros2), and [ES.32](07-ES-Expressions+and+Statements.md#Res-ALL_CAPS).
 However, there are billions of lines of code littered with macros and a long tradition for using and overusing macros.
 If you are forced to use macros, use long names and supposedly unique prefixes (e.g., your organization's name) to lower the likelihood of a clash.
 
@@ -1381,7 +1381,7 @@ Avoid using the loop variable for other purposes after the loop.
     }
     // j is still visible here and isn't needed
 
-**See also**: [Don't use a variable for two unrelated purposes](07%2dES%2dExpressions%20and%20Statements%2emd#Res-recycle)
+**See also**: [Don't use a variable for two unrelated purposes](07-ES-Expressions+and+Statements.md#Res-recycle)
 
 ##### Example
 
@@ -1487,7 +1487,7 @@ Often. a loop that uses `continue` can equivalently and as clearly be expressed 
 
 ##### Note
 
-If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](07%2dES%2dExpressions%20and%20Statements%2emd#Res-loop-counter) or a [`goto`](07%2dES%2dExpressions%20and%20Statements%2emd#Res-goto):
+If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](07-ES-Expressions+and+Statements.md#Res-loop-counter) or a [`goto`](07-ES-Expressions+and+Statements.md#Res-goto):
 
 
 ##### Enforcement
@@ -1754,7 +1754,7 @@ Some of these expressions are unconditionally bad (e.g., they rely on undefined 
 ##### Note
 
 C++17 tightens up the rules for the order of evaluation
-(left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified; [see ES.43](07%2dES%2dExpressions%20and%20Statements%2emd#Res-order)),
+(left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified; [see ES.43](07-ES-Expressions+and+Statements.md#Res-order)),
 but that doesn't change the fact that complicated expressions are potentially confusing.
 
 ##### Note
@@ -2189,7 +2189,7 @@ In any variant, we must guard against data races on the `cache` in multithreaded
 
 ##### Enforcement
 
-Flag `const_cast`s. See also [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19%2dPro%2dProfiles%2emd#Pro-type-constcast) for the related Profile.
+Flag `const_cast`s. See also [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19-Pro-Profiles.md#Pro-type-constcast) for the related Profile.
 
 ### <a name="Res-range-checking"></a>ES.55: Avoid the need for range checking
 
@@ -2214,7 +2214,7 @@ Look for explicit range checks and heuristically suggest alternatives.
 
 We move, rather than copy, to avoid duplication and for improved performance.
 
-A move typically leaves behind an empty object ([C.64](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-semantic)), which can be surprising or even dangerous, so we try to avoid moving from lvalues (they might be accessed later).
+A move typically leaves behind an empty object ([C.64](04-C-Classes+and+Class+Hierarchies.md#Rc-move-semantic)), which can be surprising or even dangerous, so we try to avoid moving from lvalues (they might be accessed later).
 
 ##### Notes
 
@@ -2243,7 +2243,7 @@ Explicit `move` is needed to explicitly move an object to another scope, notably
     }
 
 Usually, a `std::move()` is used as an argument to a `&&` parameter.
-And after you do that, assume the object has been moved from (see [C.64](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
+And after you do that, assume the object has been moved from (see [C.64](04-C-Classes+and+Class+Hierarchies.md#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
 
     void f() {
         string s1 = "supercalifragilisticexpialidocious";
@@ -2345,7 +2345,7 @@ also known as "No naked `new`!"
 
 There can be code in the `...` part that causes the `delete` never to happen.
 
-**See also**: [R: Resource management](06%2dR%2dResource%20management%2emd#S-resource).
+**See also**: [R: Resource management](06-R-Resource+management.md#S-resource).
 
 ##### Enforcement
 
@@ -2368,7 +2368,7 @@ That's what the language requires and mistakes can lead to resource release erro
 
 ##### Note
 
-This example not only violates the [no naked `new` rule](07%2dES%2dExpressions%20and%20Statements%2emd#Res-new) as in the previous example, it has many more problems.
+This example not only violates the [no naked `new` rule](07-ES-Expressions+and+Statements.md#Res-new) as in the previous example, it has many more problems.
 
 ##### Enforcement
 
@@ -2416,7 +2416,7 @@ In the rare cases where the slicing was deliberate the code can be surprising.
     Shape s {c};    // copy Shape part of Circle
 
 The result will be meaningless because the center and radius will not be copied from `c` into `s`.
-The first defense against this is to [define the base class `Shape` not to allow this](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#Rc-copy-virtual).
+The first defense against this is to [define the base class `Shape` not to allow this](04-C-Classes+and+Class+Hierarchies.md#Rc-copy-virtual).
 
 ##### Alternative
 

@@ -31,7 +31,7 @@ If the class definition and the constructor body are in separate files, the long
 
 **References**:
 
-[\[Cline99\]](27%2dBibliography%2emd#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) §4, [\[Lakos96\]](27%2dBibliography%2emd#Lakos96) §10.3.5, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §13, [\[Murray93\]](27%2dBibliography%2emd#Murray93) §2.1.3, [\[Sutter00\]](27%2dBibliography%2emd#Sutter00) §47
+[\[Cline99\]](27-Bibliography.md#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](27-Bibliography.md#Koenig97) §4, [\[Lakos96\]](27-Bibliography.md#Lakos96) §10.3.5, [\[Meyers97\]](27-Bibliography.md#Meyers97) §13, [\[Murray93\]](27-Bibliography.md#Murray93) §2.1.3, [\[Sutter00\]](27-Bibliography.md#Sutter00) §47
 
 ### <a name="TBD"></a>Use of `=`, `{}`, and `()` as initializers
 
@@ -43,7 +43,7 @@ If your design wants virtual dispatch into a derived class from a base class con
 
 * *Pass the buck:* Just document that user code must call the post-initialization function right after constructing an object.
 * *Post-initialize lazily:* Do it during the first call of a member function. A Boolean flag in the base class tells whether or not post-construction has taken place yet.
-* *Use virtual base class semantics:* Language rules dictate that the constructor most-derived class decides which base constructor will be invoked; you can use that to your advantage. (See [\[Taligent94\]](27%2dBibliography%2emd#Taligent94).)
+* *Use virtual base class semantics:* Language rules dictate that the constructor most-derived class decides which base constructor will be invoked; you can use that to your advantage. (See [\[Taligent94\]](27-Bibliography.md#Taligent94).)
 * *Use a factory function:* This way, you can easily force a mandatory invocation of a post-constructor function.
 
 Here is an example of the last option:
@@ -98,7 +98,7 @@ If the requirements above are met, the design guarantees that `PostInitialize` h
 
 In summary, no post-construction technique is perfect. The worst techniques dodge the whole issue by simply asking the caller to invoke the post-constructor manually. Even the best require a different syntax for constructing objects (easy to check at compile time) and/or cooperation from derived class authors (impossible to check at compile time).
 
-**References**: [\[Alexandrescu01\]](27%2dBibliography%2emd#Alexandrescu01) §3, [\[Boost\]](18%2dRF%2dReferences%2emd#Boost), [\[Dewhurst03\]](27%2dBibliography%2emd#Dewhurst03) §75, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §46, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §15.4.3, [\[Taligent94\]](27%2dBibliography%2emd#Taligent94)
+**References**: [\[Alexandrescu01\]](27-Bibliography.md#Alexandrescu01) §3, [\[Boost\]](18-RF-References.md#Boost), [\[Dewhurst03\]](27-Bibliography.md#Dewhurst03) §75, [\[Meyers97\]](27-Bibliography.md#Meyers97) §46, [\[Stroustrup00\]](27-Bibliography.md#Stroustrup00) §15.4.3, [\[Taligent94\]](27-Bibliography.md#Taligent94)
 
 ### <a name="Sd-dtor"></a>Discussion: Make base class destructors public and virtual, or protected and nonvirtual
 
@@ -169,7 +169,7 @@ In this rare case, you could make the destructor public and nonvirtual but clear
 
 In general, however, avoid concrete base classes (see Item 35). For example, `unary_function` is a bundle-of-typedefs that was never intended to be instantiated standalone. It really makes no sense to give it a public destructor; a better design would be to follow this Item's advice and give it a protected nonvirtual destructor.
 
-**References**: [\[C++CS\]](#C++CS) Item 50, [\[Cargill92\]](27%2dBibliography%2emd#Cargill92) pp. 77-79, 207, [\[Cline99\]](27%2dBibliography%2emd#Cline99) §21.06, 21.12-13, [\[Henricson97\]](27%2dBibliography%2emd#Henricson97) pp. 110-114, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) Chapters 4, 11, [\[Meyers97\]](27%2dBibliography%2emd#Meyers97) §14, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §12.4.2, [\[Sutter02\]](27%2dBibliography%2emd#Sutter02) §27, [\[Sutter04\]](27%2dBibliography%2emd#Sutter04) §18
+**References**: [\[C++CS\]](#C++CS) Item 50, [\[Cargill92\]](27-Bibliography.md#Cargill92) pp. 77-79, 207, [\[Cline99\]](27-Bibliography.md#Cline99) §21.06, 21.12-13, [\[Henricson97\]](27-Bibliography.md#Henricson97) pp. 110-114, [\[Koenig97\]](27-Bibliography.md#Koenig97) Chapters 4, 11, [\[Meyers97\]](27-Bibliography.md#Meyers97) §14, [\[Stroustrup00\]](27-Bibliography.md#Stroustrup00) §12.4.2, [\[Sutter02\]](27-Bibliography.md#Sutter02) §27, [\[Sutter04\]](27-Bibliography.md#Sutter04) §18
 
 ### <a name="Sd-noexcept"></a>Discussion: Usage of noexcept
 
@@ -261,7 +261,7 @@ Fortunately, when releasing a resource, the scope for failure is definitely smal
 
 When using exceptions as your error handling mechanism, always document this behavior by declaring these functions `noexcept`. (See Item 75.)
 
-**References**: [\[C++CS\]](#C++CS) Item 51; [\[C++03\]](#C++03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](27%2dBibliography%2emd#Meyers96) §11, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](27%2dBibliography%2emd#Sutter00) §8, §16, [\[Sutter02\]](27%2dBibliography%2emd#Sutter02) §18-19
+**References**: [\[C++CS\]](#C++CS) Item 51; [\[C++03\]](#C++03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](27-Bibliography.md#Meyers96) §11, [\[Stroustrup00\]](27-Bibliography.md#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](27-Bibliography.md#Sutter00) §8, §16, [\[Sutter02\]](27-Bibliography.md#Sutter02) §18-19
 
 ## <a name="Sd-consistent"></a>Define Copy, move, and destroy consistently
 
@@ -347,18 +347,18 @@ Prefer compiler-generated (including `=default`) special members; only these can
 In rare cases, classes that have members of strange types (such as reference members) are an exception because they have peculiar copy semantics.
 In a class holding a reference, you likely need to write the copy constructor and the assignment operator, but the default destructor already does the right thing. (Note that using a reference member is almost always wrong.)
 
-**References**: [\[C++CS\]](#C++CS) Item 52; [\[Cline99\]](27%2dBibliography%2emd#Cline99) §30.01-14, [\[Koenig97\]](27%2dBibliography%2emd#Koenig97) §4, [\[Stroustrup00\]](27%2dBibliography%2emd#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](27%2dBibliography%2emd#SuttHysl04b)
+**References**: [\[C++CS\]](#C++CS) Item 52; [\[Cline99\]](27-Bibliography.md#Cline99) §30.01-14, [\[Koenig97\]](27-Bibliography.md#Koenig97) §4, [\[Stroustrup00\]](27-Bibliography.md#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](27-Bibliography.md#SuttHysl04b)
 
 Resource management rule summary:
 
-* [Provide strong resource safety; that is, never leak anything that you think of as a resource](25%2dAppendix%20C%2dDiscussion%2emd#Cr-safety)
-* [Never throw while holding a resource not owned by a handle](25%2dAppendix%20C%2dDiscussion%2emd#Cr-never)
-* [A "raw" pointer or reference is never a resource handle](25%2dAppendix%20C%2dDiscussion%2emd#Cr-raw)
-* [Never let a pointer outlive the object it points to](25%2dAppendix%20C%2dDiscussion%2emd#Cr-outlive)
-* [Use templates to express containers (and other resource handles)](25%2dAppendix%20C%2dDiscussion%2emd#Cr-templates)
-* [Return containers by value (relying on move or copy elision for efficiency)](25%2dAppendix%20C%2dDiscussion%2emd#Cr-value-return)
-* [If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations](25%2dAppendix%20C%2dDiscussion%2emd#Cr-handle)
-* [If a class is a container, give it an initializer-list constructor](25%2dAppendix%20C%2dDiscussion%2emd#Cr-list)
+* [Provide strong resource safety; that is, never leak anything that you think of as a resource](25-Appendix+C-Discussion.md#Cr-safety)
+* [Never throw while holding a resource not owned by a handle](25-Appendix+C-Discussion.md#Cr-never)
+* [A "raw" pointer or reference is never a resource handle](25-Appendix+C-Discussion.md#Cr-raw)
+* [Never let a pointer outlive the object it points to](25-Appendix+C-Discussion.md#Cr-outlive)
+* [Use templates to express containers (and other resource handles)](25-Appendix+C-Discussion.md#Cr-templates)
+* [Return containers by value (relying on move or copy elision for efficiency)](25-Appendix+C-Discussion.md#Cr-value-return)
+* [If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations](25-Appendix+C-Discussion.md#Cr-handle)
+* [If a class is a container, give it an initializer-list constructor](25-Appendix+C-Discussion.md#Cr-list)
 
 ### <a name="Cr-safety"></a>Provide strong resource safety; that is, never leak anything that you think of as a resource
 
@@ -492,7 +492,7 @@ To provide statically type-safe manipulation of elements.
 
 ##### Reason
 
-To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime. See also [F.20, the general item about "out" output values](03%2dF%2dFunctions%2emd#Rf-out).
+To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime. See also [F.20, the general item about "out" output values](03-F-Functions.md#Rf-out).
 
 ##### Example
 
@@ -505,7 +505,7 @@ To simplify code and eliminate a need for explicit memory management. To bring a
 
 ##### Exception
 
-See the Exceptions in [F.20](03%2dF%2dFunctions%2emd#Rf-out).
+See the Exceptions in [F.20](03-F-Functions.md#Rf-out).
 
 ##### Enforcement
 
@@ -534,7 +534,7 @@ Now `Named` has a default constructor, a destructor, and efficient copy and move
 
 ##### Enforcement
 
-In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04%2dC%2dClasses%20and%20Class%20Hierarchies%2emd#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
+In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04-C-Classes+and+Class+Hierarchies.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
 
 ### <a name="Cr-list"></a>If a class is a container, give it an initializer-list constructor
 

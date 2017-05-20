@@ -77,14 +77,19 @@ std::string& replace_all(std::string& s, std::string const& from, std::string co
 
 std::string urlencode(std::string const& url)
 {
-	static const std::string plain = "";
+	static const std::string plain = "-_.";
+
 	std::ostringstream oss;
 	std::string::const_iterator i = url.begin();
-//	for(; i != url.end(); ++i)
+
 	for(auto c: url)
 	{
-		if(std::isalnum(c) || plain.find(c) != std::string::npos) { oss << c; }
-		else { oss << "%" << std::hex << int(c); }
+		if(std::isalnum(c) || plain.find(c) != std::string::npos)
+			oss << c;
+		else if(std::isspace(c))
+			oss << '+';
+		else
+			oss << "%" << std::uppercase << std::hex << int(c);
 	}
 	return oss.str();
 }
@@ -99,7 +104,7 @@ int main(int, char* argv[])
 		if(!argv[1])
 			throw std::runtime_error("Pathname for CppCoreGuidelines.md required");
 
-		std::string doc = [&]
+		std::string const doc = [&]
 		{
 			std::ostringstream oss;
 			if(!(oss << std::ifstream(argv[1]).rdbuf()))
@@ -118,11 +123,10 @@ int main(int, char* argv[])
 		std::sregex_iterator itr(std::begin(doc), std::end(doc), re_sec_text);
 		std::sregex_iterator const itr_end;
 
-		unsigned idx = 0;
 		std::string name = "";
 		pos_type beg = 0;
 
-		for(; itr != itr_end; ++itr, ++idx)
+		for(auto idx = 0U; itr != itr_end; ++itr, ++idx)
 		{
 			std::cout << "found: " << itr->str(3) << '\n';
 
@@ -164,31 +168,19 @@ int main(int, char* argv[])
 			beg = itr->position();
 		}
 
-//		if(beg)
-//		{
-//			auto& section = names["Bibliography"];
-//
-//			section.id = "Bib";
-//			section.long_id = "bibliography";
-//			section.name = name;
-//			section.beg = beg;
-//			section.end = itr->position();
-//		}
-
 		std::map<std::string, std::string> links;
 
 		// build link database
 		std::regex const e_anchors{R"~(<a\s+name="([^"]+)"></a>)~"};
+
 		for(auto const& p: names)
 		{
+			std::sregex_iterator itr_end;
 			std::sregex_iterator itr{std::next(std::begin(doc), p.second.beg),
 				std::next(std::begin(doc), p.second.end), e_anchors};
-			std::sregex_iterator itr_end;
 
 			for(; itr != itr_end; ++itr)
-			{
-				links['#' + itr->str(1)] = urlencode(p.second.name) + '#' + itr->str(1);
-			}
+				links["](#" + itr->str(1) + ")"] = "](" + urlencode(p.second.name) + '#' + itr->str(1) + ")";
 		}
 
 		// rewrite links
@@ -200,16 +192,7 @@ int main(int, char* argv[])
 				text = replace_all(text, link.first, link.second);
 
 			write(path, p.second.name, text);
-
 		}
-
-		// # Bibliography
-//		std::string text = doc.substr(beg, doc.size() - beg);
-//
-//		for(auto const& link: links)
-//			text = replace_all(text, link.first, link.second);
-//
-//		write(path, (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md", text);
 	}
 	catch(std::exception const& e)
 	{

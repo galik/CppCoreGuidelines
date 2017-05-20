@@ -9,14 +9,14 @@ There are two kind of enumerations, "plain" `enum`s and `class enum`s.
 
 Enumeration rule summary:
 
-* [Enum.1: Prefer enumerations over macros](05%2dEnum%2dEnumerations%2emd#Renum-macro)
-* [Enum.2: Use enumerations to represent sets of related named constants](05%2dEnum%2dEnumerations%2emd#Renum-set)
-* [Enum.3: Prefer `enum class`es over "plain" `enum`s](05%2dEnum%2dEnumerations%2emd#Renum-class)
-* [Enum.4: Define operations on enumerations for safe and simple use](05%2dEnum%2dEnumerations%2emd#Renum-oper)
-* [Enum.5: Don't use `ALL_CAPS` for enumerators](05%2dEnum%2dEnumerations%2emd#Renum-caps)
-* [Enum.6: Avoid unnamed enumerations](05%2dEnum%2dEnumerations%2emd#Renum-unnamed)
-* [Enum.7: Specify the underlying type of an enumeration only when necessary](05%2dEnum%2dEnumerations%2emd#Renum-underlying)
-* [Enum.8: Specify enumerator values only when necessary](05%2dEnum%2dEnumerations%2emd#Renum-value)
+* [Enum.1: Prefer enumerations over macros](05-Enum-Enumerations.md#Renum-macro)
+* [Enum.2: Use enumerations to represent sets of related named constants](05-Enum-Enumerations.md#Renum-set)
+* [Enum.3: Prefer `enum class`es over "plain" `enum`s](05-Enum-Enumerations.md#Renum-class)
+* [Enum.4: Define operations on enumerations for safe and simple use](05-Enum-Enumerations.md#Renum-oper)
+* [Enum.5: Don't use `ALL_CAPS` for enumerators](05-Enum-Enumerations.md#Renum-caps)
+* [Enum.6: Avoid unnamed enumerations](05-Enum-Enumerations.md#Renum-unnamed)
+* [Enum.7: Specify the underlying type of an enumeration only when necessary](05-Enum-Enumerations.md#Renum-underlying)
+* [Enum.8: Specify enumerator values only when necessary](05-Enum-Enumerations.md#Renum-value)
 
 ### <a name="Renum-macro"></a>Enum.1: Prefer enumerations over macros
 
