@@ -8,7 +8,7 @@ Ideally, we would follow all of the guidelines.
 That would give the cleanest, most regular, least error-prone, and often the fastest code.
 Unfortunately, that is usually impossible because we have to fit our code into large code bases and use existing libraries.
 Often, such code has been written over decades and does not follow these guidelines.
-We must aim for [gradual adoption](24-Appendix+B-Modernizing+code.md#S-modernizing).
+We must aim for [gradual adoption](24-Appendix+B-Modernizing+code%2Emd#S-modernizing).
 
 Whatever strategy for gradual adoption we adopt, we need to be able to apply sets of related guidelines to address some set
 of problems first and leave the rest until later.
@@ -32,9 +32,9 @@ A profile may also introduce additional library types to ease conformance and en
 
 Profiles summary:
 
-* [Pro.type: Type safety](19-Pro-Profiles.md#SS-type)
-* [Pro.bounds: Bounds safety](19-Pro-Profiles.md#SS-bounds)
-* [Pro.lifetime: Lifetime safety](19-Pro-Profiles.md#SS-lifetime)
+* [Pro.type: Type safety](19-Pro-Profiles%2Emd#SS-type)
+* [Pro.bounds: Bounds safety](19-Pro-Profiles%2Emd#SS-bounds)
+* [Pro.lifetime: Lifetime safety](19-Pro-Profiles%2Emd#SS-lifetime)
 
 In the future, we expect to define many more profiles and add more checks to existing profiles.
 Candidates include:
@@ -65,27 +65,27 @@ It does so by focusing on removing the primary sources of type violations, inclu
 For the purposes of this section,
 type-safety is defined to be the property that a variable is not used in a way that doesn't obey the rules for the type of its definition.
 Memory accessed as a type `T` should not be valid memory that actually contains an object of an unrelated type `U`.
-Note that the safety is intended to be complete when combined also with [Bounds safety](19-Pro-Profiles.md#SS-bounds) and [Lifetime safety](19-Pro-Profiles.md#SS-lifetime).
+Note that the safety is intended to be complete when combined also with [Bounds safety](19-Pro-Profiles%2Emd#SS-bounds) and [Lifetime safety](19-Pro-Profiles%2Emd#SS-lifetime).
 
 An implementation of this profile shall recognize the following patterns in source code as non-conforming and issue a diagnostic.
 
 Type safety profile summary:
 
-* [Type.1: Don't use `reinterpret_cast`](19-Pro-Profiles.md#Pro-type-reinterpretcast)
-* [Type.2: Don't use `static_cast` downcasts. Use `dynamic_cast` instead](19-Pro-Profiles.md#Pro-type-downcast)
-* [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19-Pro-Profiles.md#Pro-type-constcast)
-* [Type.4: Don't use C-style `(T)expression` casts that would perform a `static_cast` downcast, `const_cast`, or `reinterpret_cast`](19-Pro-Profiles.md#Pro-type-cstylecast)
-* [Type.4.1: Don't use `T(expression)` for casting](19-Pro-Profiles.md#Pro-fct-style-cast)
-* [Type.5: Don't use a variable before it has been initialized](19-Pro-Profiles.md#Pro-type-init)
-* [Type.6: Always initialize a member variable](19-Pro-Profiles.md#Pro-type-memberinit)
-* [Type.7: Avoid accessing members of raw unions. Prefer `variant` instead](19-Pro-Profiles.md#Pro-fct-style-cast)
-* [Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead](19-Pro-Profiles.md#Pro-type-varargs)
+* [Type.1: Don't use `reinterpret_cast`](19-Pro-Profiles%2Emd#Pro-type-reinterpretcast)
+* [Type.2: Don't use `static_cast` downcasts. Use `dynamic_cast` instead](19-Pro-Profiles%2Emd#Pro-type-downcast)
+* [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19-Pro-Profiles%2Emd#Pro-type-constcast)
+* [Type.4: Don't use C-style `(T)expression` casts that would perform a `static_cast` downcast, `const_cast`, or `reinterpret_cast`](19-Pro-Profiles%2Emd#Pro-type-cstylecast)
+* [Type.4.1: Don't use `T(expression)` for casting](19-Pro-Profiles%2Emd#Pro-fct-style-cast)
+* [Type.5: Don't use a variable before it has been initialized](19-Pro-Profiles%2Emd#Pro-type-init)
+* [Type.6: Always initialize a member variable](19-Pro-Profiles%2Emd#Pro-type-memberinit)
+* [Type.7: Avoid accessing members of raw unions. Prefer `variant` instead](19-Pro-Profiles%2Emd#Pro-fct-style-cast)
+* [Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead](19-Pro-Profiles%2Emd#Pro-type-varargs)
 
 ##### Impact
 
 With the type-safety profile you can trust that every operation is applied to a valid object.
 Exception may be thrown to indicate errors that cannot be detected statically (at compile time).
-Note that this type-safety can be complete only if we also have [Bounds safety](19-Pro-Profiles.md#SS-bounds) and [Lifetime safety](19-Pro-Profiles.md#SS-lifetime).
+Note that this type-safety can be complete only if we also have [Bounds safety](19-Pro-Profiles%2Emd#SS-bounds) and [Lifetime safety](19-Pro-Profiles%2Emd#SS-lifetime).
 Without those guarantees, a region of memory could be accessed independent of which object, objects, or parts of objects are stored in it.
 
 ### <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`.
@@ -151,7 +151,7 @@ Use of these casts can violate type safety and cause the program to access a var
 If a class hierarchy isn't polymorphic, avoid casting.
 It is entirely unsafe.
 Look for a better design.
-See also [C.146](04-C-Classes+and+Class+Hierarchies.md#Rh-dynamic_cast).
+See also [C.146](04-C-Classes+and+Class+Hierarchies%2Emd#Rh-dynamic_cast).
 
 ##### Enforcement
 
@@ -233,7 +233,7 @@ You may need to cast away `const` when calling `const`-incorrect functions. Pref
 
 ##### See also: 
 
-[ES.50, Don't cast away `const`](07-ES-Expressions+and+Statements.md#Res-casts-const) for more discussion.
+[ES.50, Don't cast away `const`](07-ES-Expressions+and+Statements%2Emd#Res-casts-const) for more discussion.
 
 ##### Enforcement
 
@@ -308,7 +308,7 @@ Flag `T(e)` if used for `e` of a built-in type.
 
 ### <a name="Pro-type-init"></a>Type.5: Don't use a variable before it has been initialized.
 
-[ES.20: Always initialize an object](07-ES-Expressions+and+Statements.md#Res-always) is required.
+[ES.20: Always initialize an object](07-ES-Expressions+and+Statements%2Emd#Res-always) is required.
 
 ### <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable.
 
@@ -393,7 +393,7 @@ Note: Declaring a `...` parameter is sometimes useful for techniques that don't 
 
 This profile makes it easier to construct code that operates within the bounds of allocated blocks of memory. It does so by focusing on removing the primary sources of bounds violations: pointer arithmetic and array indexing. One of the core features of this profile is to restrict pointers to only refer to single objects, not arrays.
 
-For the purposes of this document, bounds-safety is defined to be the property that a program does not use a variable to access memory outside of the range that was allocated and assigned to that variable. (Note that the safety is intended to be complete when combined also with [Type safety](19-Pro-Profiles.md#SS-type) and [Lifetime safety](19-Pro-Profiles.md#SS-lifetime), which cover other unsafe operations that allow bounds violations, such as type-unsafe casts that 'widen' pointers.)
+For the purposes of this document, bounds-safety is defined to be the property that a program does not use a variable to access memory outside of the range that was allocated and assigned to that variable. (Note that the safety is intended to be complete when combined also with [Type safety](19-Pro-Profiles%2Emd#SS-type) and [Lifetime safety](19-Pro-Profiles%2Emd#SS-lifetime), which cover other unsafe operations that allow bounds violations, such as type-unsafe casts that 'widen' pointers.)
 
 The following are under consideration but not yet in the rules below, and may be better in other profiles:
 
@@ -403,10 +403,10 @@ An implementation of this profile shall recognize the following patterns in sour
 
 Bounds safety profile summary:
 
-* [Bounds.1: Don't use pointer arithmetic. Use `span` instead](19-Pro-Profiles.md#Pro-bounds-arithmetic)
-* [Bounds.2: Only index into arrays using constant expressions](19-Pro-Profiles.md#Pro-bounds-arrayindex)
-* [Bounds.3: No array-to-pointer decay](19-Pro-Profiles.md#Pro-bounds-decay)
-* [Bounds.4: Don't use standard library functions and types that are not bounds-checked](19-Pro-Profiles.md#Pro-bounds-stdlib)
+* [Bounds.1: Don't use pointer arithmetic. Use `span` instead](19-Pro-Profiles%2Emd#Pro-bounds-arithmetic)
+* [Bounds.2: Only index into arrays using constant expressions](19-Pro-Profiles%2Emd#Pro-bounds-arrayindex)
+* [Bounds.3: No array-to-pointer decay](19-Pro-Profiles%2Emd#Pro-bounds-decay)
+* [Bounds.4: Don't use standard library functions and types that are not bounds-checked](19-Pro-Profiles%2Emd#Pro-bounds-stdlib)
 
 
 ### <a name="Pro-bounds-arithmetic"></a>Bounds.1: Don't use pointer arithmetic. Use `span` instead.
@@ -659,9 +659,9 @@ The following are specific rules that are being enforced.
 
 Lifetime safety profile summary:
 
-* [Lifetime.1: Don't dereference a possibly invalid pointer.](19-Pro-Profiles.md#Pro-lifetime-invalid-deref)
-* [Lifetime.2: Don't dereference a possibly null pointer.](19-Pro-Profiles.md#Pro-lifetime-null-deref)
-* [Lifetime.3: Don't pass a possibly invalid pointer to a function.](19-Pro-Profiles.md#Pro-lifetime-invalid-argument)
+* [Lifetime.1: Don't dereference a possibly invalid pointer.](19-Pro-Profiles%2Emd#Pro-lifetime-invalid-deref)
+* [Lifetime.2: Don't dereference a possibly null pointer.](19-Pro-Profiles%2Emd#Pro-lifetime-null-deref)
+* [Lifetime.3: Don't pass a possibly invalid pointer to a function.](19-Pro-Profiles%2Emd#Pro-lifetime-invalid-argument)
 
 
 ### <a name="Pro-lifetime-invalid-deref"></a>Lifetime.1: Don't dereference a possibly invalid pointer.

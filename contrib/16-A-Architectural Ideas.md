@@ -8,8 +8,8 @@ This section contains ideas about higher-level architectural ideas and libraries
 
 Architectural rule summary:
 
-* [A.1 Separate stable from less stable part of code](16-A-Architectural+Ideas.md#Ra-stable)
-* [A.2 Express potentially reusable parts as a library](16-A-Architectural+Ideas.md#Ra-lib)
+* [A.1 Separate stable from less stable part of code](16-A-Architectural+Ideas%2Emd#Ra-stable)
+* [A.2 Express potentially reusable parts as a library](16-A-Architectural+Ideas%2Emd#Ra-lib)
 * [A.4 There should be no cycles among libraries](#?Ra-dag)
 * [???](#???)
 * [???](#???)

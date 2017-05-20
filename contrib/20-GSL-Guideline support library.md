@@ -18,11 +18,11 @@ Eventually, use [the one voted into C++17](http://www.open-std.org/jtc1/sc22/wg2
 
 Summary of GSL components:
 
-* [GSL.view: Views](20-GSL-Guideline+support+library.md#SS-views)
-* [GSL.owner](20-GSL-Guideline+support+library.md#SS-ownership)
-* [GSL.assert: Assertions](20-GSL-Guideline+support+library.md#SS-assertions)
-* [GSL.util: Utilities](20-GSL-Guideline+support+library.md#SS-utilities)
-* [GSL.concept: Concepts](20-GSL-Guideline+support+library.md#SS-gsl-concepts)
+* [GSL.view: Views](20-GSL-Guideline+support+library%2Emd#SS-views)
+* [GSL.owner](20-GSL-Guideline+support+library%2Emd#SS-ownership)
+* [GSL.assert: Assertions](20-GSL-Guideline+support+library%2Emd#SS-assertions)
+* [GSL.util: Utilities](20-GSL-Guideline+support+library%2Emd#SS-utilities)
+* [GSL.concept: Concepts](20-GSL-Guideline+support+library%2Emd#SS-gsl-concepts)
 
 We plan for a "ISO C++ standard style" semi-formal specification of the GSL.
 
@@ -123,9 +123,9 @@ Most of the concepts below are defined in [the Ranges TS](http://www.open-std.or
 * `String`   // ???
 * `Number`   // ???
 * `Sortable`
-* `Pointer`  // A type with `*`, `->`, `==`, and default construction (default construction is assumed to set the singular "null" value); see [smart pointers](20-GSL-Guideline+support+library.md#SS-gsl-smartptrconcepts)
-* `Unique_ptr`  // A type that matches `Pointer`, has move (not copy), and matches the Lifetime profile criteria for a `unique` owner type; see [smart pointers](20-GSL-Guideline+support+library.md#SS-gsl-smartptrconcepts)
-* `Shared_ptr`   // A type that matches `Pointer`, has copy, and matches the Lifetime profile criteria for a `shared` owner type; see [smart pointers](20-GSL-Guideline+support+library.md#SS-gsl-smartptrconcepts)
+* `Pointer`  // A type with `*`, `->`, `==`, and default construction (default construction is assumed to set the singular "null" value); see [smart pointers](20-GSL-Guideline+support+library%2Emd#SS-gsl-smartptrconcepts)
+* `Unique_ptr`  // A type that matches `Pointer`, has move (not copy), and matches the Lifetime profile criteria for a `unique` owner type; see [smart pointers](20-GSL-Guideline+support+library%2Emd#SS-gsl-smartptrconcepts)
+* `Shared_ptr`   // A type that matches `Pointer`, has copy, and matches the Lifetime profile criteria for a `shared` owner type; see [smart pointers](20-GSL-Guideline+support+library%2Emd#SS-gsl-smartptrconcepts)
 * `EqualityComparable`   // ???Must we suffer CaMelcAse???
 * `Convertible`
 * `Common`

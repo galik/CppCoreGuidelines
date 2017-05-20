@@ -8,19 +8,19 @@ The rules in this section are very general.
 
 Philosophy rules summary:
 
-* [P.1: Express ideas directly in code](01-P-Philosophy.md#Rp-direct)
-* [P.2: Write in ISO Standard C++](01-P-Philosophy.md#Rp-Cplusplus)
-* [P.3: Express intent](01-P-Philosophy.md#Rp-what)
-* [P.4: Ideally, a program should be statically type safe](01-P-Philosophy.md#Rp-typesafe)
-* [P.5: Prefer compile-time checking to run-time checking](01-P-Philosophy.md#Rp-compile-time)
-* [P.6: What cannot be checked at compile time should be checkable at run time](01-P-Philosophy.md#Rp-run-time)
-* [P.7: Catch run-time errors early](01-P-Philosophy.md#Rp-early)
-* [P.8: Don't leak any resources](01-P-Philosophy.md#Rp-leak)
-* [P.9: Don't waste time or space](01-P-Philosophy.md#Rp-waste)
-* [P.10: Prefer immutable data to mutable data](01-P-Philosophy.md#Rp-mutable)
-* [P.11: Encapsulate messy constructs, rather than spreading through the code](01-P-Philosophy.md#Rp-library)
-* [P.12: Use supporting tools as appropriate](01-P-Philosophy.md#Rp-tools)
-* [P.13: Use support libraries as appropriate](01-P-Philosophy.md#Rp-lib)
+* [P.1: Express ideas directly in code](01-P-Philosophy%2Emd#Rp-direct)
+* [P.2: Write in ISO Standard C++](01-P-Philosophy%2Emd#Rp-Cplusplus)
+* [P.3: Express intent](01-P-Philosophy%2Emd#Rp-what)
+* [P.4: Ideally, a program should be statically type safe](01-P-Philosophy%2Emd#Rp-typesafe)
+* [P.5: Prefer compile-time checking to run-time checking](01-P-Philosophy%2Emd#Rp-compile-time)
+* [P.6: What cannot be checked at compile time should be checkable at run time](01-P-Philosophy%2Emd#Rp-run-time)
+* [P.7: Catch run-time errors early](01-P-Philosophy%2Emd#Rp-early)
+* [P.8: Don't leak any resources](01-P-Philosophy%2Emd#Rp-leak)
+* [P.9: Don't waste time or space](01-P-Philosophy%2Emd#Rp-waste)
+* [P.10: Prefer immutable data to mutable data](01-P-Philosophy%2Emd#Rp-mutable)
+* [P.11: Encapsulate messy constructs, rather than spreading through the code](01-P-Philosophy%2Emd#Rp-library)
+* [P.12: Use supporting tools as appropriate](01-P-Philosophy%2Emd#Rp-tools)
+* [P.13: Use support libraries as appropriate](01-P-Philosophy%2Emd#Rp-lib)
 
 Philosophical rules are generally not mechanically checkable.
 However, individual rules reflecting these philosophical themes are.
@@ -78,7 +78,7 @@ A well-designed library expresses intent (what is to be done, rather than just h
 
 A C++ programmer should know the basics of the standard library, and use it where appropriate.
 Any programmer should know the basics of the foundation libraries of the project being worked on, and use them appropriately.
-Any programmer using these guidelines should know the [guideline support library](20-GSL-Guideline+support+library.md#S-gsl), and use it appropriately.
+Any programmer using these guidelines should know the [guideline support library](20-GSL-Guideline+support+library%2Emd#S-gsl), and use it appropriately.
 
 ##### Example
 
@@ -124,7 +124,7 @@ portability will be impacted.
 ##### Note
 
 Using valid ISO C++ does not guarantee portability (let alone correctness).
-Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](07-ES-Expressions+and+Statements.md#Res-order))
+Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](07-ES-Expressions+and+Statements%2Emd#Res-order))
 and be aware of constructs with implementation defined meaning (e.g., `sizeof(int)`).
 
 ##### Note
@@ -168,8 +168,8 @@ The last variant makes it clear that we are not interested in the order in which
 
 A programmer should be familiar with
 
-* [The guideline support library](20-GSL-Guideline+support+library.md#S-gsl)
-* [The ISO C++ standard library](15-SL-The+Standard+Library.md#S-stdlib)
+* [The guideline support library](20-GSL-Guideline+support+library%2Emd#S-gsl)
+* [The ISO C++ standard library](15-SL-The+Standard+Library%2Emd#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
 ##### Note
@@ -513,7 +513,7 @@ This is particularly important for long-running programs, but is an essential pi
         fclose(input);
     }
 
-Prefer [RAII](06-R-Resource+management.md#Rr-raii):
+Prefer [RAII](06-R-Resource+management%2Emd#Rr-raii):
 
     void f(char* name)
     {
@@ -523,7 +523,7 @@ Prefer [RAII](06-R-Resource+management.md#Rr-raii):
         // ...
     }
 
-**See also**: [The resource management section](06-R-Resource+management.md#S-resource)
+**See also**: [The resource management section](06-R-Resource+management%2Emd#S-resource)
 
 ##### Note
 
@@ -537,14 +537,14 @@ However, relying on abstractions that implicitly clean up can be as simple, and 
 ##### Note
 
 Enforcing [the lifetime profile](#In.force) eliminates leaks.
-When combined with resource safety provided by [RAII](06-R-Resource+management.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
+When combined with resource safety provided by [RAII](06-R-Resource+management%2Emd#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
 Combine this with enforcement of [the type and bounds profiles](#In.force) and you get complete type- and resource-safety, guaranteed by tools.
 
 ##### Enforcement
 
 * Look at pointers: Classify them into non-owners (the default) and owners.
   Where feasible, replace owners with standard-library resource handles (as in the example above).
-  Alternatively, mark an owner as such using `owner` from [the GSL](20-GSL-Guideline+support+library.md#S-gsl).
+  Alternatively, mark an owner as such using `owner` from [the GSL](20-GSL-Guideline+support+library%2Emd#S-gsl).
 * Look for naked `new` and `delete`
 * Look for known resource allocating functions returning raw pointers (such as `fopen`, `malloc`, and `strdup`)
 
@@ -630,7 +630,7 @@ Something immutable cannot change unexpectedly.
 Sometimes immutability enables better optimization.
 You can't have a data race on a constant.
 
-See [Con: Constants and Immutability](11-Con-Constants+and+Immutability.md#S-const)
+See [Con: Constants and Immutability](11-Con-Constants+and+Immutability%2Emd#S-const)
 
 ### <a name="Rp-library"></a>P.11: Encapsulate messy constructs, rather than spreading through the code
 
@@ -675,7 +675,7 @@ that are needed to implement key abstractions, such as `vector`, `span`, `lock_g
 designed and implemented by people with more time and expertise than we usually have.
 Similarly, we can and should design and implement more specialized libraries, rather than leaving the users (often ourselves)
 with the challenge of repeatedly getting low-level code well.
-This is a variant of the [subset of superset principle](00-In-Introduction.md#R0) that underlies these guidelines.
+This is a variant of the [subset of superset principle](00-In-Introduction%2Emd#R0) that underlies these guidelines.
 
 ##### Enforcement
 
@@ -699,7 +699,7 @@ Run a static analyzer to verify that your code follows the guidelines you want i
 See
 
 * [Static analysis tools](???)
-* [Concurrency tools](09-CP-Concurrency+and+Parallelism.md#Rconc-tools)
+* [Concurrency tools](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-tools)
 * [Testing tools](???)
 
 There are many other kinds of tools, such as source code depositories, build tools, etc.,
@@ -735,8 +735,8 @@ You need a reason not to use the standard library (or whatever foundational libr
 
 By default use
 
-* The [ISO C++ standard library](15-SL-The+Standard+Library.md#S-stdlib)
-* The [Guidelines Support Library](20-GSL-Guideline+support+library.md#S-gsl)
+* The [ISO C++ standard library](15-SL-The+Standard+Library%2Emd#S-stdlib)
+* The [Guidelines Support Library](20-GSL-Guideline+support+library%2Emd#S-gsl)
 
 ##### Note
 

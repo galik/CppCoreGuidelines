@@ -77,10 +77,9 @@ std::string& replace_all(std::string& s, std::string const& from, std::string co
 
 std::string urlencode(std::string const& url)
 {
-	static const std::string plain = "-_.";
+	static const std::string plain = "-_";
 
 	std::ostringstream oss;
-	std::string::const_iterator i = url.begin();
 
 	for(auto c: url)
 	{
