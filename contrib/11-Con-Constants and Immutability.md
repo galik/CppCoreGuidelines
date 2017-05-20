@@ -10,11 +10,11 @@ Interfaces that promises "no change" of objects passed as arguments greatly incr
 
 Constant rule summary:
 
-* [Con.1: By default, make objects immutable](11-Con-Constants+and+Immutability%2Emd#Rconst-immutable)
-* [Con.2: By default, make member functions `const`](11-Con-Constants+and+Immutability%2Emd#Rconst-fct)
-* [Con.3: By default, pass pointers and references to `const`s](11-Con-Constants+and+Immutability%2Emd#Rconst-ref)
-* [Con.4: Use `const` to define objects with values that do not change after construction](11-Con-Constants+and+Immutability%2Emd#Rconst-const)
-* [Con.5: Use `constexpr` for values that can be computed at compile time](11-Con-Constants+and+Immutability%2Emd#Rconst-constexpr)
+* [Con.1: By default, make objects immutable](11-Con-Constants%20and%20Immutability.md#Rconst-immutable)
+* [Con.2: By default, make member functions `const`](11-Con-Constants%20and%20Immutability.md#Rconst-fct)
+* [Con.3: By default, pass pointers and references to `const`s](11-Con-Constants%20and%20Immutability.md#Rconst-ref)
+* [Con.4: Use `const` to define objects with values that do not change after construction](11-Con-Constants%20and%20Immutability.md#Rconst-const)
+* [Con.5: Use `constexpr` for values that can be computed at compile time](11-Con-Constants%20and%20Immutability.md#Rconst-constexpr)
 
 ### <a name="Rconst-immutable"></a>Con.1: By default, make objects immutable
 
@@ -78,7 +78,7 @@ This is a problem for people modernizing code.
 You can
 
 * update the library to be `const`-correct; preferred long-term solution
-* "cast away `const`"; [best avoided](07-ES-Expressions+and+Statements%2Emd#Res-casts-const)
+* "cast away `const`"; [best avoided](07-ES-Expressions%20and%20Statements.md#Res-casts-const)
 * provide a wrapper function
 
 Example:
@@ -141,7 +141,7 @@ but that should be done only when the called function is supposed to modify the 
 
 ##### Note
 
-[Do not cast away `const`](07-ES-Expressions+and+Statements%2Emd#Res-casts-const).
+[Do not cast away `const`](07-ES-Expressions%20and%20Statements.md#Res-casts-const).
 
 ##### Enforcement
 

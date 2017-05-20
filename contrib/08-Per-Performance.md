@@ -13,24 +13,24 @@ Do not blindly try to follow them in general code: achieving the goals of low la
 
 Performance rule summary:
 
-* [Per.1: Don't optimize without reason](08-Per-Performance%2Emd#Rper-reason)
-* [Per.2: Don't optimize prematurely](08-Per-Performance%2Emd#Rper-Knuth)
-* [Per.3: Don't optimize something that's not performance critical](08-Per-Performance%2Emd#Rper-critical)
-* [Per.4: Don't assume that complicated code is necessarily faster than simple code](08-Per-Performance%2Emd#Rper-simple)
-* [Per.5: Don't assume that low-level code is necessarily faster than high-level code](08-Per-Performance%2Emd#Rper-low)
-* [Per.6: Don't make claims about performance without measurements](08-Per-Performance%2Emd#Rper-measure)
-* [Per.7: Design to enable optimization](08-Per-Performance%2Emd#Rper-efficiency)
-* [Per.10: Rely on the static type system](08-Per-Performance%2Emd#Rper-type)
-* [Per.11: Move computation from run time to compile time](08-Per-Performance%2Emd#Rper-Comp)
-* [Per.12: Eliminate redundant aliases](08-Per-Performance%2Emd#Rper-alias)
-* [Per.13: Eliminate redundant indirections](08-Per-Performance%2Emd#Rper-indirect)
-* [Per.14: Minimize the number of allocations and deallocations](08-Per-Performance%2Emd#Rper-alloc)
-* [Per.15: Do not allocate on a critical branch](08-Per-Performance%2Emd#Rper-alloc0)
-* [Per.16: Use compact data structures](08-Per-Performance%2Emd#Rper-compact)
-* [Per.17: Declare the most used member of a time-critical struct first](08-Per-Performance%2Emd#Rper-struct)
-* [Per.18: Space is time](08-Per-Performance%2Emd#Rper-space)
-* [Per.19: Access memory predictably](08-Per-Performance%2Emd#Rper-access)
-* [Per.30: Avoid context switches on the critical path](08-Per-Performance%2Emd#Rper-context)
+* [Per.1: Don't optimize without reason](08-Per-Performance.md#Rper-reason)
+* [Per.2: Don't optimize prematurely](08-Per-Performance.md#Rper-Knuth)
+* [Per.3: Don't optimize something that's not performance critical](08-Per-Performance.md#Rper-critical)
+* [Per.4: Don't assume that complicated code is necessarily faster than simple code](08-Per-Performance.md#Rper-simple)
+* [Per.5: Don't assume that low-level code is necessarily faster than high-level code](08-Per-Performance.md#Rper-low)
+* [Per.6: Don't make claims about performance without measurements](08-Per-Performance.md#Rper-measure)
+* [Per.7: Design to enable optimization](08-Per-Performance.md#Rper-efficiency)
+* [Per.10: Rely on the static type system](08-Per-Performance.md#Rper-type)
+* [Per.11: Move computation from run time to compile time](08-Per-Performance.md#Rper-Comp)
+* [Per.12: Eliminate redundant aliases](08-Per-Performance.md#Rper-alias)
+* [Per.13: Eliminate redundant indirections](08-Per-Performance.md#Rper-indirect)
+* [Per.14: Minimize the number of allocations and deallocations](08-Per-Performance.md#Rper-alloc)
+* [Per.15: Do not allocate on a critical branch](08-Per-Performance.md#Rper-alloc0)
+* [Per.16: Use compact data structures](08-Per-Performance.md#Rper-compact)
+* [Per.17: Declare the most used member of a time-critical struct first](08-Per-Performance.md#Rper-struct)
+* [Per.18: Space is time](08-Per-Performance.md#Rper-space)
+* [Per.19: Access memory predictably](08-Per-Performance.md#Rper-access)
+* [Per.30: Avoid context switches on the critical path](08-Per-Performance.md#Rper-context)
 
 ### <a name="Rper-reason"></a>Per.1: Don't optimize without reason
 
@@ -65,7 +65,7 @@ If your program spends most of its time waiting for the web or for a human, opti
 Put another way: If your program spends 4% of its processing time doing
 computation A and 40% of its time doing computation B, a 50% improvement on A is
 only as impactful as a 5% improvement on B. (If you don't even know how much
-time is spent on A or B, see [Per.1](08-Per-Performance%2Emd#Rper-reason) and [Per.2](08-Per-Performance%2Emd#Rper-Knuth).)
+time is spent on A or B, see [Per.1](08-Per-Performance.md#Rper-reason) and [Per.2](08-Per-Performance.md#Rper-Knuth).)
 
 ### <a name="Rper-simple"></a>Per.4: Don't assume that complicated code is necessarily faster than simple code
 
@@ -190,21 +190,21 @@ but the semantics is expressed in English rather than code using concepts.
 
 ##### Note
 
-Premature optimization is said to be [the root of all evil](08-Per-Performance%2Emd#Rper-Knuth), but that's not a reason to despise performance.
+Premature optimization is said to be [the root of all evil](08-Per-Performance.md#Rper-Knuth), but that's not a reason to despise performance.
 It is never premature to consider what makes a design amenable to improvement, and improved performance is a commonly desired improvement.
 Aim to build a set of habits that by default results in efficient, maintainable, and optimizable code.
 In particular, when you write a function that is not a one-off implementation detail, consider
 
 * Information passing:
-Prefer clean [interfaces](02-I-Interfaces%2Emd#S-interfaces) carrying sufficient information for later improvement of implementation.
+Prefer clean [interfaces](02-I-Interfaces.md#S-interfaces) carrying sufficient information for later improvement of implementation.
 Note that information flows into and out of an implementation through the interfaces we provide.
-* Compact data: By default, [use compact data](08-Per-Performance%2Emd#Rper-compact), such as `std::vector` and [access it in a systematic fashion](08-Per-Performance%2Emd#Rper-access).
+* Compact data: By default, [use compact data](08-Per-Performance.md#Rper-compact), such as `std::vector` and [access it in a systematic fashion](08-Per-Performance.md#Rper-access).
 If you think you need a linked structure, try to craft the interface so that this structure isn't seen by users.
 * Function argument passing and return:
 Distinguish between mutable and non-mutable data.
 Don't impose a resource management burden on your users.
 Don't impose spurious run-time indirections on your users.
-Use [conventional ways](03-F-Functions%2Emd#Rf-conventional) of passing information through an interface;
+Use [conventional ways](03-F-Functions.md#Rf-conventional) of passing information through an interface;
 unconventional and/or "optimized" ways of passing data can seriously complicate later reimplementation.
 * Abstraction:
 Don't overgeneralize; a design that tries to cater for every possible use (and misuse) and defers every design decision for later
@@ -215,7 +215,7 @@ The ideal is zero-overhead generalization.
 * Libraries:
 Use libraries with good interfaces.
 If no library is available build one yourself and imitate the interface style from a good library.
-The [standard library](15-SL-The+Standard+Library%2Emd#S-stdlib) is a good first place to look for inspiration.
+The [standard library](15-SL-The%20Standard%20Library.md#S-stdlib) is a good first place to look for inspiration.
 * Isolation:
 Isolate your code from messy and/or old style code by providing an interface of your choosing to it.
 This is sometimes called "providing a wrapper" for the useful/necessary but messy code.
@@ -264,7 +264,7 @@ Once your first initial implementation is complete, review it; once you deploy i
 
 ##### Note
 
-A need for efficiency does not imply a need for [low-level code](08-Per-Performance%2Emd#Rper-low).
+A need for efficiency does not imply a need for [low-level code](08-Per-Performance.md#Rper-low).
 High-level code does not imply slow or bloated.
 
 ##### Note
@@ -289,7 +289,7 @@ One question that can be useful is
 
 ##### Note
 
-This rule does not contradict the [Don't optimize prematurely](08-Per-Performance%2Emd#Rper-Knuth) rule.
+This rule does not contradict the [Don't optimize prematurely](08-Per-Performance.md#Rper-Knuth) rule.
 It complements it encouraging developers enable later - appropriate and non-premature - optimization, if and where needed.
 
 ##### Enforcement

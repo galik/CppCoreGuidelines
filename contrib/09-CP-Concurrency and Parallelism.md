@@ -43,21 +43,21 @@ but please think about the majority of programmers who are struggling to get the
 
 Concurrency and parallelism rule summary:
 
-* [CP.1: Assume that your code will run as part of a multi-threaded program](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-multi)
-* [CP.2: Avoid data races](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-races)
-* [CP.3: Minimize explicit sharing of writable data](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-data)
-* [CP.4: Think in terms of tasks, rather than threads](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-task)
-* [CP.8: Don't try to use `volatile` for synchronization](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-volatile)
-* [CP.9: Whenever feasible use tools to validate your concurrent code](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-tools)
+* [CP.1: Assume that your code will run as part of a multi-threaded program](09-CP-Concurrency%20and%20Parallelism.md#Rconc-multi)
+* [CP.2: Avoid data races](09-CP-Concurrency%20and%20Parallelism.md#Rconc-races)
+* [CP.3: Minimize explicit sharing of writable data](09-CP-Concurrency%20and%20Parallelism.md#Rconc-data)
+* [CP.4: Think in terms of tasks, rather than threads](09-CP-Concurrency%20and%20Parallelism.md#Rconc-task)
+* [CP.8: Don't try to use `volatile` for synchronization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-volatile)
+* [CP.9: Whenever feasible use tools to validate your concurrent code](09-CP-Concurrency%20and%20Parallelism.md#Rconc-tools)
 
 See also:
 
-* [CP.con: Concurrency](09-CP-Concurrency+and+Parallelism%2Emd#SScp-con)
-* [CP.par: Parallelism](09-CP-Concurrency+and+Parallelism%2Emd#SScp-par)
-* [CP.mess: Message passing](09-CP-Concurrency+and+Parallelism%2Emd#SScp-mess)
-* [CP.vec: Vectorization](09-CP-Concurrency+and+Parallelism%2Emd#SScp-vec)
-* [CP.free: Lock-free programming](09-CP-Concurrency+and+Parallelism%2Emd#SScp-free)
-* [CP.etc: Etc. concurrency rules](09-CP-Concurrency+and+Parallelism%2Emd#SScp-etc)
+* [CP.con: Concurrency](09-CP-Concurrency%20and%20Parallelism.md#SScp-con)
+* [CP.par: Parallelism](09-CP-Concurrency%20and%20Parallelism.md#SScp-par)
+* [CP.mess: Message passing](09-CP-Concurrency%20and%20Parallelism.md#SScp-mess)
+* [CP.vec: Vectorization](09-CP-Concurrency%20and%20Parallelism.md#SScp-vec)
+* [CP.free: Lock-free programming](09-CP-Concurrency%20and%20Parallelism.md#SScp-free)
+* [CP.etc: Etc. concurrency rules](09-CP-Concurrency%20and%20Parallelism.md#SScp-etc)
 
 ### <a name="Rconc-multi"></a>CP.1: Assume that your code will run as part of a multi-threaded program
 
@@ -311,7 +311,7 @@ Use a `mutex` for more complicated examples.
 
 ##### See also
 
-[(rare) proper uses of `volatile`](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-volatile2)
+[(rare) proper uses of `volatile`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-volatile2)
 
 ### <a name="Rconc-tools"></a>CP.9: Whenever feasible use tools to validate your concurrent code
 
@@ -355,31 +355,31 @@ It is up to an application builder to choose which support tools are valuable fo
 
 This section focuses on relatively ad-hoc uses of multiple threads communicating through shared data.
 
-* For parallel algorithms, see [parallelism](09-CP-Concurrency+and+Parallelism%2Emd#SScp-par)
-* For inter-task communication without explicit sharing, see [messaging](09-CP-Concurrency+and+Parallelism%2Emd#SScp-mess)
-* For vector parallel code, see [vectorization](09-CP-Concurrency+and+Parallelism%2Emd#SScp-vec)
-* For lock-free programming, see [lock free](09-CP-Concurrency+and+Parallelism%2Emd#SScp-free)
+* For parallel algorithms, see [parallelism](09-CP-Concurrency%20and%20Parallelism.md#SScp-par)
+* For inter-task communication without explicit sharing, see [messaging](09-CP-Concurrency%20and%20Parallelism.md#SScp-mess)
+* For vector parallel code, see [vectorization](09-CP-Concurrency%20and%20Parallelism.md#SScp-vec)
+* For lock-free programming, see [lock free](09-CP-Concurrency%20and%20Parallelism.md#SScp-free)
 
 Concurrency rule summary:
 
-* [CP.20: Use RAII, never plain `lock()`/`unlock()`](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-raii)
-* [CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-lock)
-* [CP.22: Never call unknown code while holding a lock (e.g., a callback)](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-unknown)
-* [CP.23: Think of a joining `thread` as a scoped container](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-join)
-* [CP.24: Think of a detached `thread` as a global container](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-detach)
-* [CP.25: Prefer `gsl::raii_thread` over `std::thread` unless you plan to `detach()`](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-raii_thread)
-* [CP.26: Prefer `gsl::detached_thread` over `std::thread` if you plan to `detach()`](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-detached_thread)
-* [CP.27: Use plain `std::thread` for `thread`s that detach based on a run-time condition (only)](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-thread)
-* [CP.28: Remember to join scoped `thread`s that are not `detach()`ed](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-join-undetached)
+* [CP.20: Use RAII, never plain `lock()`/`unlock()`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-raii)
+* [CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es](09-CP-Concurrency%20and%20Parallelism.md#Rconc-lock)
+* [CP.22: Never call unknown code while holding a lock (e.g., a callback)](09-CP-Concurrency%20and%20Parallelism.md#Rconc-unknown)
+* [CP.23: Think of a joining `thread` as a scoped container](09-CP-Concurrency%20and%20Parallelism.md#Rconc-join)
+* [CP.24: Think of a detached `thread` as a global container](09-CP-Concurrency%20and%20Parallelism.md#Rconc-detach)
+* [CP.25: Prefer `gsl::raii_thread` over `std::thread` unless you plan to `detach()`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-raii_thread)
+* [CP.26: Prefer `gsl::detached_thread` over `std::thread` if you plan to `detach()`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-detached_thread)
+* [CP.27: Use plain `std::thread` for `thread`s that detach based on a run-time condition (only)](09-CP-Concurrency%20and%20Parallelism.md#Rconc-thread)
+* [CP.28: Remember to join scoped `thread`s that are not `detach()`ed](09-CP-Concurrency%20and%20Parallelism.md#Rconc-join-undetached)
 * [CP.30: Do not pass pointers to local variables to non-`raii_thread`s](#Rconc-pass)
-* [CP.31: Pass small amounts of data between threads by value, rather than by reference or pointer](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-data-by-value)
-* [CP.32: To share ownership between unrelated `thread`s use `shared_ptr`](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-shared)
-* [CP.40: Minimize context switching](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-switch)
-* [CP.41: Minimize thread creation and destruction](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-create)
-* [CP.42: Don't `wait` without a condition](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-wait)
-* [CP.43: Minimize time spent in a critical section](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-time)
-* [CP.44: Remember to name your `lock_guard`s and `unique_lock`s](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-name)
-* [CP.50: Define a `mutex` together with the data it protects](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-mutex)
+* [CP.31: Pass small amounts of data between threads by value, rather than by reference or pointer](09-CP-Concurrency%20and%20Parallelism.md#Rconc-data-by-value)
+* [CP.32: To share ownership between unrelated `thread`s use `shared_ptr`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-shared)
+* [CP.40: Minimize context switching](09-CP-Concurrency%20and%20Parallelism.md#Rconc-switch)
+* [CP.41: Minimize thread creation and destruction](09-CP-Concurrency%20and%20Parallelism.md#Rconc-create)
+* [CP.42: Don't `wait` without a condition](09-CP-Concurrency%20and%20Parallelism.md#Rconc-wait)
+* [CP.43: Minimize time spent in a critical section](09-CP-Concurrency%20and%20Parallelism.md#Rconc-time)
+* [CP.44: Remember to name your `lock_guard`s and `unique_lock`s](09-CP-Concurrency%20and%20Parallelism.md#Rconc-name)
+* [CP.50: Define a `mutex` together with the data it protects](09-CP-Concurrency%20and%20Parallelism.md#Rconc-mutex)
 * ??? when to use a spinlock
 * ??? when to use `try_lock()`
 * ??? when to prefer `lock_guard` over `unique_lock`
@@ -983,7 +983,7 @@ We could rewrite this to
         do2();  // cleanup: does not need locking
     }
 
-But that compromises safety and violates the [use RAII](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-raii) rule.
+But that compromises safety and violates the [use RAII](09-CP-Concurrency%20and%20Parallelism.md#Rconc-raii) rule.
 Instead, add a block for the critical section:
 
     void do_something() // OK
@@ -1072,8 +1072,8 @@ This section looks at passing messages so that a programmer doesn't have to do e
 
 Message passing rules summary:
 
-* [CP.60: Use a `future` to return a value from a concurrent task](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-future)
-* [CP.61: Use a `async()` to spawn a concurrent task](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-async)
+* [CP.60: Use a `future` to return a value from a concurrent task](09-CP-Concurrency%20and%20Parallelism.md#Rconc-future)
+* [CP.61: Use a `async()` to spawn a concurrent task](09-CP-Concurrency%20and%20Parallelism.md#Rconc-async)
 * message queues
 * messaging libraries
 
@@ -1147,14 +1147,14 @@ Lock free programming is also used to implement higher-level concurrency mechani
 
 Lock-free programming rule summary:
 
-* [CP.100: Don't use lock-free programming unless you absolutely have to](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-lockfree)
-* [CP.101: Distrust your hardware/compiler combination](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-distrust)
-* [CP.102: Carefully study the literature](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-literature)
+* [CP.100: Don't use lock-free programming unless you absolutely have to](09-CP-Concurrency%20and%20Parallelism.md#Rconc-lockfree)
+* [CP.101: Distrust your hardware/compiler combination](09-CP-Concurrency%20and%20Parallelism.md#Rconc-distrust)
+* [CP.102: Carefully study the literature](09-CP-Concurrency%20and%20Parallelism.md#Rconc-literature)
 * how/when to use atomics
 * avoid starvation
 * use a lock free data structure rather than hand-crafting specific lock-free access
-* [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-double)
-* [CP.111: Use a conventional pattern if you really need double-checked locking](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-double-pattern)
+* [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double)
+* [CP.111: Use a conventional pattern if you really need double-checked locking](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double-pattern)
 * how/when to compare and swap
 
 
@@ -1278,13 +1278,13 @@ Example with thread-safe static local variables of C++11.
 
 ##### Reason
 
-Double-checked locking is easy to mess up. If you really need to write your own double-checked locking, in spite of the rules [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-double) and [CP.100: Don't use lock-free programming unless you absolutely have to](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-lockfree), then do it in a conventional pattern.
+Double-checked locking is easy to mess up. If you really need to write your own double-checked locking, in spite of the rules [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double) and [CP.100: Don't use lock-free programming unless you absolutely have to](09-CP-Concurrency%20and%20Parallelism.md#Rconc-lockfree), then do it in a conventional pattern.
 
-The uses of the double-checked locking pattern that are not in violation of [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-double) arise when a non-thread-safe action is both hard and rare, and there exists a fast thread-safe test that can be used to guarantee that the action is not needed, but cannot be used to guarantee the converse.
+The uses of the double-checked locking pattern that are not in violation of [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double) arise when a non-thread-safe action is both hard and rare, and there exists a fast thread-safe test that can be used to guarantee that the action is not needed, but cannot be used to guarantee the converse.
 
 ##### Example, bad
 
-The use of volatile does not make the first check thread-safe, see also [CP.200: Use `volatile` only to talk to non-C++ memory](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-volatile2)
+The use of volatile does not make the first check thread-safe, see also [CP.200: Use `volatile` only to talk to non-C++ memory](09-CP-Concurrency%20and%20Parallelism.md#Rconc-volatile2)
 
     mutex action_mutex;
     volatile bool action_needed;
@@ -1332,8 +1332,8 @@ Fine-tuned memory order may be beneficial where acquire load is more efficient t
 
 These rules defy simple categorization:
 
-* [CP.200: Use `volatile` only to talk to non-C++ memory](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-volatile2)
-* [CP.201: ??? Signals](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-signal)
+* [CP.200: Use `volatile` only to talk to non-C++ memory](09-CP-Concurrency%20and%20Parallelism.md#Rconc-volatile2)
+* [CP.201: ??? Signals](09-CP-Concurrency%20and%20Parallelism.md#Rconc-signal)
 
 ### <a name="Rconc-volatile2"></a>CP.200: Use `volatile` only to talk to non-C++ memory
 
@@ -1389,7 +1389,7 @@ The same applies almost as strongly to member variables, for the same reason.
 
 ##### Note
 
-In C++, unlike in some other languages, `volatile` has [nothing to do with synchronization](09-CP-Concurrency+and+Parallelism%2Emd#Rconc-volatile).
+In C++, unlike in some other languages, `volatile` has [nothing to do with synchronization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-volatile).
 
 ##### Enforcement
 

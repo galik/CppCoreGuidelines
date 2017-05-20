@@ -77,7 +77,7 @@ std::string& replace_all(std::string& s, std::string const& from, std::string co
 
 std::string urlencode(std::string const& url)
 {
-	static const std::string plain = "-_";
+	static const std::string plain = "-_.";
 
 	std::ostringstream oss;
 
@@ -85,8 +85,8 @@ std::string urlencode(std::string const& url)
 	{
 		if(std::isalnum(c) || plain.find(c) != std::string::npos)
 			oss << c;
-		else if(std::isspace(c))
-			oss << '+';
+//		else if(std::isspace(c))
+//			oss << '+';
 		else
 			oss << "%" << std::uppercase << std::hex << int(c);
 	}

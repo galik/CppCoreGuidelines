@@ -30,12 +30,12 @@ We expect different organizations to provide additions, typically with more rest
 
 Reference sections:
 
-* [RF.rules: Coding rules](18-RF-References%2Emd#SS-rules)
-* [RF.books: Books with coding guidelines](18-RF-References%2Emd#SS-books)
-* [RF.C++: C++ Programming (C++11/C++14)](18-RF-References%2Emd#SS-Cplusplus)
-* [RF.web: Websites](18-RF-References%2Emd#SS-web)
-* [RS.video: Videos about "modern C++"](18-RF-References%2Emd#SS-vid)
-* [RF.man: Manuals](18-RF-References%2Emd#SS-man)
+* [RF.rules: Coding rules](18-RF-References.md#SS-rules)
+* [RF.books: Books with coding guidelines](18-RF-References.md#SS-books)
+* [RF.C++: C++ Programming (C++11/C++14)](18-RF-References.md#SS-Cplusplus)
+* [RF.web: Websites](18-RF-References.md#SS-web)
+* [RS.video: Videos about "modern C++"](18-RF-References.md#SS-vid)
+* [RF.man: Manuals](18-RF-References.md#SS-man)
 
 ## <a name="SS-rules"></a>RF.rules: Coding rules
 
@@ -75,18 +75,18 @@ Reference sections:
 
 ## <a name="SS-books"></a>RF.books: Books with coding guidelines
 
-* [Meyers96](27-Bibliography%2Emd#Meyers96) Scott Meyers: *More Effective C++*. Addison-Wesley 1996.
-* [Meyers97](27-Bibliography%2Emd#Meyers97) Scott Meyers: *Effective C++, Second Edition*. Addison-Wesley 1997.
+* [Meyers96](27-Bibliography.md#Meyers96) Scott Meyers: *More Effective C++*. Addison-Wesley 1996.
+* [Meyers97](27-Bibliography.md#Meyers97) Scott Meyers: *Effective C++, Second Edition*. Addison-Wesley 1997.
 * [Meyers01](#Meyers01) Scott Meyers: *Effective STL*. Addison-Wesley 2001.
 * [Meyers05](#Meyers05) Scott Meyers: *Effective C++, Third Edition*. Addison-Wesley 2005.
-* [Meyers15](27-Bibliography%2Emd#Meyers15) Scott Meyers: *Effective Modern C++*. O'Reilly 2015.
-* [SuttAlex05](27-Bibliography%2Emd#SuttAlex05) Sutter and Alexandrescu: *C++ Coding Standards*. Addison-Wesley 2005. More a set of meta-rules than a set of rules. Pre-C++11.
-* [Stroustrup05](27-Bibliography%2Emd#Stroustrup05) Bjarne Stroustrup: [A rationale for semantically enhanced library languages](http://www.stroustrup.com/SELLrationale.pdf).
+* [Meyers15](27-Bibliography.md#Meyers15) Scott Meyers: *Effective Modern C++*. O'Reilly 2015.
+* [SuttAlex05](27-Bibliography.md#SuttAlex05) Sutter and Alexandrescu: *C++ Coding Standards*. Addison-Wesley 2005. More a set of meta-rules than a set of rules. Pre-C++11.
+* [Stroustrup05](27-Bibliography.md#Stroustrup05) Bjarne Stroustrup: [A rationale for semantically enhanced library languages](http://www.stroustrup.com/SELLrationale.pdf).
   LCSD05. October 2005.
-* [Stroustrup14](27-Bibliography%2Emd#Stroustrup05) Stroustrup: [A Tour of C++](http://www.stroustrup.com/Tour.html).
+* [Stroustrup14](27-Bibliography.md#Stroustrup05) Stroustrup: [A Tour of C++](http://www.stroustrup.com/Tour.html).
   Addison Wesley 2014.
   Each chapter ends with an advice section consisting of a set of recommendations.
-* [Stroustrup13](27-Bibliography%2Emd#Stroustrup13) Stroustrup: [The C++ Programming Language (4th Edition)](http://www.stroustrup.com/4th.html).
+* [Stroustrup13](27-Bibliography.md#Stroustrup13) Stroustrup: [The C++ Programming Language (4th Edition)](http://www.stroustrup.com/4th.html).
   Addison Wesley 2013.
   Each chapter ends with an advice section consisting of a set of recommendations.
 * Stroustrup: [Style Guide](http://www.stroustrup.com/Programming/PPP-style.pdf)

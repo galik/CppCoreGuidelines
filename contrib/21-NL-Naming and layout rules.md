@@ -13,25 +13,25 @@ IDEs and tools can help (as well as hinder).
 
 Naming and layout rules:
 
-* [NL.1: Don't say in comments what can be clearly stated in code](21-NL-Naming+and+layout+rules%2Emd#Rl-comments)
-* [NL.2: State intent in comments](21-NL-Naming+and+layout+rules%2Emd#Rl-comments-intent)
-* [NL.3: Keep comments crisp](21-NL-Naming+and+layout+rules%2Emd#Rl-comments-crisp)
-* [NL.4: Maintain a consistent indentation style](21-NL-Naming+and+layout+rules%2Emd#Rl-indent)
-* [NL.5: Don't encode type information in names](21-NL-Naming+and+layout+rules%2Emd#Rl-name-type)
-* [NL.7: Make the length of a name roughly proportional to the length of its scope](21-NL-Naming+and+layout+rules%2Emd#Rl-name-length)
-* [NL.8: Use a consistent naming style](21-NL-Naming+and+layout+rules%2Emd#Rl-name)
-* [NL.9: Use `ALL_CAPS` for macro names only](21-NL-Naming+and+layout+rules%2Emd#Rl-all-caps)
-* [NL.10: Avoid CamelCase](21-NL-Naming+and+layout+rules%2Emd#Rl-camel)
-* [NL.11: Make literals readable](21-NL-Naming+and+layout+rules%2Emd#Rl-literals)
-* [NL.15: Use spaces sparingly](21-NL-Naming+and+layout+rules%2Emd#Rl-space)
-* [NL.16: Use a conventional class member declaration order](21-NL-Naming+and+layout+rules%2Emd#Rl-order)
-* [NL.17: Use K&R-derived layout](21-NL-Naming+and+layout+rules%2Emd#Rl-knr)
-* [NL.18: Use C++-style declarator layout](21-NL-Naming+and+layout+rules%2Emd#Rl-ptr)
-* [NL.19: Avoid names that are easily misread](21-NL-Naming+and+layout+rules%2Emd#Rl-misread)
-* [NL.20: Don't place two statements on the same line](21-NL-Naming+and+layout+rules%2Emd#Rl-stmt)
-* [NL.21: Declare one name (only) per declaration](21-NL-Naming+and+layout+rules%2Emd#Rl-dcl)
-* [NL.25: Don't use `void` as an argument type](21-NL-Naming+and+layout+rules%2Emd#Rl-void)
-* [NL.26: Use conventional `const` notation](21-NL-Naming+and+layout+rules%2Emd#Rl-const)
+* [NL.1: Don't say in comments what can be clearly stated in code](21-NL-Naming%20and%20layout%20rules.md#Rl-comments)
+* [NL.2: State intent in comments](21-NL-Naming%20and%20layout%20rules.md#Rl-comments-intent)
+* [NL.3: Keep comments crisp](21-NL-Naming%20and%20layout%20rules.md#Rl-comments-crisp)
+* [NL.4: Maintain a consistent indentation style](21-NL-Naming%20and%20layout%20rules.md#Rl-indent)
+* [NL.5: Don't encode type information in names](21-NL-Naming%20and%20layout%20rules.md#Rl-name-type)
+* [NL.7: Make the length of a name roughly proportional to the length of its scope](21-NL-Naming%20and%20layout%20rules.md#Rl-name-length)
+* [NL.8: Use a consistent naming style](21-NL-Naming%20and%20layout%20rules.md#Rl-name)
+* [NL.9: Use `ALL_CAPS` for macro names only](21-NL-Naming%20and%20layout%20rules.md#Rl-all-caps)
+* [NL.10: Avoid CamelCase](21-NL-Naming%20and%20layout%20rules.md#Rl-camel)
+* [NL.11: Make literals readable](21-NL-Naming%20and%20layout%20rules.md#Rl-literals)
+* [NL.15: Use spaces sparingly](21-NL-Naming%20and%20layout%20rules.md#Rl-space)
+* [NL.16: Use a conventional class member declaration order](21-NL-Naming%20and%20layout%20rules.md#Rl-order)
+* [NL.17: Use K&R-derived layout](21-NL-Naming%20and%20layout%20rules.md#Rl-knr)
+* [NL.18: Use C++-style declarator layout](21-NL-Naming%20and%20layout%20rules.md#Rl-ptr)
+* [NL.19: Avoid names that are easily misread](21-NL-Naming%20and%20layout%20rules.md#Rl-misread)
+* [NL.20: Don't place two statements on the same line](21-NL-Naming%20and%20layout%20rules.md#Rl-stmt)
+* [NL.21: Declare one name (only) per declaration](21-NL-Naming%20and%20layout%20rules.md#Rl-dcl)
+* [NL.25: Don't use `void` as an argument type](21-NL-Naming%20and%20layout%20rules.md#Rl-void)
+* [NL.26: Use conventional `const` notation](21-NL-Naming%20and%20layout%20rules.md#Rl-const)
 
 Most of these rules are aesthetic and programmers hold strong opinions.
 IDEs also tend to have defaults and a range of alternatives.
@@ -282,7 +282,7 @@ If you prefer CamelCase, you have to choose among different flavors of camelCase
 ##### Note
 
 This rule is a default to use only if you have a choice.
-Often, you don't have a choice and must follow an established style for [consistency](21-NL-Naming+and+layout+rules%2Emd#Rl-name).
+Often, you don't have a choice and must follow an established style for [consistency](21-NL-Naming%20and%20layout%20rules.md#Rl-name).
 The need for consistency beats personal taste.
 
 ##### Example
@@ -354,7 +354,7 @@ Use literal suffixes where clarification is needed
 
 ##### Note
 
-Literals should not be sprinkled all over the code as ["magic constants"](07-ES-Expressions+and+Statements%2Emd#Res-magic),
+Literals should not be sprinkled all over the code as ["magic constants"](07-ES-Expressions%20and%20Statements.md#Res-magic),
 but it is still a good idea to make them readable where they are defined.
 It is easy to make a typo in a long string of integers.
 
@@ -531,7 +531,7 @@ Minimizing confusion with the declarator syntax.
 
 ##### Note
 
-For details, see [ES.10](07-ES-Expressions+and+Statements%2Emd#Res-name-one).
+For details, see [ES.10](07-ES-Expressions%20and%20Statements.md#Res-name-one).
 
 
 ### <a name="Rl-void"></a>NL.25: Don't use `void` as an argument type
