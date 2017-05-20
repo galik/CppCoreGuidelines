@@ -15,7 +15,7 @@ PROGRAMS := \
 all: $(PROGRAMS)
 
 run: all
-	./extract-sections ../CppCoreGuidelines.md
+	./extract-sections ../CppCoreGuidelines.md ../sections
 
 clean:
-	$(RM) $(PROGRAMS) *.md
+	$(RM) $(PROGRAMS)
