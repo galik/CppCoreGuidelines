@@ -576,11 +576,11 @@ int glob = 33;
 void some_fct(int* p)
 {
     int x = 77;
-    gsl::raii_thread t0(f, &x);           // OK
-    gsl::raii_thread t1(f, p);            // OK
-    gsl::raii_thread t2(f, &glob);        // OK
+    raii_thread t0(f, &x);           // OK
+    raii_thread t1(f, p);            // OK
+    raii_thread t2(f, &glob);        // OK
     auto q = make_unique<int>(99);
-    gsl::raii_thread t3(f, q.get());      // OK
+    raii_thread t3(f, q.get());      // OK
     // ...
 }
 

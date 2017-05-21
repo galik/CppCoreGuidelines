@@ -12107,7 +12107,8 @@ If your program spends most of its time waiting for the web or for a human, opti
 Put another way: If your program spends 4% of its processing time doing
 computation A and 40% of its time doing computation B, a 50% improvement on A is
 only as impactful as a 5% improvement on B. (If you don't even know how much
-time is spent on A or B, see [Per.1](#Rper-reason) and [Per.2](#Rper-Knuth).)
+time is spent on A or B, see <a href="#Rper-reason">Per.1</a> and <a
+href="#Rper-Knuth">Per.2</a>.)
 
 ### <a name="Rper-simple"></a>Per.4: Don't assume that complicated code is necessarily faster than simple code
 
@@ -12948,11 +12949,11 @@ If a `thread` joins, we can safely pass pointers to objects in the scope of the 
     void some_fct(int* p)
     {
         int x = 77;
-        gsl::raii_thread t0(f, &x);           // OK
-        gsl::raii_thread t1(f, p);            // OK
-        gsl::raii_thread t2(f, &glob);        // OK
+        raii_thread t0(f, &x);           // OK
+        raii_thread t1(f, p);            // OK
+        raii_thread t2(f, &glob);        // OK
         auto q = make_unique<int>(99);
-        gsl::raii_thread t3(f, q.get());      // OK
+        raii_thread t3(f, q.get());      // OK
         // ...
     }
 

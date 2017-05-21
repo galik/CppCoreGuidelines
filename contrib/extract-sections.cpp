@@ -15,6 +15,12 @@
 #include <set>
 #include <vector>
 
+#define con_out(m) do{std::cout << m << '\n';}while(0)
+#define con_err(m) do{std::cerr << m << '\n';}while(0)
+
+#define throw_runtime(m) do{std::ostringstream o;o<<m;throw std::runtime_error(o.str());}while(0)
+#define throw_errno(m) throw_runtime(m << ": " << std::strerror(errno))
+
 constexpr char path_separator()
 {
 #if defined _WIN32 || defined __CYGWIN__
@@ -37,14 +43,111 @@ struct section_info
 	pos_type end;
 };
 
-std::string get_prog_name(std::string const& pathname)
+/// for all substrings `from` in `s` replace them with `to`
+std::string& replace_all(std::string& s, std::string const& from, std::string const& to);
+
+std::string urlencode(std::string const& url);
+
+/// Find all the section breaks in doc and store the relevant
+/// info needed to split the document later
+std::map<std::string, section_info> extract_section_info(std::string const& doc);
+
+/// Scan all the anchors in each section and build a URL out of it
+std::map<std::string, std::string> build_link_database(std::string const& doc,
+	std::map<std::string, section_info> const& sections);
+
+void write(std::string const& dir, std::string const& filename, std::string const& text);
+
+int usage(std::string const& prog, int error_code);
+
+int main(int, char* argv[])
 {
-	auto pos = pathname.find_last_of(path_separator());
+	std::string const prog = [argv]
+	{
+		std::string prog{argv[0]};
+		if(auto pos = prog.rfind(path_separator()) + 1)
+			prog.erase(0, pos);
+		return prog;
+	}();
 
-	if(pos == std::string::npos)
-		return pathname;
+	try
+	{
+		std::string pathname;
+		std::string dir;
 
-	return pathname.substr(pos + 1);
+		for(auto arg = argv + 1; *arg; ++arg)
+		{
+			if(!std::strcmp(*arg, "-h") || !std::strcmp(*arg, "--help"))
+				return usage(prog, EXIT_SUCCESS);
+			else if((*arg)[0] == '-')
+				throw_runtime("unknown option: " << *arg);
+			else if(pathname.empty())
+				pathname = *arg;
+			else if(dir.empty())
+				dir = *arg;
+		}
+
+		if(pathname.empty())
+			throw std::runtime_error("Pathname for CppCoreGuidelines.md required");
+
+		if(dir.empty())
+			dir = ".";
+
+		std::string const doc = [&]
+		{
+			std::ostringstream oss;
+			if(!(oss << std::ifstream(pathname).rdbuf()))
+				throw std::runtime_error(std::string(std::strerror(errno)) + ": " + argv[1]);
+			return oss.str();
+		}();
+
+		// section_id -> section
+		auto sections = extract_section_info(doc);
+
+		auto links = build_link_database(doc, sections);
+
+		for(auto const& s: sections)
+		{
+			// extract section text from document
+			std::string text = doc.substr(s.second.beg, s.second.end - s.second.beg);
+
+			// rewrite links
+			for(auto const& link: links)
+				text = replace_all(text, link.first, link.second);
+
+			write(dir, s.second.filename, text);
+		}
+	}
+	catch(std::exception const& e)
+	{
+		std::cerr << prog << ": " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	catch(...)
+	{
+		std::cerr << prog << ": unknown error" << '\n';
+		return EXIT_FAILURE;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int usage(std::string const& prog, int error_code)
+{
+
+	con_out("");
+	con_out("Usage: " << prog << " <input.md> [<out-dir>]");
+	con_out("       " << prog << " -h|--help");
+	con_out("");
+	con_out("                If no output directory <out-dir> is specified");
+	con_out("                  the output goes to the current directory.");
+	con_out("");
+	con_out("OPTIONS");
+	con_out("");
+	con_out(" -h|--help    - Print this help massage.");
+	con_out("");
+
+	return error_code;
 }
 
 /// for all substrings `from` in `s` replace them with `to`
@@ -167,56 +270,4 @@ void write(std::string const& dir, std::string const& filename, std::string cons
 
 	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
 		throw std::runtime_error(std::string(std::strerror(errno)) + ": " + filename);
-}
-
-/// Usage:
-/// extract-sections <path-to-guidelines> [<output-dir>]opt
-int main(int, char* argv[])
-{
-	auto prog = get_prog_name(argv[0]);
-
-	try
-	{
-		if(!argv[1])
-			throw std::runtime_error("Pathname for CppCoreGuidelines.md required");
-
-		std::string const doc = [&]
-		{
-			std::ostringstream oss;
-			if(!(oss << std::ifstream(argv[1]).rdbuf()))
-				throw std::runtime_error(std::string(std::strerror(errno)) + ": " + argv[1]);
-			return oss.str();
-		}();
-
-		std::string path = argv[2] ? argv[2]: ".";
-
-		// section_id -> section
-		auto sections = extract_section_info(doc);
-
-		auto links = build_link_database(doc, sections);
-
-		for(auto const& s: sections)
-		{
-			// extract section text from document
-			std::string text = doc.substr(s.second.beg, s.second.end - s.second.beg);
-
-			// rewrite links
-			for(auto const& link: links)
-				text = replace_all(text, link.first, link.second);
-
-			write(path, s.second.filename, text);
-		}
-	}
-	catch(std::exception const& e)
-	{
-		std::cerr << prog << ": " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	catch(...)
-	{
-		std::cerr << prog << ": unknown error" << '\n';
-		return EXIT_FAILURE;
-	}
-
-	return EXIT_SUCCESS;
 }
