@@ -2,7 +2,7 @@
 
 CXXFLAGS += \
 	-std=c++14 \
-	-g3 -O0 \
+	-g0 -O3 \
 	-Wconversion \
 	-Wall -Wextra \
 	-pedantic-errors \
@@ -10,12 +10,14 @@ CXXFLAGS += \
 	-Wno-unused-parameter
 
 PROGRAMS := \
-	extract-sections
+	extract-sections \
+	add-github-syntax-highlights
 
 all: $(PROGRAMS)
 
 run: all
-	./extract-sections ../CppCoreGuidelines.md ../sections
+	./add-github-syntax-highlights < ../CppCoreGuidelines.md > ../CppCoreGuidelinesSH.md 
+	./extract-sections ../CppCoreGuidelinesSH.md ../sections
 
 clean:
 	$(RM) $(PROGRAMS)

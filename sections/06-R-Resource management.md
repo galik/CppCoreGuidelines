@@ -61,18 +61,20 @@ Whenever you deal with a resource that needs paired acquire/release function cal
 
 Consider:
 
-    void send(X* x, cstring_span destination)
-    {
-        auto port = open_port(destination);
-        my_mutex.lock();
-        // ...
-        send(port, x);
-        // ...
-        my_mutex.unlock();
-        close_port(port);
-        delete x;
-    }
+```cpp
+void send(X* x, cstring_span destination)
+{
+    auto port = open_port(destination);
+    my_mutex.lock();
+    // ...
+    send(port, x);
+    // ...
+    my_mutex.unlock();
+    close_port(port);
+    delete x;
+}
 
+```
 In this code, you have to remember to `unlock`, `close_port`, and `delete` on all paths, and do each exactly once.
 Further, if any of the code marked `...` throws an exception, then `x` is leaked and `my_mutex` remains locked.
 
@@ -80,31 +82,35 @@ Further, if any of the code marked `...` throws an exception, then `x` is leaked
 
 Consider:
 
-    void send(unique_ptr<X> x, cstring_span destination)  // x owns the X
-    {
-        Port port{destination};            // port owns the PortHandle
-        lock_guard<mutex> guard{my_mutex}; // guard owns the lock
-        // ...
-        send(port, x);
-        // ...
-    } // automatically unlocks my_mutex and deletes the pointer in x
+```cpp
+void send(unique_ptr<X> x, cstring_span destination)  // x owns the X
+{
+    Port port{destination};            // port owns the PortHandle
+    lock_guard<mutex> guard{my_mutex}; // guard owns the lock
+    // ...
+    send(port, x);
+    // ...
+} // automatically unlocks my_mutex and deletes the pointer in x
 
+```
 Now all resource cleanup is automatic, performed once on all paths whether or not there is an exception. As a bonus, the function now advertises that it takes over ownership of the pointer.
 
 What is `Port`? A handy wrapper that encapsulates the resource:
 
-    class Port {
-        PortHandle port;
-    public:
-        Port(cstring_span destination) : port{open_port(destination)} { }
-        ~Port() { close_port(port); }
-        operator PortHandle() { return port; }
+```cpp
+class Port {
+    PortHandle port;
+public:
+    Port(cstring_span destination) : port{open_port(destination)} { }
+    ~Port() { close_port(port); }
+    operator PortHandle() { return port; }
 
-        // port handles can't usually be cloned, so disable copying and assignment if necessary
-        Port(const Port&) = delete;
-        Port& operator=(const Port&) = delete;
-    };
+    // port handles can't usually be cloned, so disable copying and assignment if necessary
+    Port(const Port&) = delete;
+    Port& operator=(const Port&) = delete;
+};
 
+```
 ##### Note
 
 Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](20-GSL-Guideline%20support%20library.md#S-gsl)
@@ -120,23 +126,27 @@ Such containers and views hold sufficient information to do range checking.
 
 ##### Example, bad
 
-    void f(int* p, int n)   // n is the number of elements in p[]
-    {
-        // ...
-        p[2] = 7;   // bad: subscript raw pointer
-        // ...
-    }
+```cpp
+void f(int* p, int n)   // n is the number of elements in p[]
+{
+    // ...
+    p[2] = 7;   // bad: subscript raw pointer
+    // ...
+}
 
+```
 The compiler does not read comments, and without reading other code you do not know whether `p` really points to `n` elements.
 Use a `span` instead.
 
 ##### Example
 
-    void g(int* p, int fmt)   // print *p using format #fmt
-    {
-        // ... uses *p and p[0] only ...
-    }
+```cpp
+void g(int* p, int fmt)   // print *p using format #fmt
+{
+    // ... uses *p and p[0] only ...
+}
 
+```
 ##### Exception
 
 C-style strings are passed as single pointers to a zero-terminated sequence of characters.
@@ -162,35 +172,41 @@ We want owning pointers identified so that we can reliably and efficiently delet
 
 ##### Example
 
-    void f()
-    {
-        int* p1 = new int{7};           // bad: raw owning pointer
-        auto p2 = make_unique<int>(7);  // OK: the int is owned by a unique pointer
-        // ...
-    }
+```cpp
+void f()
+{
+    int* p1 = new int{7};           // bad: raw owning pointer
+    auto p2 = make_unique<int>(7);  // OK: the int is owned by a unique pointer
+    // ...
+}
 
+```
 The `unique_ptr` protects against leaks by guaranteeing the deletion of its object (even in the presence of exceptions). The `T*` does not.
 
 ##### Example
 
-    template<typename T>
-    class X {
-        // ...
-    public:
-        T* p;   // bad: it is unclear whether p is owning or not
-        T* q;   // bad: it is unclear whether q is owning or not
-    };
+```cpp
+template<typename T>
+class X {
+    // ...
+public:
+    T* p;   // bad: it is unclear whether p is owning or not
+    T* q;   // bad: it is unclear whether q is owning or not
+};
 
+```
 We can fix that problem by making ownership explicit:
 
-    template<typename T>
-    class X2 {
-        // ...
-    public:
-        owner<T*> p;  // OK: p is owning
-        T* q;         // OK: q is not owning
-    };
+```cpp
+template<typename T>
+class X2 {
+    // ...
+public:
+    owner<T*> p;  // OK: p is owning
+    T* q;         // OK: q is not owning
+};
 
+```
 ##### Exception
 
 A major class of exception is legacy code, especially code that must remain compilable as C or interface with C and C-style C++ through ABIs.
@@ -219,29 +235,33 @@ For example, if an `owner<T*>` is a member of a class, that class better have a 
 
 Returning a (raw) pointer imposes a life-time management uncertainty on the caller; that is, who deletes the pointed-to object?
 
-    Gadget* make_gadget(int n)
-    {
-        auto p = new Gadget{n};
-        // ...
-        return p;
-    }
+```cpp
+Gadget* make_gadget(int n)
+{
+    auto p = new Gadget{n};
+    // ...
+    return p;
+}
 
-    void caller(int n)
-    {
-        auto p = make_gadget(n);   // remember to delete p
-        // ...
-        delete p;
-    }
+void caller(int n)
+{
+    auto p = make_gadget(n);   // remember to delete p
+    // ...
+    delete p;
+}
 
+```
 In addition to suffering from the problem from [leak](#???), this adds a spurious allocation and deallocation operation, and is needlessly verbose. If Gadget is cheap to move out of a function (i.e., is small or has an efficient move operation), just return it "by value" (see ["out" return values](03-F-Functions.md#Rf-out)):
 
-    Gadget make_gadget(int n)
-    {
-        Gadget g{n};
-        // ...
-        return g;
-    }
+```cpp
+Gadget make_gadget(int n)
+{
+    Gadget g{n};
+    // ...
+    return g;
+}
 
+```
 ##### Note
 
 This rule applies to factory functions.
@@ -267,13 +287,15 @@ We want owners identified so that we can reliably and efficiently delete the obj
 
 ##### Example
 
-    void f()
-    {
-        int& r = *new int{7};  // bad: raw owning reference
-        // ...
-        delete &r;             // bad: violated the rule against deleting raw pointers
-    }
+```cpp
+void f()
+{
+    int& r = *new int{7};  // bad: raw owning reference
+    // ...
+    delete &r;             // bad: violated the rule against deleting raw pointers
+}
 
+```
 **See also**: [The raw pointer rule](06-R-Resource%20management.md#Rr-ptr)
 
 ##### Enforcement
@@ -292,21 +314,25 @@ The members of a scoped object are themselves scoped and the scoped object's con
 
 The following example is inefficient (because it has unnecessary allocation and deallocation), vulnerable to exception throws and returns in the `...` part (leading to leaks), and verbose:
 
-    void f(int n)
-    {
-        auto p = new Gadget{n};
-        // ...
-        delete p;
-    }
+```cpp
+void f(int n)
+{
+    auto p = new Gadget{n};
+    // ...
+    delete p;
+}
 
+```
 Instead, use a local variable:
 
-    void f(int n)
-    {
-        Gadget g{n};
-        // ...
-    }
+```cpp
+void f(int n)
+{
+    Gadget g{n};
+    // ...
+}
 
+```
 ##### Enforcement
 
 * (Moderate) Warn if an object is allocated and then deallocated on all paths within a function. Suggest it should be a local `auto` stack object instead.
@@ -345,31 +371,33 @@ An immutable (`const`) global does not introduce the problems we try to avoid by
 
 ##### Example
 
-    class Record {
-        int id;
-        string name;
-        // ...
-    };
+```cpp
+class Record {
+    int id;
+    string name;
+    // ...
+};
 
-    void use()
-    {
-        // p1 may be nullptr
-        // *p1 is not initialized; in particular,
-        // that string isn't a string, but a string-sized bag of bits
-        Record* p1 = static_cast<Record*>(malloc(sizeof(Record)));
+void use()
+{
+    // p1 may be nullptr
+    // *p1 is not initialized; in particular,
+    // that string isn't a string, but a string-sized bag of bits
+    Record* p1 = static_cast<Record*>(malloc(sizeof(Record)));
 
-        auto p2 = new Record;
+    auto p2 = new Record;
 
-        // unless an exception is thrown, *p2 is default initialized
-        auto p3 = new(nothrow) Record;
-        // p3 may be nullptr; if not, *p3 is default initialized
+    // unless an exception is thrown, *p2 is default initialized
+    auto p3 = new(nothrow) Record;
+    // p3 may be nullptr; if not, *p3 is default initialized
 
-        // ...
+    // ...
 
-        delete p1;    // error: cannot delete object allocated by malloc()
-        free(p2);    // error: cannot free() object allocated by new
-    }
+    delete p1;    // error: cannot delete object allocated by malloc()
+    free(p2);    // error: cannot free() object allocated by new
+}
 
+```
 In some implementations that `delete` and that `free()` might work, or maybe they will cause run-time errors.
 
 ##### Exception
@@ -410,25 +438,29 @@ If you don't, an exception or a return may lead to a leak.
 
 ##### Example, bad
 
-    void f(const string& name)
-    {
-        FILE* f = fopen(name, "r");          // open the file
-        vector<char> buf(1024);
-        auto _ = finally([f] { fclose(f); })  // remember to close the file
-        // ...
-    }
+```cpp
+void f(const string& name)
+{
+    FILE* f = fopen(name, "r");          // open the file
+    vector<char> buf(1024);
+    auto _ = finally([f] { fclose(f); })  // remember to close the file
+    // ...
+}
 
+```
 The allocation of `buf` may fail and leak the file handle.
 
 ##### Example
 
-    void f(const string& name)
-    {
-        ifstream f{name};   // open the file
-        vector<char> buf(1024);
-        // ...
-    }
+```cpp
+void f(const string& name)
+{
+    ifstream f{name};   // open the file
+    vector<char> buf(1024);
+    // ...
+}
 
+```
 The use of the file handle (in `ifstream`) is simple, efficient, and safe.
 
 ##### Enforcement
@@ -443,13 +475,17 @@ If you perform two explicit resource allocations in one statement, you could lea
 
 ##### Example
 
-    void fun(shared_ptr<Widget> sp1, shared_ptr<Widget> sp2);
+```cpp
+void fun(shared_ptr<Widget> sp1, shared_ptr<Widget> sp2);
 
+```
 This `fun` can be called like this:
 
-    // BAD: potential leak
-    fun(shared_ptr<Widget>(new Widget(a, b)), shared_ptr<Widget>(new Widget(c, d)));
+```cpp
+// BAD: potential leak
+fun(shared_ptr<Widget>(new Widget(a, b)), shared_ptr<Widget>(new Widget(c, d)));
 
+```
 This is exception-unsafe because the compiler may reorder the two expressions building the function's two arguments.
 In particular, the compiler can interleave execution of the two expressions:
 Memory allocation (by calling `operator new`) could be done first for both objects, followed by attempts to call the two `Widget` constructors.
@@ -458,13 +494,17 @@ If one of the constructor calls throws an exception, then the other object's mem
 This subtle problem has a simple solution: Never perform more than one explicit resource allocation in a single expression statement.
 For example:
 
-    shared_ptr<Widget> sp1(new Widget(a, b)); // Better, but messy
-    fun(sp1, new Widget(c, d));
+```cpp
+shared_ptr<Widget> sp1(new Widget(a, b)); // Better, but messy
+fun(sp1, new Widget(c, d));
 
+```
 The best solution is to avoid explicit allocation entirely use factory functions that return owning objects:
 
-    fun(make_shared<Widget>(a, b), make_shared<Widget>(c, d)); // Best
+```cpp
+fun(make_shared<Widget>(a, b), make_shared<Widget>(c, d)); // Best
 
+```
 Write your own factory wrapper if there is not one already.
 
 ##### Enforcement
@@ -479,8 +519,10 @@ An array decays to a pointer, thereby losing its size, opening the opportunity f
 
 ##### Example
 
-    ??? what do we recommend: f(int*[]) or f(int**) ???
+```cpp
+??? what do we recommend: f(int*[]) or f(int**) ???
 
+```
 **Alternative**: Use `span` to preserve size information.
 
 ##### Enforcement
@@ -495,13 +537,15 @@ Otherwise you get mismatched operations and chaos.
 
 ##### Example
 
-    class X {
-        // ...
-        void* operator new(size_t s);
-        void operator delete(void*);
-        // ...
-    };
+```cpp
+class X {
+    // ...
+    void* operator new(size_t s);
+    void operator delete(void*);
+    // ...
+};
 
+```
 ##### Note
 
 If you want memory that cannot be deallocated, `=delete` the deallocation operation.
@@ -523,14 +567,16 @@ They can prevent resource leaks.
 
 Consider:
 
-    void f()
-    {
-        X x;
-        X* p1 { new X };              // see also ???
-        unique_ptr<T> p2 { new X };   // unique ownership; see also ???
-        shared_ptr<T> p3 { new X };   // shared ownership; see also ???
-    }
+```cpp
+void f()
+{
+    X x;
+    X* p1 { new X };              // see also ???
+    unique_ptr<T> p2 { new X };   // unique ownership; see also ???
+    shared_ptr<T> p3 { new X };   // shared ownership; see also ???
+}
 
+```
 This will leak the object used to initialize `p1` (only).
 
 ##### Enforcement
@@ -547,22 +593,26 @@ A `unique_ptr` is conceptually simpler and more predictable (you know when destr
 
 This needlessly adds and maintains a reference count.
 
-    void f()
-    {
-        shared_ptr<Base> base = make_shared<Derived>();
-        // use base locally, without copying it -- refcount never exceeds 1
-    } // destroy base
+```cpp
+void f()
+{
+    shared_ptr<Base> base = make_shared<Derived>();
+    // use base locally, without copying it -- refcount never exceeds 1
+} // destroy base
 
+```
 ##### Example
 
 This is more efficient:
 
-    void f()
-    {
-        unique_ptr<Base> base = make_unique<Derived>();
-        // use base locally
-    } // destroy base
+```cpp
+void f()
+{
+    unique_ptr<Base> base = make_unique<Derived>();
+    // use base locally
+} // destroy base
 
+```
 ##### Enforcement
 
 (Simple) Warn if a function uses a `Shared_ptr` with an object allocated within the function, but never returns the `Shared_ptr` or passes it to a function requiring a `Shared_ptr&`. Suggest using `unique_ptr` instead.
@@ -577,9 +627,11 @@ If you first make an object and then give it to a `shared_ptr` constructor, you 
 
 Consider:
 
-    shared_ptr<X> p1 { new X{2} }; // bad
-    auto p = make_shared<X>(2);    // good
+```cpp
+shared_ptr<X> p1 { new X{2} }; // bad
+auto p = make_shared<X>(2);    // good
 
+```
 The `make_shared()` version mentions `X` only once, so it is usually shorter (as well as faster) than the version with the explicit `new`.
 
 ##### Enforcement
@@ -609,8 +661,10 @@ be able to destroy a cyclic structure.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Note
 
  ??? (HS: A lot of people say "to break cycles", while I think "temporary shared ownership" is more to the point.)
@@ -631,38 +685,42 @@ A function that does not manipulate lifetime should take raw pointers or referen
 
 ##### Example, bad
 
-    // callee
-    void f(shared_ptr<widget>& w)
-    {
-        // ...
-        use(*w); // only use of w -- the lifetime is not used at all
-        // ...
-    };
+```cpp
+// callee
+void f(shared_ptr<widget>& w)
+{
+    // ...
+    use(*w); // only use of w -- the lifetime is not used at all
+    // ...
+};
 
-    // caller
-    shared_ptr<widget> my_widget = /* ... */;
-    f(my_widget);
+// caller
+shared_ptr<widget> my_widget = /* ... */;
+f(my_widget);
 
-    widget stack_widget;
-    f(stack_widget); // error
+widget stack_widget;
+f(stack_widget); // error
 
+```
 ##### Example, good
 
-    // callee
-    void f(widget& w)
-    {
-        // ...
-        use(w);
-        // ...
-    };
+```cpp
+// callee
+void f(widget& w)
+{
+    // ...
+    use(w);
+    // ...
+};
 
-    // caller
-    shared_ptr<widget> my_widget = /* ... */;
-    f(*my_widget);
+// caller
+shared_ptr<widget> my_widget = /* ... */;
+f(*my_widget);
 
-    widget stack_widget;
-    f(stack_widget); // ok -- now this works
+widget stack_widget;
+f(stack_widget); // ok -- now this works
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a parameter of a smart pointer type (that overloads `operator->` or `operator*`) that is copyable but the function only calls any of: `operator*`, `operator->` or `get()`.
@@ -684,20 +742,22 @@ Any type (including primary template or specialization) that overloads unary `*`
 
 ##### Example
 
-    // use Boost's intrusive_ptr
-    #include <boost/intrusive_ptr.hpp>
-    void f(boost::intrusive_ptr<widget> p)  // error under rule 'sharedptrparam'
-    {
-        p->foo();
-    }
+```cpp
+// use Boost's intrusive_ptr
+#include <boost/intrusive_ptr.hpp>
+void f(boost::intrusive_ptr<widget> p)  // error under rule 'sharedptrparam'
+{
+    p->foo();
+}
 
-    // use Microsoft's CComPtr
-    #include <atlbase.h>
-    void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
-    {
-        p->foo();
-    }
+// use Microsoft's CComPtr
+#include <atlbase.h>
+void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
+{
+    p->foo();
+}
 
+```
 Both cases are an error under the [`sharedptrparam` guideline](06-R-Resource%20management.md#Rr-smartptrparam):
 `p` is a `Shared_ptr`, but nothing about its sharedness is used here and passing it by value is a silent pessimization;
 these functions should accept a smart pointer only if they need to participate in the widget's lifetime management. Otherwise they should accept a `widget*`, if it can be `nullptr`. Otherwise, and ideally, the function should accept a `widget&`.
@@ -711,14 +771,18 @@ Using `unique_ptr` in this way both documents and enforces the function call's o
 
 ##### Example
 
-    void sink(unique_ptr<widget>); // consumes the widget
+```cpp
+void sink(unique_ptr<widget>); // consumes the widget
 
-    void uses(widget*);            // just uses the widget
+void uses(widget*);            // just uses the widget
 
+```
 ##### Example, bad
 
-    void thinko(const unique_ptr<widget>&); // usually not what you want
+```cpp
+void thinko(const unique_ptr<widget>&); // usually not what you want
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Unique_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
@@ -736,12 +800,16 @@ Using `unique_ptr` in this way both documents and enforces the function call's r
 
 ##### Example
 
-    void reseat(unique_ptr<widget>&); // "will" or "might" reseat pointer
+```cpp
+void reseat(unique_ptr<widget>&); // "will" or "might" reseat pointer
 
+```
 ##### Example, bad
 
-    void thinko(const unique_ptr<widget>&); // usually not what you want
+```cpp
+void thinko(const unique_ptr<widget>&); // usually not what you want
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Unique_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
@@ -755,12 +823,14 @@ This makes the function's ownership sharing explicit.
 
 ##### Example, good
 
-    void share(shared_ptr<widget>);            // share -- "will" retain refcount
+```cpp
+void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
-    void may_share(const shared_ptr<widget>&); // "might" retain refcount
+void may_share(const shared_ptr<widget>&); // "might" retain refcount
 
-    void reseat(shared_ptr<widget>&);          // "might" reseat ptr
+void reseat(shared_ptr<widget>&);          // "might" reseat ptr
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Shared_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
@@ -779,12 +849,14 @@ This makes the function's reseating explicit.
 
 ##### Example, good
 
-    void share(shared_ptr<widget>);            // share -- "will" retain refcount
+```cpp
+void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
-    void reseat(shared_ptr<widget>&);          // "might" reseat ptr
+void reseat(shared_ptr<widget>&);          // "might" reseat ptr
 
-    void may_share(const shared_ptr<widget>&); // "might" retain refcount
+void may_share(const shared_ptr<widget>&); // "might" retain refcount
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Shared_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
@@ -799,12 +871,14 @@ This makes the function's ??? explicit.
 
 ##### Example, good
 
-    void share(shared_ptr<widget>);            // share -- "will" retain refcount
+```cpp
+void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
-    void reseat(shared_ptr<widget>&);          // "might" reseat ptr
+void reseat(shared_ptr<widget>&);          // "might" reseat ptr
 
-    void may_share(const shared_ptr<widget>&); // "might" retain refcount
+void may_share(const shared_ptr<widget>&); // "might" retain refcount
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Shared_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.
@@ -828,46 +902,52 @@ To do this, sometimes you need to take a local copy of a smart pointer, which fi
 
 Consider this code:
 
-    // global (static or heap), or aliased local ...
-    shared_ptr<widget> g_p = ...;
+```cpp
+// global (static or heap), or aliased local ...
+shared_ptr<widget> g_p = ...;
 
-    void f(widget& w)
-    {
-        g();
-        use(w);  // A
-    }
+void f(widget& w)
+{
+    g();
+    use(w);  // A
+}
 
-    void g()
-    {
-        g_p = ...; // oops, if this was the last shared_ptr to that widget, destroys the widget
-    }
+void g()
+{
+    g_p = ...; // oops, if this was the last shared_ptr to that widget, destroys the widget
+}
 
+```
 The following should not pass code review:
 
-    void my_code()
-    {
-        // BAD: passing pointer or reference obtained from a nonlocal smart pointer
-        //      that could be inadvertently reset somewhere inside f or it callees
-        f(*g_p);
+```cpp
+void my_code()
+{
+    // BAD: passing pointer or reference obtained from a nonlocal smart pointer
+    //      that could be inadvertently reset somewhere inside f or it callees
+    f(*g_p);
 
-        // BAD: same reason, just passing it as a "this" pointer
-         g_p->func();
-    }
+    // BAD: same reason, just passing it as a "this" pointer
+     g_p->func();
+}
 
+```
 The fix is simple -- take a local copy of the pointer to "keep a ref count" for your call tree:
 
-    void my_code()
-    {
-        // cheap: 1 increment covers this entire function and all the call trees below us
-        auto pin = g_p;
+```cpp
+void my_code()
+{
+    // cheap: 1 increment covers this entire function and all the call trees below us
+    auto pin = g_p;
 
-        // GOOD: passing pointer or reference obtained from a local unaliased smart pointer
-        f(*pin);
+    // GOOD: passing pointer or reference obtained from a local unaliased smart pointer
+    f(*pin);
 
-        // GOOD: same reason
-        pin->func();
-    }
+    // GOOD: same reason
+    pin->func();
+}
 
+```
 ##### Enforcement
 
 * (Simple) Warn if a pointer or reference obtained from a smart pointer variable (`Unique_ptr` or `Shared_ptr`) that is nonlocal, or that is local but potentially aliased, is used in a function call. If the smart pointer is a `Shared_ptr` then suggest taking a local copy of the smart pointer and obtain a pointer or reference from that instead.

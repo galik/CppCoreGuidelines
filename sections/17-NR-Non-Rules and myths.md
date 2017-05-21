@@ -36,25 +36,27 @@ This leads to longer programs and more errors caused by uninitialized and wrongl
 
 ##### Example, bad
 
-    int use(int x)
-    {
-        int i;
-        char c;
-        double d;
+```cpp
+int use(int x)
+{
+    int i;
+    char c;
+    double d;
 
-        // ... some stuff ...
+    // ... some stuff ...
 
-        if (x < i) {
-            // ...
-            i = f(x, d);
-        }
-        if (i < x) {
-            // ...
-            i = g(x, c);
-        }
-        return i;
+    if (x < i) {
+        // ...
+        i = f(x, d);
     }
+    if (i < x) {
+        // ...
+        i = g(x, c);
+    }
+    return i;
+}
 
+```
 The larger the distance between the uninitialized variable and its use, the larger the chance of a bug.
 Fortunately, compilers catch many "used before set" errors.
 Unfortunately, compilers cannot catch all such errors and unfortunately, the bugs aren't always as simple to spot as in this small example.
@@ -74,59 +76,67 @@ In particular, the single-return rule makes it harder to concentrate error check
 
 ##### Example
 
-    template<class T>
-    //  requires Number<T>
-    string sign(T x)
-    {
-        if (x < 0)
-            return "negative";
-        else if (x > 0)
-            return "positive";
-        return "zero";
-    }
+```cpp
+template<class T>
+//  requires Number<T>
+string sign(T x)
+{
+    if (x < 0)
+        return "negative";
+    else if (x > 0)
+        return "positive";
+    return "zero";
+}
 
+```
 to use a single return only we would have to do something like
 
-    template<class T>
-    //  requires Number<T>
-    string sign(T x)        // bad
-    {
-        string res;
-        if (x < 0)
-            res = "negative";
-        else if (x > 0)
-            res = "positive";
-        else
-            res = "zero";
-        return res;
-    }
+```cpp
+template<class T>
+//  requires Number<T>
+string sign(T x)        // bad
+{
+    string res;
+    if (x < 0)
+        res = "negative";
+    else if (x > 0)
+        res = "positive";
+    else
+        res = "zero";
+    return res;
+}
 
+```
 This is both longer and likely to be less efficient.
 The larger and more complicated the function is, the more painful the workarounds get.
 Of course many simple functions will naturally have just one `return` because of their simpler inherent logic.
 
 ##### Example
 
-    int index(const char* p)
-    {
-        if (p == nullptr) return -1;  // error indicator: alternatively "throw nullptr_error{}"
-        // ... do a lookup to find the index for p
-        return i;
-    }
+```cpp
+int index(const char* p)
+{
+    if (p == nullptr) return -1;  // error indicator: alternatively "throw nullptr_error{}"
+    // ... do a lookup to find the index for p
+    return i;
+}
 
+```
 If we applied the rule, we'd get something like
 
-    int index2(const char* p)
-    {
-        int i;
-        if (p == nullptr)
-            i = -1;  // error indicator
-        else {
-            // ... do a lookup to find the index for p
-        }
-        return i;
+```cpp
+int index2(const char* p)
+{
+    int i;
+    if (p == nullptr)
+        i = -1;  // error indicator
+    else {
+        // ... do a lookup to find the index for p
     }
+    return i;
+}
 
+```
 Note that we (deliberately) violated the rule against uninitialized variables because this style commonly leads to that.
 Also, this style is a temptation to use the [goto exit](17-NR-Non-Rules%20and%20myths.md#Rnr-goto-exit) non-rule.
 
@@ -197,8 +207,10 @@ Remember
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Alternative
 
 * [RAII](10-E-Error%20handling.md#Re-raii)
@@ -213,8 +225,10 @@ Individual classes are rarely a good logical unit of maintenance and distributio
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Alternative
 
 * Use namespaces containing logically cohesive sets of classes and functions.
@@ -229,8 +243,10 @@ and errors (when we didn't deal correctly with semi-constructed objects consiste
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Alternative
 
 * Always establish a class invariant in a constructor.
@@ -245,18 +261,20 @@ This technique is a pre-exception technique for RAII-like resource and error han
 
 ##### Example, bad
 
-    void do_something(int n)
-    {
-        if (n < 100) goto exit;
-        // ...
-        int* p = (int*) malloc(n);
-        // ...
-        if (some_ error) goto_exit;
-        // ...
-    exit:
-        free(p);
-    }
+```cpp
+void do_something(int n)
+{
+    if (n < 100) goto exit;
+    // ...
+    int* p = (int*) malloc(n);
+    // ...
+    if (some_ error) goto_exit;
+    // ...
+exit:
+    free(p);
+}
 
+```
 and spot the bug.
 
 ##### Alternative
@@ -274,8 +292,10 @@ and spot the bug.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Alternative
 
 * [Make member data `public` or (preferably) `private`](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-protected)

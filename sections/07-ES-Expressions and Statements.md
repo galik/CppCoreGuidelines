@@ -95,19 +95,25 @@ It is available as part of all C++ Implementations.
 
 ##### Example
 
-    auto sum = accumulate(begin(a), end(a), 0.0);   // good
+```cpp
+auto sum = accumulate(begin(a), end(a), 0.0);   // good
 
+```
 a range version of `accumulate` would be even better:
 
-    auto sum = accumulate(v, 0.0); // better
+```cpp
+auto sum = accumulate(v, 0.0); // better
 
+```
 but don't hand-code a well-known algorithm:
 
-    int max = v.size();   // bad: verbose, purpose unstated
-    double sum = 0.0;
-    for (int i = 0; i < max; ++i)
-        sum = sum + v[i];
+```cpp
+int max = v.size();   // bad: verbose, purpose unstated
+double sum = 0.0;
+for (int i = 0; i < max; ++i)
+    sum = sum + v[i];
 
+```
 ##### Exception
 
 Large parts of the standard library rely on dynamic allocation (free store). These parts, notably the containers but not the algorithms, are unsuitable for some hard-real time and embedded applications. In such cases, consider providing/using similar facilities, e.g.,  a standard-library-style container implemented using a pool allocator.
@@ -124,29 +130,33 @@ A "suitable abstraction" (e.g., library or class) is closer to the application c
 
 ##### Example
 
-    vector<string> read1(istream& is)   // good
-    {
-        vector<string> res;
-        for (string s; is >> s;)
-            res.push_back(s);
-        return res;
-    }
+```cpp
+vector<string> read1(istream& is)   // good
+{
+    vector<string> res;
+    for (string s; is >> s;)
+        res.push_back(s);
+    return res;
+}
 
+```
 The more traditional and lower-level near-equivalent is longer, messier, harder to get right, and most likely slower:
 
-    char** read2(istream& is, int maxelem, int maxstring, int* nread)   // bad: verbose and incomplete
-    {
-        auto res = new char*[maxelem];
-        int elemcount = 0;
-        while (is && elemcount < maxelem) {
-            auto s = new char[maxstring];
-            is.read(s, maxstring);
-            res[elemcount++] = s;
-        }
-        nread = &elemcount;
-        return res;
+```cpp
+char** read2(istream& is, int maxelem, int maxstring, int* nread)   // bad: verbose and incomplete
+{
+    auto res = new char*[maxelem];
+    int elemcount = 0;
+    while (is && elemcount < maxelem) {
+        auto s = new char[maxstring];
+        is.read(s, maxstring);
+        res[elemcount++] = s;
     }
+    nread = &elemcount;
+    return res;
+}
 
+```
 Once the checking for overflow and error handling has been added that code gets quite messy, and there is the problem remembering to `delete` the returned pointer and the C-style strings that array contains.
 
 ##### Enforcement
@@ -167,51 +177,57 @@ Readability. Minimize resource retention. Avoid accidental misuse of value.
 
 ##### Example
 
-    void use()
-    {
-        int i;    // bad: i is needlessly accessible after loop
-        for (i = 0; i < 20; ++i) { /* ... */ }
-        // no intended use of i here
-        for (int i = 0; i < 20; ++i) { /* ... */ }  // good: i is local to for-loop
+```cpp
+void use()
+{
+    int i;    // bad: i is needlessly accessible after loop
+    for (i = 0; i < 20; ++i) { /* ... */ }
+    // no intended use of i here
+    for (int i = 0; i < 20; ++i) { /* ... */ }  // good: i is local to for-loop
 
-        if (auto pc = dynamic_cast<Circle*>(ps)) {  // good: pc is local to if-statement
-            // ... deal with Circle ...
-        }
-        else {
-            // ... handle error ...
-        }
+    if (auto pc = dynamic_cast<Circle*>(ps)) {  // good: pc is local to if-statement
+        // ... deal with Circle ...
     }
+    else {
+        // ... handle error ...
+    }
+}
 
+```
 ##### Example, bad
 
-    void use(const string& name)
-    {
-        string fn = name + ".txt";
-        ifstream is {fn};
-        Record r;
-        is >> r;
-        // ... 200 lines of code without intended use of fn or is ...
-    }
+```cpp
+void use(const string& name)
+{
+    string fn = name + ".txt";
+    ifstream is {fn};
+    Record r;
+    is >> r;
+    // ... 200 lines of code without intended use of fn or is ...
+}
 
+```
 This function is by most measure too long anyway, but the point is that the resources used by `fn` and the file handle held by `is`
 are retained for much longer than needed and that unanticipated use of `is` and `fn` could happen later in the function.
 In this case, it might be a good idea to factor out the read:
 
-    Record load_record(const string& name)
-    {
-        string fn = name + ".txt";
-        ifstream is {fn};
-        Record r;
-        is >> r;
-        return r;
-    }
+```cpp
+Record load_record(const string& name)
+{
+    string fn = name + ".txt";
+    ifstream is {fn};
+    Record r;
+    is >> r;
+    return r;
+}
 
-    void use(const string& name)
-    {
-        Record r = load_record(name);
-        // ... 200 lines of code ...
-    }
+void use(const string& name)
+{
+    Record r = load_record(name);
+    // ... 200 lines of code ...
+}
 
+```
 ##### Enforcement
 
 * Flag loop variable declared outside a loop and not used after the loop
@@ -225,23 +241,25 @@ Readability. Minimize resource retention.
 
 ##### Example
 
-    void use()
-    {
-        for (string s; cin >> s;)
-            v.push_back(s);
+```cpp
+void use()
+{
+    for (string s; cin >> s;)
+        v.push_back(s);
 
-        for (int i = 0; i < 20; ++i) {   // good: i is local to for-loop
-            // ...
-        }
-
-        if (auto pc = dynamic_cast<Circle*>(ps)) {   // good: pc is local to if-statement
-            // ... deal with Circle ...
-        }
-        else {
-            // ... handle error ...
-        }
+    for (int i = 0; i < 20; ++i) {   // good: i is local to for-loop
+        // ...
     }
 
+    if (auto pc = dynamic_cast<Circle*>(ps)) {   // good: pc is local to if-statement
+        // ... deal with Circle ...
+    }
+    else {
+        // ... handle error ...
+    }
+}
+
+```
 ##### Enforcement
 
 * Flag loop variables declared before the loop and not used after the loop
@@ -251,14 +269,16 @@ Readability. Minimize resource retention.
 
 Note: C++17 also adds `if` and `switch` initializer statements. These require C++17 support.
 
-    map<int, string> mymap;
+```cpp
+map<int, string> mymap;
 
-    if (auto result = mymap.insert(value); result.second) {
-        // insert succeeded, and result is valid for this block
-        use(result.first);  // ok
-        // ...
-    } // result is destroyed here
+if (auto result = mymap.insert(value); result.second) {
+    // insert succeeded, and result is valid for this block
+    use(result.first);  // ok
+    // ...
+} // result is destroyed here
 
+```
 ##### C++17 enforcement (if using a C++17 compiler)
 
 * Flag selection/loop variables declared before the body and not used after the body
@@ -276,60 +296,70 @@ Readability. Lowering the chance of clashes between unrelated non-local names.
 
 Conventional short, local names increase readability:
 
-    template<typename T>    // good
-    void print(ostream& os, const vector<T>& v)
-    {
-        for (int i = 0; i < v.size(); ++i)
-            os << v[i] << '\n';
-    }
+```cpp
+template<typename T>    // good
+void print(ostream& os, const vector<T>& v)
+{
+    for (int i = 0; i < v.size(); ++i)
+        os << v[i] << '\n';
+}
 
+```
 An index is conventionally called `i` and there is no hint about the meaning of the vector in this generic function, so `v` is as good name as any. Compare
 
-    template<typename Element_type>   // bad: verbose, hard to read
-    void print(ostream& target_stream, const vector<Element_type>& current_vector)
-    {
-        for (int current_element_index = 0;
-                current_element_index < current_vector.size();
-                ++current_element_index
-        )
-        target_stream << current_vector[current_element_index] << '\n';
-    }
+```cpp
+template<typename Element_type>   // bad: verbose, hard to read
+void print(ostream& target_stream, const vector<Element_type>& current_vector)
+{
+    for (int current_element_index = 0;
+            current_element_index < current_vector.size();
+            ++current_element_index
+    )
+    target_stream << current_vector[current_element_index] << '\n';
+}
 
+```
 Yes, it is a caricature, but we have seen worse.
 
 ##### Example
 
 Unconventional and short non-local names obscure code:
 
-    void use1(const string& s)
-    {
-        // ...
-        tt(s);   // bad: what is tt()?
-        // ...
-    }
+```cpp
+void use1(const string& s)
+{
+    // ...
+    tt(s);   // bad: what is tt()?
+    // ...
+}
 
+```
 Better, give non-local entities readable names:
 
-    void use1(const string& s)
-    {
-        // ...
-        trim_tail(s);   // better
-        // ...
-    }
+```cpp
+void use1(const string& s)
+{
+    // ...
+    trim_tail(s);   // better
+    // ...
+}
 
+```
 Here, there is a chance that the reader knows what `trim_tail` means and that the reader can remember it after looking it up.
 
 ##### Example, bad
 
 Argument names of large functions are de facto non-local and should be meaningful:
 
-    void complicated_algorithm(vector<Record>& vr, const vector<int>& vi, map<string, int>& out)
-    // read from events in vr (marking used Records) for the indices in
-    // vi placing (name, index) pairs into out
-    {
-        // ... 500 lines of code using vr, vi, and out ...
-    }
+```cpp
+void complicated_algorithm(vector<Record>& vr, const vector<int>& vi, map<string, int>& out)
+// read from events in vr (marking used Records) for the indices in
+// vi placing (name, index) pairs into out
+{
+    // ... 500 lines of code using vr, vi, and out ...
+}
 
+```
 We recommend keeping functions short, but that rule isn't universally adhered to and naming should reflect that.
 
 ##### Enforcement
@@ -344,16 +374,20 @@ Code clarity and readability. Too-similar names slow down comprehension and incr
 
 ##### Example; bad
 
-    if (readable(i1 + l1 + ol + o1 + o0 + ol + o1 + I0 + l0)) surprise();
+```cpp
+if (readable(i1 + l1 + ol + o1 + o0 + ol + o1 + I0 + l0)) surprise();
 
+```
 ##### Example; bad
 
 Do not declare a non-type with the same name as a type in the same scope. This removes the need to disambiguate with a keyword such as `struct` or `enum`. It also removes a source of errors, as `struct X` can implicitly declare `X` if lookup fails.
 
-    struct foo { int n; };
-    struct foo foo();       // BAD, foo is a type already in scope
-    struct foo x = foo();   // requires disambiguation
+```cpp
+struct foo { int n; };
+struct foo foo();       // BAD, foo is a type already in scope
+struct foo x = foo();   // requires disambiguation
 
+```
 ##### Exception
 
 Antique header files might declare non-types and types with the same name in the same scope.
@@ -371,21 +405,23 @@ Such names are commonly used for macros. Thus, `ALL_CAPS` name are vulnerable to
 
 ##### Example
 
-    // somewhere in some header:
-    #define NE !=
+```cpp
+// somewhere in some header:
+#define NE !=
 
-    // somewhere else in some other header:
-    enum Coord { N, NE, NW, S, SE, SW, E, W };
+// somewhere else in some other header:
+enum Coord { N, NE, NW, S, SE, SW, E, W };
 
-    // somewhere third in some poor programmer's .cpp:
-    switch (direction) {
-    case N:
-        // ...
-    case NE:
-        // ...
+// somewhere third in some poor programmer's .cpp:
+switch (direction) {
+case N:
     // ...
-    }
+case NE:
+    // ...
+// ...
+}
 
+```
 ##### Note
 
 Do not use `ALL_CAPS` for constants just because constants used to be macros.
@@ -404,8 +440,10 @@ comment.
 
 ##### Example, bad
 
-    char *p, c, a[7], *pp[7], **aa[10];   // yuck!
+```cpp
+char *p, c, a[7], *pp[7], **aa[10];   // yuck!
 
+```
 ##### Exception
 
 A function declaration can contain several function argument declarations.
@@ -414,38 +452,52 @@ A function declaration can contain several function argument declarations.
 
 A structured binding (C++17) is specifically designed to introduce several variables:
 
-    auto [iter, inserted] = m.insert_or_assign(k, val);
-    if (inserted) { /* new entry was inserted */ }
+```cpp
+auto [iter, inserted] = m.insert_or_assign(k, val);
+if (inserted) { /* new entry was inserted */ }
 
+```
 ##### Example
 
-    template <class InputIterator, class Predicate>
-    bool any_of(InputIterator first, InputIterator last, Predicate pred);
+```cpp
+template <class InputIterator, class Predicate>
+bool any_of(InputIterator first, InputIterator last, Predicate pred);
 
+```
 or better using concepts:
 
-    bool any_of(InputIterator first, InputIterator last, Predicate pred);
+```cpp
+bool any_of(InputIterator first, InputIterator last, Predicate pred);
 
+```
 ##### Example
 
-    double scalbn(double x, int n);   // OK: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
+```cpp
+double scalbn(double x, int n);   // OK: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
 
+```
 or:
 
-    double scalbn(    // better: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
-        double x,     // base value
-        int n         // exponent
-    );
+```cpp
+double scalbn(    // better: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
+    double x,     // base value
+    int n         // exponent
+);
 
+```
 or:
 
-    // better: base * pow(FLT_RADIX, exponent); FLT_RADIX is usually 2
-    double scalbn(double base, int exponent);
+```cpp
+// better: base * pow(FLT_RADIX, exponent); FLT_RADIX is usually 2
+double scalbn(double base, int exponent);
 
+```
 ##### Example
 
-    int a = 7, b = 9, c, d = 10, e = 3;
+```cpp
+int a = 7, b = 9, c, d = 10, e = 3;
 
+```
 In a long list of declarators is is easy to overlook an uninitialized variable.
 
 ##### Enforcement
@@ -464,39 +516,49 @@ Flag variable and constant declarations with multiple declarators (e.g., `int* p
 
 Consider:
 
-    auto p = v.begin();   // vector<int>::iterator
-    auto s = v.size();
-    auto h = t.future();
-    auto q = make_unique<int[]>(s);
-    auto f = [](int x){ return x + 10; };
+```cpp
+auto p = v.begin();   // vector<int>::iterator
+auto s = v.size();
+auto h = t.future();
+auto q = make_unique<int[]>(s);
+auto f = [](int x){ return x + 10; };
 
+```
 In each case, we save writing a longish, hard-to-remember type that the compiler already knows but a programmer could get wrong.
 
 ##### Example
 
-    template<class T>
-    auto Container<T>::first() -> Iterator;   // Container<T>::Iterator
+```cpp
+template<class T>
+auto Container<T>::first() -> Iterator;   // Container<T>::Iterator
 
+```
 ##### Exception
 
 Avoid `auto` for initializer lists and in cases where you know exactly which type you want and where an initializer might require conversion.
 
 ##### Example
 
-    auto lst = { 1, 2, 3 };   // lst is an initializer list
-    auto x{1};   // x is an int (after correction of the C++14 standard; initializer_list in C++11)
+```cpp
+auto lst = { 1, 2, 3 };   // lst is an initializer list
+auto x{1};   // x is an int (after correction of the C++14 standard; initializer_list in C++11)
 
+```
 ##### Note
 
 When concepts become available, we can (and should) be more specific about the type we are deducing:
 
-    // ...
-    ForwardIterator p = algo(x, y, z);
+```cpp
+// ...
+ForwardIterator p = algo(x, y, z);
 
+```
 ##### Example (C++17)
-    
-    auto [ quotient, remainder ] = div(123456, 73);   // break out the members of the div_t result
+```cpp
 
+auto [ quotient, remainder ] = div(123456, 73);   // break out the members of the div_t result
+
+```
 ##### Enforcement
 
 Flag redundant repetition of type names in a declaration.
@@ -510,23 +572,25 @@ Can cause maintenance problems.
 
 ##### Example, bad
 
-    int d = 0;
+```cpp
+int d = 0;
+// ...
+if (cond) {
     // ...
-    if (cond) {
-        // ...
-        d = 9;
-        // ...
-    }
-    else {
-        // ...
-        int d = 7;
-        // ...
-        d = value_to_be_returned;
-        // ...
-    }
+    d = 9;
+    // ...
+}
+else {
+    // ...
+    int d = 7;
+    // ...
+    d = value_to_be_returned;
+    // ...
+}
 
-    return d;
+return d;
 
+```
 If this is a large `if`-statement, it is easy to overlook that a new `d` has been introduced in the inner scope.
 This is a known source of bugs.
 Sometimes such reuse of a name in an inner scope is called "shadowing".
@@ -539,49 +603,55 @@ Shadowing is primarily a problem when functions are too large and too complex.
 
 Shadowing of function arguments in the outermost block is disallowed by the language:
 
-    void f(int x)
-    {
-        int x = 4;  // error: reuse of function argument name
+```cpp
+void f(int x)
+{
+    int x = 4;  // error: reuse of function argument name
 
-        if (x) {
-            int x = 7;  // allowed, but bad
-            // ...
-        }
+    if (x) {
+        int x = 7;  // allowed, but bad
+        // ...
     }
+}
 
+```
 ##### Example, bad
 
 Reuse of a member name as a local variable can also be a problem:
 
-    struct S {
-        int m;
-        void f(int x);
-    };
+```cpp
+struct S {
+    int m;
+    void f(int x);
+};
 
-    void S::f(int x)
-    {
-        m = 7;    // assign to member
-        if (x) {
-            int m = 9;
-            // ...
-            m = 99; // assign to member
-            // ...
-        }
+void S::f(int x)
+{
+    m = 7;    // assign to member
+    if (x) {
+        int m = 9;
+        // ...
+        m = 99; // assign to member
+        // ...
     }
+}
 
+```
 ##### Exception
 
 We often reuse function names from a base class in a derived class:
 
-    struct B {
-        void f(int);
-    };
+```cpp
+struct B {
+    void f(int);
+};
 
-    struct D : B {
-        void f(double);
-        using B::f;
-    };
+struct D : B {
+    void f(double);
+    using B::f;
+};
 
+```
 This is error-prone.
 For example, had we forgotten the using declaration, a call `d.f(1)` would not have found the `int` version of `f`.
 
@@ -604,22 +674,26 @@ Simplify refactoring.
 
 ##### Example
 
-    void use(int arg)
-    {
-        int i;   // bad: uninitialized variable
-        // ...
-        i = 7;   // initialize i
-    }
+```cpp
+void use(int arg)
+{
+    int i;   // bad: uninitialized variable
+    // ...
+    i = 7;   // initialize i
+}
 
+```
 No, `i = 7` does not initialize `i`; it assigns to it. Also, `i` can be read in the `...` part. Better:
 
-    void use(int arg)   // OK
-    {
-        int i = 7;   // OK: initialized
-        string s;    // OK: default initialized
-        // ...
-    }
+```cpp
+void use(int arg)   // OK
+{
+    int i = 7;   // OK: initialized
+    string s;    // OK: default initialized
+    // ...
+}
 
+```
 ##### Note
 
 The *always initialize* rule is deliberately stronger than the *an object must be set before used* language rule.
@@ -637,48 +711,58 @@ The *always initialize* rule is a style rule aimed to improve maintainability as
 
 Here is an example that is often considered to demonstrate the need for a more relaxed rule for initialization
 
-    widget i;    // "widget" a type that's expensive to initialize, possibly a large POD
-    widget j;
+```cpp
+widget i;    // "widget" a type that's expensive to initialize, possibly a large POD
+widget j;
 
-    if (cond) {  // bad: i and j are initialized "late"
-        i = f1();
-        j = f2();
-    }
-    else {
-        i = f3();
-        j = f4();
-    }
+if (cond) {  // bad: i and j are initialized "late"
+    i = f1();
+    j = f2();
+}
+else {
+    i = f3();
+    j = f4();
+}
 
+```
 This cannot trivially be rewritten to initialize `i` and `j` with initializers.
 Note that for types with a default constructor, attempting to postpone initialization simply leads to a default initialization followed by an assignment.
 A popular reason for such examples is "efficiency", but a compiler that can detect whether we made a used-before-set error can also eliminate any redundant double initialization.
 
 At the cost of repeating `cond` we could write:
 
-    widget i = (cond) ? f1() : f3();
-    widget j = (cond) ? f2() : f4();
+```cpp
+widget i = (cond) ? f1() : f3();
+widget j = (cond) ? f2() : f4();
 
+```
 Assuming that there is a logical connection between `i` and `j`, that connection should probably be expressed in code:
 
-    pair<widget, widget> make_related_widgets(bool x)
-    {
-        return (x) ? {f1(), f2()} : {f3(), f4() };
-    }
+```cpp
+pair<widget, widget> make_related_widgets(bool x)
+{
+    return (x) ? {f1(), f2()} : {f3(), f4() };
+}
 
-    auto init = make_related_widgets(cond);
-    widget i = init.first;
-    widget j = init.second;
+auto init = make_related_widgets(cond);
+widget i = init.first;
+widget j = init.second;
 
+```
 Obviously, what we really would like is a construct that initialized n variables from a `tuple`. For example:
 
-    auto [i, j] = make_related_widgets(cond);    // C++17, not C++14
+```cpp
+auto [i, j] = make_related_widgets(cond);    // C++17, not C++14
 
+```
 Today, we might approximate that using `tie()`:
 
-    widget i;       // bad: uninitialized variable
-    widget j;
-    tie(i, j) = make_related_widgets(cond);
+```cpp
+widget i;       // bad: uninitialized variable
+widget j;
+tie(i, j) = make_related_widgets(cond);
 
+```
 This may be seen as an example of the *immediately initialize from input* exception below.
 
 Creating optimal and equivalent code from all of these examples should be well within the capabilities of modern C++ compilers
@@ -696,34 +780,44 @@ Many such errors are introduced during maintenance years after the initial imple
 It you are declaring an object that is just about to be initialized from input, initializing it would cause a double initialization.
 However, beware that this may leave uninitialized data beyond the input -- and that has been a fertile source of errors and security breaches:
 
-    constexpr int max = 8 * 1024;
-    int buf[max];         // OK, but suspicious: uninitialized
-    f.read(buf, max);
+```cpp
+constexpr int max = 8 * 1024;
+int buf[max];         // OK, but suspicious: uninitialized
+f.read(buf, max);
 
+```
 The cost of initializing that array could be significant in some situations.
 However, such examples do tend to leave uninitialized variables accessible, so they should be treated with suspicion.
 
-    constexpr int max = 8 * 1024;
-    int buf[max] = {};   // zero all elements; better in some situations
-    f.read(buf, max);
+```cpp
+constexpr int max = 8 * 1024;
+int buf[max] = {};   // zero all elements; better in some situations
+f.read(buf, max);
 
+```
 When feasible use a library function that is known not to overflow. For example:
 
-    string s;   // s is default initialized to ""
-    cin >> s;   // s expands to hold the string
+```cpp
+string s;   // s is default initialized to ""
+cin >> s;   // s expands to hold the string
 
+```
 Don't consider simple variables that are targets for input operations exceptions to this rule:
 
-    int i;   // bad
-    // ...
-    cin >> i;
+```cpp
+int i;   // bad
+// ...
+cin >> i;
 
+```
 In the not uncommon case where the input target and the input operation get separated (as they should not) the possibility of used-before-set opens up.
 
-    int i2 = 0;   // better
-    // ...
-    cin >> i;
+```cpp
+int i2 = 0;   // better
+// ...
+cin >> i;
 
+```
 A good optimizer should know about input operations and eliminate the redundant operation.
 
 ##### Example
@@ -731,43 +825,49 @@ A good optimizer should know about input operations and eliminate the redundant 
 Using an `uninitialized` or sentinel value is a symptom of a problem and not a
 solution:
 
-    widget i = uninit;  // bad
-    widget j = uninit;
+```cpp
+widget i = uninit;  // bad
+widget j = uninit;
 
-    // ...
-    use(i);         // possibly used before set
-    // ...
+// ...
+use(i);         // possibly used before set
+// ...
 
-    if (cond) {     // bad: i and j are initialized "late"
-        i = f1();
-        j = f2();
-    }
-    else {
-        i = f3();
-        j = f4();
-    }
+if (cond) {     // bad: i and j are initialized "late"
+    i = f1();
+    j = f2();
+}
+else {
+    i = f3();
+    j = f4();
+}
 
+```
 Now the compiler cannot even simply detect a used-before-set. Further, we've introduced complexity in the state space for widget: which operations are valid on an `uninit` widget and which are not?
 
 ##### Note
 
 Sometimes, a lambda can be used as an initializer to avoid an uninitialized variable:
 
-    error_code ec;
-    Value v = [&] {
-        auto p = get_value();   // get_value() returns a pair<error_code, Value>
-        ec = p.first;
-        return p.second;
-    }();
+```cpp
+error_code ec;
+Value v = [&] {
+    auto p = get_value();   // get_value() returns a pair<error_code, Value>
+    ec = p.first;
+    return p.second;
+}();
 
+```
 or maybe:
 
-    Value v = [] {
-        auto p = get_value();   // get_value() returns a pair<error_code, Value>
-        if (p.first) throw Bad_value{p.first};
-        return p.second;
-    }();
+```cpp
+Value v = [] {
+    auto p = get_value();   // get_value() returns a pair<error_code, Value>
+    if (p.first) throw Bad_value{p.first};
+    return p.second;
+}();
 
+```
 **See also**: [ES.28](07-ES-Expressions%20and%20Statements.md#Res-lambda-init)
 
 ##### Enforcement
@@ -785,10 +885,12 @@ Readability. To limit the scope in which the variable can be used.
 
 ##### Example
 
-    int x = 7;
-    // ... no use of x here ...
-    ++x;
+```cpp
+int x = 7;
+// ... no use of x here ...
+++x;
 
+```
 ##### Enforcement
 
 Flag declarations that are distant from their first use.
@@ -801,27 +903,31 @@ Readability. Limit the scope in which a variable can be used. Don't risk used-be
 
 ##### Example, bad
 
-    string s;
-    // ... no use of s here ...
-    s = "what a waste";
+```cpp
+string s;
+// ... no use of s here ...
+s = "what a waste";
 
+```
 ##### Example, bad
 
-    SomeLargeType var;   // ugly CaMeLcAsEvArIaBlE
+```cpp
+SomeLargeType var;   // ugly CaMeLcAsEvArIaBlE
 
-    if (cond)   // some non-trivial condition
-        Set(&var);
-    else if (cond2 || !cond3) {
-        var = Set2(3.14);
-    }
-    else {
-        var = 0;
-        for (auto& e : something)
-            var += e;
-    }
+if (cond)   // some non-trivial condition
+    Set(&var);
+else if (cond2 || !cond3) {
+    var = Set2(3.14);
+}
+else {
+    var = 0;
+    for (auto& e : something)
+        var += e;
+}
 
-    // use var; that this isn't done too early can be enforced statically with only control flow
+// use var; that this isn't done too early can be enforced statically with only control flow
 
+```
 This would be fine if there was a default initialization for `SomeLargeType` that wasn't too expensive.
 Otherwise, a programmer might very well wonder if every possible path through the maze of conditions has been covered.
 If not, we have a "use before set" bug. This is a maintenance trap.
@@ -841,71 +947,85 @@ The rules for `{}` initialization are simpler, more general, less ambiguous, and
 
 ##### Example
 
-    int x {f(99)};
-    vector<int> v = {1, 2, 3, 4, 5, 6};
+```cpp
+int x {f(99)};
+vector<int> v = {1, 2, 3, 4, 5, 6};
 
+```
 ##### Exception
 
 For containers, there is a tradition for using `{...}` for a list of elements and `(...)` for sizes:
 
-    vector<int> v1(10);    // vector of 10 elements with the default value 0
-    vector<int> v2 {10};   // vector of 1 element with the value 10
+```cpp
+vector<int> v1(10);    // vector of 10 elements with the default value 0
+vector<int> v2 {10};   // vector of 1 element with the value 10
 
+```
 ##### Note
 
 `{}`-initializers do not allow narrowing conversions.
 
 ##### Example
 
-    int x {7.9};   // error: narrowing
-    int y = 7.9;   // OK: y becomes 7. Hope for a compiler warning
+```cpp
+int x {7.9};   // error: narrowing
+int y = 7.9;   // OK: y becomes 7. Hope for a compiler warning
 
+```
 ##### Note
 
 `{}` initialization can be used for all initialization; other forms of initialization can't:
 
-    auto p = new vector<int> {1, 2, 3, 4, 5};   // initialized vector
-    D::D(int a, int b) :m{a, b} {   // member initializer (e.g., m might be a pair)
-        // ...
-    };
-    X var {};   // initialize var to be empty
-    struct S {
-        int m {7};   // default initializer for a member
-        // ...
-    };
+```cpp
+auto p = new vector<int> {1, 2, 3, 4, 5};   // initialized vector
+D::D(int a, int b) :m{a, b} {   // member initializer (e.g., m might be a pair)
+    // ...
+};
+X var {};   // initialize var to be empty
+struct S {
+    int m {7};   // default initializer for a member
+    // ...
+};
 
+```
 ##### Note
 
 Initialization of a variable declared using `auto` with a single value, e.g., `{v}`, had surprising results until C++17.
 The C++17 rules are somewhat less surprising:
 
-    auto x1 {7};        // x1 is an int with the value 7
-    auto x2 = {7};  // x2 is an initializer_list<int> with an element 7
+```cpp
+auto x1 {7};        // x1 is an int with the value 7
+auto x2 = {7};  // x2 is an initializer_list<int> with an element 7
 
-    auto x11 {7, 8};    // error: two initializers
-    auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
+auto x11 {7, 8};    // error: two initializers
+auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
 
+```
 So use `={...}` if you really want an `initializer_list<T>`
 
-    auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
+```cpp
+auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
 
+```
 ##### Note
 
 Old habits die hard, so this rule is hard to apply consistently, especially as there are so many cases where `=` is innocent.
 
 ##### Example
 
-    template<typename T>
-    void f()
-    {
-        T x1(1);    // T initialized with 1
-        T x0();     // bad: function declaration (often a mistake)
+```cpp
+template<typename T>
+void f()
+{
+    T x1(1);    // T initialized with 1
+    T x0();     // bad: function declaration (often a mistake)
 
-        T y1 {1};   // T initialized with 1
-        T y0 {};    // default initialized T
-        // ...
-    }
+    T y1 {1};   // T initialized with 1
+    T y0 {};    // default initialized T
+    // ...
+}
 
+```
 **See also**: [Discussion](#???)
 
 ##### Enforcement
@@ -925,18 +1045,20 @@ increases readability, and it has zero or near zero runtime cost.
 
 ##### Example
 
-    void use(bool leak)
-    {
-        auto p1 = make_unique<int>(7);   // OK
-        int* p2 = new int{7};            // bad: might leak
-        // ... no assignment to p2 ...
-        if (leak) return;
-        // ... no assignment to p2 ...
-        vector<int> v(7);
-        v.at(7) = 0;                    // exception thrown
-        // ...
-    }
+```cpp
+void use(bool leak)
+{
+    auto p1 = make_unique<int>(7);   // OK
+    int* p2 = new int{7};            // bad: might leak
+    // ... no assignment to p2 ...
+    if (leak) return;
+    // ... no assignment to p2 ...
+    vector<int> v(7);
+    v.at(7) = 0;                    // exception thrown
+    // ...
+}
 
+```
 If `leak == true` the object pointed to by `p2` is leaked and the object pointed to by `p1` is not.
 The same is the case when `at()` throws.
 
@@ -952,13 +1074,15 @@ That way you can't change the value by mistake. That way may offer the compiler 
 
 ##### Example
 
-    void f(int n)
-    {
-        const int bufmax = 2 * n + 2;  // good: we can't change bufmax by accident
-        int xmax = n;                  // suspicious: is xmax intended to change?
-        // ...
-    }
+```cpp
+void f(int n)
+{
+    const int bufmax = 2 * n + 2;  // good: we can't change bufmax by accident
+    int xmax = n;                  // suspicious: is xmax intended to change?
+    // ...
+}
 
+```
 ##### Enforcement
 
 Look to see if a variable is actually mutated, and flag it if
@@ -973,33 +1097,37 @@ Readability and safety.
 
 ##### Example, bad
 
-    void use()
-    {
-        int i;
-        for (i = 0; i < 20; ++i) { /* ... */ }
-        for (i = 0; i < 200; ++i) { /* ... */ } // bad: i recycled
-    }
+```cpp
+void use()
+{
+    int i;
+    for (i = 0; i < 20; ++i) { /* ... */ }
+    for (i = 0; i < 200; ++i) { /* ... */ } // bad: i recycled
+}
 
+```
 ##### Note
 
 As an optimization, you may want to reuse a buffer as a scratch pad, but even then prefer to limit the variable's scope as much as possible and be careful not to cause bugs from data left in a recycled buffer as this is a common source of security bugs.
 
+```cpp
+{
+    std::string buffer;             // to avoid reallocations on every loop iteration
+    for (auto& o : objects)
     {
-        std::string buffer;             // to avoid reallocations on every loop iteration
-        for (auto& o : objects)
-        {
-            // First part of the work.
-            generateFirstString(buffer, o);
-            writeToFile(buffer);
+        // First part of the work.
+        generateFirstString(buffer, o);
+        writeToFile(buffer);
 
-            // Second part of the work.
-            generateSecondString(buffer, o);
-            writeToFile(buffer);
+        // Second part of the work.
+        generateSecondString(buffer, o);
+        writeToFile(buffer);
 
-            // etc...
-        }
+        // etc...
     }
+}
 
+```
 ##### Enforcement
 
 Flag recycled variables.
@@ -1013,16 +1141,18 @@ They are not confused with non-standard extensions of built-in arrays.
 
 ##### Example, bad
 
-    const int n = 7;
-    int m = 9;
+```cpp
+const int n = 7;
+int m = 9;
 
-    void f()
-    {
-        int a1[n];
-        int a2[m];   // error: not ISO C++
-        // ...
-    }
+void f()
+{
+    int a1[n];
+    int a2[m];   // error: not ISO C++
+    // ...
+}
 
+```
 ##### Note
 
 The definition of `a1` is legal C++ and has always been.
@@ -1033,16 +1163,18 @@ The definition of `a2` is C but not C++ and is considered a security risk
 
 ##### Example
 
-    const int n = 7;
-    int m = 9;
+```cpp
+const int n = 7;
+int m = 9;
 
-    void f()
-    {
-        array<int, n> a1;
-        stack_array<int> a2(m);
-        // ...
-    }
+void f()
+{
+    array<int, n> a1;
+    stack_array<int> a2(m);
+    // ...
+}
 
+```
 ##### Enforcement
 
 * Flag arrays with non-constant bounds (C-style VLAs)
@@ -1056,32 +1188,38 @@ It nicely encapsulates local initialization, including cleaning up scratch varia
 
 ##### Example, bad
 
-    widget x;   // should be const, but:
-    for (auto i = 2; i <= N; ++i) {             // this could be some
-        x += some_obj.do_something_with(i);  // arbitrarily long code
-    }                                        // needed to initialize x
-    // from here, x should be const, but we can't say so in code in this style
+```cpp
+widget x;   // should be const, but:
+for (auto i = 2; i <= N; ++i) {             // this could be some
+    x += some_obj.do_something_with(i);  // arbitrarily long code
+}                                        // needed to initialize x
+// from here, x should be const, but we can't say so in code in this style
 
+```
 ##### Example, good
 
-    const widget x = [&]{
-        widget val;                                // assume that widget has a default constructor
-        for (auto i = 2; i <= N; ++i) {            // this could be some
-            val += some_obj.do_something_with(i);  // arbitrarily long code
-        }                                          // needed to initialize x
-        return val;
-    }();
+```cpp
+const widget x = [&]{
+    widget val;                                // assume that widget has a default constructor
+    for (auto i = 2; i <= N; ++i) {            // this could be some
+        val += some_obj.do_something_with(i);  // arbitrarily long code
+    }                                          // needed to initialize x
+    return val;
+}();
 
+```
 ##### Example
 
-    string var = [&]{
-        if (!in) return "";   // default
-        string s;
-        for (char c : in >> c)
-            s += toupper(c);
-        return s;
-    }(); // note ()
+```cpp
+string var = [&]{
+    if (!in) return "";   // default
+    string s;
+    for (char c : in >> c)
+        s += toupper(c);
+    return s;
+}(); // note ()
 
+```
 If at all possible, reduce the conditions to a simple set of alternatives (e.g., an `enum`) and don't mix up selection and initialization.
 
 ##### Enforcement
@@ -1099,8 +1237,10 @@ Macros complicate tool building.
 
 ##### Example, bad
 
-    #define Case break; case   /* BAD */
+```cpp
+#define Case break; case   /* BAD */
 
+```
 This innocuous-looking macro makes a single lower case `c` instead of a `C` into a bad flow-control bug.
 
 ##### Note
@@ -1123,14 +1263,18 @@ Macros complicate tool building.
 
 ##### Example, bad
 
-    #define PI 3.14
-    #define SQUARE(a, b) (a * b)
+```cpp
+#define PI 3.14
+#define SQUARE(a, b) (a * b)
 
+```
 Even if we hadn't left a well-known bug in `SQUARE` there are much better behaved alternatives; for example:
 
-    constexpr double pi = 3.14;
-    template<typename T> T square(T a, T b) { return a * b; }
+```cpp
+constexpr double pi = 3.14;
+template<typename T> T square(T a, T b) { return a * b; }
 
+```
 ##### Enforcement
 
 Scream when you see a macro that isn't just used for source control (e.g., `#ifdef`)
@@ -1143,10 +1287,12 @@ Convention. Readability. Distinguishing macros.
 
 ##### Example
 
-    #define forever for (;;)   /* very BAD */
+```cpp
+#define forever for (;;)   /* very BAD */
 
-    #define FOREVER for (;;)   /* Still evil, but at least visible to humans */
+#define FOREVER for (;;)   /* Still evil, but at least visible to humans */
 
+```
 ##### Enforcement
 
 Scream when you see a lower case macro.
@@ -1159,10 +1305,12 @@ Macros do not obey scope rules.
 
 ##### Example
 
-    #define MYCHAR        /* BAD, will eventually clash with someone else's MYCHAR*/
+```cpp
+#define MYCHAR        /* BAD, will eventually clash with someone else's MYCHAR*/
 
-    #define ZCORP_CHAR    /* Still evil, but less likely to clash */
+#define ZCORP_CHAR    /* Still evil, but less likely to clash */
 
+```
 ##### Note
 
 Avoid macros if you can: [ES.30](07-ES-Expressions%20and%20Statements.md#Res-macros), [ES.31](07-ES-Expressions%20and%20Statements.md#Res-macros2), and [ES.32](07-ES-Expressions%20and%20Statements.md#Res-ALL_CAPS).
@@ -1182,37 +1330,39 @@ Requires messy cast-and-macro-laden code to get working right.
 
 ##### Example
 
-    #include <cstdarg>
+```cpp
+#include <cstdarg>
 
-    // "severity" followed by a zero-terminated list of char*s; write the C-style strings to cerr
-    void error(int severity ...)
-    {
-        va_list ap;             // a magic type for holding arguments
-        va_start(ap, severity); // arg startup: "severity" is the first argument of error()
+// "severity" followed by a zero-terminated list of char*s; write the C-style strings to cerr
+void error(int severity ...)
+{
+    va_list ap;             // a magic type for holding arguments
+    va_start(ap, severity); // arg startup: "severity" is the first argument of error()
 
-        for (;;) {
-            // treat the next var as a char*; no checking: a cast in disguise
-            char* p = va_arg(ap, char*);
-            if (p == nullptr) break;
-            cerr << p << ' ';
-        }
-
-        va_end(ap);             // arg cleanup (don't forget this)
-
-        cerr << '\n';
-        if (severity) exit(severity);
+    for (;;) {
+        // treat the next var as a char*; no checking: a cast in disguise
+        char* p = va_arg(ap, char*);
+        if (p == nullptr) break;
+        cerr << p << ' ';
     }
 
-    void use()
-    {
-        error(7, "this", "is", "an", "error", nullptr);
-        error(7); // crash
-        error(7, "this", "is", "an", "error");  // crash
-        const char* is = "is";
-        string an = "an";
-        error(7, "this", "is", an, "error"); // crash
-    }
+    va_end(ap);             // arg cleanup (don't forget this)
 
+    cerr << '\n';
+    if (severity) exit(severity);
+}
+
+void use()
+{
+    error(7, "this", "is", "an", "error", nullptr);
+    error(7); // crash
+    error(7, "this", "is", "an", "error");  // crash
+    const char* is = "is";
+    string an = "an";
+    error(7, "this", "is", an, "error"); // crash
+}
+
+```
 **Alternative**: Overloading. Templates. Variadic templates.
 
 ##### Note
@@ -1238,24 +1388,28 @@ Statements control the flow of control (except for function calls and exception 
 
 ##### Example
 
-    void use(int n)
-    {
-        switch (n) {   // good
-        case 0:   // ...
-        case 7:   // ...
-        }
+```cpp
+void use(int n)
+{
+    switch (n) {   // good
+    case 0:   // ...
+    case 7:   // ...
     }
+}
 
+```
 rather than:
 
-    void use2(int n)
-    {
-        if (n == 0)   // bad: if-then-else chain comparing against a set of constants
-            // ...
-        else if (n == 7)
-            // ...
-    }
+```cpp
+void use2(int n)
+{
+    if (n == 0)   // bad: if-then-else chain comparing against a set of constants
+        // ...
+    else if (n == 7)
+        // ...
+}
 
+```
 ##### Enforcement
 
 Flag `if`-`then`-`else` chains that check against constants (only).
@@ -1268,28 +1422,30 @@ Readability. Error prevention. Efficiency.
 
 ##### Example
 
-    for (int i = 0; i < v.size(); ++i)   // bad
-            cout << v[i] << '\n';
+```cpp
+for (int i = 0; i < v.size(); ++i)   // bad
+        cout << v[i] << '\n';
 
-    for (auto p = v.begin(); p != v.end(); ++p)   // bad
-        cout << *p << '\n';
+for (auto p = v.begin(); p != v.end(); ++p)   // bad
+    cout << *p << '\n';
 
-    for (auto& x : v)    // OK
-        cout << x << '\n';
+for (auto& x : v)    // OK
+    cout << x << '\n';
 
-    for (int i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
-        cout << v[i] + v[i - 1] << '\n';
+for (int i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
+    cout << v[i] + v[i - 1] << '\n';
 
-    for (int i = 0; i < v.size(); ++i) // possible side-effect: can't be a range-for
-        cout << f(v, &v[i]) << '\n';
+for (int i = 0; i < v.size(); ++i) // possible side-effect: can't be a range-for
+    cout << f(v, &v[i]) << '\n';
 
-    for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
-        if (i % 2 == 0)
-            continue;   // skip even elements
-        else
-            cout << v[i] << '\n';
-    }
+for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
+    if (i % 2 == 0)
+        continue;   // skip even elements
+    else
+        cout << v[i] << '\n';
+}
 
+```
 A human or a good static analyzer may determine that there really isn't a side effect on `v` in `f(v, &v[i])` so that the loop can be rewritten.
 
 "Messing with the loop variable" in the body of a loop is typically best avoided.
@@ -1298,16 +1454,22 @@ A human or a good static analyzer may determine that there really isn't a side e
 
 Don't use expensive copies of the loop variable of a range-`for` loop:
 
-    for (string s : vs) // ...
+```cpp
+for (string s : vs) // ...
 
+```
 This will copy each elements of `vs` into `s`. Better:
 
-    for (string& s : vs) // ...
+```cpp
+for (string& s : vs) // ...
 
+```
 Better still, if the loop variable isn't modified or copied:
 
-    for (const string& s : vs) // ...
+```cpp
+for (const string& s : vs) // ...
 
+```
 ##### Enforcement
 
 Look at loops, if a traditional loop just looks at each element of a sequence, and there are no side-effects on what it does with the elements, rewrite the loop to a ranged-`for` loop.
@@ -1320,18 +1482,22 @@ Readability: the complete logic of the loop is visible "up front". The scope of 
 
 ##### Example
 
-    for (int i = 0; i < vec.size(); i++) {
-        // do work
-    }
+```cpp
+for (int i = 0; i < vec.size(); i++) {
+    // do work
+}
 
+```
 ##### Example, bad
 
-    int i = 0;
-    while (i < vec.size()) {
-        // do work
-        i++;
-    }
+```cpp
+int i = 0;
+while (i < vec.size()) {
+    // do work
+    i++;
+}
 
+```
 ##### Enforcement
 
 ???
@@ -1344,20 +1510,24 @@ Readability.
 
 ##### Example
 
-    int events = 0;
-    for (; wait_for_event(); ++events) {  // bad, confusing
-        // ...
-    }
+```cpp
+int events = 0;
+for (; wait_for_event(); ++events) {  // bad, confusing
+    // ...
+}
 
+```
 The "event loop" is misleading because the `events` counter has nothing to do with the loop condition (`wait_for_event()`).
 Better
 
-    int events = 0;
-    while (wait_for_event()) {      // better
-        ++events;
-        // ...
-    }
+```cpp
+int events = 0;
+while (wait_for_event()) {      // better
+    ++events;
+    // ...
+}
 
+```
 ##### Enforcement
 
 Flag actions in `for`-initializers and `for`-increments that do not relate to the `for`-condition.
@@ -1371,26 +1541,32 @@ Avoid using the loop variable for other purposes after the loop.
 
 ##### Example
 
-    for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
-        // ...
-    }
+```cpp
+for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
+    // ...
+}
 
+```
 ##### Example, don't
 
-    int j;                            // BAD: j is visible outside the loop
-    for (j = 0; j < 100; ++j) {
-        // ...
-    }
-    // j is still visible here and isn't needed
+```cpp
+int j;                            // BAD: j is visible outside the loop
+for (j = 0; j < 100; ++j) {
+    // ...
+}
+// j is still visible here and isn't needed
 
+```
 **See also**: [Don't use a variable for two unrelated purposes](07-ES-Expressions%20and%20Statements.md#Res-recycle)
 
 ##### Example
 
-    for (string s; cin >> s; ) {
-        cout << s << '\n';
-    }
+```cpp
+for (string s; cin >> s; ) {
+    cout << s << '\n';
+}
 
+```
 ##### Enforcement
 
 Warn when a variable modified inside the `for`-statement is declared outside the loop and not being used outside the loop.
@@ -1407,12 +1583,14 @@ The termination condition is at the end (where it can be overlooked) and the con
 
 ##### Example
 
-    int x;
-    do {
-        cin >> x;
-        // ...
-    } while (x < 0);
+```cpp
+int x;
+do {
+    cin >> x;
+    // ...
+} while (x < 0);
 
+```
 ##### Note
 
 Yes, there are genuine examples where a `do`-statement is a clear statement of a solution, but also many bugs.
@@ -1432,29 +1610,33 @@ Readability, avoidance of errors. There are better control structures for humans
 Breaking out of a nested loop.
 In that case, always jump forwards.
 
-    for (int i = 0; i < imax; ++i)
-        for (int j = 0; j < jmax; ++j) {
-            if (a[i][j] > elem_max) goto finished;
-            // ...
-        }
-    finished:
-    // ...
+```cpp
+for (int i = 0; i < imax; ++i)
+    for (int j = 0; j < jmax; ++j) {
+        if (a[i][j] > elem_max) goto finished;
+        // ...
+    }
+finished:
+// ...
 
+```
 ##### Example, bad
 
 There is a fair amount of use of the C goto-exit idiom:
 
-    void f()
-    {
-        // ...
-            goto exit;
-        // ...
-            goto exit;
-        // ...
-    exit:
-        ... common cleanup code ...
-    }
+```cpp
+void f()
+{
+    // ...
+        goto exit;
+    // ...
+        goto exit;
+    // ...
+exit:
+    ... common cleanup code ...
+}
 
+```
 This is an ad-hoc simulation of destructors.
 Declare your resources with handles with destructors that clean up.
 If for some reason you cannot handle all cleanup with destructors for the variables used,
@@ -1475,18 +1657,24 @@ consider `gsl::finally()` as a cleaner and more reliable alternative to `goto ex
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Alternative
 
 Often, a loop that requires a `break` is a good candidate for a function (algorithm), in which case the `break` becomes a `return`.
 
-    ???
+```cpp
+???
 
+```
 Often. a loop that uses `continue` can equivalently and as clearly be expressed by an `if`-statement.
 
-    ???
+```cpp
+???
 
+```
 ##### Note
 
 If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](07-ES-Expressions%20and%20Statements.md#Res-loop-counter) or a [`goto`](07-ES-Expressions%20and%20Statements.md#Res-goto):
@@ -1505,60 +1693,68 @@ If you really need to break out a loop, a `break` is typically better than alter
 
 ##### Example
 
-    switch (eventType)
-    {
-    case Information:
-        update_status_bar();
-        break;
-    case Warning:
-        write_event_log();
-    case Error:
-        display_error_window(); // Bad
-        break;
-    }
+```cpp
+switch (eventType)
+{
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+case Error:
+    display_error_window(); // Bad
+    break;
+}
 
+```
 It is easy to overlook the fallthrough. Be explicit:
 
-    switch (eventType)
-    {
-    case Information:
-        update_status_bar();
-        break;
-    case Warning:
-        write_event_log();
-        // fallthrough
-    case Error:
-        display_error_window(); // Bad
-        break;
-    }
+```cpp
+switch (eventType)
+{
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    // fallthrough
+case Error:
+    display_error_window(); // Bad
+    break;
+}
 
+```
 In C++17, use a `[[fallthrough]]` annotation:
 
-    switch (eventType)
-    {
-    case Information:
-        update_status_bar();
-        break;
-    case Warning:
-        write_event_log();
-        [[fallthrough]];        // C++17
-    case Error:
-        display_error_window(); // Bad
-        break;
-    }
+```cpp
+switch (eventType)
+{
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    [[fallthrough]];        // C++17
+case Error:
+    display_error_window(); // Bad
+    break;
+}
 
+```
 ##### Note
 
 Multiple case labels of a single statement is OK:
 
-    switch (x) {
-    case 'a':
-    case 'b':
-    case 'f':
-        do_something(x);
-        break;
-    }
+```cpp
+switch (x) {
+case 'a':
+case 'b':
+case 'f':
+    do_something(x);
+    break;
+}
 
+```
 ##### Enforcement
 
 Flag all fallthroughs from non-empty `case`s.
@@ -1572,23 +1768,25 @@ Flag all fallthroughs from non-empty `case`s.
 
 ##### Example
 
-    enum E { a, b, c , d };
+```cpp
+enum E { a, b, c , d };
 
-    void f1(E x)
-    {
-        switch (x) {
-        case a:
-            do_something();
-            break;
-        case b:
-            do_something_else();
-            break;
-        default:
-            take_the_default_action();
-            break;
-        }
+void f1(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        take_the_default_action();
+        break;
     }
+}
 
+```
 Here it is clear that there is a default action and that cases `a` and `b` are special.
 
 ##### Example
@@ -1596,36 +1794,40 @@ Here it is clear that there is a default action and that cases `a` and `b` are s
 But what if there is no default action and you mean to handle only specific cases?
 In that case, have an empty default or else it is impossible to know if you meant to handle all cases:
 
-    void f2(E x)
-    {
-        switch (x) {
-        case a:
-            do_something();
-            break;
-        case b:
-            do_something_else();
-            break;
-        default:
-            // do nothing for the rest of the cases
-            break;
-        }
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        // do nothing for the rest of the cases
+        break;
     }
+}
 
+```
 If you leave out the `default`, a maintainer and/or a compiler may reasonably assume that you intended to handle all cases:
 
-    void f2(E x)
-    {
-        switch (x) {
-        case a:
-            do_something();
-            break;
-        case b:
-        case c:
-            do_something_else();
-            break;
-        }
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+    case c:
+        do_something_else();
+        break;
     }
+}
 
+```
 Did you forget case `d` or deliberately leave it out?
 Forgetting a case typically happens when a case is added to an enumeration and the person doing so fails to add it to every
 switch over the enumerators.
@@ -1646,12 +1848,14 @@ To avoid unpleasant surprises.
 
 ##### Example, bad
 
-    void f()
-    {
-        lock<mutex>{mx};   // Bad
-        // ...
-    }
+```cpp
+void f()
+{
+    lock<mutex>{mx};   // Bad
+    // ...
+}
 
+```
 This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
 This is not an uncommon mistake.
 In particular, this particular example can lead to hard-to find race conditions.
@@ -1659,12 +1863,16 @@ There are exceedingly clever used of this "idiom", but they are far rarer than t
 
 ##### Note
 
-    Unnamed function arguments are fine.
+```cpp
+Unnamed function arguments are fine.
 
+```
 ##### Enforcement
 
-    Flag statements that are just a temporary
+```cpp
+Flag statements that are just a temporary
 
+```
 ### <a name="Res-empty"></a>ES.85: Make empty statements visible
 
 ##### Reason
@@ -1673,14 +1881,16 @@ Readability.
 
 ##### Example
 
-    for (i = 0; i < max; ++i);   // BAD: the empty statement is easily overlooked
-    v[i] = f(v[i]);
+```cpp
+for (i = 0; i < max; ++i);   // BAD: the empty statement is easily overlooked
+v[i] = f(v[i]);
 
-    for (auto x : v) {           // better
-        // nothing
-    }
-    v[i] = f(v[i]);
+for (auto x : v) {           // better
+    // nothing
+}
+v[i] = f(v[i]);
 
+```
 ##### Enforcement
 
 Flag empty statements that are not blocks and don't contain comments.
@@ -1693,24 +1903,26 @@ The loop control up front should enable correct reasoning about what is happenin
 
 ##### Example
 
-    for (int i = 0; i < 10; ++i) {
-        // no updates to i -- ok
-    }
+```cpp
+for (int i = 0; i < 10; ++i) {
+    // no updates to i -- ok
+}
 
-    for (int i = 0; i < 10; ++i) {
-        //
-        if (/* something */) ++i; // BAD
-        //
-    }
+for (int i = 0; i < 10; ++i) {
+    //
+    if (/* something */) ++i; // BAD
+    //
+}
 
-    bool skip = false;
-    for (int i = 0; i < 10; ++i) {
-        if (skip) { skip = false; continue; }
-        //
-        if (/* something */) skip = true;  // Better: using two variable for two concepts.
-        //
-    }
+bool skip = false;
+for (int i = 0; i < 10; ++i) {
+    if (skip) { skip = false; continue; }
+    //
+    if (/* something */) skip = true;  // Better: using two variable for two concepts.
+    //
+}
 
+```
 ##### Enforcement
 
 Flag variables that are potentially updated (have a non-const use) in both the loop control iteration-expression and the loop body.
@@ -1727,30 +1939,32 @@ Complicated expressions are error-prone.
 
 ##### Example
 
-    // bad: assignment hidden in subexpression
-    while ((c = getc()) != -1)
+```cpp
+// bad: assignment hidden in subexpression
+while ((c = getc()) != -1)
 
-    // bad: two non-local variables assigned in a sub-expressions
-    while ((cin >> c1, cin >> c2), c1 == c2)
+// bad: two non-local variables assigned in a sub-expressions
+while ((cin >> c1, cin >> c2), c1 == c2)
 
-    // better, but possibly still too complicated
-    for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
+// better, but possibly still too complicated
+for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
 
-    // OK: if i and j are not aliased
-    int x = ++i + ++j;
+// OK: if i and j are not aliased
+int x = ++i + ++j;
 
-    // OK: if i != j and i != k
-    v[i] = v[j] + v[k];
+// OK: if i != j and i != k
+v[i] = v[j] + v[k];
 
-    // bad: multiple assignments "hidden" in subexpressions
-    x = a + (b = f()) + (c = g()) * 7;
+// bad: multiple assignments "hidden" in subexpressions
+x = a + (b = f()) + (c = g()) * 7;
 
-    // bad: relies on commonly misunderstood precedence rules
-    x = a & b + c * d && e ^ f == 7;
+// bad: relies on commonly misunderstood precedence rules
+x = a & b + c * d && e ^ f == 7;
 
-    // bad: undefined behavior
-    x = x++ + x++ + ++x;
+// bad: undefined behavior
+x = x++ + x++ + ++x;
 
+```
 Some of these expressions are unconditionally bad (e.g., they rely on undefined behavior). Others are simply so complicated and/or unusual that even good programmers could misunderstand them or overlook a problem when in a hurry.
 
 ##### Note
@@ -1765,17 +1979,19 @@ A programmer should know and use the basic rules for expressions.
 
 ##### Example
 
-    x = k * y + z;             // OK
+```cpp
+x = k * y + z;             // OK
 
-    auto t1 = k * y;           // bad: unnecessarily verbose
-    x = t1 + z;
+auto t1 = k * y;           // bad: unnecessarily verbose
+x = t1 + z;
 
-    if (0 <= x && x < max)   // OK
+if (0 <= x && x < max)   // OK
 
-    auto t1 = 0 <= x;        // bad: unnecessarily verbose
-    auto t2 = x < max;
-    if (t1 && t2)            // ...
+auto t1 = 0 <= x;        // bad: unnecessarily verbose
+auto t2 = x < max;
+if (t1 && t2)            // ...
 
+```
 ##### Enforcement
 
 Tricky. How complicated must an expression be to be considered complicated? Writing computations as statements with one operation each is also confusing. Things to consider:
@@ -1796,23 +2012,29 @@ Avoid errors. Readability. Not everyone has the operator table memorized.
 
 ##### Example
 
-    const unsigned int flag = 2;
-    unsigned int a = flag;
+```cpp
+const unsigned int flag = 2;
+unsigned int a = flag;
 
-    if (a & flag != 0)  // bad: means a&(flag != 0)
+if (a & flag != 0)  // bad: means a&(flag != 0)
 
+```
 Note: We recommend that programmers know their precedence table for the arithmetic operations, the logical operations, but consider mixing bitwise logical operations with other operators in need of parentheses.
 
-    if ((a & flag) != 0)  // OK: works as intended
+```cpp
+if ((a & flag) != 0)  // OK: works as intended
 
+```
 ##### Note
 
 You should know enough not to need parentheses for:
 
-    if (a < 0 || a <= max) {
-        // ...
-    }
+```cpp
+if (a < 0 || a <= max) {
+    // ...
+}
 
+```
 ##### Enforcement
 
 * Flag combinations of bitwise-logical operators and other operators.
@@ -1831,8 +2053,10 @@ Complicated pointer manipulation is a major source of errors.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 We need a heuristic limiting the complexity of pointer arithmetic statement.
@@ -1853,8 +2077,10 @@ However, remember that your code may be compiled with a pre-C++17 compiler (e.g.
 
 ##### Example
 
-    v[i] = ++i;   //  the result is undefined
+```cpp
+v[i] = ++i;   //  the result is undefined
 
+```
 A good rule of thumb is that you should not read a value twice in an expression where you write to it.
 
 ##### Enforcement
@@ -1873,18 +2099,22 @@ C++17 tightens up the rules for the order of evaluation, but the order of evalua
 
 ##### Example
 
-    int i = 0;
-    f(++i, ++i);
+```cpp
+int i = 0;
+f(++i, ++i);
 
+```
 The call will most likely be `f(0, 1)` or `f(1, 0)`, but you don't know which. Technically, the behavior is undefined.
 
 ##### Example
 
 ??? overloaded operators can lead to order of evaluation problems (shouldn't :-()
 
-    f1()->m(f2());   // m(f1(), f2())
-    cout << f1() << f2();   // operator<<(operator<<(cout, f1()), f2())
+```cpp
+f1()->m(f2());   // m(f1(), f2())
+cout << f1() << f2();   // operator<<(operator<<(cout, f1()), f2())
 
+```
 ##### Enforcement
 
 Can be detected by a good analyzer.
@@ -1897,23 +2127,29 @@ Unnamed constants embedded in expressions are easily overlooked and often hard t
 
 ##### Example
 
-    for (int m = 1; m <= 12; ++m)   // don't: magic constant 12
-        cout << month[m] << '\n';
+```cpp
+for (int m = 1; m <= 12; ++m)   // don't: magic constant 12
+    cout << month[m] << '\n';
 
+```
 No, we don't all know that there are 12 months, numbered 1..12, in a year. Better:
 
-    // months are indexed 1..12
-    constexpr int first_month = 1;
-    constexpr int last_month = 12;
+```cpp
+// months are indexed 1..12
+constexpr int first_month = 1;
+constexpr int last_month = 12;
 
-    for (int m = first_month; m <= last_month; ++m)   // better
-        cout << month[m] << '\n';
+for (int m = first_month; m <= last_month; ++m)   // better
+    cout << month[m] << '\n';
 
+```
 Better still, don't expose constants:
 
-    for (auto m : month)
-        cout << m << '\n';
+```cpp
+for (auto m : month)
+    cout << m << '\n';
 
+```
 ##### Enforcement
 
 Flag literals in code. Give a pass to `0`, `1`, `nullptr`, `\n`, `""`, and others on a positive list.
@@ -1928,33 +2164,39 @@ A narrowing conversion destroys information, often unexpectedly so.
 
 A key example is basic narrowing:
 
-    double d = 7.9;
-    int i = d;    // bad: narrowing: i becomes 7
-    i = (int) d;  // bad: we're going to claim this is still not explicit enough
+```cpp
+double d = 7.9;
+int i = d;    // bad: narrowing: i becomes 7
+i = (int) d;  // bad: we're going to claim this is still not explicit enough
 
-    void f(int x, long y, double d)
-    {
-        char c1 = x;   // bad: narrowing
-        char c2 = y;   // bad: narrowing
-        char c3 = d;   // bad: narrowing
-    }
+void f(int x, long y, double d)
+{
+    char c1 = x;   // bad: narrowing
+    char c2 = y;   // bad: narrowing
+    char c3 = d;   // bad: narrowing
+}
 
+```
 ##### Note
 
 The guideline support library offers a `narrow` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
 
-    i = narrow_cast<int>(d);   // OK (you asked for it): narrowing: i becomes 7
-    i = narrow<int>(d);        // OK: throws narrowing_error
+```cpp
+i = narrow_cast<int>(d);   // OK (you asked for it): narrowing: i becomes 7
+i = narrow<int>(d);        // OK: throws narrowing_error
 
+```
 We also include lossy arithmetic casts, such as from a negative floating point type to an unsigned integral type:
 
-    double d = -7.9;
-    unsigned u = 0;
+```cpp
+double d = -7.9;
+unsigned u = 0;
 
-    u = d;                          // BAD
-    u = narrow_cast<unsigned>(d);   // OK (you asked for it): u becomes 0
-    u = narrow<unsigned>(d);        // OK: throws narrowing_error
+u = d;                          // BAD
+u = narrow_cast<unsigned>(d);   // OK (you asked for it): u becomes 0
+u = narrow<unsigned>(d);        // OK: throws narrowing_error
 
+```
 ##### Enforcement
 
 A good analyzer can detect all narrowing conversions. However, flagging all narrowing conversions will lead to a lot of false positives. Suggestions:
@@ -1976,11 +2218,13 @@ or `0`.
 
 Consider:
 
-    void f(int);
-    void f(char*);
-    f(0);         // call f(int)
-    f(nullptr);   // call f(char*)
+```cpp
+void f(int);
+void f(char*);
+f(0);         // call f(int)
+f(nullptr);   // call f(char*)
 
+```
 ##### Enforcement
 
 Flag uses of `0` and `NULL` for pointers. The transformation may be helped by simple program transformation.
@@ -1993,24 +2237,32 @@ Casts are a well-known source of errors. Make some optimizations unreliable.
 
 ##### Example, bad
 
-    double d = 2;
-    auto p = (long*)&d;
-    auto q = (long long*)&d;
-    cout << d << ' ' << *p << ' ' << *q << '\n';
+```cpp
+double d = 2;
+auto p = (long*)&d;
+auto q = (long long*)&d;
+cout << d << ' ' << *p << ' ' << *q << '\n';
 
+```
 What would you think this fragment prints? The result is at best implementation defined. I got
 
-    2 0 4611686018427387904
+```cpp
+2 0 4611686018427387904
 
+```
 Adding 
 
-    *q = 666;
-    cout << d << ' ' << *p << ' ' << *q << '\n';
+```cpp
+*q = 666;
+cout << d << ' ' << *p << ' ' << *q << '\n';
 
+```
 I got 
 
-    3.29048e-321 666 666
+```cpp
+3.29048e-321 666 666
 
+```
 Surprised? I'm just glad I didn't crash the program.
 
 ##### Note
@@ -2056,19 +2308,21 @@ The named casts are:
 
 ##### Example
 
-    class B { /* ... */ };
-    class D { /* ... */ };
+```cpp
+class B { /* ... */ };
+class D { /* ... */ };
 
-    template<typename D> D* upcast(B* pb)
-    {
-        D* pd0 = pb;                        // error: no implicit conversion from B* to D*
-        D* pd1 = (D*)pb;                    // legal, but what is done?
-        D* pd2 = static_cast<D*>(pb);       // error: D is not derived from B
-        D* pd3 = reinterpret_cast<D*>(pb);  // OK: on your head be it!
-        D* pd4 = dynamic_cast<D*>(pb);      // OK: return nullptr
-        // ...
-    }
+template<typename D> D* upcast(B* pb)
+{
+    D* pd0 = pb;                        // error: no implicit conversion from B* to D*
+    D* pd1 = (D*)pb;                    // legal, but what is done?
+    D* pd2 = static_cast<D*>(pb);       // error: D is not derived from B
+    D* pd3 = reinterpret_cast<D*>(pb);  // OK: on your head be it!
+    D* pd4 = dynamic_cast<D*>(pb);      // OK: return nullptr
+    // ...
+}
 
+```
 The example was synthesized from real-world bugs where `D` used to be derived from `B`, but someone refactored the hierarchy.
 The C-style cast is dangerous because it can do any kind of conversion, depriving us of any protection from mistakes (now or in the future).
 
@@ -2077,9 +2331,11 @@ The C-style cast is dangerous because it can do any kind of conversion, deprivin
 When converting between types with no information loss (e.g. from `float` to
 `double` or `int64` from `int32`), brace initialization may be used instead.
 
-    double d {some_float};
-    int64_t i {some_int32};
+```cpp
+double d {some_float};
+int64_t i {some_int32};
 
+```
 This makes it clear that the type conversion was intended and also prevents
 conversions between types that might result in loss of precision. (It is a
 compilation error to try to initialize a `float` from a `double` in this fashion,
@@ -2105,85 +2361,93 @@ Such examples are often handled as well or better using `mutable` or an indirect
 
 Consider keeping previously computed results around for a costly operation:
 
-    int compute(int x); // compute a value for x; assume this to be costly
+```cpp
+int compute(int x); // compute a value for x; assume this to be costly
 
-    class Cache {   // some type implementing a cache for an int->int operation
-    public:
-        pair<bool, int> find(int x) const;   // is there a value for x?
-        void set(int x, int v);             // make y the value for x
-        // ...
-    private:
-        // ...
-    };
+class Cache {   // some type implementing a cache for an int->int operation
+public:
+    pair<bool, int> find(int x) const;   // is there a value for x?
+    void set(int x, int v);             // make y the value for x
+    // ...
+private:
+    // ...
+};
 
-    class X {
-    public:
-        int get_val(int x)
-        {
-            auto p = cache.find(x);
-            if (p.first) return p.second;
-            int val = compute(x);
-            cache.set(x, val); // insert value for x
-            return val;
-        }
-        // ...
-    private:
-        Cache cache;
-    };
+class X {
+public:
+    int get_val(int x)
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache.set(x, val); // insert value for x
+        return val;
+    }
+    // ...
+private:
+    Cache cache;
+};
 
+```
 Here, `get_val()` is logically constant, so we would like to make it a `const` member.
 To do this we still need to mutate `cache`, so people sometimes resort to a `const_cast`:
 
-    class X {   // Suspicious solution based on casting
-    public:
-        int get_val(int x) const
-        {
-            auto p = cache.find(x);
-            if (p.first) return p.second;
-            int val = compute(x);
-            const_cast<Cache&>(cache).set(x, val);   // ugly
-            return val;
-        }
-        // ...
-    private:
-        Cache cache;
-    };
+```cpp
+class X {   // Suspicious solution based on casting
+public:
+    int get_val(int x) const
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        const_cast<Cache&>(cache).set(x, val);   // ugly
+        return val;
+    }
+    // ...
+private:
+    Cache cache;
+};
 
+```
 Fortunately, there is a better solution:
 State that `cache` is mutable even for a `const` object:
 
-    class X {   // better solution
-    public:
-        int get_val(int x) const
-        {
-            auto p = cache.find(x);
-            if (p.first) return p.second;
-            int val = compute(x);
-            cache.set(x, val);
-            return val;
-        }
-        // ...
-    private:
-        mutable Cache cache;
-    };
+```cpp
+class X {   // better solution
+public:
+    int get_val(int x) const
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache.set(x, val);
+        return val;
+    }
+    // ...
+private:
+    mutable Cache cache;
+};
 
+```
 An alternative solution would to store a pointer to the `cache`:
 
-    class X {   // OK, but slightly messier solution
-    public:
-        int get_val(int x) const
-        {
-            auto p = cache->find(x);
-            if (p.first) return p.second;
-            int val = compute(x);
-            cache->set(x, val);
-            return val;
-        }
-        // ...
-    private:
-        unique_ptr<Cache> cache;
-    };
+```cpp
+class X {   // OK, but slightly messier solution
+public:
+    int get_val(int x) const
+    {
+        auto p = cache->find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache->set(x, val);
+        return val;
+    }
+    // ...
+private:
+    unique_ptr<Cache> cache;
+};
 
+```
 That solution is the most flexible, but requires explicit construction and destruction of `*cache`
 (most likely in the constructor and destructor of `X`).
 
@@ -2201,11 +2465,13 @@ Constructs that cannot overflow do not overflow (and usually run faster):
 
 ##### Example
 
-    for (auto& x : v)      // print all elements of v
-        cout << x << '\n';
+```cpp
+for (auto& x : v)      // print all elements of v
+    cout << x << '\n';
 
-    auto p = find(v, x);   // find x in v
+auto p = find(v, x);   // find x in v
 
+```
 ##### Enforcement
 
 Look for explicit range checks and heuristically suggest alternatives.
@@ -2228,50 +2494,56 @@ Explicit `move` is needed to explicitly move an object to another scope, notably
 
 ##### Example, bad
 
-    void sink(X&& x);   // sink takes ownership of x
+```cpp
+void sink(X&& x);   // sink takes ownership of x
 
-    void user()
-    {
-        X x;
-        // error: cannot bind an lvalue to a rvalue reference
-        sink(x);
-        // OK: sink takes the contents of x, x must now be assumed to be empty
-        sink(std::move(x));
+void user()
+{
+    X x;
+    // error: cannot bind an lvalue to a rvalue reference
+    sink(x);
+    // OK: sink takes the contents of x, x must now be assumed to be empty
+    sink(std::move(x));
 
-        // ...
+    // ...
 
-        // probably a mistake
-        use(x);
-    }
+    // probably a mistake
+    use(x);
+}
 
+```
 Usually, a `std::move()` is used as an argument to a `&&` parameter.
 And after you do that, assume the object has been moved from (see [C.64](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
 
-    void f() {
-        string s1 = "supercalifragilisticexpialidocious";
+```cpp
+void f() {
+    string s1 = "supercalifragilisticexpialidocious";
 
-        string s2 = s1;             // ok, takes a copy
-        assert(s1 == "supercalifragilisticexpialidocious");  // ok
+    string s2 = s1;             // ok, takes a copy
+    assert(s1 == "supercalifragilisticexpialidocious");  // ok
 
-        // bad, if you want to keep using s1's value
-        string s3 = move(s1);
+    // bad, if you want to keep using s1's value
+    string s3 = move(s1);
 
-        // bad, assert will likely fail, s1 likely changed
-        assert(s1 == "supercalifragilisticexpialidocious");
-    }
+    // bad, assert will likely fail, s1 likely changed
+    assert(s1 == "supercalifragilisticexpialidocious");
+}
 
+```
 ##### Example
 
-    void sink(unique_ptr<widget> p);  // pass ownership of p to sink()
+```cpp
+void sink(unique_ptr<widget> p);  // pass ownership of p to sink()
 
-    void f() {
-        auto w = make_unique<widget>();
-        // ...
-        sink(std::move(w));               // ok, give to sink()
-        // ...
-        sink(w);    // Error: unique_ptr is carefully designed so that you cannot copy it
-    }
+void f() {
+    auto w = make_unique<widget>();
+    // ...
+    sink(std::move(w));               // ok, give to sink()
+    // ...
+    sink(w);    // Error: unique_ptr is carefully designed so that you cannot copy it
+}
 
+```
 ##### Notes
 
 `std::move()` is a cast to `&&` in disguise; it doesn't itself move anything, but marks a named object as a candidate that can be moved from.
@@ -2283,38 +2555,44 @@ In general, don't complicate your code without reason (??)
 
 ##### Example, bad
 
-    vector<int> make_vector() {
-        vector<int> result;
-        // ... load result with data
-        return std::move(result);       // bad; just write "return result;"
-    }
+```cpp
+vector<int> make_vector() {
+    vector<int> result;
+    // ... load result with data
+    return std::move(result);       // bad; just write "return result;"
+}
 
+```
 Never write `return move(local_variable);`, because the language already knows the variable is a move candidate.
 Writing `move` in this code won't help, and can actually be detrimental because on some compilers it interferes with RVO (the return value optimization) by creating an additional reference alias to the local variable.
 
 
 ##### Example, bad
 
-    vector<int> v = std::move(make_vector());   // bad; the std::move is entirely redundant
+```cpp
+vector<int> v = std::move(make_vector());   // bad; the std::move is entirely redundant
 
+```
 Never write `move` on a returned value such as `x = move(f());` where `f` returns by value.
 The language already knows that a returned value is a temporary object that can be moved from.
 
 ##### Example
 
-    void mover(X&& x) {
-        call_something(std::move(x));         // ok
-        call_something(std::forward<X>(x));   // bad, don't std::forward an rvalue reference
-        call_something(x);                    // suspicious, why not std::move?
-    }
+```cpp
+void mover(X&& x) {
+    call_something(std::move(x));         // ok
+    call_something(std::forward<X>(x));   // bad, don't std::forward an rvalue reference
+    call_something(x);                    // suspicious, why not std::move?
+}
 
-    template<class T>
-    void forwarder(T&& t) {
-        call_something(std::move(t));         // bad, don't std::move a forwarding reference
-        call_something(std::forward<T>(t));   // ok
-        call_something(t);                    // suspicious, why not std::forward?
-    }
+template<class T>
+void forwarder(T&& t) {
+    call_something(std::move(t));         // bad, don't std::move a forwarding reference
+    call_something(std::forward<T>(t));   // ok
+    call_something(t);                    // suspicious, why not std::forward?
+}
 
+```
 ##### Enforcement
 
 * Flag use of `std::move(x)` where `x` is an rvalue or the language will already treat it as an rvalue, including `return std::move(local_variable);` and `std::move(f())` on a function that returns by value.
@@ -2338,13 +2616,15 @@ also known as "No naked `new`!"
 
 ##### Example, bad
 
-    void f(int n)
-    {
-        auto p = new X[n];   // n default constructed Xs
-        // ...
-        delete[] p;
-    }
+```cpp
+void f(int n)
+{
+    auto p = new X[n];   // n default constructed Xs
+    // ...
+    delete[] p;
+}
 
+```
 There can be code in the `...` part that causes the `delete` never to happen.
 
 **See also**: [R: Resource management](06-R-Resource%20management.md#S-resource).
@@ -2361,13 +2641,15 @@ That's what the language requires and mistakes can lead to resource release erro
 
 ##### Example, bad
 
-    void f(int n)
-    {
-        auto p = new X[n];   // n default constructed Xs
-        // ...
-        delete p;   // error: just delete the object p, rather than delete the array p[]
-    }
+```cpp
+void f(int n)
+{
+    auto p = new X[n];   // n default constructed Xs
+    // ...
+    delete p;   // error: just delete the object p, rather than delete the array p[]
+}
 
+```
 ##### Note
 
 This example not only violates the [no naked `new` rule](07-ES-Expressions%20and%20Statements.md#Res-new) as in the previous example, it has many more problems.
@@ -2385,14 +2667,16 @@ The result of doing so is undefined.
 
 ##### Example, bad
 
-    void f(int n)
-    {
-        int a1[7];
-        int a2[9];
-        if (&a1[5] < &a2[7]) {}       // bad: undefined
-        if (0 < &a1[5] - &a2[7]) {}   // bad: undefined
-    }
+```cpp
+void f(int n)
+{
+    int a1[7];
+    int a2[9];
+    if (&a1[5] < &a2[7]) {}       // bad: undefined
+    if (0 < &a1[5] - &a2[7]) {}   // bad: undefined
+}
 
+```
 ##### Note
 
 This example has many more problems.
@@ -2411,12 +2695,14 @@ In the rare cases where the slicing was deliberate the code can be surprising.
 
 ##### Example
 
-    class Shape { /* ... */ };
-    class Circle : public Shape { /* ... */ Point c; int r; };
+```cpp
+class Shape { /* ... */ };
+class Circle : public Shape { /* ... */ Point c; int r; };
 
-    Circle c {{0, 0}, 42};
-    Shape s {c};    // copy Shape part of Circle
+Circle c {{0, 0}, 42};
+Shape s {c};    // copy Shape part of Circle
 
+```
 The result will be meaningless because the center and radius will not be copied from `c` into `s`.
 The first defense against this is to [define the base class `Shape` not to allow this](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-virtual).
 
@@ -2426,16 +2712,18 @@ If you mean to slice, define an explicit operation to do so.
 This saves readers from confusion.
 For example:
 
-    class Smiley : public Circle {
-        public:
-        Circle copy_circle();
-        // ...
-    };
+```cpp
+class Smiley : public Circle {
+    public:
+    Circle copy_circle();
+    // ...
+};
 
-    Smiley sm { /* ... */ };
-    Circle c1 {sm};  // ideally prevented by the definition of Circle
-    Circle c2 {sm.copy_circle()};
+Smiley sm { /* ... */ };
+Circle c1 {sm};  // ideally prevented by the definition of Circle
+Circle c2 {sm.copy_circle()};
 
+```
 ##### Enforcement
 
 Warn against slicing.
@@ -2450,13 +2738,15 @@ Avoid wrong results.
 
 ##### Example
 
-    int x = -3;
-    unsigned int y = 7;
+```cpp
+int x = -3;
+unsigned int y = 7;
 
-    cout << x - y << '\n';  // unsigned result, possibly 4294967286
-    cout << x + y << '\n';  // unsigned result: 4
-    cout << x * y << '\n';  // unsigned result, possibly 4294967275
+cout << x - y << '\n';  // unsigned result, possibly 4294967286
+cout << x + y << '\n';  // unsigned result: 4
+cout << x * y << '\n';  // unsigned result, possibly 4294967275
 
+```
 It is harder to spot the problem in more realistic examples.
 
 ##### Note
@@ -2476,9 +2766,11 @@ Unsigned types support bit manipulation without surprises from sign bits.
 
 ##### Example
 
-    unsigned char x = 0b1010'1010;
-    unsigned char y = ~x;   // y == 0b0101'0101;
+```cpp
+unsigned char x = 0b1010'1010;
+unsigned char y = ~x;   // y == 0b0101'0101;
 
+```
 ##### Note
 
 Unsigned types can also be useful for modulo arithmetic.
@@ -2503,24 +2795,26 @@ Because most arithmetic is assumed to be signed;
 Unsigned arithmetic can yield surprising results if you are not expecting it.
 This is even more true for mixed signed and unsigned arithmetic.
 
-    template<typename T, typename T2>
-    T subtract(T x, T2 y)
-    {
-        return x-y;
-    }
+```cpp
+template<typename T, typename T2>
+T subtract(T x, T2 y)
+{
+    return x-y;
+}
 
-    void test()
-    {
-        int s = 5;
-        unsigned int us = 5;
-        cout << subtract(s, 7) << '\n';     // -2
-        cout << subtract(us, 7u) << '\n';   // 4294967294
-        cout << subtract(s, 7u) << '\n';    // -2
-        cout << subtract(us, 7) << '\n';    // 4294967294
-        cout << subtract(s, us+2) << '\n';  // -2
-        cout << subtract(us, s+2) << '\n';  // 4294967294
-    }
+void test()
+{
+    int s = 5;
+    unsigned int us = 5;
+    cout << subtract(s, 7) << '\n';     // -2
+    cout << subtract(us, 7u) << '\n';   // 4294967294
+    cout << subtract(s, 7u) << '\n';    // -2
+    cout << subtract(us, 7) << '\n';    // 4294967294
+    cout << subtract(s, us+2) << '\n';  // -2
+    cout << subtract(us, s+2) << '\n';  // 4294967294
+}
 
+```
 Here we have been very explicit about what's happening,
 but if you had seen `us-(s+2)` or `s+=2; ... us-s`, would you reliably have suspected that the result would print as `4294967294`?
 
@@ -2536,17 +2830,19 @@ The standard library uses unsigned types for subscripts.
 The build-in array uses signed types for subscripts.
 This makes surprises (and bugs) inevitable.
 
-    int a[10];
-    for (int i=0; i < 10; ++i) a[i]=i;
-    vector<int> v(10);
-    // compares signed to unsigned; some compilers warn
-    for (int i=0; v.size() < 10; ++i) v[i]=i;
+```cpp
+int a[10];
+for (int i=0; i < 10; ++i) a[i]=i;
+vector<int> v(10);
+// compares signed to unsigned; some compilers warn
+for (int i=0; v.size() < 10; ++i) v[i]=i;
 
-    int a2[-2];         // error: negative size
+int a2[-2];         // error: negative size
 
-    // OK, but the number of ints (4294967294) is so large that we should get an exception
-    vector<int> v2(-2);
+// OK, but the number of ints (4294967294) is so large that we should get an exception
+vector<int> v2(-2);
 
+```
 ##### Enforcement
 
 * Flag mixed signed and unsigned arithmetic
@@ -2562,24 +2858,30 @@ Incrementing a value beyond a maximum value can lead to memory corruption and un
 
 ##### Example, bad
 
-    int a[10];
-    a[10] = 7;   // bad
+```cpp
+int a[10];
+a[10] = 7;   // bad
 
-    int n = 0;
-    while (n++ < 10)
-        a[n - 1] = 9; // bad (twice)
+int n = 0;
+while (n++ < 10)
+    a[n - 1] = 9; // bad (twice)
 
+```
 ##### Example, bad
 
-    int n = numeric_limits<int>::max();
-    int m = n + 1;   // bad
+```cpp
+int n = numeric_limits<int>::max();
+int m = n + 1;   // bad
 
+```
 ##### Example, bad
 
-    int area(int h, int w) { return h * w; }
+```cpp
+int area(int h, int w) { return h * w; }
 
-    auto a = area(10'000'000, 100'000'000);   // bad
+auto a = area(10'000'000, 100'000'000);   // bad
 
+```
 ##### Exception
 
 Use unsigned types if you really want modulo arithmetic.
@@ -2598,13 +2900,15 @@ Decrementing a value beyond a minimum value can lead to memory corruption and un
 
 ##### Example, bad
 
-    int a[10];
-    a[-2] = 7;   // bad
+```cpp
+int a[10];
+a[-2] = 7;   // bad
 
-    int n = 101;
-    while (n--)
-        a[n - 1] = 9;   // bad (twice)
+int n = 101;
+while (n--)
+    a[n - 1] = 9;   // bad (twice)
 
+```
 ##### Exception
 
 Use unsigned types if you really want modulo arithmetic.
@@ -2625,24 +2929,28 @@ This also applies to `%`.
 
 ##### Example; bad
 
-    double divide(int a, int b) {
-        // BAD, should be checked (e.g., in a precondition)
-        return a / b;
-    }
+```cpp
+double divide(int a, int b) {
+    // BAD, should be checked (e.g., in a precondition)
+    return a / b;
+}
 
+```
 ##### Example; good
 
-    double divide(int a, int b) {
-        // good, address via precondition (and replace with contracts once C++ gets them)
-        Expects(b != 0);
-        return a / b;
-    }
+```cpp
+double divide(int a, int b) {
+    // good, address via precondition (and replace with contracts once C++ gets them)
+    Expects(b != 0);
+    return a / b;
+}
 
-    double divide(int a, int b) {
-        // good, address via check
-        return b ? a / b : quiet_NaN<double>();
-    }
+double divide(int a, int b) {
+    // good, address via check
+    return b ? a / b : quiet_NaN<double>();
+}
 
+```
 **Alternative**: For critical applications that can afford some overhead, use a range-checked integer and/or floating-point type.
 
 ##### Enforcement
@@ -2661,29 +2969,35 @@ Using `unsigned` doesn't actually eliminate the possibility of negative values.
 
 ##### Example
 
-    unsigned int u1 = -2;   // OK: the value of u1 is 4294967294
-    int i1 = -2;
-    unsigned int u2 = i1;   // OK: the value of u2 is -2
-    int i2 = u2;            // OK: the value of i2 is -2
+```cpp
+unsigned int u1 = -2;   // OK: the value of u1 is 4294967294
+int i1 = -2;
+unsigned int u2 = i1;   // OK: the value of u2 is -2
+int i2 = u2;            // OK: the value of i2 is -2
 
+```
 These problems with such (perfectly legal) constructs are hard to spot in real code and are the source of many real-world errors.
 Consider:
 
-    unsigned area(unsigned height, unsigned width) { return height*width; } // [see also](02-I-Interfaces.md#Ri-expects)
-    // ...
-    int height;
-    cin >> height;
-    auto a = area(height, 2);   // if the input is -2 a becomes 4294967292
+```cpp
+unsigned area(unsigned height, unsigned width) { return height*width; } // [see also](02-I-Interfaces.md#Ri-expects)
+// ...
+int height;
+cin >> height;
+auto a = area(height, 2);   // if the input is -2 a becomes 4294967292
 
+```
 Remember that `-1` when assigned to an `unsigned int` becomes the largest `unsigned int`.
 Also, since unsigned arithmetic is modulo arithmetic the multiplication didn't overflow, it wrapped around.
 
 ##### Example
 
-    unsigned max = 100000;    // "accidental typo", I mean to say 10'000
-    unsigned short x = 100;
-    while (x < max) x += 100; // infinite loop
+```cpp
+unsigned max = 100000;    // "accidental typo", I mean to say 10'000
+unsigned short x = 100;
+while (x < max) x += 100; // infinite loop
 
+```
 Had `x` been a signed `short`, we could have warned about the undefined behavior upon overflow.
 
 ##### Alternatives
@@ -2695,17 +3009,19 @@ Had `x` been a signed `short`, we could have warned about the undefined behavior
 
 For example
 
-    struct Positive {
-        int val;
-        Positive(int x) :val{x} { Assert(0 < x); }
-        operator int() { return val; }
-    };
+```cpp
+struct Positive {
+    int val;
+    Positive(int x) :val{x} { Assert(0 < x); }
+    operator int() { return val; }
+};
 
-    int f(Positive arg) {return arg };
+int f(Positive arg) {return arg };
 
-    int r1 = f(2);
-    int r2 = f(-2);  // throws
+int r1 = f(2);
+int r2 = f(-2);  // throws
 
+```
 ##### Note
 
 ???
@@ -2725,17 +3041,19 @@ To enable better error detection.
 
 ##### Example, bad
 
-    vector<int> vec {1, 2, 3, 4, 5};
+```cpp
+vector<int> vec {1, 2, 3, 4, 5};
 
-    for (int i=0; i < vec.size(); i+=2)                    // mix int and unsigned
-        cout << vec[i] << '\n';
-    for (unsigned i=0; i < vec.size(); i+=2)               // risk wraparound
-        cout << vec[i] << '\n';
-    for (vector<int>::size_type i=0; i < vec.size(); i+=2) // verbose
-        cout << vec[i] << '\n';
-    for (auto i=0; i < vec.size(); i+=2)                   // mix int and unsigned
-        cout << vec[i] << '\n';
+for (int i=0; i < vec.size(); i+=2)                    // mix int and unsigned
+    cout << vec[i] << '\n';
+for (unsigned i=0; i < vec.size(); i+=2)               // risk wraparound
+    cout << vec[i] << '\n';
+for (vector<int>::size_type i=0; i < vec.size(); i+=2) // verbose
+    cout << vec[i] << '\n';
+for (auto i=0; i < vec.size(); i+=2)                   // mix int and unsigned
+    cout << vec[i] << '\n';
 
+```
 ##### Note
 
 The built-in array uses signed subscripts.
@@ -2745,18 +3063,22 @@ Given the known problems with unsigned and signed/unsigned mixtures, better stic
 
 ##### Example
 
-    template<typename T>
-    struct My_container {
-    public:
-        // ...
-        T& operator[](int i);    // not unsigned
-        // ...
-    };
+```cpp
+template<typename T>
+struct My_container {
+public:
+    // ...
+    T& operator[](int i);    // not unsigned
+    // ...
+};
 
+```
 ##### Example
 
-    ??? demonstrate improved code generation and potential for error detection ???
+```cpp
+??? demonstrate improved code generation and potential for error detection ???
 
+```
 ##### Alternatives
 
 Alternatives for users

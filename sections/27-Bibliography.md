@@ -54,6 +54,5 @@
 * <a name="Taligent94"></a>
   \[Taligent94]: Taligent's Guide to Designing Programs (Addison-Wesley, 1994).
 
-
 [INDEX](00-In-Introduction.md#SS-sec)
 

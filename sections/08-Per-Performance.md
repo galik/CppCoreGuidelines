@@ -75,25 +75,29 @@ Simple code can be very fast. Optimizers sometimes do marvels with simple code
 
 ##### Example, good
 
-    // clear expression of intent, fast execution
+```cpp
+// clear expression of intent, fast execution
 
-    vector<uint8_t> v(100000);
+vector<uint8_t> v(100000);
 
-    for (auto& c : v)
-        c = ~c;
+for (auto& c : v)
+    c = ~c;
 
+```
 ##### Example, bad
 
-    // intended to be faster, but is actually slower
+```cpp
+// intended to be faster, but is actually slower
 
-    vector<uint8_t> v(100000);
+vector<uint8_t> v(100000);
 
-    for (size_t i = 0; i < v.size(); i += sizeof(uint64_t))
-    {
-        uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
-        quad_word = ~quad_word;
-    }
+for (size_t i = 0; i < v.size(); i += sizeof(uint64_t))
+{
+    uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
+    quad_word = ~quad_word;
+}
 
+```
 ##### Note
 
 ???
@@ -143,48 +147,58 @@ Because a design that ignore the possibility of later improvement is hard to cha
 
 From the C (and C++) standard:
 
-    void qsort (void* base, size_t num, size_t size, int (*compar)(const void*, const void*));
+```cpp
+void qsort (void* base, size_t num, size_t size, int (*compar)(const void*, const void*));
 
+```
 When did you even want to sort memory?
 Really, we sort sequences of elements, typically stored in containers.
 A call to `qsort` throws away much useful information (e.g., the element type), forces the user to repeat information
 already known (e.g., the element size), and forces the user to write extra code (e.g., a function to compare `double`s).
 This implies added work for the programmer, is error prone, and deprives the compiler of information needed for optimization.
 
-    double data[100];
-    // ... fill a ...
+```cpp
+double data[100];
+// ... fill a ...
 
-    // 100 chunks of memory of sizeof(double) starting at
-    // address data using the order defined by compare_doubles
-    qsort(data, 100, sizeof(double), compare_doubles);
+// 100 chunks of memory of sizeof(double) starting at
+// address data using the order defined by compare_doubles
+qsort(data, 100, sizeof(double), compare_doubles);
 
+```
 From the point of view of interface design is that `qsort` throws away useful information.
 
 We can do better (in C++98)
 
-    template<typename Iter>
-        void sort(Iter b, Iter e);  // sort [b:e)
+```cpp
+template<typename Iter>
+    void sort(Iter b, Iter e);  // sort [b:e)
 
-    sort(data, data + 100);
+sort(data, data + 100);
 
+```
 Here, we use the compiler's knowledge about the size of the array, the type of elements, and how to compare `double`s.
 
 With C++11 plus [concepts](#???), we can do better still
 
-    // Sortable specifies that c must be a
-    // random-access sequence of elements comparable with <
-    void sort(Sortable& c);
+```cpp
+// Sortable specifies that c must be a
+// random-access sequence of elements comparable with <
+void sort(Sortable& c);
 
-    sort(c);
+sort(c);
 
+```
 The key is to pass sufficient information for a good implementation to be chosen.
 In this, the `sort` interfaces shown here still have a weakness:
 They implicitly rely on the element type having less-than (`<`) defined.
 To complete the interface, we need a second version that accepts a comparison criteria:
 
-    // compare elements of c using p
-    void sort(Sortable& c, Predicate<Value_type<Sortable>> p);
+```cpp
+// compare elements of c using p
+void sort(Sortable& c, Predicate<Value_type<Sortable>> p);
 
+```
 The standard-library specification of `sort` offers those two versions,
 but the semantics is expressed in English rather than code using concepts.
 
@@ -225,32 +239,40 @@ Don't let bad designs "bleed into" your code.
 
 Consider:
 
-    template <class ForwardIterator, class T>
-    bool binary_search(ForwardIterator first, ForwardIterator last, const T& val);
+```cpp
+template <class ForwardIterator, class T>
+bool binary_search(ForwardIterator first, ForwardIterator last, const T& val);
 
+```
 `binary_search(begin(c), end(c), 7)` will tell you whether `7` is in `c` or not.
 However, it will not tell you where that `7` is or whether there are more than one `7`.
 
 Sometimes, just passing the minimal amount of information back (here, `true` or `false`) is sufficient, but a good interface passes
 needed information back to the caller. Therefore, the standard library also offers
 
-    template <class ForwardIterator, class T>
-    ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& val);
+```cpp
+template <class ForwardIterator, class T>
+ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& val);
 
+```
 `lower_bound` returns an iterator to the first match if any, otherwise `last`.
 
 However, `lower_bound` still doesn't return enough information for all uses, so the standard library also offers
 
-    template <class ForwardIterator, class T>
-    pair<ForwardIterator, ForwardIterator>
-    equal_range(ForwardIterator first, ForwardIterator last, const T& val);
+```cpp
+template <class ForwardIterator, class T>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last, const T& val);
 
+```
 `equal_range` returns a `pair` of iterators specifying the first and one beyond last match.
 
-    auto r = equal_range(begin(c), end(c), 7);
-    for (auto p = r.first(); p != r.second(), ++p)
-        cout << *p << '\n';
+```cpp
+auto r = equal_range(begin(c), end(c), 7);
+for (auto p = r.first(); p != r.second(), ++p)
+    cout << *p << '\n';
 
+```
 Obviously, these three interfaces are implemented by the same basic code.
 They are simply three ways of presenting the basic binary search algorithm to users,
 ranging from the simplest ("make simple things simple!")
@@ -353,18 +375,20 @@ Performance is very sensitive to cache performance and cache algorithms favor si
 
 ##### Example
 
-    int matrix[rows][cols];
+```cpp
+int matrix[rows][cols];
 
-    // bad
-    for (int c = 0; c < cols; ++c)
-        for (int r = 0; r < rows; ++r)
-            sum += matrix[r][c];
-
-    // good
+// bad
+for (int c = 0; c < cols; ++c)
     for (int r = 0; r < rows; ++r)
-        for (int c = 0; c < cols; ++c)
-            sum += matrix[r][c];
+        sum += matrix[r][c];
 
+// good
+for (int r = 0; r < rows; ++r)
+    for (int c = 0; c < cols; ++c)
+        sum += matrix[r][c];
+
+```
 ### <a name="Rper-context"></a>Per.30: Avoid context switches on the critical path
 
 ???

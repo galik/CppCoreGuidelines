@@ -55,8 +55,10 @@ Additions to `std` may clash with future versions of the standard.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 Possible, but messy and likely to cause problems with platforms.
@@ -83,17 +85,21 @@ For a variable-length array, use `std::vector`, which additionally can change it
 
 ##### Example
 
-    int v[SIZE];                        // BAD
+```cpp
+int v[SIZE];                        // BAD
 
-    std::array<int, SIZE> w;             // ok
+std::array<int, SIZE> w;             // ok
 
+```
 ##### Example
 
-    int* v = new int[initial_size];     // BAD, owning raw pointer
-    delete[] v;                         // BAD, manual delete
+```cpp
+int* v = new int[initial_size];     // BAD, owning raw pointer
+delete[] v;                         // BAD, manual delete
 
-    std::vector<int> w(initial_size);   // ok
+std::vector<int> w(initial_size);   // ok
 
+```
 ##### Enforcement
 
 * Flag declaration of a C array inside a function or class that also declares an STL container (to avoid excessive noisy warnings on legacy non-STL code). To fix: At least change the C array to a `std::array`.
@@ -161,54 +167,62 @@ See also
 
 ##### Example
 
-    vector<string> read_until(const string& terminator)
-    {
-        vector<string> res;
-        for (string s; cin >> s && s != terminator; ) // read a word
-            res.push_back(s);
-        return res;
-    }
+```cpp
+vector<string> read_until(const string& terminator)
+{
+    vector<string> res;
+    for (string s; cin >> s && s != terminator; ) // read a word
+        res.push_back(s);
+    return res;
+}
 
+```
 Note how `>>` and `!=` are provided for `string` (as examples of useful operations) and there are no explicit
 allocations, deallocations, or range checks (`string` takes care of those).
 
 In C++17, we might use `string_view` as the argument, rather than `const string*` to allow more flexibility to callers:
 
-    vector<string> read_until(string_view terminator)   // C++17
-    {
-        vector<string> res;
-        for (string s; cin >> s && s != terminator; ) // read a word
-            res.push_back(s);
-        return res;
-    }
+```cpp
+vector<string> read_until(string_view terminator)   // C++17
+{
+    vector<string> res;
+    for (string s; cin >> s && s != terminator; ) // read a word
+        res.push_back(s);
+    return res;
+}
 
+```
 The `gsl::string_span` is a current alternative offering most of the benefits of `string_span` for simple examples:
 
-    vector<string> read_until(string_span terminator)
-    {
-        vector<string> res;
-        for (string s; cin >> s && s != terminator; ) // read a word
-            res.push_back(s);
-        return res;
-    }
+```cpp
+vector<string> read_until(string_span terminator)
+{
+    vector<string> res;
+    for (string s; cin >> s && s != terminator; ) // read a word
+        res.push_back(s);
+    return res;
+}
 
+```
 ##### Example, bad
 
 Don't use C-style strings for operations that require non-trivial memory management
 
-    char* cat(const char* s1, const char* s2)   // beware!
-        // return s1 + '.' + s2
-    {
-        int l1 = strlen(s1);
-        int l2 = strlen(s2);
-        char* p = (char*)malloc(l1+l2+2);
-        strcpy(p, s1, l1);
-        p[l1] = '.';
-        strcpy(p+l1+1, s2, l2);
-        p[l1+l2+1] = 0;
-        return res;
-    }
+```cpp
+char* cat(const char* s1, const char* s2)   // beware!
+    // return s1 + '.' + s2
+{
+    int l1 = strlen(s1);
+    int l2 = strlen(s2);
+    char* p = (char*)malloc(l1+l2+2);
+    strcpy(p, s1, l1);
+    p[l1] = '.';
+    strcpy(p+l1+1, s2, l2);
+    p[l1+l2+1] = 0;
+    return res;
+}
 
+```
 Did we get that right?
 Will the caller remember to `free()` the returned pointer?
 Will this code pass a security review?
@@ -231,16 +245,18 @@ those sequences are allocated and stored.
 
 ##### Example
 
-    vector<string> read_until(string_span terminator);
+```cpp
+vector<string> read_until(string_span terminator);
 
-    void user(zstring p, const string& s, string_span ss)
-    {
-        auto v1 = read_until(p);
-        auto v2 = read_until(s);
-        auto v3 = read_until(ss);
-        // ...
-    }
+void user(zstring p, const string& s, string_span ss)
+{
+    auto v1 = read_until(p);
+    auto v2 = read_until(s);
+    auto v3 = read_until(ss);
+    // ...
+}
 
+```
 ##### Note
 
 `std::string_view` (C++17) is read only.
@@ -260,14 +276,18 @@ Distinguishing these alternatives prevents misunderstandings and bugs.
 
 ##### Example
 
-    void f1(const char* s); // s is probably a string
+```cpp
+void f1(const char* s); // s is probably a string
 
+```
 All we know is that it is supposed to be the nullptr or point to at least one character
 
-    void f1(zstring s);     // s is a C-style string or the nullptr
-    void f1(czstring s);    // s is a C-style string that is not the nullptr
-    void f1(std::byte* s);  // s is a pointer to a byte (C++17)
+```cpp
+void f1(zstring s);     // s is a C-style string or the nullptr
+void f1(czstring s);    // s is a C-style string that is not the nullptr
+void f1(std::byte* s);  // s is a pointer to a byte (C++17)
 
+```
 ##### Note
 
 Don't convert a C-style string to `string` unless there is a reason to.
@@ -297,18 +317,20 @@ The variety of uses of `char*` in current code is a major source of errors.
 
 ##### Example, bad
 
-    char arr[] = {'a', 'b', 'c'};
+```cpp
+char arr[] = {'a', 'b', 'c'};
 
-    void print(const char* p)
-    {
-        cout << p << '\n';
-    }
+void print(const char* p)
+{
+    cout << p << '\n';
+}
 
-    void use()
-    {
-        print(arr);   // run-time error; potentially very bad
-    }
+void use()
+{
+    print(arr);   // run-time error; potentially very bad
+}
 
+```
 The array `arr` is not a C-style string because it is not zero-terminated.
 
 ##### Alternative
@@ -328,8 +350,10 @@ and disables valuable optimizations.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Note
 
 C++17
@@ -337,8 +361,10 @@ C++17
 ##### Enforcement
 
 ???
-    
+```cpp
 
+
+```
 ### <a name="Rstr-locale"></a>Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations
 
 ##### Reason
@@ -347,8 +373,10 @@ C++17
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Note
 
 ???
@@ -383,12 +411,14 @@ Direct expression of an idea minimizes mistakes.
 
 ##### Example
 
-    auto pp1 = make_pair("Tokyo", 9.00);         // {C-style string,double} intended?
-    pair<string, double> pp2 = {"Tokyo", 9.00};  // a bit verbose
-    auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++17
-    pair pp4 = {"Tokyo"s, 9.00};                 // {std::string,double}    // C++17
+```cpp
+auto pp1 = make_pair("Tokyo", 9.00);         // {C-style string,double} intended?
+pair<string, double> pp2 = {"Tokyo", 9.00};  // a bit verbose
+auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++17
+pair pp4 = {"Tokyo"s, 9.00};                 // {std::string,double}    // C++17
 
 
+```
 ##### Note
 
 C++17
@@ -423,21 +453,25 @@ and potentially inefficient composition of tokens out of characters.
 
 ##### Example
 
-    char c;
-    char buf[128];
-    int i = 0;
-    while (cin.get(c) && !isspace(c) && i < 128)
-        buf[i++] = c;
-    if (i == 128) {
-        // ... handle too long string ....
-    }
+```cpp
+char c;
+char buf[128];
+int i = 0;
+while (cin.get(c) && !isspace(c) && i < 128)
+    buf[i++] = c;
+if (i == 128) {
+    // ... handle too long string ....
+}
 
+```
 Better (much simpler and probably faster):
 
-    string s;
-    s.reserve(128);
-    cin >> s;
+```cpp
+string s;
+s.reserve(128);
+cin >> s;
 
+```
 and the `reserve(128)` is probably not worthwhile.
 
 ##### Enforcement
@@ -454,8 +488,10 @@ If input isn't validated, every function must be written to cope with bad data (
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -468,18 +504,22 @@ If input isn't validated, every function must be written to cope with bad data (
 
 ##### Example
 
-    // write a complex number:
-    complex<double> z{ 3, 4 };
-    cout << z << '\n';
+```cpp
+// write a complex number:
+complex<double> z{ 3, 4 };
+cout << z << '\n';
 
+```
 `complex` is a user defined type and its I/O is defined without modifying the `iostream` library.
 
 ##### Example
 
-    // read a file of complex numbers:
-    for (complex<double> z; cin >> z; )
-        v.push_back(z);
+```cpp
+// read a file of complex numbers:
+for (complex<double> z; cin >> z; )
+    v.push_back(z);
 
+```
 ##### Exception
 
 ??? performance ???
@@ -509,12 +549,14 @@ Synchronizing `iostreams` with `printf-style` I/O can be costly.
 
 ##### Example
 
-    int main()
-    {
-        ios_base::sync_with_stdio(false);
-        // ... use iostreams ...
-    }
+```cpp
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    // ... use iostreams ...
+}
 
+```
 ##### Enforcement
 
 ???
@@ -529,9 +571,11 @@ This slowdown can be significant compared to `printf`-style output.
 
 ##### Example
 
-    cout << "Hello, World!" << endl;    // two output operations and a flush
-    cout << "Hello, World!\n";          // one output operation and no flush
+```cpp
+cout << "Hello, World!" << endl;    // two output operations and a flush
+cout << "Hello, World!\n";          // one output operation and no flush
 
+```
 ##### Note
 
 For `cin`/`cout` (and equivalent) interaction, there is no reason to flush; that's done automatically.

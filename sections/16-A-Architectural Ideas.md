@@ -45,8 +45,10 @@ A library can be statically or dynamically linked into a program, or it may be `
 A library can contain cyclic references in the definition of its components.
 For example:
 
-    ???
+```cpp
+???
 
+```
 However, a library should not depend on another that depends on it.
 
 

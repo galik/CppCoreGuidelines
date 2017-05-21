@@ -11,20 +11,22 @@ In particular, here we present further rationale, longer examples, and discussio
 
 Member variables are always initialized in the order they are declared in the class definition, so write them in that order in the constructor initialization list. Writing them in a different order just makes the code confusing because it won't run in the order you see, and that can make it hard to see order-dependent bugs.
 
-    class Employee {
-        string email, first, last;
-    public:
-        Employee(const char* firstName, const char* lastName);
-        // ...
-    };
+```cpp
+class Employee {
+    string email, first, last;
+public:
+    Employee(const char* firstName, const char* lastName);
+    // ...
+};
 
-    Employee::Employee(const char* firstName, const char* lastName)
-      : first(firstName),
-        last(lastName),
-        // BAD: first and last not yet constructed
-        email(first + "." + last + "@acme.com")
-    {}
+Employee::Employee(const char* firstName, const char* lastName)
+  : first(firstName),
+    last(lastName),
+    // BAD: first and last not yet constructed
+    email(first + "." + last + "@acme.com")
+{}
 
+```
 In this example, `email` will be constructed before `first` and `last` because it is declared first. That means its constructor will attempt to use `first` and `last` too soon -- not just before they are set to the desired values, but before they are constructed at all.
 
 If the class definition and the constructor body are in separate files, the long-distance influence that the order of member variable declarations has over the constructor's correctness will be even harder to spot.
@@ -48,46 +50,48 @@ If your design wants virtual dispatch into a derived class from a base class con
 
 Here is an example of the last option:
 
-    class B {
-    public:
-        B() { /* ... */ f(); /* ... */ }   // BAD: see Item 49.1
+```cpp
+class B {
+public:
+    B() { /* ... */ f(); /* ... */ }   // BAD: see Item 49.1
 
-        virtual void f() = 0;
+    virtual void f() = 0;
 
-        // ...
-    };
+    // ...
+};
 
-    class B {
-    protected:
-        B() { /* ... */ }
-        virtual void PostInitialize()    // called right after construction
-            { /* ... */ f(); /* ... */ }   // GOOD: virtual dispatch is safe
-    public:
-        virtual void f() = 0;
+class B {
+protected:
+    B() { /* ... */ }
+    virtual void PostInitialize()    // called right after construction
+        { /* ... */ f(); /* ... */ }   // GOOD: virtual dispatch is safe
+public:
+    virtual void f() = 0;
 
-        template<class T>
-        static shared_ptr<T> Create()    // interface for creating objects
-        {
-            auto p = make_shared<T>();
-            p->PostInitialize();
-            return p;
-        }
-    };
+    template<class T>
+    static shared_ptr<T> Create()    // interface for creating objects
+    {
+        auto p = make_shared<T>();
+        p->PostInitialize();
+        return p;
+    }
+};
 
 
-    class D : public B {                 // some derived class
-    public:
-        void f() override { /* ...  */ };
+class D : public B {                 // some derived class
+public:
+    void f() override { /* ...  */ };
 
-    protected:
-        D() {}
+protected:
+    D() {}
 
-        template<class T>
-        friend shared_ptr<T> B::Create();
-    };
+    template<class T>
+    friend shared_ptr<T> B::Create();
+};
 
-    shared_ptr<D> p = D::Create<D>();    // creating a D object
+shared_ptr<D> p = D::Create<D>();    // creating a D object
 
+```
 This design requires the following discipline:
 
 * Derived classes such as `D` must not expose a public constructor. Otherwise, `D`'s users could create `D` objects that don't invoke `PostInitialize`.
@@ -108,33 +112,37 @@ Should destruction behave virtually? That is, should destruction through a point
 
 The common case for a base class is that it's intended to have publicly derived classes, and so calling code is just about sure to use something like a `shared_ptr<base>`:
 
-    class Base {
-    public:
-        ~Base();                   // BAD, not virtual
-        virtual ~Base();           // GOOD
-        // ...
-    };
+```cpp
+class Base {
+public:
+    ~Base();                   // BAD, not virtual
+    virtual ~Base();           // GOOD
+    // ...
+};
 
-    class Derived : public Base { /* ... */ };
+class Derived : public Base { /* ... */ };
 
-    {
-        unique_ptr<Base> pb = make_unique<Derived>();
-        // ...
-    } // ~pb invokes correct destructor only when ~Base is virtual
+{
+    unique_ptr<Base> pb = make_unique<Derived>();
+    // ...
+} // ~pb invokes correct destructor only when ~Base is virtual
 
+```
 In rarer cases, such as policy classes, the class is used as a base class for convenience, not for polymorphic behavior. It is recommended to make those destructors protected and nonvirtual:
 
-    class My_policy {
-    public:
-        virtual ~My_policy();      // BAD, public and virtual
-    protected:
-        ~My_policy();              // GOOD
-        // ...
-    };
+```cpp
+class My_policy {
+public:
+    virtual ~My_policy();      // BAD, public and virtual
+protected:
+    ~My_policy();              // GOOD
+    // ...
+};
 
-    template<class Policy>
-    class customizable : Policy { /* ... */ }; // note: private inheritance
+template<class Policy>
+class customizable : Policy { /* ... */ }; // note: private inheritance
 
+```
 ##### Note
 
 This simple guideline illustrates a subtle issue and reflects modern uses of inheritance and object-oriented design principles.
@@ -181,62 +189,74 @@ Never allow an error to be reported from a destructor, a resource deallocation f
 
 ##### Example
 
-    class Nefarious {
-    public:
-        Nefarious()  { /* code that could throw */ }   // ok
-        ~Nefarious() { /* code that could throw */ }   // BAD, should not throw
-        // ...
-    };
+```cpp
+class Nefarious {
+public:
+    Nefarious()  { /* code that could throw */ }   // ok
+    ~Nefarious() { /* code that could throw */ }   // BAD, should not throw
+    // ...
+};
 
+```
 1. `Nefarious` objects are hard to use safely even as local variables:
 
 
-        void test(string& s)
-        {
-            Nefarious n;          // trouble brewing
-            string copy = s;      // copy the string
-        } // destroy copy and then n
+```cpp
+    void test(string& s)
+    {
+        Nefarious n;          // trouble brewing
+        string copy = s;      // copy the string
+    } // destroy copy and then n
 
-    Here, copying `s` could throw, and if that throws and if `n`'s destructor then also throws, the program will exit via `std::terminate` because two exceptions can't be propagated simultaneously.
+Here, copying `s` could throw, and if that throws and if `n`'s destructor then also throws, the program will exit via `std::terminate` because two exceptions can't be propagated simultaneously.
 
+```
 2. Classes with `Nefarious` members or bases are also hard to use safely, because their destructors must invoke `Nefarious`' destructor, and are similarly poisoned by its poor behavior:
 
 
-        class Innocent_bystander {
-            Nefarious member;     // oops, poisons the enclosing class's destructor
-            // ...
-        };
+```cpp
+    class Innocent_bystander {
+        Nefarious member;     // oops, poisons the enclosing class's destructor
+        // ...
+    };
 
-        void test(string& s)
-        {
-            Innocent_bystander i; // more trouble brewing
-            string copy2 = s;      // copy the string
-        } // destroy copy and then i
+    void test(string& s)
+    {
+        Innocent_bystander i; // more trouble brewing
+        string copy2 = s;      // copy the string
+    } // destroy copy and then i
 
-    Here, if constructing `copy2` throws, we have the same problem because `i`'s destructor now also can throw, and if so we'll invoke `std::terminate`.
+Here, if constructing `copy2` throws, we have the same problem because `i`'s destructor now also can throw, and if so we'll invoke `std::terminate`.
 
+```
 3. You can't reliably create global or static `Nefarious` objects either:
 
 
-        static Nefarious n;       // oops, any destructor exception can't be caught
+```cpp
+    static Nefarious n;       // oops, any destructor exception can't be caught
 
+```
 4. You can't reliably create arrays of `Nefarious`:
 
 
-        void test()
-        {
-            std::array<Nefarious, 10> arr; // this line can std::terminate(!)
-        }
+```cpp
+    void test()
+    {
+        std::array<Nefarious, 10> arr; // this line can std::terminate(!)
+    }
 
-    The behavior of arrays is undefined in the presence of destructors that throw because there is no reasonable rollback behavior that could ever be devised. Just think: What code can the compiler generate for constructing an `arr` where, if the fourth object's constructor throws, the code has to give up and in its cleanup mode tries to call the destructors of the already-constructed objects ... and one or more of those destructors throws? There is no satisfactory answer.
+The behavior of arrays is undefined in the presence of destructors that throw because there is no reasonable rollback behavior that could ever be devised. Just think: What code can the compiler generate for constructing an `arr` where, if the fourth object's constructor throws, the code has to give up and in its cleanup mode tries to call the destructors of the already-constructed objects ... and one or more of those destructors throws? There is no satisfactory answer.
 
+```
 5. You can't use `Nefarious` objects in standard containers:
 
 
-        std::vector<Nefarious> vec(10);   // this line can std::terminate()
+```cpp
+    std::vector<Nefarious> vec(10);   // this line can std::terminate()
 
-    The standard library forbids all destructors used with it from throwing. You can't store `Nefarious` objects in standard containers or use them with any other part of the standard library.
+The standard library forbids all destructors used with it from throwing. You can't store `Nefarious` objects in standard containers or use them with any other part of the standard library.
 
+```
 ##### Note
 
 These are key functions that must not fail because they are necessary for the two key operations in transactional programming: to back out work if problems are encountered during processing, and to commit work if no problems occur. If there's no way to safely back out using no-fail operations, then no-fail rollback is impossible to implement. If there's no way to safely commit state changes using a no-fail operation (notably, but not limited to, `swap`), then no-fail commit is impossible to implement.
@@ -250,11 +270,13 @@ Consider the following advice and requirements found in the C++ Standard:
 Deallocation functions, including specifically overloaded `operator delete` and `operator delete[]`, fall into the same category, because they too are used during cleanup in general, and during exception handling in particular, to back out of partial work that needs to be undone.
 Besides destructors and deallocation functions, common error-safety techniques rely also on `swap` operations never failing -- in this case, not because they are used to implement a guaranteed rollback, but because they are used to implement a guaranteed commit. For example, here is an idiomatic implementation of `operator=` for a type `T` that performs copy construction followed by a call to a no-fail `swap`:
 
-    T& T::operator=(const T& other) {
-        auto temp = other;
-        swap(temp);
-    }
+```cpp
+T& T::operator=(const T& other) {
+    auto temp = other;
+    swap(temp);
+}
 
+```
 (See also Item 56. ???)
 
 Fortunately, when releasing a resource, the scope for failure is definitely smaller. If using exceptions as the error reporting mechanism, make sure such functions handle all exceptions and other errors that their internal processing might generate. (For exceptions, simply wrap everything sensitive that your destructor does in a `try/catch(...)` block.) This is particularly important because a destructor might be called in a crisis situation, such as failure to allocate a system resource (e.g., memory, files, locks, ports, windows, or other system objects).
@@ -279,56 +301,62 @@ If you define a move constructor, you must also define a move assignment operato
 
 ##### Example
 
-    class X {
-        // ...
-    public:
-        X(const X&) { /* stuff */ }
+```cpp
+class X {
+    // ...
+public:
+    X(const X&) { /* stuff */ }
 
-        // BAD: failed to also define a copy assignment operator
+    // BAD: failed to also define a copy assignment operator
 
-        X(x&&) { /* stuff */ }
+    X(x&&) { /* stuff */ }
 
-        // BAD: failed to also define a move assignment operator
-    };
+    // BAD: failed to also define a move assignment operator
+};
 
-    X x1;
-    X x2 = x1; // ok
-    x2 = x1;   // pitfall: either fails to compile, or does something suspicious
+X x1;
+X x2 = x1; // ok
+x2 = x1;   // pitfall: either fails to compile, or does something suspicious
 
+```
 If you define a destructor, you should not use the compiler-generated copy or move operation; you probably need to define or suppress copy and/or move.
 
-    class X {
-        HANDLE hnd;
-        // ...
-    public:
-        ~X() { /* custom stuff, such as closing hnd */ }
-        // suspicious: no mention of copying or moving -- what happens to hnd?
-    };
+```cpp
+class X {
+    HANDLE hnd;
+    // ...
+public:
+    ~X() { /* custom stuff, such as closing hnd */ }
+    // suspicious: no mention of copying or moving -- what happens to hnd?
+};
 
-    X x1;
-    X x2 = x1; // pitfall: either fails to compile, or does something suspicious
-    x2 = x1;   // pitfall: either fails to compile, or does something suspicious
+X x1;
+X x2 = x1; // pitfall: either fails to compile, or does something suspicious
+x2 = x1;   // pitfall: either fails to compile, or does something suspicious
 
+```
 If you define copying, and any base or member has a type that defines a move operation, you should also define a move operation.
 
-    class X {
-        string s; // defines more efficient move operations
-        // ... other data members ...
-    public:
-        X(const X&) { /* stuff */ }
-        X& operator=(const X&) { /* stuff */ }
+```cpp
+class X {
+    string s; // defines more efficient move operations
+    // ... other data members ...
+public:
+    X(const X&) { /* stuff */ }
+    X& operator=(const X&) { /* stuff */ }
 
-        // BAD: failed to also define a move construction and move assignment
-        // (why wasn't the custom "stuff" repeated here?)
-    };
+    // BAD: failed to also define a move construction and move assignment
+    // (why wasn't the custom "stuff" repeated here?)
+};
 
-    X test()
-    {
-        X local;
-        // ...
-        return local;  // pitfall: will be inefficient and/or do the wrong thing
-    }
+X test()
+{
+    X local;
+    // ...
+    return local;  // pitfall: will be inefficient and/or do the wrong thing
+}
 
+```
 If you define any of the copy constructor, copy assignment operator, or destructor, you probably should define the others.
 
 ##### Note
@@ -370,20 +398,24 @@ Prevent leaks. Leaks can lead to performance degradation, mysterious error, syst
 
 ##### Example
 
-    template<class T>
-    class Vector {
-    // ...
-    private:
-        T* elem;   // sz elements on the free store, owned by the class object
-        int sz;
-    };
+```cpp
+template<class T>
+class Vector {
+// ...
+private:
+    T* elem;   // sz elements on the free store, owned by the class object
+    int sz;
+};
 
+```
 This class is a resource handle. It manages the lifetime of the `T`s. To do so, `Vector` must define or delete [the set of special operations](???) (constructors, a destructor, etc.).
 
 ##### Example
 
-    ??? "odd" non-memory resource ???
+```cpp
+??? "odd" non-memory resource ???
 
+```
 ##### Enforcement
 
 The basic technique for preventing leaks is to have every resource owned by a resource handle with a suitable destructor. A checker can find "naked `new`s". Given a list of C-style allocation functions (e.g., `fopen()`), a checker can also find uses that are not managed by a resource handle. In general, "naked pointers" can be viewed with suspicion, flagged, and/or analyzed. A complete list of resources cannot be generated without human input (the definition of "a resource" is necessarily too general), but a tool can be "parameterized" with a resource list.
@@ -396,36 +428,42 @@ That would be a leak.
 
 ##### Example
 
-    void f(int i)
-    {
-        FILE* f = fopen("a file", "r");
-        ifstream is { "another file" };
-        // ...
-        if (i == 0) return;
-        // ...
-        fclose(f);
-    }
+```cpp
+void f(int i)
+{
+    FILE* f = fopen("a file", "r");
+    ifstream is { "another file" };
+    // ...
+    if (i == 0) return;
+    // ...
+    fclose(f);
+}
 
+```
 If `i == 0` the file handle for `a file` is leaked. On the other hand, the `ifstream` for `another file` will correctly close its file (upon destruction). If you must use an explicit pointer, rather than a resource handle with specific semantics, use a `unique_ptr` or a `shared_ptr` with a custom deleter:
 
-    void f(int i)
-    {
-        unique_ptr<FILE, int(*)(FILE*)> f(fopen("a file", "r"), fclose);
-        // ...
-        if (i == 0) return;
-        // ...
-    }
+```cpp
+void f(int i)
+{
+    unique_ptr<FILE, int(*)(FILE*)> f(fopen("a file", "r"), fclose);
+    // ...
+    if (i == 0) return;
+    // ...
+}
 
+```
 Better:
 
-    void f(int i)
-    {
-        ifstream input {"a file"};
-        // ...
-        if (i == 0) return;
-        // ...
-    }
+```cpp
+void f(int i)
+{
+    ifstream input {"a file"};
+    // ...
+    if (i == 0) return;
+    // ...
+}
 
+```
 ##### Enforcement
 
 A checker must consider all "naked pointers" suspicious.
@@ -451,23 +489,25 @@ To avoid extremely hard-to-find errors. Dereferencing such a pointer is undefine
 
 ##### Example
 
-    string* bad()   // really bad
-    {
-        vector<string> v = { "This", "will", "cause", "trouble", "!" };
-        // leaking a pointer into a destroyed member of a destroyed object (v)
-        return &v[0];
-    }
+```cpp
+string* bad()   // really bad
+{
+    vector<string> v = { "This", "will", "cause", "trouble", "!" };
+    // leaking a pointer into a destroyed member of a destroyed object (v)
+    return &v[0];
+}
 
-    void use()
-    {
-        string* p = bad();
-        vector<int> xx = {7, 8, 9};
-        // undefined behavior: x may not be the string "This"
-        string x = *p;
-        // undefined behavior: we don't know what (if anything) is allocated a location p
-        *p = "Evil!";
-    }
+void use()
+{
+    string* p = bad();
+    vector<int> xx = {7, 8, 9};
+    // undefined behavior: x may not be the string "This"
+    string x = *p;
+    // undefined behavior: we don't know what (if anything) is allocated a location p
+    *p = "Evil!";
+}
 
+```
 The `string`s of `v` are destroyed upon exit from `bad()` and so is `v` itself. The returned pointer points to unallocated memory on the free store. This memory (pointed into by `p`) may have been reallocated by the time `*p` is executed. There may be no `string` to read and a write through `p` could easily corrupt objects of unrelated types.
 
 ##### Enforcement
@@ -482,12 +522,14 @@ To provide statically type-safe manipulation of elements.
 
 ##### Example
 
-    template<typename T> class Vector {
-        // ...
-        T* elem;   // point to sz elements of type T
-        int sz;
-    };
+```cpp
+template<typename T> class Vector {
+    // ...
+    T* elem;   // point to sz elements of type T
+    int sz;
+};
 
+```
 ### <a name="Cr-value-return"></a>Return containers by value (relying on move or copy elision for efficiency)
 
 ##### Reason
@@ -496,13 +538,15 @@ To simplify code and eliminate a need for explicit memory management. To bring a
 
 ##### Example
 
-    vector<int> get_large_vector()
-    {
-        return ...;
-    }
+```cpp
+vector<int> get_large_vector()
+{
+    return ...;
+}
 
-    auto v = get_large_vector(); //  return by value is ok, most modern compilers will do copy elision
+auto v = get_large_vector(); //  return by value is ok, most modern compilers will do copy elision
 
+```
 ##### Exception
 
 See the Exceptions in [F.20](03-F-Functions.md#Rf-out).
@@ -519,17 +563,21 @@ To provide complete control of the lifetime of the resource. To provide a cohere
 
 ##### Example
 
-    ??? Messing with pointers
+```cpp
+??? Messing with pointers
 
+```
 ##### Note
 
 If all members are resource handles, rely on the default special operations where possible.
 
-    template<typename T> struct Named {
-        string name;
-        T value;
-    };
+```cpp
+template<typename T> struct Named {
+    string name;
+    T value;
+};
 
+```
 Now `Named` has a default constructor, a destructor, and efficient copy and move operations, provided `T` has.
 
 ##### Enforcement
@@ -544,14 +592,16 @@ It is common to need an initial set of elements.
 
 ##### Example
 
-    template<typename T> class Vector {
-    public:
-        Vector(std::initializer_list<T>);
-        // ...
-    };
+```cpp
+template<typename T> class Vector {
+public:
+    Vector(std::initializer_list<T>);
+    // ...
+};
 
-    Vector<string> vs { "Nygaard", "Ritchie" };
+Vector<string> vs { "Nygaard", "Ritchie" };
 
+```
 ##### Enforcement
 
 When is a class a container? ???

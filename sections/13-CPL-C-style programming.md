@@ -23,11 +23,13 @@ It provides better support for high-level programming and often generates faster
 
 ##### Example
 
-    char ch = 7;
-    void* pv = &ch;
-    int* pi = pv;   // not C++
-    *pi = 999;      // overwrite sizeof(int) bytes near &ch
+```cpp
+char ch = 7;
+void* pv = &ch;
+int* pi = pv;   // not C++
+*pi = 999;      // overwrite sizeof(int) bytes near &ch
 
+```
 The rules for implicit casting to and from `void*` in C are subtle and unenforced.
 In particular, this example violates a rule against converting to a type with stricter alignment.
 
@@ -43,11 +45,13 @@ That subset can be compiled with both C and C++ compilers, and when compiled as 
 
 ##### Example
 
-    int* p1 = malloc(10 * sizeof(int));                      // not C++
-    int* p2 = static_cast<int*>(malloc(10 * sizeof(int)));   // not C, C-style C++
-    int* p3 = new int[10];                                   // not C
-    int* p4 = (int*) malloc(10 * sizeof(int));               // both C and C++
+```cpp
+int* p1 = malloc(10 * sizeof(int));                      // not C++
+int* p2 = static_cast<int*>(malloc(10 * sizeof(int)));   // not C, C-style C++
+int* p3 = new int[10];                                   // not C
+int* p4 = (int*) malloc(10 * sizeof(int));               // both C and C++
 
+```
 ##### Enforcement
 
 * Flag if using a build mode that compiles code as C.
@@ -69,27 +73,31 @@ Whenever possible encapsulate the low-level interface in an interface that follo
 
 You can call C from C++:
 
-    // in C:
-    double sqrt(double);
+```cpp
+// in C:
+double sqrt(double);
 
-    // in C++:
-    extern "C" double sqrt(double);
+// in C++:
+extern "C" double sqrt(double);
 
-    sqrt(2);
+sqrt(2);
 
+```
 ##### Example
 
 You can call C++ from C:
 
-    // in C:
-    X call_f(struct Y*, int);
+```cpp
+// in C:
+X call_f(struct Y*, int);
 
-    // in C++:
-    extern "C" X call_f(Y* p, int i)
-    {
-        return p->f(i);   // possibly a virtual function call
-    }
+// in C++:
+extern "C" X call_f(Y* p, int i)
+{
+    return p->f(i);   // possibly a virtual function call
+}
 
+```
 ##### Enforcement
 
 None needed

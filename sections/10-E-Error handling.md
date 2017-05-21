@@ -64,18 +64,20 @@ To make error handling systematic, robust, and non-repetitive.
 
 ##### Example
 
-    struct Foo {
-        vector<Thing> v;
-        File_handle f;
-        string s;
-    };
+```cpp
+struct Foo {
+    vector<Thing> v;
+    File_handle f;
+    string s;
+};
 
-    void use()
-    {
-        Foo bar {{Thing{1}, Thing{2}, Thing{monkey}}, {"my_file", "r"}, "Here we go!"};
-        // ...
-    }
+void use()
+{
+    Foo bar {{Thing{1}, Thing{2}, Thing{monkey}}, {"my_file", "r"}, "Here we go!"};
+    // ...
+}
 
+```
 Here, `vector` and `string`s constructors may not be able to allocate sufficient memory for their elements, `vector`s constructor may not be able copy the `Thing`s in its initializer list, and `File_handle` may not be able to open the required file.
 In each case, they throw an exception for `use()`'s caller to handle.
 If `use()` could handle the failure to construct `bar` it can take control using `try`/`catch`.
@@ -84,13 +86,15 @@ Note that there is no return value that could contain an error code.
 
 The `File_handle` constructor might be defined like this:
 
-    File_handle::File_handle(const string& name, const string& mode)
-        :f{fopen(name.c_str(), mode.c_str())}
-    {
-        if (!f)
-            throw runtime_error{"File_handle: could not open " + name + " as " + mode};
-    }
+```cpp
+File_handle::File_handle(const string& name, const string& mode)
+    :f{fopen(name.c_str(), mode.c_str())}
+{
+    if (!f)
+        throw runtime_error{"File_handle: could not open " + name + " as " + mode};
+}
 
+```
 ##### Note
 
 It is often said that exceptions are meant to signal exceptional events and failures.
@@ -132,18 +136,20 @@ C++ implementations tend to be optimized based on the assumption that exceptions
 
 ##### Example, don't
 
-    // don't: exception not used for error handling
-    int find_index(vector<string>& vec, const string& x)
-    {
-        try {
-            for (int i = 0; i < vec.size(); ++i)
-                if (vec[i] == x) throw i;  // found x
-        } catch (int i) {
-            return i;
-        }
-        return -1;   // not found
+```cpp
+// don't: exception not used for error handling
+int find_index(vector<string>& vec, const string& x)
+{
+    try {
+        for (int i = 0; i < vec.size(); ++i)
+            if (vec[i] == x) throw i;  // found x
+    } catch (int i) {
+        return i;
     }
+    return -1;   // not found
+}
 
+```
 This is more complicated and most likely runs much slower than the obvious alternative.
 There is nothing exceptional about finding a value in a `vector`.
 
@@ -175,19 +181,21 @@ Not all member functions can be called.
 
 ##### Example
 
-    class Vector {  // very simplified vector of doubles
-        // if elem != nullptr then elem points to sz doubles
-    public:
-        Vector() : elem{nullptr}, sz{0}{}
-        Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
-        ~Vector() { delete elem; }
-        double& operator[](int s) { return elem[s]; }
-        // ...
-    private:
-        owner<double*> elem;
-        int sz;
-    };
+```cpp
+class Vector {  // very simplified vector of doubles
+    // if elem != nullptr then elem points to sz doubles
+public:
+    Vector() : elem{nullptr}, sz{0}{}
+    Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
+    ~Vector() { delete elem; }
+    double& operator[](int s) { return elem[s]; }
+    // ...
+private:
+    owner<double*> elem;
+    int sz;
+};
 
+```
 The class invariant - here stated as a comment - is established by the constructors.
 `new` throws if it cannot allocate the required memory.
 The operators, notably the subscript operator, relies on the invariant.
@@ -208,57 +216,67 @@ RAII ("Resource Acquisition Is Initialization") is the simplest, most systematic
 
 ##### Example
 
-    void f1(int i)   // Bad: possibly leak
-    {
-        int* p = new int[12];
-        // ...
-        if (i < 17) throw Bad {"in f()", i};
-        // ...
-    }
+```cpp
+void f1(int i)   // Bad: possibly leak
+{
+    int* p = new int[12];
+    // ...
+    if (i < 17) throw Bad {"in f()", i};
+    // ...
+}
 
+```
 We could carefully release the resource before the throw:
 
-    void f2(int i)   // Clumsy and error-prone: explicit release
-    {
-        int* p = new int[12];
-        // ...
-        if (i < 17) {
-            delete[] p;
-            throw Bad {"in f()", i};
-        }
-        // ...
+```cpp
+void f2(int i)   // Clumsy and error-prone: explicit release
+{
+    int* p = new int[12];
+    // ...
+    if (i < 17) {
+        delete[] p;
+        throw Bad {"in f()", i};
     }
+    // ...
+}
 
+```
 This is verbose. In larger code with multiple possible `throw`s explicit releases become repetitive and error-prone.
 
-    void f3(int i)   // OK: resource management done by a handle (but see below)
-    {
-        auto p = make_unique<int[]>(12);
-        // ...
-        if (i < 17) throw Bad {"in f()", i};
-        // ...
-    }
+```cpp
+void f3(int i)   // OK: resource management done by a handle (but see below)
+{
+    auto p = make_unique<int[]>(12);
+    // ...
+    if (i < 17) throw Bad {"in f()", i};
+    // ...
+}
 
+```
 Note that this works even when the `throw` is implicit because it happened in a called function:
 
-    void f4(int i)   // OK: resource management done by a handle (but see below)
-    {
-        auto p = make_unique<int[]>(12);
-        // ...
-        helper(i);   // may throw
-        // ...
-    }
+```cpp
+void f4(int i)   // OK: resource management done by a handle (but see below)
+{
+    auto p = make_unique<int[]>(12);
+    // ...
+    helper(i);   // may throw
+    // ...
+}
 
+```
 Unless you really need pointer semantics, use a local resource object:
 
-    void f5(int i)   // OK: resource management done by local object
-    {
-        vector<int> v(12);
-        // ...
-        helper(i);   // may throw
-        // ...
-    }
+```cpp
+void f5(int i)   // OK: resource management done by local object
+{
+    vector<int> v(12);
+    // ...
+    helper(i);   // may throw
+    // ...
+}
 
+```
 That's even simpler and safer, and often more efficient.
 
 ##### Note
@@ -286,21 +304,23 @@ When exceptions cannot be used, simulate RAII.
 That is, systematically check that objects are valid after construction and still release all resources in the destructor.
 One strategy is to add a `valid()` operation to every resource handle:
 
-    void f()
-    {
-        vector<string> vs(100);   // not std::vector: valid() added
-        if (!vs.valid()) {
-            // handle error or exit
-        }
+```cpp
+void f()
+{
+    vector<string> vs(100);   // not std::vector: valid() added
+    if (!vs.valid()) {
+        // handle error or exit
+    }
 
-        ifstream fs("foo");   // not std::ifstream: valid() added
-        if (!fs.valid()) {
-            // handle error or exit
-        }
+    ifstream fs("foo");   // not std::ifstream: valid() added
+    if (!fs.valid()) {
+        // handle error or exit
+    }
 
-        // ...
-    } // destructors clean up as usual
+    // ...
+} // destructors clean up as usual
 
+```
 Obviously, this increases the size of the code, doesn't allow for implicit propagation of "exceptions" (`valid()` checks), and `valid()` checks can be forgotten.
 Prefer to use exceptions.
 
@@ -334,11 +354,13 @@ To make error handling systematic, robust, and efficient.
 
 ##### Example
 
-    double compute(double d) noexcept
-    {
-        return log(sqrt(d <= 0 ? 1 : d));
-    }
+```cpp
+double compute(double d) noexcept
+{
+    return log(sqrt(d <= 0 ? 1 : d));
+}
 
+```
 Here, we know that `compute` will not throw because it is composed out of operations that don't throw.
 By declaring `compute` to be `noexcept`, we give the compiler and human readers information that can make it easier for them to understand and manipulate `compute`.
 
@@ -348,12 +370,14 @@ Many standard library functions are `noexcept` including all the standard librar
 
 ##### Example
 
-    vector<double> munge(const vector<double>& v) noexcept
-    {
-        vector<double> v2(v.size());
-        // ... do something ...
-    }
+```cpp
+vector<double> munge(const vector<double>& v) noexcept
+{
+    vector<double> v2(v.size());
+    // ... do something ...
+}
 
+```
 The `noexcept` here states that I am not willing or able to handle the situation where I cannot construct the local `vector`.
 That is, I consider memory exhaustion a serious design error (on par with hardware failures) so that I'm willing to crash the program if it happens.
 
@@ -373,32 +397,38 @@ That would be a leak.
 
 ##### Example
 
-    void leak(int x)   // don't: may leak
-    {
-        auto p = new int{7};
-        if (x < 0) throw Get_me_out_of_here{};  // may leak *p
-        // ...
-        delete p;   // we may never get here
-    }
+```cpp
+void leak(int x)   // don't: may leak
+{
+    auto p = new int{7};
+    if (x < 0) throw Get_me_out_of_here{};  // may leak *p
+    // ...
+    delete p;   // we may never get here
+}
 
+```
 One way of avoiding such problems is to use resource handles consistently:
 
-    void no_leak(int x)
-    {
-        auto p = make_unique<int>(7);
-        if (x < 0) throw Get_me_out_of_here{};  // will delete *p if necessary
-        // ...
-        // no need for delete p
-    }
+```cpp
+void no_leak(int x)
+{
+    auto p = make_unique<int>(7);
+    if (x < 0) throw Get_me_out_of_here{};  // will delete *p if necessary
+    // ...
+    // no need for delete p
+}
 
+```
 Another solution (often better) would be to use a local variable to eliminate explicit use of pointers:
 
-    void no_leak_simplified(int x)
-    {
-        vector<int> v(7);
-        // ...
-    }
+```cpp
+void no_leak_simplified(int x)
+{
+    vector<int> v(7);
+    // ...
+}
 
+```
 ##### Note
 
 If you have local "things" that requires cleanup, but is not represented by an object with a destructor, such cleanup must
@@ -413,71 +443,77 @@ A user-defined type is unlikely to clash with other people's exceptions.
 
 ##### Example
 
-    void my_code()
-    {
+```cpp
+void my_code()
+{
+    // ...
+    throw Moonphase_error{};
+    // ...
+}
+
+void your_code()
+{
+    try {
         // ...
-        throw Moonphase_error{};
+        my_code();
         // ...
     }
-
-    void your_code()
-    {
-        try {
-            // ...
-            my_code();
-            // ...
-        }
-        catch(Bufferpool_exhausted) {
-            // ...
-        }
+    catch(Bufferpool_exhausted) {
+        // ...
     }
+}
 
+```
 ##### Example, don't
 
-    void my_code()     // Don't
-    {
+```cpp
+void my_code()     // Don't
+{
+    // ...
+    throw 7;       // 7 means "moon in the 4th quarter"
+    // ...
+}
+
+void your_code()   // Don't
+{
+    try {
         // ...
-        throw 7;       // 7 means "moon in the 4th quarter"
+        my_code();
         // ...
     }
-
-    void your_code()   // Don't
-    {
-        try {
-            // ...
-            my_code();
-            // ...
-        }
-        catch(int i) {  // i == 7 means "input buffer too small"
-            // ...
-        }
+    catch(int i) {  // i == 7 means "input buffer too small"
+        // ...
     }
+}
 
+```
 ##### Note
 
 The standard-library classes derived from `exception` should be used only as base classes or for exceptions that require only "generic" handling. Like built-in types, their use could clash with other people's use of them.
 
 ##### Example, don't
 
-    void my_code()   // Don't
-    {
+```cpp
+void my_code()   // Don't
+{
+    // ...
+    throw runtime_error{"moon in the 4th quarter"};
+    // ...
+}
+
+void your_code()   // Don't
+{
+    try {
         // ...
-        throw runtime_error{"moon in the 4th quarter"};
+        my_code();
         // ...
     }
-
-    void your_code()   // Don't
-    {
-        try {
-            // ...
-            my_code();
-            // ...
-        }
-        catch(runtime_error) {   // runtime_error means "input buffer too small"
-            // ...
-        }
+    catch(runtime_error) {   // runtime_error means "input buffer too small"
+        // ...
     }
+}
 
+```
 **See also**: [Discussion](#Sd-???)
 
 ##### Enforcement
@@ -492,22 +528,28 @@ To prevent slicing.
 
 ##### Example
 
-    void f()
-    try {
-        // ...
-    }
-    catch (exception e) {   // don't: may slice
-        // ...
-    }
+```cpp
+void f()
+try {
+    // ...
+}
+catch (exception e) {   // don't: may slice
+    // ...
+}
 
+```
 Instead, use a reference:
 
-    catch (exception& e) { /* ... */ }
+```cpp
+catch (exception& e) { /* ... */ }
 
+```
 of - typically better still - a `const` reference:
 
-    catch (const exception& e) { /* ... */ }
+```cpp
+catch (const exception& e) { /* ... */ }
 
+```
 Most handlers do not modify their exception and in general we [recommend use of `const`](07-ES-Expressions%20and%20Statements.md#Res-const).
 
 ##### Enforcement
@@ -522,16 +564,18 @@ We don't know how to write reliable programs if a destructor, a swap, or a memor
 
 ##### Example, don't
 
-    class Connection {
+```cpp
+class Connection {
+    // ...
+public:
+    ~Connection()   // Don't: very bad destructor
+    {
+        if (cannot_disconnect()) throw I_give_up{information};
         // ...
-    public:
-        ~Connection()   // Don't: very bad destructor
-        {
-            if (cannot_disconnect()) throw I_give_up{information};
-            // ...
-        }
-    };
+    }
+};
 
+```
 ##### Note
 
 Many have tried to write reliable code violating this rule for examples, such as a network connection that "refuses to close".
@@ -568,17 +612,19 @@ Let cleanup actions on the unwinding path be handled by [RAII](10-E-Error%20hand
 
 ##### Example, don't
 
-    void f()   // bad
-    {
-        try {
-            // ...
-        }
-        catch (...) {
-            // no action
-            throw;   // propagate exception
-        }
+```cpp
+void f()   // bad
+{
+    try {
+        // ...
     }
+    catch (...) {
+        // no action
+        throw;   // propagate exception
+    }
+}
 
+```
 ##### Enforcement
 
 * Flag nested try-blocks.
@@ -593,31 +639,35 @@ Let cleanup actions on the unwinding path be handled by [RAII](10-E-Error%20hand
 
 ##### Example, Bad
 
-    void f(zstring s)
-    {
-        Gadget* p;
-        try {
-            p = new Gadget(s);
-            // ...
-            delete p;
-        }
-        catch (Gadget_construction_failure) {
-            delete p;
-            throw;
-        }
+```cpp
+void f(zstring s)
+{
+    Gadget* p;
+    try {
+        p = new Gadget(s);
+        // ...
+        delete p;
     }
+    catch (Gadget_construction_failure) {
+        delete p;
+        throw;
+    }
+}
 
+```
 This code is messy.
 There could be a leak from the naked pointer in the `try` block.
 Not all exceptions are handled.
 `deleting` an object that failed to construct is almost certainly a mistake.
 Better:
 
-    void f2(zstring s)
-    {
-        Gadget g {s};
-    }
+```cpp
+void f2(zstring s)
+{
+    Gadget g {s};
+}
 
+```
 ##### Alternatives
 
 * proper resource handles and [RAII](10-E-Error%20handling.md#Re-raii)
@@ -635,13 +685,15 @@ Better:
 
 ##### Example
 
-    void f(int n)
-    {
-        void* p = malloc(1, n);
-        auto _ = finally([p] { free(p); });
-        // ...
-    }
+```cpp
+void f(int n)
+{
+    void* p = malloc(1, n);
+    auto _ = finally([p] { free(p); });
+    // ...
+}
 
+```
 ##### Note
 
 `finally` is not as messy as `try`/`catch`, but it is still ad-hoc.
@@ -693,23 +745,27 @@ If performance is your worry, measure.
 
 Assume you wanted to write
 
-    void func(zstring arg)
-    {
-        Gadget g {arg};
-        // ...
-    }
+```cpp
+void func(zstring arg)
+{
+    Gadget g {arg};
+    // ...
+}
 
+```
 If the `gadget` isn't correctly constructed, `func` exits with an exception.
 If we cannot throw an exception, we can simulate this RAII style of resource handling by adding a `valid()` member function to `Gadget`:
 
-    error_indicator func(zstring arg)
-    {
-        Gadget g {arg};
-        if (!g.valid()) return gadget_construction_error;
-        // ...
-        return 0;   // zero indicates "good"
-    }
+```cpp
+error_indicator func(zstring arg)
+{
+    Gadget g {arg};
+    if (!g.valid()) return gadget_construction_error;
+    // ...
+    return 0;   // zero indicates "good"
+}
 
+```
 The problem is of course that the caller now has to remember to test the return value.
 
 **See also**: [Discussion](#Sd-???).
@@ -738,23 +794,27 @@ In such cases, "crashing" is simply leaving error handling to the next level of 
 
 ##### Example
 
-    void f(int n)
-    {
-        // ...
-        p = static_cast<X*>(malloc(n, X));
-        if (p == nullptr) abort();     // abort if memory is exhausted
-        // ...
-    }
+```cpp
+void f(int n)
+{
+    // ...
+    p = static_cast<X*>(malloc(n, X));
+    if (p == nullptr) abort();     // abort if memory is exhausted
+    // ...
+}
 
+```
 Most programs cannot handle memory exhaustion gracefully anyway. This is roughly equivalent to
 
-    void f(int n)
-    {
-        // ...
-        p = new X[n];    // throw if memory is exhausted (by default, terminate)
-        // ...
-    }
+```cpp
+void f(int n)
+{
+    // ...
+    p = new X[n];    // throw if memory is exhausted (by default, terminate)
+    // ...
+}
 
+```
 Typically, it is a good idea to log the reason for the "crash" before exiting.
 
 ##### Enforcement
@@ -783,20 +843,22 @@ or a pair of values can be returned.
 
 ##### Example
 
-    Gadget make_gadget(int n)
-    {
-        // ...
-    }
+```cpp
+Gadget make_gadget(int n)
+{
+    // ...
+}
 
-    void user()
-    {
-        Gadget g = make_gadget(17);
-        if (!g.valid()) {
-                // error handling
-        }
-        // ...
+void user()
+{
+    Gadget g = make_gadget(17);
+    if (!g.valid()) {
+            // error handling
     }
+    // ...
+}
 
+```
 This approach fits with [simulated RAII resource management](10-E-Error%20handling.md#Re-no-throw-raii).
 The `valid()` function could return an `error_indicator` (e.g. a member of an `error_indicator` enumeration).
 
@@ -806,40 +868,44 @@ What if we cannot or do not want to modify the `Gadget` type?
 In that case, we must return a pair of values.
 For example:
 
-    std::pair<Gadget, error_indicator> make_gadget(int n)
-    {
-        // ...
-    }
+```cpp
+std::pair<Gadget, error_indicator> make_gadget(int n)
+{
+    // ...
+}
 
-    void user()
-    {
-        auto r = make_gadget(17);
-        if (!r.second) {
-                // error handling
-        }
-        Gadget& g = r.first;
-        // ...
+void user()
+{
+    auto r = make_gadget(17);
+    if (!r.second) {
+            // error handling
     }
+    Gadget& g = r.first;
+    // ...
+}
 
+```
 As shown, `std::pair` is a possible return type.
 Some people prefer a specific type.
 For example:
 
-    Gval make_gadget(int n)
-    {
-        // ...
-    }
+```cpp
+Gval make_gadget(int n)
+{
+    // ...
+}
 
-    void user()
-    {
-        auto r = make_gadget(17);
-        if (!r.err) {
-                // error handling
-        }
-        Gadget& g = r.val;
-        // ...
+void user()
+{
+    auto r = make_gadget(17);
+    if (!r.err) {
+            // error handling
     }
+    Gadget& g = r.val;
+    // ...
+}
 
+```
 One reason to prefer a specific return type is to have names for its members, rather than the somewhat cryptic `first` and `second`
 and to avoid confusion with other uses of `std::pair`.
 
@@ -848,63 +914,67 @@ and to avoid confusion with other uses of `std::pair`.
 In general, you must clean up before an error exit.
 This can be messy:
 
-    std::pair<int, error_indicator> user()
-    {
-        Gadget g1 = make_gadget(17);
-        if (!g1.valid()) {
-                return {0, g1_error};
-        }
-
-        Gadget g2 = make_gadget(17);
-        if (!g2.valid()) {
-                cleanup(g1);
-                return {0, g2_error};
-        }
-
-        // ...
-
-        if (all_foobar(g1, g2)) {
-            cleanup(g1);
-            cleanup(g2);
-            return {0, foobar_error};
-        // ...
-
-        cleanup(g1);
-        cleanup(g2);
-        return {res, 0};
+```cpp
+std::pair<int, error_indicator> user()
+{
+    Gadget g1 = make_gadget(17);
+    if (!g1.valid()) {
+            return {0, g1_error};
     }
 
+    Gadget g2 = make_gadget(17);
+    if (!g2.valid()) {
+            cleanup(g1);
+            return {0, g2_error};
+    }
+
+    // ...
+
+    if (all_foobar(g1, g2)) {
+        cleanup(g1);
+        cleanup(g2);
+        return {0, foobar_error};
+    // ...
+
+    cleanup(g1);
+    cleanup(g2);
+    return {res, 0};
+}
+
+```
 Simulating RAII can be non-trivial, especially in functions with multiple resources and multiple possible errors.
 A not uncommon technique is to gather cleanup at the end of the function to avoid repetition:
 
-    std::pair<int, error_indicator> user()
-    {
-        error_indicator err = 0;
+```cpp
+std::pair<int, error_indicator> user()
+{
+    error_indicator err = 0;
 
-        Gadget g1 = make_gadget(17);
-        if (!g1.valid()) {
-                err = g1_error;
-                goto exit;
-        }
-
-        Gadget g2 = make_gadget(17);
-        if (!g2.valid()) {
-                err = g2_error;
-                goto exit;
-        }
-
-        if (all_foobar(g1, g2)) {
-            err = foobar_error;
+    Gadget g1 = make_gadget(17);
+    if (!g1.valid()) {
+            err = g1_error;
             goto exit;
-        }
-        // ...
-
-    exit:
-      if (g1.valid()) cleanup(g1);
-      if (g2.valid()) cleanup(g2);
-      return {res, err};
     }
 
+    Gadget g2 = make_gadget(17);
+    if (!g2.valid()) {
+            err = g2_error;
+            goto exit;
+    }
+
+    if (all_foobar(g1, g2)) {
+        err = foobar_error;
+        goto exit;
+    }
+    // ...
+
+exit:
+  if (g1.valid()) cleanup(g1);
+  if (g2.valid()) cleanup(g2);
+  return {res, err};
+}
+
+```
 The larger the function, the more tempting this technique becomes.
 `finally` can [ease the pain a bit](10-E-Error%20handling.md#Re-finally).
 Also, the larger the program becomes the harder it is to apply an error-indicator-based error handling strategy systematically.
@@ -930,8 +1000,10 @@ See also [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii).
 
 ##### Example, bad
 
-    ???
+```cpp
+???
 
+```
 ##### Note
 
 C-style error handling is based on the global variable `errno`, so it is essentially impossible to avoid this style completely.
@@ -949,14 +1021,16 @@ Exception specifications make error handling brittle, impose a run-time cost, an
 
 ##### Example
 
-    int use(int arg)
-        throw(X, Y)
-    {
-        // ...
-        auto x = f(arg);
-        // ...
-    }
+```cpp
+int use(int arg)
+    throw(X, Y)
+{
+    // ...
+    auto x = f(arg);
+    // ...
+}
 
+```
 if `f()` throws an exception different from `X` and `Y` the unexpected handler is invoked, which by default terminates.
 That's OK, but say that we have checked that this cannot happen and `f` is changed to throw a new exception `Z`,
 we now have a crash on our hands unless we change `use()` (and re-test everything).
@@ -994,18 +1068,20 @@ Flag every exception specification.
 
 ##### Example
 
-    void f()
-    {
-        // ...
-        try {
-                // ...
-        }
-        catch (Base& b) { /* ... */ }
-        catch (Derived& d) { /* ... */ }
-        catch (...) { /* ... */ }
-        catch (std::exception& e){ /* ... */ }
+```cpp
+void f()
+{
+    // ...
+    try {
+            // ...
     }
+    catch (Base& b) { /* ... */ }
+    catch (Derived& d) { /* ... */ }
+    catch (...) { /* ... */ }
+    catch (std::exception& e){ /* ... */ }
+}
 
+```
 If `Derived`is derived from `Base` the `Derived`-handler will never be invoked.
 The "catch everything" handler ensured that the `std::exception`-handler will never be invoked.
 

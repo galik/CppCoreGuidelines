@@ -48,22 +48,26 @@ Your IDE (if you use one) may have strong opinions about suffices.
 
 ##### Example
 
-    // foo.h:
-    extern int a;   // a declaration
-    extern void foo();
+```cpp
+// foo.h:
+extern int a;   // a declaration
+extern void foo();
 
-    // foo.cpp:
-    int a;   // a definition
-    void foo() { ++a; }
+// foo.cpp:
+int a;   // a definition
+void foo() { ++a; }
 
+```
 `foo.h` provides the interface to `foo.cpp`. Global variables are best avoided.
 
 ##### Example, bad
 
-    // foo.h:
-    int a;   // a definition
-    void foo() { ++a; }
+```cpp
+// foo.h:
+int a;   // a definition
+void foo() { ++a; }
 
+```
 `#include <foo.h>` twice in a program and you get a linker error for two one-definition-rule violations.
 
 ##### Enforcement
@@ -79,20 +83,22 @@ Including entities subject to the one-definition rule leads to linkage errors.
 
 ##### Example
 
-    // file.h:
-    namespace Foo {
-        int x = 7;
-        int xx() { return x+x; }
-    }
+```cpp
+// file.h:
+namespace Foo {
+    int x = 7;
+    int xx() { return x+x; }
+}
 
-    // file1.cpp:
-    #include <file.h>
-    // ... more ...
+// file1.cpp:
+#include <file.h>
+// ... more ...
 
-     // file2.cpp:
-    #include <file.h>
-    // ... more ...
+ // file2.cpp:
+#include <file.h>
+// ... more ...
 
+```
 Linking `file1.cpp` and `file2.cpp` will give two linker errors.
 
 **Alternative formulation**: A `.h` file must contain only:
@@ -120,13 +126,15 @@ Maintainability. Readability.
 
 ##### Example, bad
 
-    // bar.cpp:
-    void bar() { cout << "bar\n"; }
+```cpp
+// bar.cpp:
+void bar() { cout << "bar\n"; }
 
-    // foo.cpp:
-    extern void bar();
-    void foo() { bar(); }
+// foo.cpp:
+extern void bar();
+void foo() { bar(); }
 
+```
 A maintainer of `bar` cannot find all declarations of `bar` if its type needs changing.
 The user of `bar` cannot know if the interface used is complete and correct. At best, error messages come (late) from the linker.
 
@@ -142,21 +150,25 @@ Minimize context dependencies and increase readability.
 
 ##### Example
 
-    #include <vector>
-    #include <algorithm>
-    #include <string>
+```cpp
+#include <vector>
+#include <algorithm>
+#include <string>
 
-    // ... my code here ...
+// ... my code here ...
 
+```
 ##### Example, bad
 
-    #include <vector>
+```cpp
+#include <vector>
 
-    // ... my code here ...
+// ... my code here ...
 
-    #include <algorithm>
-    #include <string>
+#include <algorithm>
+#include <string>
 
+```
 ##### Note
 
 This applies to both `.h` and `.cpp` files.
@@ -185,32 +197,36 @@ This enables the compiler to do an early consistency check.
 
 ##### Example, bad
 
-    // foo.h:
-    void foo(int);
-    int bar(long);
-    int foobar(int);
+```cpp
+// foo.h:
+void foo(int);
+int bar(long);
+int foobar(int);
 
-    // foo.cpp:
-    void foo(int) { /* ... */ }
-    int bar(double) { /* ... */ }
-    double foobar(int);
+// foo.cpp:
+void foo(int) { /* ... */ }
+int bar(double) { /* ... */ }
+double foobar(int);
 
+```
 The errors will not be caught until link time for a program calling `bar` or `foobar`.
 
 ##### Example
 
-    // foo.h:
-    void foo(int);
-    int bar(long);
-    int foobar(int);
+```cpp
+// foo.h:
+void foo(int);
+int bar(long);
+int foobar(int);
 
-    // foo.cpp:
-    #include <foo.h>
+// foo.cpp:
+#include <foo.h>
 
-    void foo(int) { /* ... */ }
-    int bar(double) { /* ... */ }
-    double foobar(int);   // error: wrong return type
+void foo(int) { /* ... */ }
+int bar(double) { /* ... */ }
+double foobar(int);   // error: wrong return type
 
+```
 The return-type error for `foobar` is now caught immediately when `foo.cpp` is compiled.
 The argument-type error for `bar` cannot be caught until link time because of the possibility of overloading, but systematic use of `.h` files increases the likelihood that it is caught earlier by the programmer.
 
@@ -228,16 +244,18 @@ The argument-type error for `bar` cannot be caught until link time because of th
 
 ##### Example
 
-    #include<string>
-    #include<vector>
-    #include<iostream>
-    #include<memory>
-    #include<algorithm>
+```cpp
+#include<string>
+#include<vector>
+#include<iostream>
+#include<memory>
+#include<algorithm>
 
-    using namespace std;
+using namespace std;
 
-    // ...
+// ...
 
+```
 Here (obviously), the standard library is used pervasively and apparently no other library is used, so requiring `std::` everywhere
 could be distracting.
 
@@ -245,16 +263,18 @@ could be distracting.
 
 The use of `using namespace std;` leaves the programmer open to a name clash with a name from the standard library
 
-    #include<cmath>
-    using namespace std;
+```cpp
+#include<cmath>
+using namespace std;
 
-    int g(int x)
-    {
-        int sqrt = 7;
-        // ...
-        return sqrt(x); // error
-    }
+int g(int x)
+{
+    int sqrt = 7;
+    // ...
+    return sqrt(x); // error
+}
 
+```
 However, this is not particularly likely to lead to a resolution that is not an error and
 people who use `using namespace std` are supposed to know about `std` and about this risk.
 
@@ -281,19 +301,21 @@ Doing so takes away an `#include`r's ability to effectively disambiguate and to 
 
 ##### Example
 
-    // bad.h
-    #include <iostream>
-    using namespace std; // bad
+```cpp
+// bad.h
+#include <iostream>
+using namespace std; // bad
 
-    // user.cpp
-    #include "bad.h"
-    
-    bool copy(/*... some parameters ...*/);    // some function that happens to be named copy
+// user.cpp
+#include "bad.h"
 
-    int main() {
-        copy(/*...*/);    // now overloads local ::copy and std::copy, could be ambiguous
-    }
+bool copy(/*... some parameters ...*/);    // some function that happens to be named copy
 
+int main() {
+    copy(/*...*/);    // now overloads local ::copy and std::copy, could be ambiguous
+}
+
+```
 ##### Enforcement
 
 Flag `using namespace` at global scope in a header file.
@@ -310,12 +332,14 @@ the header file is part of.
 
 ##### Example
 
-    // file foobar.h:
-    #ifndef LIBRARY_FOOBAR_H
-    #define LIBRARY_FOOBAR_H
-    // ... declarations ...
-    #endif // LIBRARY_FOOBAR_H
+```cpp
+// file foobar.h:
+#ifndef LIBRARY_FOOBAR_H
+#define LIBRARY_FOOBAR_H
+// ... declarations ...
+#endif // LIBRARY_FOOBAR_H
 
+```
 ##### Enforcement
 
 Flag `.h` files without `#include` guards.
@@ -340,15 +364,17 @@ Eliminate cycles; don't just break them with `#include` guards.
 
 ##### Example, bad
 
-    // file1.h:
-    #include "file2.h"
+```cpp
+// file1.h:
+#include "file2.h"
 
-    // file2.h:
-    #include "file3.h"
+// file2.h:
+#include "file3.h"
 
-    // file3.h:
-    #include "file1.h"
+// file3.h:
+#include "file1.h"
 
+```
 ##### Enforcement
 
 Flag all cycles.
@@ -364,19 +390,21 @@ Avoid accidentally becoming dependent on implementation details and logically se
 
 ##### Example
 
-    #include <iostream>
-    using namespace std;
+```cpp
+#include <iostream>
+using namespace std;
 
-    void use()                  // bad
-    {
-        string s;
-        cin >> s;               // fine
-        getline(cin, s);        // error: getline() not defined
-        if (s == "surprise") {  // error == not defined
-            // ...
-        }
+void use()                  // bad
+{
+    string s;
+    cin >> s;               // fine
+    getline(cin, s);        // error: getline() not defined
+    if (s == "surprise") {  // error == not defined
+        // ...
     }
+}
 
+```
 <iostream> exposes the definition of `std::string` ("why?" makes for a fun trivia question),
 but it is not required to do so by transitively including the entire `<string>` header,
 resulting in the popular beginner question "why doesn't `getline(cin,s);` work?"
@@ -384,38 +412,44 @@ or even an occasional "`string`s cannot be compared with `==`).
 
 The solution is to explicitly `#include<string>`:
 
-    #include <iostream>
-    #include <string>
-    using namespace std;
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
 
-    void use()
-    {
-        string s;
-        cin >> s;               // fine
-        getline(cin, s);        // fine
-        if (s == "surprise") {  // fine
-            // ...
-        }
+void use()
+{
+    string s;
+    cin >> s;               // fine
+    getline(cin, s);        // fine
+    if (s == "surprise") {  // fine
+        // ...
     }
+}
 
+```
 ##### Note
 
 Some headers exist exactly to collect a set of consistent declarations from a variety of headers.
 For example:
 
-    // basic_std_lib.h:
+```cpp
+// basic_std_lib.h:
 
-    #include <vector>
-    #include <string>
-    #include <map>
-    #include <iostream>
-    #include <random>
-    #include <vector>
+#include <vector>
+#include <string>
+#include <map>
+#include <iostream>
+#include <random>
+#include <vector>
 
+```
 a user can now get that set of declarations with a single `#include`"
 
-    #include "basic_std_lib.h"
+```cpp
+#include "basic_std_lib.h"
 
+```
 This rule against implicit inclusion is not meant to prevent such deliberate aggregation.
 
 ##### Enforcement
@@ -431,8 +465,10 @@ No really good solution is possible until we have modules.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -445,8 +481,10 @@ It is almost always a bug to mention an unnamed namespace in a header file.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 * Flag any use of an anonymous namespace in a header file.
@@ -462,8 +500,10 @@ Consider putting every definition in an implementation source file in an unnamed
 
 An API class and its members can't live in an unnamed namespace; but any "helper" class or function that is defined in an implementation source file should be at an unnamed namespace scope.
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 * ???

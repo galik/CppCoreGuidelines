@@ -122,35 +122,39 @@ Generality. Re-use. Efficiency. Encourages consistent definition of user types.
 
 Conceptually, the following requirements are wrong because what we want of `T` is more than just the very low-level concepts of "can be incremented" or "can be added":
 
-    template<typename T>
-        // requires Incrementable<T>
-    T sum1(vector<T>& v, T s)
-    {
-        for (auto x : v) s += x;
-        return s;
-    }
+```cpp
+template<typename T>
+    // requires Incrementable<T>
+T sum1(vector<T>& v, T s)
+{
+    for (auto x : v) s += x;
+    return s;
+}
 
-    template<typename T>
-        // requires Simple_number<T>
-    T sum2(vector<T>& v, T s)
-    {
-        for (auto x : v) s = s + x;
-        return s;
-    }
+template<typename T>
+    // requires Simple_number<T>
+T sum2(vector<T>& v, T s)
+{
+    for (auto x : v) s = s + x;
+    return s;
+}
 
+```
 Assuming that `Incrementable` does not support `+` and `Simple_number` does not support `+=`, we have overconstrained implementers of `sum1` and `sum2`.
 And, in this case, missed an opportunity for a generalization.
 
 ##### Example
 
-    template<typename T>
-        // requires Arithmetic<T>
-    T sum(vector<T>& v, T s)
-    {
-        for (auto x : v) s += x;
-        return s;
-    }
+```cpp
+template<typename T>
+    // requires Arithmetic<T>
+T sum(vector<T>& v, T s)
+{
+    for (auto x : v) s += x;
+    return s;
+}
 
+```
 Assuming that `Arithmetic` requires both `+` and `+=`, we have constrained the user of `sum` to provide a complete arithmetic type.
 That is not a minimal requirement, but it gives the implementer of algorithms much needed freedom and ensures that any `Arithmetic` type
 can be used for a wide variety of algorithms.
@@ -191,14 +195,16 @@ Generality. Minimizing the amount of source code. Interoperability. Re-use.
 
 That's the foundation of the STL. A single `find` algorithm easily works with any kind of input range:
 
-    template<typename Iter, typename Val>
-        // requires Input_iterator<Iter>
-        //       && Equality_comparable<Value_type<Iter>, Val>
-    Iter find(Iter b, Iter e, Val v)
-    {
-        // ...
-    }
+```cpp
+template<typename Iter, typename Val>
+    // requires Input_iterator<Iter>
+    //       && Equality_comparable<Value_type<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
 
+```
 ##### Note
 
 Don't use a template unless you have a realistic need for more than one template argument type.
@@ -217,28 +223,32 @@ It also avoids brittle or inefficient workarounds. Convention: That's the way th
 
 ##### Example
 
-    template<typename T>
-        // requires Regular<T>
-    class Vector {
-        // ...
-        T* elem;   // points to sz Ts
-        int sz;
-    };
+```cpp
+template<typename T>
+    // requires Regular<T>
+class Vector {
+    // ...
+    T* elem;   // points to sz Ts
+    int sz;
+};
 
-    Vector<double> v(10);
-    v[7] = 9.9;
+Vector<double> v(10);
+v[7] = 9.9;
 
+```
 ##### Example, bad
 
-    class Container {
-        // ...
-        void* elem;   // points to size elements of some type
-        int sz;
-    };
+```cpp
+class Container {
+    // ...
+    void* elem;   // points to size elements of some type
+    int sz;
+};
 
-    Container c(10, sizeof(double));
-    ((double*) c.elem)[] = 9.9;
+Container c(10, sizeof(double));
+((double*) c.elem)[] = 9.9;
 
+```
 This doesn't directly express the intent of the programmer and hides the structure of the program from the type system and optimizer.
 
 Hiding the `void*` behind macros simply obscures the problems and introduces new opportunities for confusion.
@@ -258,8 +268,10 @@ See [Stable base](12-T-Templates%20and%20generic%20programming.md#Rt-abi).
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 **Exceptions**: ???
 
 ### <a name="Rt-generic-oo"></a>T.5: Combine generic and OO techniques to amplify their strengths, not their costs
@@ -272,16 +284,18 @@ Generic and OO techniques are complementary.
 
 Static helps dynamic: Use static polymorphism to implement dynamically polymorphic interfaces.
 
-    class Command {
-        // pure virtual functions
-    };
+```cpp
+class Command {
+    // pure virtual functions
+};
 
-    // implementations
-    template</*...*/>
-    class ConcreteCommand : public Command {
-        // implement virtuals
-    };
+// implementations
+template</*...*/>
+class ConcreteCommand : public Command {
+    // implement virtuals
+};
 
+```
 ##### Example
 
 Dynamic helps static: Offer a generic, comfortable, statically bound interface, but internally dispatch dynamically, so you offer a uniform object layout.
@@ -344,23 +358,27 @@ Specifying concepts for template arguments is a powerful design tool.
 
 ##### Example
 
-    template<typename Iter, typename Val>
-    //    requires Input_iterator<Iter>
-    //             && Equality_comparable<Value_type<Iter>, Val>
-    Iter find(Iter b, Iter e, Val v)
-    {
-        // ...
-    }
+```cpp
+template<typename Iter, typename Val>
+//    requires Input_iterator<Iter>
+//             && Equality_comparable<Value_type<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
 
+```
 or equivalently and more succinctly:
 
-    template<Input_iterator Iter, typename Val>
-    //    requires Equality_comparable<Value_type<Iter>, Val>
-    Iter find(Iter b, Iter e, Val v)
-    {
-        // ...
-    }
+```cpp
+template<Input_iterator Iter, typename Val>
+//    requires Equality_comparable<Value_type<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
 
+```
 ##### Note
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
@@ -369,14 +387,16 @@ Currently (July 2016), concepts are supported only in GCC 6.1.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
 If you use GCC 6.1, you can uncomment them:
 
-    template<typename Iter, typename Val>
-        requires Input_iterator<Iter>
-               && Equality_comparable<Value_type<Iter>, Val>
-    Iter find(Iter b, Iter e, Val v)
-    {
-        // ...
-    }
+```cpp
+template<typename Iter, typename Val>
+    requires Input_iterator<Iter>
+           && Equality_comparable<Value_type<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
 
+```
 ##### Note
 
 Plain `typename` (or `auto`) is the least constraining concept.
@@ -402,18 +422,22 @@ Unless you are creating a new generic library, most of the concepts you need wil
 
 ##### Example (using TS concepts)
 
-    template<typename T>
-        // don't define this: Sortable is in the GSL
-    concept Ordered_container = Sequence<T> && Random_access<Iterator<T>> && Ordered<Value_type<T>>;
+```cpp
+template<typename T>
+    // don't define this: Sortable is in the GSL
+concept Ordered_container = Sequence<T> && Random_access<Iterator<T>> && Ordered<Value_type<T>>;
 
-    void sort(Ordered_container& s);
+void sort(Ordered_container& s);
 
+```
 This `Ordered_container` is quite plausible, but it is very similar to the `Sortable` concept in the GSL (and the Range TS).
 Is it better? Is it right? Does it accurately reflect the standard's requirements for `sort`?
 It is better and simpler just to use `Sortable`:
 
-    void sort(Sortable& s);   // better
+```cpp
+void sort(Sortable& s);   // better
 
+```
 ##### Note
 
 The set of "standard" concepts is evolving as we approach an ISO standard including concepts.
@@ -437,10 +461,12 @@ Hard.
 
 ##### Example (using TS concepts)
 
-    vector<string> v;
-    auto& x = v.front();     // bad
-    String& s = v.begin();   // good (String is a GSL concept)
+```cpp
+vector<string> v;
+auto& x = v.front();     // bad
+String& s = v.begin();   // good (String is a GSL concept)
 
+```
 ##### Enforcement
 
 * ???
@@ -455,15 +481,17 @@ Readability. Direct expression of an idea.
 
 To say "`T` is `Sortable`":
 
-    template<typename T>       // Correct but verbose: "The parameter is
-    //    requires Sortable<T>   // of type T which is the name of a type
-    void sort(T&);             // that is Sortable"
+```cpp
+template<typename T>       // Correct but verbose: "The parameter is
+//    requires Sortable<T>   // of type T which is the name of a type
+void sort(T&);             // that is Sortable"
 
-    template<Sortable T>       // Better (assuming support for concepts): "The parameter is of type T
-    void sort(T&);             // which is Sortable"
+template<Sortable T>       // Better (assuming support for concepts): "The parameter is of type T
+void sort(T&);             // which is Sortable"
 
-    void sort(Sortable&);      // Best (assuming support for concepts): "The parameter is Sortable"
+void sort(Sortable&);      // Best (assuming support for concepts): "The parameter is Sortable"
 
+```
 The shorter versions better match the way we speak. Note that many templates don't need to use the `template` keyword.
 
 ##### Note
@@ -499,23 +527,25 @@ and should be used only as building blocks for meaningful concepts, rather than 
 
 ##### Example, bad (using TS concepts)
 
-    template<typename T>
-    concept Addable = has_plus<T>;    // bad; insufficient
+```cpp
+template<typename T>
+concept Addable = has_plus<T>;    // bad; insufficient
 
-    template<Addable N> auto algo(const N& a, const N& b) // use two numbers
-    {
-        // ...
-        return a + b;
-    }
+template<Addable N> auto algo(const N& a, const N& b) // use two numbers
+{
+    // ...
+    return a + b;
+}
 
-    int x = 7;
-    int y = 9;
-    auto z = plus(x, y);   // z = 16
+int x = 7;
+int y = 9;
+auto z = plus(x, y);   // z = 16
 
-    string xx = "7";
-    string yy = "9";
-    auto zz = plus(xx, yy);   // zz = "79"
+string xx = "7";
+string yy = "9";
+auto zz = plus(xx, yy);   // zz = "79"
 
+```
 Maybe the concatenation was expected. More likely, it was an accident. Defining minus equivalently would give dramatically different sets of accepted types.
 This `Addable` violates the mathematical rule that addition is supposed to be commutative: `a+b == b+a`.
 
@@ -525,27 +555,29 @@ The ability to specify a meaningful semantics is a defining characteristic of a 
 
 ##### Example (using TS concepts)
 
-    template<typename T>
-    // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
-    concept Number = has_plus<T>
-                     && has_minus<T>
-                     && has_multiply<T>
-                     && has_divide<T>;
+```cpp
+template<typename T>
+// The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
+concept Number = has_plus<T>
+                 && has_minus<T>
+                 && has_multiply<T>
+                 && has_divide<T>;
 
-    template<Number N> auto algo(const N& a, const N& b) // use two numbers
-    {
-        // ...
-        return a + b;
-    }
+template<Number N> auto algo(const N& a, const N& b) // use two numbers
+{
+    // ...
+    return a + b;
+}
 
-    int x = 7;
-    int y = 9;
-    auto z = plus(x, y);   // z = 18
+int x = 7;
+int y = 9;
+auto z = plus(x, y);   // z = 18
 
-    string xx = "7";
-    string yy = "9";
-    auto zz = plus(xx, yy);   // error: string is not a Number
+string xx = "7";
+string yy = "9";
+auto zz = plus(xx, yy);   // error: string is not a Number
 
+```
 ##### Note
 
 Concepts with multiple operations have far lower chance of accidentally matching a type than a single-operation concept.
@@ -570,8 +602,10 @@ This is a specific variant of the general rule that [a concept must make semanti
 
 ##### Example, bad (using TS concepts)
 
-    template<typename T> concept Subtractable = requires(T a, T, b) { a-b; };
+```cpp
+template<typename T> concept Subtractable = requires(T a, T, b) { a-b; };
 
+```
 This makes no semantic sense.
 You need at least `+` to make `-` meaningful and useful.
 
@@ -585,28 +619,30 @@ Examples of complete sets are
 This rule applies whether we use direct language support for concepts or not.
 It is a general design rule that even applies to non-templates:
 
-    class Minimal {
-        // ...
-    };
+```cpp
+class Minimal {
+    // ...
+};
 
-    bool operator==(const Minimal&, const Minimal&);
-    bool operator<(const Minimal&, const Minimal&);
+bool operator==(const Minimal&, const Minimal&);
+bool operator<(const Minimal&, const Minimal&);
 
-    Minimal operator+(const Minimal&, const Minimal&);
-    // no other operators
+Minimal operator+(const Minimal&, const Minimal&);
+// no other operators
 
-    void f(const Minimal& x, const Minimal& y)
-    {
-        if (!(x == y) { /* ... */ }     // OK
-        if (x != y) { /* ... */ }       // surprise! error
+void f(const Minimal& x, const Minimal& y)
+{
+    if (!(x == y) { /* ... */ }     // OK
+    if (x != y) { /* ... */ }       // surprise! error
 
-        while (!(x < y)) { /* ... */ }  // OK
-        while (x >= y) { /* ... */ }    // surprise! error
+    while (!(x < y)) { /* ... */ }  // OK
+    while (x >= y) { /* ... */ }    // surprise! error
 
-        x = x + y;        // OK
-        x += y;             // surprise! error
-    }
+    x = x + y;        // OK
+    x += y;             // surprise! error
+}
 
+```
 This is minimal, but surprising and constraining for users.
 It could even be less efficient.
 
@@ -614,29 +650,31 @@ The rule supports the view that a concept should reflect a (mathematically) cohe
 
 ##### Example
 
-    class Convenient {
-        // ...
-    };
+```cpp
+class Convenient {
+    // ...
+};
 
-    bool operator==(const Convenient&, const Convenient&);
-    bool operator<(const Convenient&, const Convenient&);
-    // ... and the other comparison operators ...
+bool operator==(const Convenient&, const Convenient&);
+bool operator<(const Convenient&, const Convenient&);
+// ... and the other comparison operators ...
 
-    Minimal operator+(const Convenient&, const Convenient&);
-    // .. and the other arithmetic operators ...
+Minimal operator+(const Convenient&, const Convenient&);
+// .. and the other arithmetic operators ...
 
-    void f(const Convenient& x, const Convenient& y)
-    {
-        if (!(x == y) { /* ... */ }     // OK
-        if (x != y) { /* ... */ }       // OK
+void f(const Convenient& x, const Convenient& y)
+{
+    if (!(x == y) { /* ... */ }     // OK
+    if (x != y) { /* ... */ }       // OK
 
-        while (!(x < y)) { /* ... */ }  // OK
-        while (x >= y) { /* ... */ }    // OK
+    while (!(x < y)) { /* ... */ }  // OK
+    while (x >= y) { /* ... */ }    // OK
 
-        x = x + y;     // OK
-        x += y;      // OK
-    }
+    x = x + y;     // OK
+    x += y;      // OK
+}
 
+```
 It can be a nuisance to define all operators, but not hard.
 Ideally, that rule should be language supported by giving you comparison operators by default.
 
@@ -656,16 +694,18 @@ Specifying semantics is a powerful design tool.
 
 ##### Example (using TS concepts)
 
-    template<typename T>
-        // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
-        // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
-        concept Number = requires(T a, T b) {
-            {a + b} -> T;   // the result of a + b is convertible to T
-            {a - b} -> T;
-            {a * b} -> T;
-            {a / b} -> T;
-        }
+```cpp
+template<typename T>
+    // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
+    // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
+    concept Number = requires(T a, T b) {
+        {a + b} -> T;   // the result of a + b is convertible to T
+        {a - b} -> T;
+        {a * b} -> T;
+        {a / b} -> T;
+    }
 
+```
 ##### Note
 
 This is an axiom in the mathematical sense: something that may be assumed without proof.
@@ -689,13 +729,15 @@ Early versions of a new "concept" still under development will often just define
 Finding good semantics can take effort and time.
 An incomplete set of constraints can still be very useful:
 
-    // balancer for a generic binary tree
-    template<typename Node> concept bool Balancer = requires(Node* p) {
-        add_fixup(p);
-        touch(p);
-        detach(p);
-    }
+```cpp
+// balancer for a generic binary tree
+template<typename Node> concept bool Balancer = requires(Node* p) {
+    add_fixup(p);
+    touch(p);
+    detach(p);
+}
 
+```
 So a `Balancer` must supply at least thee operations on a tree `Node`,
 but we are not yet ready to specify detailed semantics because a new kind of balanced tree might require more operations
 and the precise general semantics for all nodes is hard to pin down in the early stages of design.
@@ -717,12 +759,14 @@ Otherwise they cannot be distinguished automatically by the compiler.
 
 ##### Example (using TS concepts)
 
-    template<typename I>
-    concept bool Input_iter = requires(I iter) { ++iter; };
+```cpp
+template<typename I>
+concept bool Input_iter = requires(I iter) { ++iter; };
 
-    template<typename I>
-    concept bool Fwd_iter = Input_iter<I> && requires(I iter) { iter++; }
+template<typename I>
+concept bool Fwd_iter = Input_iter<I> && requires(I iter) { iter++; }
 
+```
 The compiler can determine refinement based on the sets of required operations (here, suffix `++`).
 This decreases the burden on implementers of these types since
 they do not need any special declarations to "hook into the concept".
@@ -741,22 +785,26 @@ Two concepts requiring the same syntax but having different semantics leads to a
 
 ##### Example (using TS concepts)
 
-    template<typename I>    // iterator providing random access
-    concept bool RA_iter = ...;
+```cpp
+template<typename I>    // iterator providing random access
+concept bool RA_iter = ...;
 
-    template<typename I>    // iterator providing random access to contiguous data
-    concept bool Contiguous_iter =
-        RA_iter<I> && is_contiguous<I>::value;  // using is_contiguous trait
+template<typename I>    // iterator providing random access to contiguous data
+concept bool Contiguous_iter =
+    RA_iter<I> && is_contiguous<I>::value;  // using is_contiguous trait
 
+```
 The programmer (in a library) must define `is_contiguous` (a trait) appropriately.
 
 Wrapping a tag class into a concept leads to a simpler expression of this idea:
 
-    template<typename I> concept Contiguous = is_contiguous<I>::value;
+```cpp
+template<typename I> concept Contiguous = is_contiguous<I>::value;
 
-    template<typename I>
-    concept bool Contiguous_iter = RA_iter<I> && Contiguous<I>;
+template<typename I>
+concept bool Contiguous_iter = RA_iter<I> && Contiguous<I>;
 
+```
 The programmer (in a library) must define `is_contiguous` (a trait) appropriately.
 
 ##### Note
@@ -781,55 +829,65 @@ Functions with complementary requirements expressed using negation are brittle.
 
 Initially, people will try to define functions with complementary requirements:
 
-    template<typename T>
-        requires !C<T>    // bad
-    void f();
+```cpp
+template<typename T>
+    requires !C<T>    // bad
+void f();
 
-    template<typename T>
-        requires C<T>
-    void f();
+template<typename T>
+    requires C<T>
+void f();
 
+```
 This is better:
 
-    template<typename T>   // general template
-        void f();
-
-    template<typename T>   // specialization by concept
-        requires C<T>
+```cpp
+template<typename T>   // general template
     void f();
 
+template<typename T>   // specialization by concept
+    requires C<T>
+void f();
+
+```
 The compiler will choose the unconstrained template only when `C<T>` is
 unsatisfied. If you do not want to (or cannot) define an unconstrained
 version of `f()`, then delete it.
 
-    template<typename T>
-    void f() = delete;
+```cpp
+template<typename T>
+void f() = delete;
 
+```
 The compiler will select the overload and emit an appropriate error.
 
 ##### Note
 
 Complementary constraints are unfortunately common in `enable_if` code:
 
-    template<typename T>
-    enable_if<!C<T>, void>   // bad
-    f();
+```cpp
+template<typename T>
+enable_if<!C<T>, void>   // bad
+f();
 
-    template<typename T>
-    enable_if<C<T>, void>
-    f();
+template<typename T>
+enable_if<C<T>, void>
+f();
 
 
+```
 ##### Note
 
 Complementary requirements on one requirements is sometimes (wrongly) considered manageable.
 However, for two or more requirements the number of definitions needs can go up exponentially (2,4,9,16,...):
 
-    C1<T> && C2<T>
-    !C1<T> && C2<T>
-    C1<T> && !C2<T>
-    !C1<T> && !C2<T>
+```cpp
+C1<T> && C2<T>
+!C1<T> && C2<T>
+C1<T> && !C2<T>
+!C1<T> && !C2<T>
 
+```
 Now the opportunities for errors multiply.
 
 ##### Enforcement
@@ -847,18 +905,22 @@ Conversions are taken into account. You don't have to remember the names of all 
 
 You might be tempted to define a concept `Equality` like this:
 
-    template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
+```cpp
+template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
 
+```
 Obviously, it would be better and easier just to use the standard `EqualityComparable`,
 but - just as an example - if you had to define such a concept, prefer:
 
-    template<typename T> concept Equality = requires(T a, T b) {
-        bool == { a == b }
-        bool == { a != b }
-        // axiom { !(a == b) == (a != b) }
-        // axiom { a = b; => a == b }  // => means "implies"
-    }
+```cpp
+template<typename T> concept Equality = requires(T a, T b) {
+    bool == { a == b }
+    bool == { a != b }
+    // axiom { !(a == b) == (a != b) }
+    // axiom { a = b; => a == b }  // => means "implies"
+}
 
+```
 as opposed to defining two meaningless concepts `has_equal` and `has_not_equal` just as helpers in the definition of `Equality`.
 By "meaningless" we mean that we cannot specify the semantics of `has_equal` in isolation.
 
@@ -882,21 +944,25 @@ In general, passing function objects gives better performance than passing point
 
 ##### Example (using TS concepts)
 
-    bool greater(double x, double y) { return x > y; }
-    sort(v, greater);                                    // pointer to function: potentially slow
-    sort(v, [](double x, double y) { return x > y; });   // function object
-    sort(v, std::greater<>);                             // function object
+```cpp
+bool greater(double x, double y) { return x > y; }
+sort(v, greater);                                    // pointer to function: potentially slow
+sort(v, [](double x, double y) { return x > y; });   // function object
+sort(v, std::greater<>);                             // function object
 
-    bool greater_than_7(double x) { return x > 7; }
-    auto x = find_if(v, greater_than_7);                 // pointer to function: inflexible
-    auto y = find_if(v, [](double x) { return x > 7; }); // function object: carries the needed data
-    auto z = find_if(v, Greater_than<double>(7));        // function object: carries the needed data
+bool greater_than_7(double x) { return x > 7; }
+auto x = find_if(v, greater_than_7);                 // pointer to function: inflexible
+auto y = find_if(v, [](double x) { return x > 7; }); // function object: carries the needed data
+auto z = find_if(v, Greater_than<double>(7));        // function object: carries the needed data
 
+```
 You can, of course, generalize those functions using `auto` or (when and where available) concepts. For example:
 
-    auto y1 = find_if(v, [](Ordered x) { return x > 7; }); // require an ordered type
-    auto z1 = find_if(v, [](auto x) { return x > 7; });    // hope that the type has a >
+```cpp
+auto y1 = find_if(v, [](Ordered x) { return x > 7; }); // require an ordered type
+auto z1 = find_if(v, [](auto x) { return x > 7; });    // hope that the type has a >
 
+```
 ##### Note
 
 Lambdas generate function objects.
@@ -921,24 +987,28 @@ Keep interfaces simple and stable.
 
 Consider, a `sort` instrumented with (oversimplified) simple debug support:
 
-    void sort(Sortable& s)  // sort sequence s
-    {
-        if (debug) cerr << "enter sort( " << s <<  ")\n";
-        // ...
-        if (debug) cerr << "exit sort( " << s <<  ")\n";
-    }
+```cpp
+void sort(Sortable& s)  // sort sequence s
+{
+    if (debug) cerr << "enter sort( " << s <<  ")\n";
+    // ...
+    if (debug) cerr << "exit sort( " << s <<  ")\n";
+}
 
+```
 Should this be rewritten to:
 
-    template<Sortable S>
-        requires Streamable<S>
-    void sort(S& s)  // sort sequence s
-    {
-        if (debug) cerr << "enter sort( " << s <<  ")\n";
-        // ...
-        if (debug) cerr << "exit sort( " << s <<  ")\n";
-    }
+```cpp
+template<Sortable S>
+    requires Streamable<S>
+void sort(S& s)  // sort sequence s
+{
+    if (debug) cerr << "enter sort( " << s <<  ")\n";
+    // ...
+    if (debug) cerr << "exit sort( " << s <<  ")\n";
+}
 
+```
 After all, there is nothing in `Sortable` that requires `iostream` support.
 On the other hand, there is nothing in the fundamental idea of sorting that says anything about debugging.
 
@@ -977,39 +1047,45 @@ They can also be used to wrap a trait.
 
 ##### Example
 
-    template<typename T, size_t N>
-    class Matrix {
-        // ...
-        using Iterator = typename std::vector<T>::iterator;
-        // ...
-    };
+```cpp
+template<typename T, size_t N>
+class Matrix {
+    // ...
+    using Iterator = typename std::vector<T>::iterator;
+    // ...
+};
 
+```
 This saves the user of `Matrix` from having to know that its elements are stored in a `vector` and also saves the user from repeatedly typing `typename std::vector<T>::`.
 
 ##### Example
 
-    template<typename T>
-    void user(T& c)
-    {
-        // ...
-        typename container_traits<T>::value_type x; // bad, verbose
-        // ...
-    }
+```cpp
+template<typename T>
+void user(T& c)
+{
+    // ...
+    typename container_traits<T>::value_type x; // bad, verbose
+    // ...
+}
 
-    template<typename T>
-    using Value_type = typename container_traits<T>::value_type;
+template<typename T>
+using Value_type = typename container_traits<T>::value_type;
 
 
+```
 This saves the user of `Value_type` from having to know the technique used to implement `value_type`s.
 
-    template<typename T>
-    void user2(T& c)
-    {
-        // ...
-        Value_type<T> x;
-        // ...
-    }
+```cpp
+template<typename T>
+void user2(T& c)
+{
+    // ...
+    Value_type<T> x;
+    // ...
+}
 
+```
 ##### Note
 
 A simple, common use could be expressed: "Wrap traits!"
@@ -1029,16 +1105,18 @@ Uniformity: `using` is syntactically similar to `auto`.
 
 ##### Example
 
-    typedef int (*PFI)(int);   // OK, but convoluted
+```cpp
+typedef int (*PFI)(int);   // OK, but convoluted
 
-    using PFI2 = int (*)(int);   // OK, preferred
+using PFI2 = int (*)(int);   // OK, preferred
 
-    template<typename T>
-    typedef int (*PFT)(T);      // error
+template<typename T>
+typedef int (*PFT)(T);      // error
 
-    template<typename T>
-    using PFT2 = int (*)(T);   // OK
+template<typename T>
+using PFT2 = int (*)(T);   // OK
 
+```
 ##### Enforcement
 
 * Flag uses of `typedef`. This will give a lot of "hits" :-(
@@ -1051,9 +1129,11 @@ Writing the template argument types explicitly can be tedious and unnecessarily 
 
 ##### Example
 
-    tuple<int, string, double> t1 = {1, "Hamlet", 3.14};   // explicit type
-    auto t2 = make_tuple(1, "Ophelia"s, 3.14);         // better; deduced type
+```cpp
+tuple<int, string, double> t1 = {1, "Hamlet", 3.14};   // explicit type
+auto t2 = make_tuple(1, "Ophelia"s, 3.14);         // better; deduced type
 
+```
 Note the use of the `s` suffix to ensure that the string is a `std::string`, rather than a C-style string.
 
 ##### Note
@@ -1064,17 +1144,21 @@ Since you can trivially write a `make_T` function, so could the compiler. Thus, 
 
 Sometimes there isn't a good way of getting the template arguments deduced and sometimes, you want to specify the arguments explicitly:
 
-    vector<double> v = { 1, 2, 3, 7.9, 15.99 };
-    list<Record*> lst;
+```cpp
+vector<double> v = { 1, 2, 3, 7.9, 15.99 };
+list<Record*> lst;
 
+```
 ##### Note
 
 Note that C++17 will make this rule redundant by allowing the template arguments to be deduced directly from constructor arguments:
 [Template parameter deduction for constructors (Rev. 3)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0091r1.html).
 For example:
 
-    tuple t1 = {1, "Hamlet"s, 3.14}; // deduced: tuple<int, string, double>
+```cpp
+tuple t1 = {1, "Hamlet"s, 3.14}; // deduced: tuple<int, string, double>
 
+```
 ##### Enforcement
 
 Flag uses where an explicitly specialized type exactly matches the types of the arguments used.
@@ -1089,22 +1173,24 @@ Flag uses where an explicitly specialized type exactly matches the types of the 
 
 ##### Example
 
-    class X {
-            // ...
-    public:
-        explicit X(int);
-        X(const X&);            // copy
-        X operator=(const X&);
-        X(X&&);                 // move
-        X& operator=(X&&);
-        ~X();
-        // ... no more constructors ...
-    };
+```cpp
+class X {
+        // ...
+public:
+    explicit X(int);
+    X(const X&);            // copy
+    X operator=(const X&);
+    X(X&&);                 // move
+    X& operator=(X&&);
+    ~X();
+    // ... no more constructors ...
+};
 
-    X x {1};    // fine
-    X y = x;      // fine
-    std::vector<X> v(10); // error: no default constructor
+X x {1};    // fine
+X y = x;      // fine
+std::vector<X> v(10); // error: no default constructor
 
+```
 ##### Note
 
 Semiregular requires default constructible.
@@ -1123,24 +1209,26 @@ Semiregular requires default constructible.
 
 ##### Example
 
-    namespace Bad {
-        struct S { int m; };
-        template<typename T1, typename T2>
-        bool operator==(T1, T2) { cout << "Bad\n"; return true; }
+```cpp
+namespace Bad {
+    struct S { int m; };
+    template<typename T1, typename T2>
+    bool operator==(T1, T2) { cout << "Bad\n"; return true; }
+}
+
+namespace T0 {
+    bool operator==(int, Bad::S) { cout << "T0\n"; return true; }  // compare to int
+
+    void test()
+    {
+        Bad::S bad{ 1 };
+        vector<int> v(10);
+        bool b = 1 == bad;
+        bool b2 = v.size() == bad;
     }
+}
 
-    namespace T0 {
-        bool operator==(int, Bad::S) { cout << "T0\n"; return true; }  // compare to int
-
-        void test()
-        {
-            Bad::S bad{ 1 };
-            vector<int> v(10);
-            bool b = 1 == bad;
-            bool b2 = v.size() == bad;
-        }
-    }
-
+```
 This prints `T0` and `Bad`.
 
 Now the `==` in `Bad` was designed to cause trouble, but would you have spotted the problem in real code?
@@ -1175,8 +1263,10 @@ Because that's the best we can do without direct concept support.
 
 ##### Example
 
-    enable_if<???>
+```cpp
+enable_if<???>
 
+```
 ##### Note
 
 Beware of [complementary constraints](# T.25).
@@ -1194,8 +1284,10 @@ Type erasure incurs an extra level of indirection by hiding type information beh
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 **Exceptions**: Type erasure is sometimes appropriate, such as for `std::function`.
 
 ##### Enforcement
@@ -1222,22 +1314,24 @@ Eases tool creation.
 
 ##### Example
 
-    template<typename C>
-    void sort(C& c)
-    {
-        std::sort(begin(c), end(c)); // necessary and useful dependency
-    }
+```cpp
+template<typename C>
+void sort(C& c)
+{
+    std::sort(begin(c), end(c)); // necessary and useful dependency
+}
 
-    template<typename Iter>
-    Iter algo(Iter first, Iter last) {
-        for (; first != last; ++first) {
-            auto x = sqrt(*first); // potentially surprising dependency: which sqrt()?
-            helper(first, x);      // potentially surprising dependency:
-                                   // helper is chosen based on first and x
-            TT var = 7;            // potentially surprising dependency: which TT?
-        }
+template<typename Iter>
+Iter algo(Iter first, Iter last) {
+    for (; first != last; ++first) {
+        auto x = sqrt(*first); // potentially surprising dependency: which sqrt()?
+        helper(first, x);      // potentially surprising dependency:
+                               // helper is chosen based on first and x
+        TT var = 7;            // potentially surprising dependency: which TT?
     }
+}
 
+```
 ##### Note
 
 Templates typically appear in header files so their context dependencies are more vulnerable to `#include` order dependencies than functions in `.cpp` files.
@@ -1262,57 +1356,61 @@ This limits use and typically increases code size.
 
 ##### Example, bad
 
-    template<typename T, typename A = std::allocator{}>
-        // requires Regular<T> && Allocator<A>
-    class List {
-    public:
-        struct Link {   // does not depend on A
-            T elem;
-            T* pre;
-            T* suc;
-        };
-
-        using iterator = Link*;
-
-        iterator first() const { return head; }
-
-        // ...
-    private:
-        Link* head;
-    };
-
-    List<int> lst1;
-    List<int, My_allocator> lst2;
-
-    ???
-
-This looks innocent enough, but ???
-
-    template<typename T>
-    struct Link {
+```cpp
+template<typename T, typename A = std::allocator{}>
+    // requires Regular<T> && Allocator<A>
+class List {
+public:
+    struct Link {   // does not depend on A
         T elem;
         T* pre;
         T* suc;
     };
 
-    template<typename T, typename A = std::allocator{}>
-        // requires Regular<T> && Allocator<A>
-    class List2 {
-    public:
-        using iterator = Link<T>*;
+    using iterator = Link*;
 
-        iterator first() const { return head; }
+    iterator first() const { return head; }
 
-        // ...
-    private:
-        Link* head;
-    };
+    // ...
+private:
+    Link* head;
+};
 
-    List<int> lst1;
-    List<int, My_allocator> lst2;
+List<int> lst1;
+List<int, My_allocator> lst2;
 
-    ???
+???
 
+```
+This looks innocent enough, but ???
+
+```cpp
+template<typename T>
+struct Link {
+    T elem;
+    T* pre;
+    T* suc;
+};
+
+template<typename T, typename A = std::allocator{}>
+    // requires Regular<T> && Allocator<A>
+class List2 {
+public:
+    using iterator = Link<T>*;
+
+    iterator first() const { return head; }
+
+    // ...
+private:
+    Link* head;
+};
+
+List<int> lst1;
+List<int, My_allocator> lst2;
+
+???
+
+```
 ##### Enforcement
 
 * Flag member types that do not depend on every template argument
@@ -1326,26 +1424,30 @@ This looks innocent enough, but ???
 
 ##### Example
 
-    template<typename T>
-    class Foo {
-    public:
-        enum { v1, v2 };
-        // ...
-    };
+```cpp
+template<typename T>
+class Foo {
+public:
+    enum { v1, v2 };
+    // ...
+};
 
+```
 ???
 
-    struct Foo_base {
-        enum { v1, v2 };
-        // ...
-    };
+```cpp
+struct Foo_base {
+    enum { v1, v2 };
+    // ...
+};
 
-    template<typename T>
-    class Foo : public Foo_base {
-    public:
-        // ...
-    };
+template<typename T>
+class Foo : public Foo_base {
+public:
+    // ...
+};
 
+```
 ##### Note
 
 A more general version of this rule would be
@@ -1367,10 +1469,12 @@ Specialization offers a powerful mechanism for providing alternative implementat
 
 ##### Example
 
-    ??? string specialization (==)
+```cpp
+??? string specialization (==)
 
-    ??? representation specialization ?
+??? representation specialization ?
 
+```
 ##### Note
 
 ???
@@ -1391,56 +1495,60 @@ Specialization offers a powerful mechanism for providing alternative implementat
 
 This is a simplified version of `std::copy` (ignoring the possibility of non-contiguous sequences)
 
-    struct pod_tag {};
-    struct non_pod_tag {};
+```cpp
+struct pod_tag {};
+struct non_pod_tag {};
 
-    template<class T> struct copy_trait { using tag = non_pod_tag; };   // T is not "plain old data"
+template<class T> struct copy_trait { using tag = non_pod_tag; };   // T is not "plain old data"
 
-    template<> struct copy_trait<int> { using tag = pod_tag; };         // int is "plain old data"
+template<> struct copy_trait<int> { using tag = pod_tag; };         // int is "plain old data"
 
-    template<class Iter>
-    Out copy_helper(Iter first, Iter last, Iter out, pod_tag)
-    {
-        // use memmove
-    }
+template<class Iter>
+Out copy_helper(Iter first, Iter last, Iter out, pod_tag)
+{
+    // use memmove
+}
 
-    template<class Iter>
-    Out copy_helper(Iter first, Iter last, Iter out, non_pod_tag)
-    {
-        // use loop calling copy constructors
-    }
+template<class Iter>
+Out copy_helper(Iter first, Iter last, Iter out, non_pod_tag)
+{
+    // use loop calling copy constructors
+}
 
-    template<class Itert>
-    Out copy(Iter first, Iter last, Iter out)
-    {
-        return copy_helper(first, last, out, typename copy_trait<Iter>::tag{})
-    }
+template<class Itert>
+Out copy(Iter first, Iter last, Iter out)
+{
+    return copy_helper(first, last, out, typename copy_trait<Iter>::tag{})
+}
 
-    void use(vector<int>& vi, vector<int>& vi2, vector<string>& vs, vector<string>& vs2)
-    {
-        copy(vi.begin(), vi.end(), vi2.begin()); // uses memmove
-        copy(vs.begin(), vs.end(), vs2.begin()); // uses a loop calling copy constructors
-    }
+void use(vector<int>& vi, vector<int>& vi2, vector<string>& vs, vector<string>& vs2)
+{
+    copy(vi.begin(), vi.end(), vi2.begin()); // uses memmove
+    copy(vs.begin(), vs.end(), vs2.begin()); // uses a loop calling copy constructors
+}
 
+```
 This is a general and powerful technique for compile-time algorithm selection.
 
 ##### Note
 
 When `concept`s become widely available such alternatives can be distinguished directly:
 
-    template<class Iter>
-        requires Pod<Value_type<iter>>
-    Out copy_helper(In, first, In last, Out out)
-    {
-        // use memmove
-    }
+```cpp
+template<class Iter>
+    requires Pod<Value_type<iter>>
+Out copy_helper(In, first, In last, Out out)
+{
+    // use memmove
+}
 
-    template<class Iter>
-    Out copy_helper(In, first, In last, Out out)
-    {
-        // use loop calling copy constructors
-    }
+template<class Iter>
+Out copy_helper(In, first, In last, Out out)
+{
+    // use loop calling copy constructors
+}
 
+```
 ##### Enforcement
 
 ???
@@ -1454,8 +1562,10 @@ When `concept`s become widely available such alternatives can be distinguished d
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -1468,16 +1578,18 @@ When `concept`s become widely available such alternatives can be distinguished d
 
 ##### Example
 
-    template<typename T, typename U>
-    void f(T t, U u)
-    {
-        T v1(x);    // is v1 a function of a variable?
-        T v2 {x};   // variable
-        auto x = T(u);  // construction or cast?
-    }
+```cpp
+template<typename T, typename U>
+void f(T t, U u)
+{
+    T v1(x);    // is v1 a function of a variable?
+    T v2 {x};   // variable
+    auto x = T(u);  // construction or cast?
+}
 
-    f(1, "asdf"); // bad: cast from const char* to int
+f(1, "asdf"); // bad: cast from const char* to int
 
+```
 ##### Enforcement
 
 * flag `()` initializers
@@ -1495,28 +1607,30 @@ When `concept`s become widely available such alternatives can be distinguished d
 
 There are three major ways to let calling code customize a template.
 
-    template<class T>
-        // Call a member function
-    void test1(T t)
-    {
-        t.f();    // require T to provide f()
-    }
+```cpp
+template<class T>
+    // Call a member function
+void test1(T t)
+{
+    t.f();    // require T to provide f()
+}
 
-    template<class T>
-    void test2(T t)
-        // Call a nonmember function without qualification
-    {
-        f(t);  // require f(/*T*/) be available in caller's scope or in T's namespace
-    }
+template<class T>
+void test2(T t)
+    // Call a nonmember function without qualification
+{
+    f(t);  // require f(/*T*/) be available in caller's scope or in T's namespace
+}
 
-    template<class T>
-    void test3(T t)
-        // Invoke a "trait"
-    {
-        test_traits<T>::f(t); // require customizing test_traits<>
-                              // to get non-default functions/types
-    }
+template<class T>
+void test3(T t)
+    // Invoke a "trait"
+{
+    test_traits<T>::f(t); // require customizing test_traits<>
+                          // to get non-default functions/types
+}
 
+```
 A trait is usually a type alias to compute a type,
 a `constexpr` function to compute a value,
 or a traditional traits template to be specialized on the user's type.
@@ -1548,23 +1662,25 @@ Templating a class hierarchy that has many functions, especially many virtual fu
 
 ##### Example, bad
 
-    template<typename T>
-    struct Container {         // an interface
-        virtual T* get(int i);
-        virtual T* first();
-        virtual T* next();
-        virtual void sort();
-    };
+```cpp
+template<typename T>
+struct Container {         // an interface
+    virtual T* get(int i);
+    virtual T* first();
+    virtual T* next();
+    virtual void sort();
+};
 
-    template<typename T>
-    class Vector : public Container<T> {
-    public:
-        // ...
-    };
+template<typename T>
+class Vector : public Container<T> {
+public:
+    // ...
+};
 
-    vector<int> vi;
-    vector<string> vs;
+vector<int> vi;
+vector<string> vs;
 
+```
 It is probably a dumb idea to define a `sort` as a member function of a container, but it is not unheard of and it makes a good example of what not to do.
 
 Given this, the compiler cannot know if `vector<int>::sort()` is called, so it must generate code for it.
@@ -1591,18 +1707,20 @@ An array of derived classes can implicitly "decay" to a pointer to a base class 
 
 Assume that `Apple` and `Pear` are two kinds of `Fruit`s.
 
-    void maul(Fruit* p)
-    {
-        *p = Pear{};     // put a Pear into *p
-        p[1] = Pear{};   // put a Pear into p[2]
-    }
+```cpp
+void maul(Fruit* p)
+{
+    *p = Pear{};     // put a Pear into *p
+    p[1] = Pear{};   // put a Pear into p[2]
+}
 
-    Apple aa [] = { an_apple, another_apple };   // aa contains Apples (obviously!)
+Apple aa [] = { an_apple, another_apple };   // aa contains Apples (obviously!)
 
-    maul(aa);
-    Apple& a0 = &aa[0];   // a Pear?
-    Apple& a1 = &aa[1];   // a Pear?
+maul(aa);
+Apple& a0 = &aa[0];   // a Pear?
+Apple& a1 = &aa[1];   // a Pear?
 
+```
 Probably, `aa[0]` will be a `Pear` (without the use of a cast!).
 If `sizeof(Apple) != sizeof(Pear)` the access to `aa[1]` will not be aligned to the proper start of an object in the array.
 We have a type violation and possibly (probably) a memory corruption.
@@ -1612,18 +1730,20 @@ Note that `maul()` violates the a `T*` points to an individual object [Rule](#??
 
 **Alternative**: Use a proper (templatized) container:
 
-    void maul2(Fruit* p)
-    {
-        *p = Pear{};   // put a Pear into *p
-    }
+```cpp
+void maul2(Fruit* p)
+{
+    *p = Pear{};   // put a Pear into *p
+}
 
-    vector<Apple> va = { an_apple, another_apple };   // va contains Apples (obviously!)
+vector<Apple> va = { an_apple, another_apple };   // va contains Apples (obviously!)
 
-    maul2(va);       // error: cannot convert a vector<Apple> to a Fruit*
-    maul2(&va[0]);   // you asked for it
+maul2(va);       // error: cannot convert a vector<Apple> to a Fruit*
+maul2(&va[0]);   // you asked for it
 
-    Apple& a0 = &va[0];   // a Pear?
+Apple& a0 = &va[0];   // a Pear?
 
+```
 Note that the assignment in `maul2()` violated the no-slicing [Rule](#???).
 
 ##### Enforcement
@@ -1638,8 +1758,10 @@ Note that the assignment in `maul2()` violated the no-slicing [Rule](#???).
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -1654,12 +1776,14 @@ And in general, implementations must deal with dynamic linking.
 
 ##### Example, don't
 
-    class Shape {
-        // ...
-        template<class T>
-        virtual bool intersect(T* p);   // error: template cannot be virtual
-    };
+```cpp
+class Shape {
+    // ...
+    template<class T>
+    virtual bool intersect(T* p);   // error: template cannot be virtual
+};
 
+```
 ##### Note
 
 We need a rule because people keep asking about this
@@ -1683,34 +1807,36 @@ Avoid code bloat.
 
 It could be a base class:
 
-    struct Link_base {   // stable
-        Link_base* suc;
-        Link_base* pre;
-    };
+```cpp
+struct Link_base {   // stable
+    Link_base* suc;
+    Link_base* pre;
+};
 
-    template<typename T>   // templated wrapper to add type safety
-    struct Link : Link_base {
-        T val;
-    };
+template<typename T>   // templated wrapper to add type safety
+struct Link : Link_base {
+    T val;
+};
 
-    struct List_base {
-        Link_base* first;   // first element (if any)
-        int sz;             // number of elements
-        void add_front(Link_base* p);
-        // ...
-    };
+struct List_base {
+    Link_base* first;   // first element (if any)
+    int sz;             // number of elements
+    void add_front(Link_base* p);
+    // ...
+};
 
-    template<typename T>
-    class List : List_base {
-    public:
-        void put_front(const T& e) { add_front(new Link<T>{e}); }   // implicit cast to Link_base
-        T& front() { static_cast<Link<T>*>(first).val; }   // explicit cast back to Link<T>
-        // ...
-    };
+template<typename T>
+class List : List_base {
+public:
+    void put_front(const T& e) { add_front(new Link<T>{e}); }   // implicit cast to Link_base
+    T& front() { static_cast<Link<T>*>(first).val; }   // explicit cast back to Link<T>
+    // ...
+};
 
-    List<int> li;
-    List<string> ls;
+List<int> li;
+List<string> ls;
 
+```
 Now there is only one copy of the operations linking and unlinking elements of a `List`.
 The `Link` and `List` classes do nothing but type manipulation.
 
@@ -1734,8 +1860,10 @@ Variadic templates is the most general mechanism for that, and is both efficient
 
 ##### Example
 
-    ??? printf
+```cpp
+??? printf
 
+```
 ##### Enforcement
 
 * Flag uses of `va_arg` in user code.
@@ -1748,8 +1876,10 @@ Variadic templates is the most general mechanism for that, and is both efficient
 
 ##### Example
 
-    ??? beware of move-only and reference arguments
+```cpp
+??? beware of move-only and reference arguments
 
+```
 ##### Enforcement
 
 ???
@@ -1762,8 +1892,10 @@ Variadic templates is the most general mechanism for that, and is both efficient
 
 ##### Example
 
-    ??? forwarding, type checking, references
+```cpp
+??? forwarding, type checking, references
 
+```
 ##### Enforcement
 
 ???
@@ -1776,8 +1908,10 @@ There are more precise ways of specifying a homogeneous sequence, such as an `in
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -1801,18 +1935,24 @@ For example, if you really need AST manipulation at compile time (e.g., for opti
 
 ##### Example, bad
 
-    ???
+```cpp
+???
 
+```
 ##### Example, bad
 
-    enable_if
+```cpp
+enable_if
 
+```
 Instead, use concepts. But see [How to emulate concepts if you don't have language support](12-T-Templates%20and%20generic%20programming.md#Rt-emulate).
 
 ##### Example
 
-    ??? good
+```cpp
+??? good
 
+```
 **Alternative**: If the result is a value, rather than a type, use a [`constexpr` function](12-T-Templates%20and%20generic%20programming.md#Rt-fct).
 
 ##### Note
@@ -1828,22 +1968,26 @@ Use cases that require concepts (e.g. overloading based on concepts) are among t
 
 ##### Example
 
-    template<typename Iter>
-        /*requires*/ enable_if<random_access_iterator<Iter>, void>
-    advance(Iter p, int n) { p += n; }
+```cpp
+template<typename Iter>
+    /*requires*/ enable_if<random_access_iterator<Iter>, void>
+advance(Iter p, int n) { p += n; }
 
-    template<typename Iter>
-        /*requires*/ enable_if<forward_iterator<Iter>, void>
-    advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
+template<typename Iter>
+    /*requires*/ enable_if<forward_iterator<Iter>, void>
+advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
 
+```
 ##### Note
 
 Such code is much simpler using concepts:
 
-    void advance(RandomAccessIterator p, int n) { p += n; }
+```cpp
+void advance(RandomAccessIterator p, int n) { p += n; }
 
-    void advance(ForwardIterator p, int n) { assert(n >= 0); while (n--) ++p;}
+void advance(ForwardIterator p, int n) { assert(n >= 0); while (n--) ++p;}
 
+```
 ##### Enforcement
 
 ???
@@ -1860,8 +2004,10 @@ Template metaprogramming is the only directly supported and half-way principled 
 
 ##### Example
 
-    ??? big object / small object optimization
+```cpp
+??? big object / small object optimization
 
+```
 ##### Enforcement
 
 ???
@@ -1879,17 +2025,19 @@ Often a `constexpr` function implies less compile-time overhead than alternative
 
 ##### Example
 
-    template<typename T>
-        // requires Number<T>
-    constexpr T pow(T v, int n)   // power/exponential
-    {
-        T res = 1;
-        while (n--) res *= v;
-        return res;
-    }
+```cpp
+template<typename T>
+    // requires Number<T>
+constexpr T pow(T v, int n)   // power/exponential
+{
+    T res = 1;
+    while (n--) res *= v;
+    return res;
+}
 
-    constexpr auto f7 = pow(pi, 7);
+constexpr auto f7 = pow(pi, 7);
 
+```
 ##### Enforcement
 
 * Flag template metaprograms yielding a value. These should be replaced with `constexpr` functions.
@@ -1902,8 +2050,10 @@ Facilities defined in the standard, such as `conditional`, `enable_if`, and `tup
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -1917,8 +2067,10 @@ Write your own "advanced TMP support" only if you really have to.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -1933,49 +2085,55 @@ Documentation, readability, opportunity for reuse.
 
 ##### Example
 
-    struct Rec {
-        string name;
-        string addr;
-        int id;         // unique identifier
-    };
+```cpp
+struct Rec {
+    string name;
+    string addr;
+    int id;         // unique identifier
+};
 
-    bool same(const Rec& a, const Rec& b)
-    {
-        return a.id == b.id;
-    }
+bool same(const Rec& a, const Rec& b)
+{
+    return a.id == b.id;
+}
 
-    vector<Rec*> find_id(const string& name);    // find all records for "name"
+vector<Rec*> find_id(const string& name);    // find all records for "name"
 
-    auto x = find_if(vr.begin(), vr.end(),
-        [&](Rec& r) {
-            if (r.name.size() != n.size()) return false; // name to compare to is in n
-            for (int i = 0; i < r.name.size(); ++i)
-                if (tolower(r.name[i]) != tolower(n[i])) return false;
-            return true;
-        }
-    );
-
-There is a useful function lurking here (case insensitive string comparison), as there often is when lambda arguments get large.
-
-    bool compare_insensitive(const string& a, const string& b)
-    {
-        if (a.size() != b.size()) return false;
-        for (int i = 0; i < a.size(); ++i) if (tolower(a[i]) != tolower(b[i])) return false;
+auto x = find_if(vr.begin(), vr.end(),
+    [&](Rec& r) {
+        if (r.name.size() != n.size()) return false; // name to compare to is in n
+        for (int i = 0; i < r.name.size(); ++i)
+            if (tolower(r.name[i]) != tolower(n[i])) return false;
         return true;
     }
+);
 
-    auto x = find_if(vr.begin(), vr.end(),
-        [&](Rec& r) { compare_insensitive(r.name, n); }
-    );
+```
+There is a useful function lurking here (case insensitive string comparison), as there often is when lambda arguments get large.
 
+```cpp
+bool compare_insensitive(const string& a, const string& b)
+{
+    if (a.size() != b.size()) return false;
+    for (int i = 0; i < a.size(); ++i) if (tolower(a[i]) != tolower(b[i])) return false;
+    return true;
+}
+
+auto x = find_if(vr.begin(), vr.end(),
+    [&](Rec& r) { compare_insensitive(r.name, n); }
+);
+
+```
 Or maybe (if you prefer to avoid the implicit name binding to n):
 
-    auto cmp_to_n = [&n](const string& a) { return compare_insensitive(a, n); };
+```cpp
+auto cmp_to_n = [&n](const string& a) { return compare_insensitive(a, n); };
 
-    auto x = find_if(vr.begin(), vr.end(),
-        [](const Rec& r) { return cmp_to_n(r.name); }
-    );
+auto x = find_if(vr.begin(), vr.end(),
+    [](const Rec& r) { return cmp_to_n(r.name); }
+);
 
+```
 ##### Note
 
 whether functions, lambdas, or operators.
@@ -1998,10 +2156,12 @@ That makes the code concise and gives better locality than alternatives.
 
 ##### Example
 
-    auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
-                                        [](const User &a) { return a.id > 100; });
+```cpp
+auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
+                                    [](const User &a) { return a.id > 100; });
 
 
+```
 ##### Exception
 
 Naming a lambda can be useful for clarity even if it is used only once.
@@ -2018,8 +2178,10 @@ Improved readability.
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 ##### Enforcement
 
 ???
@@ -2034,50 +2196,54 @@ Generality. Reusability. Don't gratuitously commit to details; use the most gene
 
 Use `!=` instead of `<` to compare iterators; `!=` works for more objects because it doesn't rely on ordering.
 
-    for (auto i = first; i < last; ++i) {   // less generic
-        // ...
-    }
+```cpp
+for (auto i = first; i < last; ++i) {   // less generic
+    // ...
+}
 
-    for (auto i = first; i != last; ++i) {   // good; more generic
-        // ...
-    }
+for (auto i = first; i != last; ++i) {   // good; more generic
+    // ...
+}
 
+```
 Of course, range-`for` is better still where it does what you want.
 
 ##### Example
 
 Use the least-derived class that has the functionality you need.
 
-    class Base {
-    public:
-        Bar f();
-        Bar g();
-    };
+```cpp
+class Base {
+public:
+    Bar f();
+    Bar g();
+};
 
-    class Derived1 : public Base {
-    public:
-        Bar h();
-    };
+class Derived1 : public Base {
+public:
+    Bar h();
+};
 
-    class Derived2 : public Base {
-    public:
-        Bar j();
-    };
+class Derived2 : public Base {
+public:
+    Bar j();
+};
 
-    // bad, unless there is a specific reason for limiting to Derived1 objects only
-    void my_func(Derived1& param)
-    {
-        use(param.f());
-        use(param.g());
-    }
+// bad, unless there is a specific reason for limiting to Derived1 objects only
+void my_func(Derived1& param)
+{
+    use(param.f());
+    use(param.g());
+}
 
-    // good, uses only Base interface so only commit to that
-    void my_func(Base& param)
-    {
-        use(param.f());
-        use(param.g());
-    }
+// good, uses only Base interface so only commit to that
+void my_func(Base& param)
+{
+    use(param.f());
+    use(param.g());
+}
 
+```
 ##### Enforcement
 
 * Flag comparison of iterators using `<` instead of `!=`.
@@ -2092,8 +2258,10 @@ You can't partially specialize a function template per language rules. You can f
 
 ##### Example
 
-    ???
+```cpp
+???
 
+```
 **Exceptions**: If you do have a valid reason to specialize a function template, just write a single function template that delegates to a class template, then specialize the class template (including the ability to write partial specializations).
 
 ##### Enforcement
@@ -2109,20 +2277,24 @@ If you intend for a class to match a concept, verifying that early saves users p
 
 ##### Example
 
-    class X {
-        X() = delete;
-        X(const X&) = default;
-        X(X&&) = default;
-        X& operator=(const X&) = default;
-        // ...
-    };
+```cpp
+class X {
+    X() = delete;
+    X(const X&) = default;
+    X(X&&) = default;
+    X& operator=(const X&) = default;
+    // ...
+};
 
+```
 Somewhere, possibly in an implementation file, let the compiler check the desired properties of `X`:
 
-    static_assert(Default_constructible<X>);    // error: X has no default constructor
-    static_assert(Copyable<X>);                 // error: we forgot to define X's move constructor
+```cpp
+static_assert(Default_constructible<X>);    // error: X has no default constructor
+static_assert(Copyable<X>);                 // error: we forgot to define X's move constructor
 
 
+```
 ##### Enforcement
 
 Not feasible.

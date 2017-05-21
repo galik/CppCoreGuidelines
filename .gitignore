@@ -2,3 +2,5 @@ scripts/build
 scripts/nodesjs/build
 node_modules
 _site
+contrib/add-github-syntax-highlights
+contrib/extract-sections
