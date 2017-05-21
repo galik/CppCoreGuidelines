@@ -1,4 +1,7 @@
 /*
+ * This file is released into the PUBLIC DOMAIN to be
+ * copied and used in any manner whatsoever.
+ *
  * extract-sections.cpp
  *
  *  Created on: May 18, 2017
@@ -88,7 +91,7 @@ int main(int, char* argv[])
 		}
 
 		if(pathname.empty())
-			throw std::runtime_error("Pathname for CppCoreGuidelines.md required");
+			throw_runtime("Pathname for CppCoreGuidelines.md required");
 
 		if(dir.empty())
 			dir = ".";
@@ -97,7 +100,7 @@ int main(int, char* argv[])
 		{
 			std::ostringstream oss;
 			if(!(oss << std::ifstream(pathname).rdbuf()))
-				throw std::runtime_error(std::string(std::strerror(errno)) + ": " + argv[1]);
+				throw_errno(argv[1]);
 			return oss.str();
 		}();
 
@@ -196,7 +199,7 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 
 	for(auto idx = 0U; itr != itr_end; ++itr, ++idx)
 	{
-		std::cout << "found: " << itr->str(3) << '\n';
+		con_out("found: " << itr->str(3));
 
 		// #1 long_id
 		// #2 id
@@ -263,11 +266,11 @@ std::map<std::string, std::string> build_link_database(std::string const& doc,
 void write(std::string const& dir, std::string const& filename, std::string const& text)
 {
 	auto pathname = dir + path_separator() + filename;
-	std::cout << "generating: " << pathname << '\n';
+	con_out("generating: " << pathname);
 
 	std::ostringstream index;
 	index << "\n\n[INDEX](00-In-Introduction.md#SS-sec)\n\n";
 
 	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
-		throw std::runtime_error(std::string(std::strerror(errno)) + ": " + filename);
+		throw_errno(filename);
 }
