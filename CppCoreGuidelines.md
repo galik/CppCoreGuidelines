@@ -18412,6 +18412,43 @@ the choice between `'\n'` and `endl` is almost completely aesthetic.
 `<regex>` is the standard C++ regular expression library.
 It supports a variety of regular expression pattern conventions.
 
+* [SL.regex.1: Avoid using regex for simple string manipulation](#SLno-regex)
+
+### <a name="SLno-regex"></a>SL.regex.1: Avoid using regex for simple string manipulation
+
+##### Reason
+
+Regular expressions are relatively slow compared to simple string functions and they are also more complex to understand. That makes them more difficult to maintain because not every programmer is also an expert with regular expression syntax. 
+
+##### Example, bad
+
+    std::string trim(const std::string& s)
+    {
+        // not all C++ programmers understand this
+        std::regex trim_spaces{R"~(\s*(\S.*?)\s*)~"};
+    
+        // not likely the fastest method
+        std::smatch m;
+        if(!std::regex_match(s, m, trim_spaces))
+            throw std::logic_error("bad regex");
+    
+        return m.str(1);
+    }
+
+##### Example, good
+
+    std::string trim(std::string s)
+    {
+        const char* white_space = " \t\n\r\f\v\0";
+    
+        // Doesn't require a new skill to understand
+        // Very efficient processing
+        s.erase(0, s.find_first_not_of(white_space));
+        s.erase(s.find_last_not_of(white_space) + 1);
+    
+        return s;
+    }
+
 ## <a name="SS-chrono"></a>SL.chrono: Time
 
 `<chrono>` (defined in namespace `std::chrono`) provides the notions of `time_point` and `duration` together with functions for
