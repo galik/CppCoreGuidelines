@@ -1355,7 +1355,7 @@ vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
 
 ```
 The default constructor is only auto-generated if there is no user-declared constructor, hence it's impossible to initialize the vector `vd1` in the example above.
-The absense of a default value can cause surprises for users and complicate its use, so if one can be reasonably defined, it should be.
+The absence of a default value can cause surprises for users and complicate its use, so if one can be reasonably defined, it should be.
 
 `Date` is chosen to encourage thought:
 There is no "natural" default date (the big bang is too far back in time to be useful for most people), so this example is non-trivial.
@@ -1422,7 +1422,7 @@ struct X {
 ```
 ##### Example
 
-There are classses that simply don't have a reasonable default.
+There are classes that simply don't have a reasonable default.
 
 A class designed to be useful only as a base does not need a default constructor because it cannot be constructed by itself:
 
@@ -1449,7 +1449,7 @@ A class that has a "special state" that must be handled separately from other st
 ```cpp
 ofstream out {"Foobar"};
 // ...
-out << log(time,transaction);
+out << log(time, transaction);
 
 ```
 If `Foobar` couldn't be opened for writing and `out` wasn't set to throw exceptions upon errors, the output operations become no-ops.
@@ -2760,6 +2760,7 @@ Accessing objects in a hierarchy rule summary:
 * [C.150: Use `make_unique()` to construct objects owned by `unique_ptr`s](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-make_unique)
 * [C.151: Use `make_shared()` to construct objects owned by `shared_ptr`s](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-make_shared)
 * [C.152: Never assign a pointer to an array of derived class objects to a pointer to its base](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-array)
+* [C.153: Prefer virtual function to casting](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-use-virtual)
 
 ### <a name="Rh-domain"></a>C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)
 
@@ -3749,10 +3750,31 @@ void user(B* pb)
 }
 
 ```
+Use of the other casts casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
+
+```cpp
+void user2(B* pb)   // bad
+{
+    if (D* pd = static_cast<D*>(pb)) {  // I know that pb really points to a D; trust me
+        // ... use D's interface ...
+    }
+    else {
+        // ... make do with B's interface ...
+    }
+}
+
+void f()
+{
+    B b;
+    user(&b);   // OK
+    user2(&b);  // bad error
+}
+
+```
 ##### Note
 
 Like other casts, `dynamic_cast` is overused.
-[Prefer virtual functions to casting](#???).
+[Prefer virtual functions to casting](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-use-virtual).
 Prefer [static polymorphism](#???) to hierarchy navigation where it is possible (no run-time resolution necessary)
 and reasonably convenient.
 
@@ -3769,8 +3791,8 @@ Consider:
 
 ```cpp
 struct B {
-    const char* name {"B"};
-    virtual const char* id() const { return name; }
+    const char* name {"B"}; 
+    virtual const char* id() const { return name; }     // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
     // ...
 };
 
@@ -3788,8 +3810,8 @@ void use()
     cout << pb1->id(); // "B"
     cout << pb2->id(); // "D"
 
-    if (pb1->id() == pb2->id()) // *pb1 is the same type as *pb2
-    if (pb2->id() == "D") {         // looks innocent
+
+    if (pb1->id() == "D") {         // looks innocent
         D* pd = static_cast<D*>(pb1);
         // ...
     }
@@ -3817,9 +3839,21 @@ However, compatibility makes changes difficult even if all agree that an effort 
 
 In very rare cases, if you have measured that the `dynamic_cast` overhead is material, you have other means to statically guarantee that a downcast will succeed (e.g., you are using CRTP carefully), and there is no virtual inheritance involved, consider tactically resorting `static_cast` with a prominent comment and disclaimer summarizing this paragraph and that human attention is needed under maintenance because the type system can't verify correctness. Even so, in our experience such "I know what I'm doing" situations are still a known bug source.
 
+##### Exception
+
+Consider:
+
+```cpp
+template<typename B>
+class Dx : B {
+    // ...
+};
+
+```
 ##### Enforcement
 
-Flag all uses of `static_cast` for downcasts, including C-style casts that perform a `static_cast`.
+* Flag all uses of `static_cast` for downcasts, including C-style casts that perform a `static_cast`.
+* This rule is part of the [type-safety profile](19-Pro-Profiles.md#Pro-type-downcast).
 
 ### <a name="Rh-ref-cast"></a>C.147: Use `dynamic_cast` to a reference type when failure to find the required class is considered an error
 
@@ -3981,6 +4015,25 @@ use(a);       // bad: a decays to &a[0] which is converted to a B*
 
 * Flag all combinations of array decay and base to derived conversions.
 * Pass an array as a `span` rather than as a pointer, and don't let the array name suffer a derived-to-base conversion before getting into the `span`
+
+
+### <a name="Rh-use-virtual"></a>CC.153: Prefer virtual function to casting
+
+##### Reason
+
+A virtual function call is safe, whereas casting is error-prone.
+A virtual function call reached the most derived function, whereas a cast may reach an intermediate class and therefore
+give a wrong result (especially as a hierarchy is modified during maintenance).
+
+##### Example
+
+```cpp
+???
+
+```
+##### Enforcement
+
+See [C.146] and [???]
 
 ## <a name="SS-overload"></a>C.over: Overloading and overloaded operators
 

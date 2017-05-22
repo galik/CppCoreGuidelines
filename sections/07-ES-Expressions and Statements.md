@@ -2282,11 +2282,20 @@ are seriously overused as well as a major source of errors.
 
 If you feel the need for a lot of casts, there may be a fundamental design problem.
 
+##### Alternatives
+
+Casts are widely (mis) used. Modern C++ has constructs that eliminats the need for casts in many contexts, such as
+
+* Use templates
+* Use `std::variant`
+
+
 ##### Enforcement
 
 * Force the elimination of C-style casts
 * Warn against named casts
 * Warn if there are many functional style casts (there is an obvious problem in quantifying 'many').
+* The [type profile](19-Pro-Profiles.md#Pro-type-reinterpretcast) bans `reinterpret_cast`.
 
 ### <a name="Res-casts-named"></a>ES.49: If you must use a cast, use a named cast
 
@@ -2341,23 +2350,109 @@ conversions between types that might result in loss of precision. (It is a
 compilation error to try to initialize a `float` from a `double` in this fashion,
 for example.)
 
+##### Note
+
+`reinterpret_cast` can be essential, but the essential uses (e.g., turning a machine addresses into pointer) are not type safe:
+
+```cpp
+auto p = reinterpret_cast<Device_register>(0x800);  // inherently dangerous
+
+
+```
 ##### Enforcement
 
-Flag C-style and functional casts.
+* Flag C-style and functional casts.
+* The [type profile](19-Pro-Profiles.md#Pro-type-reinterpretcast) bans `reinterpret_cast`.
 
 ### <a name="Res-casts-const"></a>ES.50: Don't cast away `const`
 
 ##### Reason
 
 It makes a lie out of `const`.
+If the variable is actually declared `const`, the result of "casting away `const`" is undefined behavior.
 
-##### Note
+##### Example, bad
 
-Usually the reason to "cast away `const`" is to allow the updating of some transient information of an otherwise immutable object.
-Examples are caching, memoization, and precomputation.
-Such examples are often handled as well or better using `mutable` or an indirection than with a `const_cast`.
+```cpp
+void f(const int& i)
+{
+    const_cast<int&>(i) = 42;   // BAD
+}
+
+static int i = 0;
+static const int j = 0;
+
+f(i); // silent side effect
+f(j); // undefined behavior
+
+```
+##### Example
+
+Sometimes, you may be tempted to resort to `const_cast` to avoid code duplication, such as when two accessor functions that differ only in `const`-ness have similar implementations. For example:
+
+```cpp
+class Bar;
+
+class Foo {
+public:
+    // BAD, duplicates logic
+    Bar& get_bar() {
+        /* complex logic around getting a non-const reference to my_bar */
+    }
+
+    const Bar& get_bar() const {
+        /* same complex logic around getting a const reference to my_bar */
+    }
+private:
+    Bar my_bar;
+};
+
+```
+Instead, prefer to share implementations. Normally, you can just have the non-`const` function call the `const` function. However, when there is complex logic this can lead to the following pattern that still resorts to a `const_cast`:
+
+```cpp
+class Foo {
+public:
+    // not great, non-const calls const version but resorts to const_cast
+    Bar& get_bar() {
+        return const_cast<Bar&>(static_cast<const Foo&>(*this).get_bar());
+    }
+    const Bar& get_bar() const {
+        /* the complex logic around getting a const reference to my_bar */
+    }
+private:
+    Bar my_bar;
+};
+
+```
+Although this pattern is safe when applied correctly, because the caller must have had a non-`const` object to begin with, it's not ideal because the safety is hard to enforce automatically as a checker rule.
+
+Instead, prefer to put the common code in a common helper function -- and make it a template so that it deduces `const`. This doesn't use any `const_cast` at all:
+
+```cpp
+class Foo {
+public:                         // good
+          Bar& get_bar()       { return get_bar_impl(*this); }
+    const Bar& get_bar() const { return get_bar_impl(*this); }
+private:
+    Bar my_bar;
+
+    template<class T>           // good, deduces whether T is const or non-const
+    static auto get_bar_impl(T& t) -> decltype(t.get_bar())
+        { /* the complex logic around getting a possibly-const reference to my_bar */ }
+};
+
+```
+##### Exception
+
+You may need to cast away `const` when calling `const`-incorrect functions.
+Prefer to wrap such functions in inline `const`-correct wrappers to encapsulate the cast in one place.
 
 ##### Example
+
+Sometimes, "cast away `const`" is to allow the updating of some transient information of an otherwise immutable object.
+Examples are caching, memoization, and precomputation.
+Such examples are often handled as well or better using `mutable` or an indirection than with a `const_cast`.
 
 Consider keeping previously computed results around for a costly operation:
 
@@ -2455,7 +2550,8 @@ In any variant, we must guard against data races on the `cache` in multithreaded
 
 ##### Enforcement
 
-Flag `const_cast`s. See also [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19-Pro-Profiles.md#Pro-type-constcast) for the related Profile.
+* Flag `const_cast`s.
+* This rule is part of the [type-safety profile](19-Pro-Profiles.md#Pro-type-constcast) for the related Profile.
 
 ### <a name="Res-range-checking"></a>ES.55: Avoid the need for range checking
 
@@ -2972,7 +3068,7 @@ Using `unsigned` doesn't actually eliminate the possibility of negative values.
 ```cpp
 unsigned int u1 = -2;   // OK: the value of u1 is 4294967294
 int i1 = -2;
-unsigned int u2 = i1;   // OK: the value of u2 is -2
+unsigned int u2 = i1;   // OK: the value of u2 is 4294967294
 int i2 = u2;            // OK: the value of i2 is -2
 
 ```

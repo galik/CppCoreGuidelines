@@ -73,15 +73,26 @@ An implementation of this profile shall recognize the following patterns in sour
 
 Type safety profile summary:
 
-* [Type.1: Don't use `reinterpret_cast`](19-Pro-Profiles.md#Pro-type-reinterpretcast)
-* [Type.2: Don't use `static_cast` downcasts. Use `dynamic_cast` instead](19-Pro-Profiles.md#Pro-type-downcast)
-* [Type.3: Don't use `const_cast` to cast away `const` (i.e., at all)](19-Pro-Profiles.md#Pro-type-constcast)
-* [Type.4: Don't use C-style `(T)expression` casts that would perform a `static_cast` downcast, `const_cast`, or `reinterpret_cast`](19-Pro-Profiles.md#Pro-type-cstylecast)
-* [Type.4.1: Don't use `T(expression)` for casting](19-Pro-Profiles.md#Pro-fct-style-cast)
-* [Type.5: Don't use a variable before it has been initialized](19-Pro-Profiles.md#Pro-type-init)
-* [Type.6: Always initialize a member variable](19-Pro-Profiles.md#Pro-type-memberinit)
-* [Type.7: Avoid accessing members of raw unions. Prefer `variant` instead](19-Pro-Profiles.md#Pro-fct-style-cast)
-* [Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead](19-Pro-Profiles.md#Pro-type-varargs)
+* <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`:
+A strict version of [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20Statements.md#Res-casts-named).
+* <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` downcasts:
+[Use `dynamic_cast` instead](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-dynamic_cast).
+* <a name="Pro-type-constcast"></a>Type.3: Don't use `const_cast` to cast away `const` (i.e., at all):
+[Don't cast away const](07-ES-Expressions%20and%20Statements.md#Res-casts-const).
+* <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` casts:
+[Prefer static casts](#Res-cast-named).
+* [Type.4.1: Don't use `T(expression)` cast](19-Pro-Profiles.md#Pro-fct-style-cast):
+[Prefer named casts](07-ES-Expressions%20and%20Statements.md#Res-casts-named).
+* [Type.5: Don't use a variable before it has been initialized](#Pro-type-init):
+[always initialize](07-ES-Expressions%20and%20Statements.md#Res-always).
+* [Type.6: Always initialize a member variable](19-Pro-Profiles.md#Pro-type-memberinit):
+[always initialize](07-ES-Expressions%20and%20Statements.md#Res-always),
+possibly using [default constructors](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-default0) or
+[default member initializers](#Rc-in-class-initializers).
+* [Type.7: Avoid naked union](19-Pro-Profiles.md#Pro-fct-style-cast):
+[Use `variant` instead](04-C-Classes%20and%20Class%20Hierarchies.md#Ru-naked).
+* [Type.8: Avoid varargs](#Pro-type-varargs):
+[Don't use `va_arg` arguments](03-F-Functions.md#F-varargs).
 
 ##### Impact
 
@@ -89,217 +100,6 @@ With the type-safety profile you can trust that every operation is applied to a 
 Exception may be thrown to indicate errors that cannot be detected statically (at compile time).
 Note that this type-safety can be complete only if we also have [Bounds safety](19-Pro-Profiles.md#SS-bounds) and [Lifetime safety](19-Pro-Profiles.md#SS-lifetime).
 Without those guarantees, a region of memory could be accessed independent of which object, objects, or parts of objects are stored in it.
-
-### <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`.
-
-##### Reason
-
-Use of these casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`.
-
-##### Example, bad
-
-```cpp
-std::string s = "hello world";
-double* p = reinterpret_cast<double*>(&s); // BAD
-
-```
-##### Enforcement
-
-Issue a diagnostic for any use of `reinterpret_cast`. To fix: Consider using a `variant` instead.
-
-### <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` downcasts. Use `dynamic_cast` instead.
-
-##### Reason
-
-Use of these casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`.
-
-##### Example, bad
-
-```cpp
-class Base { public: virtual ~Base() = 0; };
-
-class Derived1 : public Base { };
-
-class Derived2 : public Base {
-    std::string s;
-public:
-    std::string get_s() { return s; }
-};
-
-Derived1 d1;
-Base* p1 = &d1; // ok, implicit conversion to pointer to Base is fine
-
-// BAD, tries to treat d1 as a Derived2, which it is not
-Derived2* p2 = static_cast<Derived2*>(p1);
-// tries to access d1's nonexistent string member, instead sees arbitrary bytes near d1
-cout << p2->get_s();
-
-```
-##### Example, bad
-
-```cpp
-struct Foo { int a, b; };
-struct Foobar : Foo { int bar; };
-
-void use(int i, Foo& x)
-{
-    if (0 < i) {
-        Foobar& x1 = dynamic_cast<Foobar&>(x);  // error: Foo is not polymorphic
-        Foobar& x2 = static_cast<Foobar&>(x);   // bad
-        // ...
-    }
-    // ...
-}
-
-// ...
-
-use(99, *new Foo{1, 2});  // not a Foobar
-
-```
-If a class hierarchy isn't polymorphic, avoid casting.
-It is entirely unsafe.
-Look for a better design.
-See also [C.146](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-dynamic_cast).
-
-##### Enforcement
-
-Issue a diagnostic for any use of `static_cast` to downcast, meaning to cast from a pointer or reference to `X` to a pointer or reference to a type that is not `X` or an accessible base of `X`. To fix: If this is a downcast or cross-cast then use a `dynamic_cast` instead, otherwise consider using a `variant` instead.
-
-### <a name="Pro-type-constcast"></a>Type.3: Don't use `const_cast` to cast away `const` (i.e., at all).
-
-##### Reason
-
-Casting away `const` is a lie. If the variable is actually declared `const`, it's a lie punishable by undefined behavior.
-
-##### Example, bad
-
-```cpp
-void f(const int& i)
-{
-    const_cast<int&>(i) = 42;   // BAD
-}
-
-static int i = 0;
-static const int j = 0;
-
-f(i); // silent side effect
-f(j); // undefined behavior
-
-```
-##### Example
-
-Sometimes you may be tempted to resort to `const_cast` to avoid code duplication, such as when two accessor functions that differ only in `const`-ness have similar implementations. For example:
-
-```cpp
-class Bar;
-
-class Foo {
-public:
-    // BAD, duplicates logic
-    Bar& get_bar() {
-        /* complex logic around getting a non-const reference to my_bar */
-    }
-
-    const Bar& get_bar() const {
-        /* same complex logic around getting a const reference to my_bar */
-    }
-private:
-    Bar my_bar;
-};
-
-```
-Instead, prefer to share implementations. Normally, you can just have the non-`const` function call the `const` function. However, when there is complex logic this can lead to the following pattern that still resorts to a `const_cast`:
-
-```cpp
-class Foo {
-public:
-    // not great, non-const calls const version but resorts to const_cast
-    Bar& get_bar() {
-        return const_cast<Bar&>(static_cast<const Foo&>(*this).get_bar());
-    }
-    const Bar& get_bar() const {
-        /* the complex logic around getting a const reference to my_bar */
-    }
-private:
-    Bar my_bar;
-};
-
-```
-Although this pattern is safe when applied correctly, because the caller must have had a non-`const` object to begin with, it's not ideal because the safety is hard to enforce automatically as a checker rule.
-
-Instead, prefer to put the common code in a common helper function -- and make it a template so that it deduces `const`. This doesn't use any `const_cast` at all:
-
-```cpp
-class Foo {
-public:                         // good
-          Bar& get_bar()       { return get_bar_impl(*this); }
-    const Bar& get_bar() const { return get_bar_impl(*this); }
-private:
-    Bar my_bar;
-
-    template<class T>           // good, deduces whether T is const or non-const
-    static auto get_bar_impl(T& t) -> decltype(t.get_bar())
-        { /* the complex logic around getting a possibly-const reference to my_bar */ }
-};
-
-```
-##### Exception
-
-You may need to cast away `const` when calling `const`-incorrect functions. Prefer to wrap such functions in inline `const`-correct wrappers to encapsulate the cast in one place.
-
-##### See also: 
-
-[ES.50, Don't cast away `const`](07-ES-Expressions%20and%20Statements.md#Res-casts-const) for more discussion.
-
-##### Enforcement
-
-Issue a diagnostic for any use of `const_cast`. To fix: Either don't use the variable in a non-`const` way, or don't make it `const`.
-
-### <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` casts that would perform a `static_cast` downcast, `const_cast`, or `reinterpret_cast`.
-
-##### Reason
-
-Use of these casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`.
-Note that a C-style `(T)expression` cast means to perform the first of the following that is possible: a `const_cast`, a `static_cast`, a `static_cast` followed by a `const_cast`, a `reinterpret_cast`, or a `reinterpret_cast` followed by a `const_cast`. This rule bans `(T)expression` only when used to perform an unsafe cast.
-
-##### Example, bad
-
-```cpp
-std::string s = "hello world";
-double* p0 = (double*)(&s); // BAD
-
-class Base { public: virtual ~Base() = 0; };
-
-class Derived1 : public Base { };
-
-class Derived2 : public Base {
-    std::string s;
-public:
-    std::string get_s() { return s; }
-};
-
-Derived1 d1;
-Base* p1 = &d1; // ok, implicit conversion to pointer to Base is fine
-
-// BAD, tries to treat d1 as a Derived2, which it is not
-Derived2* p2 = (Derived2*)(p1);
-// tries to access d1's nonexistent string member, instead sees arbitrary bytes near d1
-cout << p2->get_s();
-
-void f(const int& i) {
-    (int&)(i) = 42;   // BAD
-}
-
-static int i = 0;
-static const int j = 0;
-
-f(i); // silent side effect
-f(j); // undefined behavior
-
-```
-##### Enforcement
-
-Issue a diagnostic for any use of a C-style `(T)expression` cast that would invoke a `static_cast` downcast, `const_cast`, or `reinterpret_cast`. To fix: Use a `dynamic_cast`, `const`-correct declaration, or `variant`, respectively.
 
 ### <a name="Pro-fct-style-cast"></a>Type.4.1: Don't use `T(expression)` for casting.
 
@@ -328,9 +128,6 @@ f(Foo{bar});
 
 Flag `T(e)` if used for `e` of a built-in type.
 
-### <a name="Pro-type-init"></a>Type.5: Don't use a variable before it has been initialized.
-
-[ES.20: Always initialize an object](07-ES-Expressions%20and%20Statements.md#Res-always) is required.
 
 ### <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable.
 
@@ -355,67 +152,7 @@ use(x2);
 * Issue a diagnostic for any constructor of a non-trivially-constructible type that does not initialize all member variables. To fix: Write a data member initializer, or mention it in the member initializer list.
 * Issue a diagnostic when constructing an object of a trivially constructible type without `()` or `{}` to initialize its members. To fix: Add `()` or `{}`.
 
-### <a name="Pro-type-unions"></a>Type.7: Avoid accessing members of raw unions. Prefer `variant` instead.
 
-##### Reason
-
-Reading from a union member assumes that member was the last one written, and writing to a union member assumes another member with a nontrivial destructor had its destructor called. This is fragile because it cannot generally be enforced to be safe in the language and so relies on programmer discipline to get it right.
-
-##### Example
-
-```cpp
-union U { int i; double d; };
-
-U u;
-u.i = 42;
-use(u.d); // BAD, undefined
-
-variant<int, double> u;
-u = 42; // u now contains int
-use(u.get<int>()); // ok
-use(u.get<double>()); // throws ??? update this when standardization finalizes the variant design
-
-```
-Note that just copying a union is not type-unsafe, so safe code can pass a union from one piece of unsafe code to another.
-
-##### Enforcement
-
-* Issue a diagnostic for accessing a member of a union. To fix: Use a `variant` instead.
-
-### <a name="Pro-type-varargs"></a>Type.8: Avoid reading from varargs or passing vararg arguments. Prefer variadic template parameters instead.
-
-##### Reason
-
-Reading from a vararg assumes that the correct type was actually passed. Passing to varargs assumes the correct type will be read. This is fragile because it cannot generally be enforced to be safe in the language and so relies on programmer discipline to get it right.
-
-##### Example
-
-```cpp
-int sum(...) {
-    // ...
-    while (/*...*/)
-        result += va_arg(list, int); // BAD, assumes it will be passed ints
-    // ...
-}
-
-sum(3, 2); // ok
-sum(3.14159, 2.71828); // BAD, undefined
-
-template<class ...Args>
-auto sum(Args... args) { // GOOD, and much more flexible
-    return (... + args); // note: C++17 "fold expression"
-}
-
-sum(3, 2); // ok: 5
-sum(3.14159, 2.71828); // ok: ~5.85987
-
-```
-Note: Declaring a `...` parameter is sometimes useful for techniques that don't involve actual argument passing, notably to declare "take-anything" functions so as to disable "everything else" in an overload set or express a catchall case in a template metaprogram.
-
-##### Enforcement
-
-* Issue a diagnostic for using `va_list`, `va_start`, or `va_arg`. To fix: Use a variadic template parameter list instead.
-* Issue a diagnostic for passing an argument to a vararg parameter of a function that does not offer an overload for a more specific type in the position of the vararg. To fix: Use a different function, or `[[suppress(types)]]`.
 
 ## <a name="SS-bounds"></a>Pro.bounds: Bounds safety profile
 

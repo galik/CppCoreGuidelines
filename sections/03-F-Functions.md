@@ -59,6 +59,7 @@ Other function rules:
 * [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](03-F-Functions.md#Rf-reference-capture)
 * [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](03-F-Functions.md#Rf-value-capture)
 * [F.54: If you capture `this`, capture all variables explicitly (no default capture)](03-F-Functions.md#Rf-this-capture)
+* [F.55: Don't use `va_arg` arguments](03-F-Functions.md#F-varargs)
 
 Functions have strong similarities to lambdas and function objects so see also Section ???.
 
@@ -1734,6 +1735,52 @@ This is under active discussion in standardization, and may be addressed in a fu
 ##### Enforcement
 
 * Flag any lambda capture-list that specifies a default capture and also captures `this` (whether explicitly or via default capture)
+
+### <a name="F-varargs"></a>F.55: Don't use `va_arg` arguments
+
+##### Reason
+
+Reading from a `va_arg` assumes that the correct type was actually passed.
+Passing to varargs assumes the correct type will be read.
+This is fragile because it cannot generally be enforced to be safe in the language and so relies on programmer discipline to get it right.
+
+##### Example
+
+```cpp
+int sum(...) {
+    // ...
+    while (/*...*/)
+        result += va_arg(list, int); // BAD, assumes it will be passed ints
+    // ...
+}
+
+sum(3, 2); // ok
+sum(3.14159, 2.71828); // BAD, undefined
+
+template<class ...Args>
+auto sum(Args... args) { // GOOD, and much more flexible
+    return (... + args); // note: C++17 "fold expression"
+}
+
+sum(3, 2); // ok: 5
+sum(3.14159, 2.71828); // ok: ~5.85987
+
+```
+##### Alternatives
+
+* overloading
+* variadic templates
+* `variant` arguments
+* `initializer_list` (homogeneous)
+
+##### Note
+
+Declaring a `...` parameter is sometimes useful for techniques that don't involve actual argument passing, notably to declare "take-anything" functions so as to disable "everything else" in an overload set or express a catchall case in a template metaprogram.
+
+##### Enforcement
+
+* Issue a diagnostic for using `va_list`, `va_start`, or `va_arg`.
+* Issue a diagnostic for passing an argument to a vararg parameter of a function that does not offer an overload for a more specific type in the position of the vararg. To fix: Use a different function, or `[[suppress(types)]]`.
 
 
 
