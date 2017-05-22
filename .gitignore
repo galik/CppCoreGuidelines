@@ -2,3 +2,4 @@ scripts/build
 scripts/nodesjs/build
 node_modules
 _site
+/contrib/Makefile.local
