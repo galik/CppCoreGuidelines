@@ -39,7 +39,7 @@ using pos_type = decltype(std::sregex_iterator()->position());
 
 struct section_info
 {
-	std::string id;
+	std::string mini_id;
 	std::string long_id;
 	std::string filename;
 
@@ -158,6 +158,37 @@ std::string add_syntax_heighlights(std::string const& doc)
 	return os.str();
 }
 
+inline
+bool s_to_test(char const* s, char const* e)
+{
+	if(e == s)
+		return false;
+
+	while(std::isspace(*e))
+		++e;
+
+	return !(*e);
+}
+
+inline
+bool s_to_ul(const std::string& s, unsigned& u)
+{
+	char* end;
+	u = unsigned(std::strtoul(s.c_str(), &end, 10));
+	return s_to_test(s.c_str(), end);
+}
+
+unsigned calc_line_number(std::string const& doc, pos_type pos)
+{
+	unsigned line_number = 0;
+	std::istringstream iss(doc.substr(0, pos));
+
+	for(std::string line; std::getline(iss, line);)
+		++line_number;
+
+	return line_number;
+}
+
 int main(int, char* argv[])
 {
 	std::string const prog = program_name(argv[0]);
@@ -258,19 +289,65 @@ int main(int, char* argv[])
 			if(outputs.count(output_type::items))
 			{
 				con_out("Outputting items:");
-//				auto links = build_link_database(doc, sections);
-//
-//				for(auto const& s: sections)
-//				{
-//					// extract section text from document
-//					std::string text = doc.substr(s.second.beg, s.second.end - s.second.beg);
-//
-//					// rewrite links
-//					for(auto const& link: links)
-//						text = replace_all(text, link.first, link.second);
-//
-//					write(dir, s.second.filename, text);
-//				}
+
+				//	* [Enum.1: Prefer enumerations over macros](05-Enum-Enumerations#Renum-macro)
+				//	* [Enum.2: Use enumerations to represent sets of related named constants](05-Enum-Enumerations#Renum-set)
+				//	* [Enum.3: Prefer `enum class`es over "plain" `enum`s](05-Enum-Enumerations#Renum-class)
+				//	* [Enum.4: Define operations on enumerations for safe and simple use](05-Enum-Enumerations#Renum-oper)
+				//	* [Enum.5: Don't use `ALL_CAPS` for enumerators](05-Enum-Enumerations#Renum-caps)
+				//	* [Enum.6: Avoid unnamed enumerations](05-Enum-Enumerations#Renum-unnamed)
+				//	* [Enum.7: Specify the underlying type of an enumeration only when necessary](05-Enum-Enumerations#Renum-underlying)
+				//	* [Enum.8: Specify enumerator values only when necessary](05-Enum-Enumerations#Renum-value)
+
+				for(auto const& s: sections)
+				{
+					bug_var(s.second.mini_id);
+					bug_var(s.second.long_id);
+					bug_var(s.second.filename);
+					bug("");
+
+//					std::regex const e_index{R"~(\*\s+\[([^.]+)\.(\d+):[^\]]+\]\([^)]+\))~"};
+
+					// #1 item_id // unique
+					// #2 mini_id // section mini_id
+					// #3 number
+					std::regex const e_item{R"~(#+\s+<a\s+name="([^"]+)"><\/a>([^.]+)\.(\d+):)~"};
+
+					std::sregex_iterator itr_end;
+					std::sregex_iterator itr(std::next(std::begin(doc), s.second.beg),
+						std::next(std::begin(doc), s.second.end), e_item);
+
+					pos_type pos = 0;
+					std::string mini_id;
+					std::string number;
+					std::string filename;
+
+					for(; itr != itr_end; ++itr)
+					{
+						bug("range: " << pos << "-" << itr->position());
+						bug_var(itr->str(1));
+						bug_var(itr->str(2));
+						bug_var(itr->str(3));
+						bug("");
+
+						if(!pos) // index
+						{
+							// 02-Section Name 2-AB.00-index.md
+							if((number = itr->str(3)).size() < 3)
+								number = std::string(3 - number.size(), '0') + number;
+							filename = s.second.filename + "-" + s.second.mini_id + "." + number +"-index";
+
+						}
+
+						std::string text = doc.substr(pos, itr->position());
+						write(dir, filename, text);
+
+						pos = itr->position();
+						if((number = itr->str(3)).size() < 2)
+							number = "0" + number;
+						filename = s.second.filename + "-" + s.second.mini_id + "." + number;
+					}
+				}
 			}
 		}
 	}
@@ -362,6 +439,8 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 
 	std::string filename = "";
 	pos_type beg = 0;
+	std::string long_id;
+	std::string mini_id;
 
 	for(auto idx = 0U; itr != itr_end; ++itr, ++idx)
 	{
@@ -372,13 +451,11 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 		// #3 name
 		// #4 "Bibliography"
 
-		auto long_id = itr->str(4).empty() ? itr->str(1) : itr->str(4);
-
 		if(beg)
 		{
 			auto& section = sections[long_id];
 
-			section.id = itr->str(2).empty() ? std::string("") : itr->str(2);
+			section.mini_id = mini_id;
 			section.long_id = long_id;
 			section.filename = filename;
 			section.beg = beg;
@@ -389,12 +466,17 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 		{
 			auto& section = sections["bibliography"];
 
-			section.id = "Bib";
+			section.mini_id = "Bib";
 			section.long_id = "bibliography";
 			section.filename = (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md";
 			section.beg = beg = itr->position();
 			section.end = doc.size();
 		}
+
+		long_id = itr->str(4).empty() ? itr->str(1) : itr->str(4);
+
+		mini_id = itr->str(2).empty() ? std::string("") : itr->str(2);
+
 
 		filename = (idx < 10 ? "0":"") + std::to_string(idx)
 			+ (itr->str(2).empty() ? std::string("") : "-" + itr->str(2))
@@ -430,13 +512,12 @@ std::map<std::string, std::string> build_link_database(std::string const& doc,
 
 void write(std::string const& dir, std::string const& filename, std::string const& text)
 {
-	bug_fun();
 	auto pathname = dir + path_separator() + filename + ".md";
 	con_out("generating: " << pathname);
 
 	std::ostringstream index;
 	index << "\n\n[INDEX](00-In-Introduction.md#SS-sec)\n\n";
 
-//	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
-//		throw_errno(filename);
+	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
+		throw_errno(filename);
 }
