@@ -23,8 +23,17 @@
 #define con_out(m) do{std::cout << m << '\n';}while(0)
 #define con_err(m) do{std::cerr << m << '\n';}while(0)
 
-#define throw_runtime(m) do{std::ostringstream o;o<<m;throw std::runtime_error(o.str());}while(0)
-#define throw_errno(m) throw_runtime(m << ": " << std::strerror(errno))
+#ifdef NDEBUG
+#define throw_exception(e, m) do{std::ostringstream o;o<<m;throw e(o.str());}while(0)
+#else
+#define throw_exception(e, m) do{ \
+	std::ostringstream o; \
+	o << __FILE__ << ":" << __LINE__ << ":error: " << m; \
+	throw e(o.str());}while(0)
+#endif // NDEBUG
+
+#define throw_runtime_error(m) throw_exception(std::runtime_error, m)
+#define throw_errno(m) throw_runtime_error(m << ": " << std::strerror(errno))
 
 constexpr char path_separator()
 {
@@ -39,9 +48,10 @@ using pos_type = decltype(std::sregex_iterator()->position());
 
 struct section_info
 {
+	unsigned index;
 	std::string mini_id;
 	std::string long_id;
-	std::string filename;
+	std::string name;
 
 	// offsets into the document
 	pos_type beg;
@@ -64,15 +74,20 @@ std::string& replace_all(std::string& s, std::string const& from, std::string co
  */
 std::string urlencode(std::string const& url);
 
+///// Find all the section breaks in doc and store the relevant
+///// info needed to split the document later
+//std::map<std::string, section_info> extract_section_info(std::string const& doc);
+
 /// Find all the section breaks in doc and store the relevant
 /// info needed to split the document later
-std::map<std::string, section_info> extract_section_info(std::string const& doc);
+std::vector<section_info> extract_section_info(std::string const& doc);
 
 /// Scan all the anchors in each section and build a URL out of it
-std::map<std::string, std::string> build_link_database(std::string const& doc,
-	std::map<std::string, section_info> const& sections);
+//std::map<std::string, std::string> build_link_database(std::string const& doc,
+//	std::vector<section_info> const& sections);
+std::vector<std::string> extract_links_from_anchors(std::string const& doc);
 
-void write(std::string const& dir, std::string const& filename, std::string const& text);
+void output(std::string const& dir, std::string const& filename, std::string const& text);
 
 int usage(std::string const& prog, int error_code);
 
@@ -189,176 +204,134 @@ unsigned calc_line_number(std::string const& doc, pos_type pos)
 	return line_number;
 }
 
+//std::string pad(std::string const& s, unsigned n, char padding = ' ')
+//{
+//	if(s.size() < n)
+//		return std::string(n - s.size(), padding) + s;
+//	return s;
+//}
+
+std::string pad(unsigned u, unsigned n, char padding = '0')
+{
+	auto s = std::to_string(u);
+	if(s.size() < n)
+		return std::string(n - s.size(), padding) + s;
+	return s;
+}
+
+// "S-02-Section Name.md"
+std::string make_section_filename(section_info const& s)
+{
+	return "S-" + pad(s.index, 2) + '-' + s.name + ".md";
+}
+
+// "I-02-Section Name-P.01.md"
+std::string make_item_filename(section_info const& s, unsigned idx)
+{
+	return "I-" + pad(s.index, 2) + '-' + s.name
+		+ '-' + s.mini_id + '.' + pad(idx, 3) + ".md";
+}
+
+std::string make_index_item(std::string const& text, std::string const& link)
+{
+	return "* [" + text + "](" + link + ")";
+}
+
+enum class output_type{document, sections, items};
+
+struct config
+{
+	std::string pathname;
+	std::string dir;
+	bool use_syntax_colors = false;
+	bool list_only = false;
+	std::set<output_type> outputs;
+	int exit_status = 2;
+};
+
+config parse_commandline(char const* const* argv);
+
+void output_section_files(config const& cfg, std::string const& doc,
+	std::vector<section_info> const& sections, std::vector<std::string> const& links);
+
+void output_item_files(config const& cfg, std::string const& doc,
+	std::vector<section_info> const& sections, std::vector<std::string> const& links);
+
 int main(int, char* argv[])
 {
-	std::string const prog = program_name(argv[0]);
-
 	try
 	{
-		enum class output_type{document, sections, items};
+		config cfg = parse_commandline(argv);
 
-		std::string pathname;
-		std::string dir;
-		bool syntax_colors = false;
+		if(cfg.exit_status != 2)
+			return cfg.exit_status;
 
-		std::set<output_type> outputs;
+		if(cfg.outputs.empty())
+			cfg.outputs.insert(output_type::document);
 
-		for(auto arg = argv + 1; *arg; ++arg)
-		{
-			if(!std::strcmp(*arg, "-h") || !std::strcmp(*arg, "--help"))
-				return usage(prog, EXIT_SUCCESS);
-			else if(!std::strcmp(*arg, "-c") || !std::strcmp(*arg, "--color"))
-				syntax_colors = true;
-			else if(!std::strcmp(*arg, "-d") || !std::strcmp(*arg, "--document"))
-				outputs.insert(output_type::document);
-			else if(!std::strcmp(*arg, "-s") || !std::strcmp(*arg, "--sections"))
-				outputs.insert(output_type::sections);
-			else if(!std::strcmp(*arg, "-i") || !std::strcmp(*arg, "--items"))
-				outputs.insert(output_type::items);
-			else if((*arg)[0] == '-')
-				throw_runtime("unknown option: " << *arg);
-			else if(pathname.empty())
-				pathname = *arg;
-			else if(dir.empty())
-				dir = *arg;
-		}
+		if(cfg.pathname.empty())
+			throw_runtime_error("Pathname for CppCoreGuidelines.md required");
 
-		if(outputs.empty())
-			outputs.insert(output_type::document);
+		if(cfg.dir.empty())
+			cfg.dir = ".";
 
-		if(pathname.empty())
-			throw_runtime("Pathname for CppCoreGuidelines.md required");
+		con_out("Loading: " << cfg.pathname);
 
-		if(dir.empty())
-			dir = ".";
-
-		con_out("Loading: " << pathname);
-
-		if(syntax_colors)
+		if(cfg.use_syntax_colors)
 			con_out("Colorizing:");
 
-		std::string const doc = syntax_colors
-			? add_syntax_heighlights(load_file(pathname))
-			: load_file(pathname);
+		std::string const doc = cfg.use_syntax_colors
+			? add_syntax_heighlights(load_file(cfg.pathname))
+			: load_file(cfg.pathname);
 
-		if(outputs.count(output_type::document))
+		if(cfg.outputs.count(output_type::document))
 		{
-			auto new_pathname = dir + path_separator() + program_name(pathname);
+			auto new_pathname = cfg.dir + path_separator() + program_name(cfg.pathname);
 
 			// TODO: Use <filesystem> to makes this more reliable
-			if(new_pathname == pathname)
-				throw_runtime("can not overwrite the original, specify a different directory");
+			if(new_pathname == cfg.pathname)
+				throw_runtime_error("can not overwrite the original, specify a different directory");
 
 			con_out("Outputting document: " << new_pathname);
-			if(!(std::ofstream(new_pathname) << doc))
-				throw_errno(new_pathname);
+			if(!cfg.list_only)
+				if(!(std::ofstream(new_pathname) << doc))
+					throw_errno(new_pathname);
 		}
 
-		if(outputs.count(output_type::sections)
-		|| outputs.count(output_type::items))
+		if(cfg.outputs.count(output_type::sections)
+		|| cfg.outputs.count(output_type::items))
 		{
 			con_out("Outputting sections:");
 			// section_id -> section
 			auto sections = extract_section_info(doc);
+			auto links = extract_links_from_anchors(doc);
 
 			// output one file for each section
-			// 00-Section Name 0.md
+			// 00-Index.md
 			// 01-Section Name 1.md
 			// 02-Section Name 2.md
-			if(outputs.count(output_type::sections))
-			{
-				auto links = build_link_database(doc, sections);
+			if(cfg.outputs.count(output_type::sections))
+				output_section_files(cfg, doc, sections, links);
 
-				for(auto const& s: sections)
-				{
-					// extract section text from document
-					std::string text = doc.substr(s.second.beg, s.second.end - s.second.beg);
-
-					// rewrite links
-					for(auto const& link: links)
-						text = replace_all(text, link.first, link.second);
-
-					write(dir, s.second.filename, text);
-				}
-			}
-
-			// output one file for the section index
+			// output one index file of all sections (section-index)
+			// I-00-Index.md
+			// output one index file of all items in each section (item-index)
+			// I-01-Section Name 1-S1.00-index.md
+			// I-02-Section Name 2-S2.00-index.md
 			// and one file for each item
-			// 02-Section Name 2-AB.00-index.md
-			// 02-Section Name 2-AB.01.md
-			if(outputs.count(output_type::items))
-			{
-				con_out("Outputting items:");
-
-				//	* [Enum.1: Prefer enumerations over macros](05-Enum-Enumerations#Renum-macro)
-				//	* [Enum.2: Use enumerations to represent sets of related named constants](05-Enum-Enumerations#Renum-set)
-				//	* [Enum.3: Prefer `enum class`es over "plain" `enum`s](05-Enum-Enumerations#Renum-class)
-				//	* [Enum.4: Define operations on enumerations for safe and simple use](05-Enum-Enumerations#Renum-oper)
-				//	* [Enum.5: Don't use `ALL_CAPS` for enumerators](05-Enum-Enumerations#Renum-caps)
-				//	* [Enum.6: Avoid unnamed enumerations](05-Enum-Enumerations#Renum-unnamed)
-				//	* [Enum.7: Specify the underlying type of an enumeration only when necessary](05-Enum-Enumerations#Renum-underlying)
-				//	* [Enum.8: Specify enumerator values only when necessary](05-Enum-Enumerations#Renum-value)
-
-				for(auto const& s: sections)
-				{
-					bug_var(s.second.mini_id);
-					bug_var(s.second.long_id);
-					bug_var(s.second.filename);
-					bug("");
-
-//					std::regex const e_index{R"~(\*\s+\[([^.]+)\.(\d+):[^\]]+\]\([^)]+\))~"};
-
-					// #1 item_id // unique
-					// #2 mini_id // section mini_id
-					// #3 number
-					std::regex const e_item{R"~(#+\s+<a\s+name="([^"]+)"><\/a>([^.]+)\.(\d+):)~"};
-
-					std::sregex_iterator itr_end;
-					std::sregex_iterator itr(std::next(std::begin(doc), s.second.beg),
-						std::next(std::begin(doc), s.second.end), e_item);
-
-					pos_type pos = 0;
-					std::string mini_id;
-					std::string number;
-					std::string filename;
-
-					for(; itr != itr_end; ++itr)
-					{
-						bug("range: " << pos << "-" << itr->position());
-						bug_var(itr->str(1));
-						bug_var(itr->str(2));
-						bug_var(itr->str(3));
-						bug("");
-
-						if(!pos) // index
-						{
-							// 02-Section Name 2-AB.00-index.md
-							if((number = itr->str(3)).size() < 3)
-								number = std::string(3 - number.size(), '0') + number;
-							filename = s.second.filename + "-" + s.second.mini_id + "." + number +"-index";
-
-						}
-
-						std::string text = doc.substr(pos, itr->position());
-						write(dir, filename, text);
-
-						pos = itr->position();
-						if((number = itr->str(3)).size() < 2)
-							number = "0" + number;
-						filename = s.second.filename + "-" + s.second.mini_id + "." + number;
-					}
-				}
-			}
+			// I-02-Section Name 2-AB.01.md
+			if(cfg.outputs.count(output_type::items))
+				output_item_files(cfg, doc, sections, links);
 		}
 	}
 	catch(std::exception const& e)
 	{
-		std::cerr << prog << ": " << e.what() << '\n';
+		con_err(program_name(argv[0]) << ": " << e.what());
 		return EXIT_FAILURE;
 	}
 	catch(...)
 	{
-		std::cerr << prog << ": unknown error" << '\n';
+		con_err(program_name(argv[0]) << ": unknown error");
 		return EXIT_FAILURE;
 	}
 
@@ -384,16 +357,144 @@ int usage(std::string const& prog, int error_code)
 	con_out(" -h|--help     - Print this help massage.");
 	con_out("");
 
-	//	else if(!std::strcmp(*arg, "-c") || !std::strcmp(*arg, "--color"))
-	//		syntax_colors = true;
-	//	else if(!std::strcmp(*arg, "-d") || !std::strcmp(*arg, "--document"))
-	//		output = output_type::document;
-	//	else if(!std::strcmp(*arg, "-s") || !std::strcmp(*arg, "--sections"))
-	//		output = output_type::sections;
-	//	else if(!std::strcmp(*arg, "-i") || !std::strcmp(*arg, "--items"))
-	//		output = output_type::items;
-
 	return error_code;
+}
+
+config parse_commandline(char const* const* argv)
+{
+	config cfg;
+
+	for(auto arg = argv + 1; *arg; ++arg)
+	{
+		if(!std::strcmp(*arg, "-h") || !std::strcmp(*arg, "--help"))
+			cfg.exit_status = usage(program_name(argv[0]), EXIT_SUCCESS);
+		else if(!std::strcmp(*arg, "-c") || !std::strcmp(*arg, "--color"))
+			cfg.use_syntax_colors = true;
+		else if(!std::strcmp(*arg, "-d") || !std::strcmp(*arg, "--document"))
+			cfg.outputs.insert(output_type::document);
+		else if(!std::strcmp(*arg, "-s") || !std::strcmp(*arg, "--sections"))
+			cfg.outputs.insert(output_type::sections);
+		else if(!std::strcmp(*arg, "-i") || !std::strcmp(*arg, "--items"))
+			cfg.outputs.insert(output_type::items);
+		else if(!std::strcmp(*arg, "-l") || !std::strcmp(*arg, "--list"))
+			cfg.list_only = true;
+		else if((*arg)[0] == '-')
+			throw_runtime_error("unknown option: " << *arg);
+		else if(cfg.pathname.empty())
+			cfg.pathname = *arg;
+		else if(cfg.dir.empty())
+			cfg.dir = *arg;
+	}
+
+	return cfg;
+}
+
+void output_section_files(config const& cfg, std::string const& doc,
+	std::vector<section_info> const& sections, std::vector<std::string> const& links)
+{
+//				auto links = build_link_database(doc, sections);
+
+	// Index of all sections
+	std::ofstream index_file("S-00-Index.md");
+
+	for(auto const& s: sections)
+	{
+		auto filename = urlencode(make_section_filename(s));
+
+		// update S-00-Index.md
+		index_file << make_index_item(s.mini_id + ": " + s.name, filename + "#" + s.long_id);
+		index_file << '\n';
+
+		// extract section text from document
+		std::string text = doc.substr(s.beg, s.end - s.beg);
+
+		// rewrite links
+		for(auto const& link: links)
+			text = replace_all(text, "](#" + link + ")", "](" + filename + "#" + link + ")");
+
+		if(!cfg.list_only)
+		{
+			std::string index = "\n[SECTIONS](S-00-Index.md)\n";
+			output(cfg.dir, make_section_filename(s), index + text + index);
+		}
+	}
+}
+
+void output_item_files(config const& cfg, std::string const& doc,
+	std::vector<section_info> const& sections, std::vector<std::string> const& links)
+{
+	con_out("Outputting items:");
+
+	// Index of all section indexes
+	std::string main_index_file_name = "I-00-Index.md";
+	std::ofstream main_index_file(main_index_file_name);
+
+	for(auto const& s: sections)
+	{
+		auto section_filename = make_section_filename(s);
+
+		// I-01-Section Name 1-S1.00-index.md
+		auto index_file_name = "I-" + pad(s.index, 2)
+			+ '-' + s.name + "-" + s.mini_id + ".000-index.md";
+
+		// update I-00-Index.md
+		main_index_file << make_index_item(s.mini_id + ": " + s.name, index_file_name);
+		main_index_file << '\n';
+
+		// I-01-Section Name 1-S1.00-index.md
+		std::ofstream index_file(index_file_name);
+		index_file << "[SECTIONS](" + main_index_file_name + ")\n\n";
+
+		// #1 item_id // unique
+		// #2 mini_id // section mini_id
+		// #3 number
+		// #4 description
+		// ### <a name="Ri-singleton"></a>I.3: Avoid singletons
+		std::regex const e_item{R"~(#+\s+<a\s+name="([^"]+)"><\/a>([^.]+)\.(\d+):\s+(.*))~"};
+
+		std::sregex_iterator itr_end;
+		std::sregex_iterator itr(std::next(std::begin(doc), s.beg),
+			std::next(std::begin(doc), s.end), e_item);
+
+		pos_type pos = 0;
+		std::string item_id;
+		std::string mini_id;
+		unsigned number = 0;
+		std::string item_filename;
+		std::string description;
+
+		for(; itr != itr_end; ++itr)
+		{
+			std::string text = doc.substr(s.beg + pos, itr->position() - pos);
+
+			if(!cfg.list_only)
+			{
+				std::string index;
+				index += "[SECTIONS](" + main_index_file_name + ")";
+				index += "[OTHER ITEMS](" + index_file_name + ")";
+				output(cfg.dir, make_item_filename(s, number), index + '\n' + text + '\n' + index);
+			}
+
+			// update I-01-Section Name 1-S1.00-index.md
+			if(!pos)
+			{
+				description = "Introduction";
+				item_filename = make_item_filename(s, number);
+			}
+
+			index_file << make_index_item(s.mini_id + "." + std::to_string(number) + ": " + description,
+				item_filename);
+			index_file << '\n';
+
+			pos = itr->position();
+			item_id = itr->str(1);
+			mini_id = itr->str(2);
+			number = unsigned(std::stoul(itr->str(3)));
+			description = itr->str(4);
+			item_filename = make_item_filename(s, number);
+		}
+		index_file << "\n[SECTIONS](" + main_index_file_name + ")";
+	}
 }
 
 /// for all substrings `from` in `s` replace them with `to`
@@ -424,9 +525,10 @@ std::string urlencode(std::string const& url)
 
 /// Find all the section breaks in doc and store the relevant
 /// info needed to split the document later
-std::map<std::string, section_info> extract_section_info(std::string const& doc)
+std::vector<section_info> extract_section_info(std::string const& doc)
 {
-	std::map<std::string, section_info> sections; // long_id -> section
+	bug_fun();
+	std::vector<section_info> sections;
 
 	// #1 long_id
 	// #2 id
@@ -437,7 +539,7 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 	std::sregex_iterator itr(std::begin(doc), std::end(doc), re_sec_text);
 	std::sregex_iterator const itr_end;
 
-	std::string filename = "";
+	std::string name;
 	pos_type beg = 0;
 	std::string long_id;
 	std::string mini_id;
@@ -453,22 +555,26 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 
 		if(beg)
 		{
-			auto& section = sections[long_id];
+			sections.emplace_back();
+			auto& section = sections.back();
 
+			section.index = idx;
 			section.mini_id = mini_id;
 			section.long_id = long_id;
-			section.filename = filename;
+			section.name = name;
 			section.beg = beg;
 			section.end = itr->position();
 		}
 
 		if(itr->str(4) == "Bibliography")
 		{
-			auto& section = sections["bibliography"];
+			sections.emplace_back();
+			auto& section = sections.back();
 
+			section.index = idx + 1;
 			section.mini_id = "Bib";
 			section.long_id = "bibliography";
-			section.filename = (idx < 10 ? "0":"") + std::to_string(idx) + "-Bibliography.md";
+			section.name = "Bibliography";
 			section.beg = beg = itr->position();
 			section.end = doc.size();
 		}
@@ -478,9 +584,7 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 		mini_id = itr->str(2).empty() ? std::string("") : itr->str(2);
 
 
-		filename = (idx < 10 ? "0":"") + std::to_string(idx)
-			+ (itr->str(2).empty() ? std::string("") : "-" + itr->str(2))
-			+ (itr->str(3).empty() ? std::string("") : "-" + itr->str(3));
+		name = itr->str(3);
 
 		beg = itr->position();
 	}
@@ -488,36 +592,27 @@ std::map<std::string, section_info> extract_section_info(std::string const& doc)
 	return sections;
 }
 
-/// Scan all the anchors in each section and build a URL out of it
-std::map<std::string, std::string> build_link_database(std::string const& doc,
-	std::map<std::string, section_info> const& sections)
+std::vector<std::string> extract_links_from_anchors(std::string const& doc)
 {
-	std::map<std::string, std::string> links;
+	std::vector<std::string> links;
 
 	// build link database
 	std::regex const e_anchors{R"~(<a\s+name="([^"]+)"></a>)~"};
 
-	for(auto const& s: sections)
-	{
-		std::sregex_iterator itr_end;
-		std::sregex_iterator itr{std::next(std::begin(doc), s.second.beg),
-			std::next(std::begin(doc), s.second.end), e_anchors};
+	std::sregex_iterator itr_end;
+	std::sregex_iterator itr{std::begin(doc), std::end(doc), e_anchors};
 
-		for(; itr != itr_end; ++itr)
-			links["](#" + itr->str(1) + ")"] = "](" + urlencode(s.second.filename) + '#' + itr->str(1) + ")";
-	}
+	for(; itr != itr_end; ++itr)
+		links.push_back(itr->str(1));
 
 	return links;
 }
 
-void write(std::string const& dir, std::string const& filename, std::string const& text)
+void output(std::string const& dir, std::string const& filename, std::string const& text)
 {
-	auto pathname = dir + path_separator() + filename + ".md";
-	con_out("generating: " << pathname);
+	auto pathname = dir + path_separator() + filename;
 
-	std::ostringstream index;
-	index << "\n\n[INDEX](00-In-Introduction.md#SS-sec)\n\n";
-
-	if(!(std::ofstream(pathname) << index.str() << text << index.str()))
+	con_out("outputting: " << pathname);
+	if(!(std::ofstream(pathname) << text))
 		throw_errno(filename);
 }
