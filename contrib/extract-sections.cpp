@@ -92,8 +92,10 @@ auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::op
 // #3 title
 std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
-//
-std::regex const e_items{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
+// #1 link_id
+// #2 mini_id
+// #3 title
+std::regex const e_items{R"~(###\s+<a name="([^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*))~", fast_n_loose};
 
 // #1 link_id
 std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
@@ -101,16 +103,6 @@ std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
 //----------------------------------------------------------------------------
 // String Utilities
 //
-
-/**
- * Keep track of line endings.
- */
-class line_ender
-{
-	char const* eol = "";
-	friend std::ostream& operator<<(std::ostream& o, line_ender& le)
-		{ o << le.eol; le.eol = "\n"; return o; }
-};
 
 /**
  * For all substrings `from` in `s` replace them with `to`.
@@ -208,6 +200,12 @@ std::string pad(unsigned n, unsigned width, char padding = '0')
  */
 std::string add_syntax_heighlights(std::string const& doc)
 {
+	struct line_ender
+	{
+		char const* eol = "";
+		char const* operator()(){ auto out = eol; eol = "\n"; return out; }
+	};
+
 	line_ender eol;
 	bool indented = false;
 
@@ -219,32 +217,21 @@ std::string add_syntax_heighlights(std::string const& doc)
 		if(!indented && !line.find("    "))
 		{
 			indented = true;
-			os << eol << "```cpp";
+			os << eol() << "```cpp";
 		}
 		else if(indented && !line.empty() && line[0] != ' ')
 		{
 			indented = false;
-			os << eol << "```";
+			os << eol() << "```";
 		}
 
 		if(indented && line.size() > 3)
 			line.erase(0, 4);
 
-		os << eol << line;
+		os << eol() << line;
 	}
 
 	return os.str();
-}
-
-unsigned calc_line_number(std::string const& doc, pos_type pos)
-{
-	unsigned line_number = 0;
-	std::istringstream iss(doc.substr(0, pos));
-
-	for(std::string line; std::getline(iss, line);)
-		++line_number;
-
-	return line_number;
 }
 
 std::tuple<document_part_map, document_link_map> extract_document_sections(std::string const& doc)
@@ -258,158 +245,92 @@ std::tuple<document_part_map, document_link_map> extract_document_sections(std::
 	std::string link_id;
 	document_part part;
 
-	unsigned file_number = 0;
-
-	for(; m != e; ++m)
+	for(auto idx = 0U; m != e; ++m, ++idx)
 	{
-		bug_var(m->str(0));
 		part.end = m->position();
 
 		if(!link_id.empty())
-		{
 			parts[link_id] = part;
-
-			std::sregex_iterator e;
-			std::sregex_iterator m
-				{std::next(std::begin(doc), part.beg), std::next(std::begin(doc) + part.end), e_links};
-
-			for(; m != e; ++m)
-				links[m->str(1)] = part.filename;
-		}
 
 		link_id = m->str(1);
 		part.beg = m->position();
-		part.filename = "S-" + pad(file_number, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3)) + ".md";
-		++file_number;
+		part.filename = pad(idx, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3));
 	}
-	{
-		part.end = doc.size();
-		parts[link_id] = part;
 
-		std::sregex_iterator e;
+	part.end = doc.size();
+	parts[link_id] = part;
+
+	// TODO: factor this out
+	for(auto const& p: parts)
+	{
 		std::sregex_iterator m
-			{std::next(std::begin(doc), part.beg), std::next(std::begin(doc) + part.end), e_links};
+			{std::next(std::begin(doc), p.second.beg), std::next(std::begin(doc) + p.second.end), e_links};
 
 		for(; m != e; ++m)
-			links[m->str(1)] = part.filename;
+			links[m->str(1)] = p.second.filename;
 	}
+
 	return {parts, links};
 }
 
-int usage(std::string const& prog, int error_code);
-
-program_config parse_commandline(char const* const* argv);
-
-int main(int, char* argv[])
+// TODO: make this generic between sections and items (provide the ehole document for sections)
+std::tuple<document_part_map, document_link_map> extract_document_items(std::string const& doc,
+	std::tuple<document_part_map, document_link_map> const& section_info)
 {
 	bug_fun();
-	try
+	document_part_map parts;
+	document_link_map links;
+
+	std::sregex_iterator const e;
+
+	auto idx = 0U;
+
+	for(auto const& section: std::get<document_part_map>(section_info))
 	{
-		program_config cfg = parse_commandline(argv);
+		bug_var(section.first);
+		bug_var(section.second.filename);
+		auto section_beg = std::next(std::begin(doc), section.second.beg);
+		auto section_end = std::next(std::begin(doc), section.second.end);
 
-		if(cfg.exit_status != 2)
-			return cfg.exit_status;
+		std::sregex_iterator m{section_beg, section_end, e_items};
 
-		if(cfg.outputs.empty())
-			cfg.outputs.insert(output_type::document);
+		// initialize for item's section header (index)
+		document_part part{section.second.beg, section.second.end, section.second.filename};
+		std::string link_id = section.first;
 
-		if(cfg.pathname.empty())
-			throw_runtime_error("Pathname for CppCoreGuidelines.md required");
-
-		if(cfg.output_dir.empty())
-			cfg.output_dir = ".";
-
-		con_out("Loading: " << cfg.pathname);
-
-		if(cfg.use_syntax_colors)
-			con_out("Colorizing:");
-
-		std::string const doc = cfg.use_syntax_colors
-			? add_syntax_heighlights(load_file(cfg.pathname))
-			: load_file(cfg.pathname);
-
-		// TESTING
-
-
-		std::exit(1);
-
-		// TESTING End
-
-		if(cfg.outputs.count(output_type::document))
+		for(; m != e; ++m, ++idx)
 		{
-			auto new_pathname = cfg.output_dir + path_separator() + program_name(cfg.pathname);
+			bug_var(m->str(3));
+			part.end = section.second.beg + m->position();
 
-			// TODO: Use <filesystem> to makes this more reliable
-			if(new_pathname == cfg.pathname)
-				throw_runtime_error("can not overwrite the original, specify a different directory");
+			parts[link_id] = part;
 
-			con_out("Outputting document: " << new_pathname);
-			if(!cfg.list_only)
-				if(!(std::ofstream(new_pathname) << doc))
-					throw_errno(new_pathname);
+			link_id = m->str(1);
+			part.filename = section.second.filename + "-" + m->str(2);
+			part.beg = part.end;
 		}
 
-		if(cfg.outputs.count(output_type::sections))
-		{
-			con_out("Outputting sections:");
-
-			auto sections = extract_document_sections(doc);
-
-			for(auto const& part: std::get<document_part_map>(sections))
-			{
-				con_out("creating: " << part.second.filename);
-
-				auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
-
-				for(auto const& link: std::get<document_link_map>(sections))
-					replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
-
-				auto filepath = cfg.output_dir + path_separator() + part.second.filename;
-
-				if(!(std::ofstream(filepath) << text))
-					throw_errno(part.second.filename);
-			}
-		}
-
-		if(cfg.outputs.count(output_type::items))
-		{
-			con_out("Outputting individual items:");
-
-			auto sections = extract_document_sections(doc);
-
-			for(auto const& part: std::get<document_part_map>(sections))
-			{
-				con_out("creating: " << part.second.filename);
-
-				auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
-
-				for(auto const& link: std::get<document_link_map>(sections))
-					replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
-
-				auto filepath = cfg.output_dir + path_separator() + part.second.filename;
-
-				if(!(std::ofstream(filepath) << text))
-					throw_errno(part.second.filename);
-			}
-		}
+		part.end = section.second.end;
+		parts[link_id] = part;
 	}
-	catch(std::exception const& e)
+
+	// TODO: factor this out
+	for(auto const& p: parts)
 	{
-		con_err(program_name(argv[0]) << ": " << e.what());
-		return EXIT_FAILURE;
-	}
-	catch(...)
-	{
-		con_err(program_name(argv[0]) << ": unknown error");
-		return EXIT_FAILURE;
+		auto part_beg = std::next(std::begin(doc), p.second.beg);
+		auto part_end = std::next(std::begin(doc), p.second.end);
+
+		std::sregex_iterator m{part_beg, part_end, e_items};
+
+		for(; m != e; ++m)
+			links[m->str(1)] = p.second.filename;
 	}
 
-	return EXIT_SUCCESS;
+	return {parts, links};
 }
 
 int usage(std::string const& prog, int error_code)
 {
-
 	con_out("");
 	con_out("Usage: " << prog << " [OPTIONS] <input.md> [<out-dir>]");
 	con_out("");
@@ -456,4 +377,108 @@ program_config parse_commandline(char const* const* argv)
 	}
 
 	return cfg;
+}
+
+int main(int, char* argv[])
+{
+	bug_fun();
+	try
+	{
+		program_config cfg = parse_commandline(argv);
+
+		if(cfg.exit_status != 2)
+			return cfg.exit_status;
+
+		if(cfg.outputs.empty())
+			cfg.outputs.insert(output_type::document);
+
+		if(cfg.pathname.empty())
+			throw_runtime_error("Pathname for CppCoreGuidelines.md required");
+
+		if(cfg.output_dir.empty())
+			cfg.output_dir = ".";
+
+		con_out("Loading: " << cfg.pathname);
+
+		if(cfg.use_syntax_colors)
+			con_out("Colorizing:");
+
+		std::string const doc = cfg.use_syntax_colors
+			? add_syntax_heighlights(load_file(cfg.pathname))
+			: load_file(cfg.pathname);
+
+		if(cfg.outputs.count(output_type::document))
+		{
+			auto new_pathname = cfg.output_dir + path_separator() + program_name(cfg.pathname);
+
+			// TODO: Use <filesystem> to makes this more reliable
+			if(new_pathname == cfg.pathname)
+				throw_runtime_error("can not overwrite the original, specify a different directory");
+
+			con_out("Outputting document: " << new_pathname);
+			if(!cfg.list_only)
+				if(!(std::ofstream(new_pathname) << doc))
+					throw_errno(new_pathname);
+		}
+
+		if(cfg.outputs.count(output_type::sections)
+		|| cfg.outputs.count(output_type::items))
+		{
+			auto section_info = extract_document_sections(doc);
+
+			if(cfg.outputs.count(output_type::sections))
+			{
+				con_out("Outputting sections:");
+
+				for(auto const& part: std::get<document_part_map>(section_info))
+				{
+					con_out("creating: " << part.second.filename);
+
+					auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+
+					for(auto const& link: std::get<document_link_map>(section_info))
+						replace_all(text, "](#" + link.first + ")", "](S-" + link.second + ".md#" + link.first + ")");
+
+					auto filepath = cfg.output_dir + path_separator() + "S-" + part.second.filename + ".md";
+
+					if(!(std::ofstream(filepath) << text))
+						throw_errno(part.second.filename);
+				}
+			}
+
+			if(cfg.outputs.count(output_type::items))
+			{
+				con_out("Outputting individual items:");
+
+				auto item_info = extract_document_items(doc, section_info);
+
+				for(auto const& part: std::get<document_part_map>(item_info))
+				{
+					con_out("creating: " << part.second.filename);
+
+					auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+
+					for(auto const& link: std::get<document_link_map>(item_info))
+						replace_all(text, "](#" + link.first + ")", "](I-" + link.second + ".md#" + link.first + ")");
+
+					auto filepath = cfg.output_dir + path_separator() + "I-" + part.second.filename + ".md";
+
+					if(!(std::ofstream(filepath) << text))
+						throw_errno(filepath);
+				}
+			}
+		}
+	}
+	catch(std::exception const& e)
+	{
+		con_err(program_name(argv[0]) << ": " << e.what());
+		return EXIT_FAILURE;
+	}
+	catch(...)
+	{
+		con_err(program_name(argv[0]) << ": unknown error");
+		return EXIT_FAILURE;
+	}
+
+	return EXIT_SUCCESS;
 }
