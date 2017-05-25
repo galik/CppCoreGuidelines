@@ -132,7 +132,7 @@ if (i < 0)
 
 Use a tool.
 
-### <a name="Rl-name-type"></a>NL.5 Don't encode type information in names
+### <a name="Rl-name-type"></a>NL.5: Don't encode type information in names
 
 ##### Rationale
 

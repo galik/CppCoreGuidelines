@@ -582,7 +582,7 @@ void some_fct(int* p)
 }
 
 ```
-A `gsl::joining_thread` is a `std::thread` with a destructor that joined and cannot be `detached()`.
+A `gsl::joining_thread` is a `std::thread` with a destructor that joins and that cannot be `detached()`.
 By "OK" we mean that the object will be in scope ("live") for as long as a `thread` can use the pointer to it.
 The fact that `thread`s run concurrently doesn't affect the lifetime or ownership issues here;
 these `thread`s can be seen as just a function object called from `some_fct`.
@@ -714,7 +714,7 @@ void use(int n)
 }
 
 ```
-This seriously complicted lifetime analysis, and in not too unlikely cases make lifetime analysis impossible.
+This seriously complicates lifetime analysis, and in not too unlikely cases makes lifetime analysis impossible.
 This implies that we cannot safely refer to local objects in `use()` from the thread or refer to local objects in the thread from `use()`.
 
 ##### Note
@@ -728,7 +728,7 @@ Because of old code and third party libraries using `std::thread` this rule can 
 
 ##### Enforcement
 
-Flag uses of 'std::thread':
+Flag uses of `std::thread`:
 
 * Suggest use of `gsl::joining_thread`.
 * Suggest ["exporting ownership"](09-CP-Concurrency%20and%20Parallelism.md#Rconc-detached_thread) to an enclosing scope if it detaches.
@@ -739,8 +739,8 @@ Flag uses of 'std::thread':
 ##### Reason
 
 Often, the need to outlive the scope of its creation is inherent in the `thread`s task,
-but implementing that idea by `detach` makes it harder monitor and communicat with the detached thread.
-In particular, it is harder (though not impossible) to ensure that the thread completed as expected or lived for as long as expected.
+but implementing that idea by `detach` makes it harder to monitor and communicate with the detached thread.
+In particular, it is harder (though not impossible) to ensure that the thread completed as expected or lives for as long as expected.
 
 ##### Example
 
@@ -758,9 +758,9 @@ void use()
 This is a reasonable use of a thread, for which `detach()` is commonly used.
 There are problems, though.
 How do we monitor the detached thread to see if it is alive?
-Something might go wrong with the heartbeat, and loosing a haertbeat can be very serious in a system for which it is needed.
-So, we need to communicate with the haertbeat thread
-(e.g., through a stream of messages or notification events using a `conrition_variable`).
+Something might go wrong with the heartbeat, and losing a heartbeat can be very serious in a system for which it is needed.
+So, we need to communicate with the heartbeat thread
+(e.g., through a stream of messages or notification events using a `condition_variable`).
 
 An alternative, and usually superior solution is to control its lifetime by placing it in a scope outside its point of creation (or activation).
 For example:
@@ -782,7 +782,8 @@ unique_ptr<gsl::joining_thread> tick_tock {nullptr};
 
 void use()
 {
-    tick_toc = make_unique(gsl::joining_thread,heartbeat);       // heartbeat is meant to run as long as tick_tock lives
+    // heartbeat is meant to run as long as tick_tock lives
+    tick_tock = make_unique<gsl::joining_thread>(heartbeat);
     // ...
 }
 

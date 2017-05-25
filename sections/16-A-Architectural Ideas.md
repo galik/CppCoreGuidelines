@@ -8,9 +8,9 @@ This section contains ideas about higher-level architectural ideas and libraries
 
 Architectural rule summary:
 
-* [A.1 Separate stable from less stable part of code](16-A-Architectural%20Ideas.md#Ra-stable)
-* [A.2 Express potentially reusable parts as a library](16-A-Architectural%20Ideas.md#Ra-lib)
-* [A.4 There should be no cycles among libraries](#?Ra-dag)
+* [A.1: Separate stable from less stable part of code](16-A-Architectural%20Ideas.md#Ra-stable)
+* [A.2: Express potentially reusable parts as a library](16-A-Architectural%20Ideas.md#Ra-lib)
+* [A.4: There should be no cycles among libraries](#?Ra-dag)
 * [???](#???)
 * [???](#???)
 * [???](#???)
@@ -18,11 +18,11 @@ Architectural rule summary:
 * [???](#???)
 * [???](#???)
 
-### <a name="Ra-stable"></a>A.1 Separate stable from less stable part of code
+### <a name="Ra-stable"></a>A.1: Separate stable from less stable part of code
 
 ???
 
-### <a name="Ra-lib"></a>A.2 Express potentially reusable parts as a library
+### <a name="Ra-lib"></a>A.2: Express potentially reusable parts as a library
 
 ##### Reason
 
@@ -33,7 +33,7 @@ A library could be a set of headers (a "header only library") or a set of header
 A library can be statically or dynamically linked into a program, or it may be `#included`
 
 
-### <a name="Ra-dag"></a>A.4 There should be no cycles among libraries
+### <a name="Ra-dag"></a>A.4: There should be no cycles among libraries
 
 ##### Reason
 

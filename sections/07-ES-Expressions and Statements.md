@@ -57,6 +57,7 @@ Expression rules:
 * [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](07-ES-Expressions%20and%20Statements.md#Res-del)
 * [ES.62: Don't compare pointers into different arrays](07-ES-Expressions%20and%20Statements.md#Res-arr2)
 * [ES.63: Don't slice](07-ES-Expressions%20and%20Statements.md#Res-slice)
+* [ES.64: Use the `T{e}`notation for construction](07-ES-Expressions%20and%20Statements.md#Res-construct)
 
 Statement rules:
 
@@ -769,6 +770,31 @@ Creating optimal and equivalent code from all of these examples should be well w
 (but don't make performance claims without measuring; a compiler may very well not generate optimal code for every example and
 there may be language rules preventing some optimization that you would have liked in a particular case).
 
+##### Example
+
+This rule covers member variables.
+
+```cpp
+class X {
+public:
+    X(int i, int ci) : m2{i}, cm2{ci} {}
+    // ...
+
+private:
+    int m1 = 7;
+    int m2;
+    int m3;
+
+    const int cm1 = 7;
+    const int cm2;
+    const int cm3;
+};
+
+```
+The compiler will flag the uninitialized `cm3` because it is a `const`, but it will not catch the lack of initialization of `m3`.
+Usually, a rare spurious member initialization is worth the absence of errors from lack of initialization and often an optimizer
+can eliminate a redundant initialization (e.g., an initialization that occurs immediately before an assignment).
+
 ##### Note
 
 Complex initialization has been popular with clever programmers for decades.
@@ -1373,6 +1399,7 @@ This is basically the way `printf` is implemented.
 
 * Flag definitions of C-style variadic functions.
 * Flag `#include <cstdarg>` and `#include <stdarg.h>`
+
 
 ## ES.stmt: Statements
 
@@ -2047,19 +2074,223 @@ if (a < 0 || a <= max) {
 
 Complicated pointer manipulation is a major source of errors.
 
-* Do all pointer arithmetic on a `span` (exception ++p in simple loop???)
-* Avoid pointers to pointers
-* ???
+##### Note
 
-##### Example
+Use `gsl::span` instead.
+Pointers should [only refer to single objects](02-I-Interfaces.md#Ri-array).
+Pointer arithmetic is fragile and easy to get wrong, the source of many, many bad bugs and security violations.
+`span` is a bounds-checked, safe type for accessing arrays of data.
+Access into an array with known bounds using a constant as a subscript can be validated by the compiler.
+
+##### Example, bad
 
 ```cpp
-???
+void f(int* p, int count)
+{
+    if (count < 2) return;
+
+    int* q = p + 1; // BAD
+
+    ptrdiff_t d;
+    int n;
+    d = (p - &n); // OK
+    d = (q - p); // OK
+
+    int n = *p++; // BAD
+
+    if (count < 6) return;
+
+    p[4] = 1; // BAD
+
+    p[count - 1] = 2; // BAD
+
+    use(&p[0], 3); // BAD
+}
+
+```
+##### Example, good
+
+```cpp
+void f(span<int> a) // BETTER: use span in the function declaration
+{
+    if (a.length() < 2) return;
+
+    int n = a[0]; // OK
+
+    span<int> q = a.subspan(1); // OK
+
+    if (a.length() < 6) return;
+
+    a[4] = 1; // OK
+
+    a[count - 1] = 2; // OK
+
+    use(a.data(), 3); // OK
+}
+
+```
+##### Note
+
+Subscripting with a variable is difficult for both tools and humans to validate as safe.
+`span` is a run-time bounds-checked, safe type for accessing arrays of data.
+`at()` is another alternative that ensures single accesses are bounds-checked.
+If iterators are needed to access an array, use the iterators from a `span` constructed over the array.
+
+##### Example, bad
+
+```cpp
+void f(array<int, 10> a, int pos)
+{
+    a[pos / 2] = 1; // BAD
+    a[pos - 1] = 2; // BAD
+    a[-1] = 3;    // BAD (but easily caught by tools) -- no replacement, just don't do this
+    a[10] = 4;    // BAD (but easily caught by tools) -- no replacement, just don't do this
+}
+
+```
+##### Example, good
+
+Use a `span`:
+
+```cpp
+void f1(span<int, 10> a, int pos) // A1: Change parameter type to use span
+{
+    a[pos / 2] = 1; // OK
+    a[pos - 1] = 2; // OK
+}
+
+void f2(array<int, 10> arr, int pos) // A2: Add local span and use that
+{
+    span<int> a = {arr, pos}
+    a[pos / 2] = 1; // OK
+    a[pos - 1] = 2; // OK
+}
+
+```
+Use a `at()`:
+
+```cpp
+void f3(array<int, 10> a, int pos) // ALTERNATIVE B: Use at() for access
+{
+    at(a, pos / 2) = 1; // OK
+    at(a, pos - 1) = 2; // OK
+}
+
+```
+##### Example, bad
+
+```cpp
+void f()
+{
+    int arr[COUNT];
+    for (int i = 0; i < COUNT; ++i)
+        arr[i] = i; // BAD, cannot use non-constant indexer
+}
+
+```
+##### Example, good
+
+Use a `span`:
+
+```cpp
+void f1()
+{
+    int arr[COUNT];
+    span<int> av = arr;
+    for (int i = 0; i < COUNT; ++i)
+        av[i] = i;
+}
+
+```
+Use a `span` and range-`for`:
+
+```cpp
+void f1a()
+{
+     int arr[COUNT];
+     span<int, COUNT> av = arr;
+     int i = 0;
+     for (auto& e : av)
+         e = i++;
+}
+
+```
+Use `at()` for access:
+
+```cpp
+void f2()
+{
+    int arr[COUNT];
+    for (int i = 0; i < COUNT; ++i)
+        at(arr, i) = i;
+}
+
+```
+Use a range-`for`:
+
+```cpp
+void f3()
+{
+    int arr[COUNT];
+    for (auto& e : arr)
+         e = i++;
+}
+
+```
+##### Note
+
+Tooling can offer rewrites of array accesses that involve dynamic index expressions to use `at()` instead:
+
+```cpp
+static int a[10];
+
+void f(int i, int j)
+{
+    a[i + j] = 12;      // BAD, could be rewritten as ...
+    at(a, i + j) = 12;  // OK -- bounds-checked
+}
+
+```
+##### Example
+
+Turning an array into a pointer (as the language does essentially always) removes opportunities for checking, so avoid it
+
+```cpp
+void g(int* p);
+
+void f()
+{
+    int a[5];
+    g(a);        // BAD: are we trying to pass an array?
+    g(&a[0]);    // OK: passing one object
+}
+
+```
+If you want to pass an array, say so:
+
+```cpp
+void g(int* p, size_t length);  // old (dangerous) code
+
+void g1(span<int> av); // BETTER: get g() changed.
+
+void f2()
+{
+    int a[5];
+    span<int> av = a;
+
+    g(av.data(), av.length());   // OK, if you have no choice
+    g1(a);                       // OK -- no decay here, instead use implicit span ctor
+}
 
 ```
 ##### Enforcement
 
-We need a heuristic limiting the complexity of pointer arithmetic statement.
+* Flag any arithmetic operation on an expression of pointer type that results in a value of pointer type.
+* Flag any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a compile-time constant expression with a value between `0` or and the upper bound of the array.
+* Flag any expression that would rely on implicit conversion of an array type to a pointer type.
+
+This rule is part of the [bounds-safety profile](19-Pro-Profiles.md#SS-bounds).
+
 
 ### <a name="Res-order"></a>ES.43: Avoid expressions with undefined order of evaluation
 
@@ -2104,15 +2335,23 @@ int i = 0;
 f(++i, ++i);
 
 ```
-The call will most likely be `f(0, 1)` or `f(1, 0)`, but you don't know which. Technically, the behavior is undefined.
+The call will most likely be `f(0, 1)` or `f(1, 0)`, but you don't know which.
+Technically, the behavior is undefined.
+In C++17, this code does not have undefined behavior, but it is still not specified which argument is evaluated first.
 
 ##### Example
 
-??? overloaded operators can lead to order of evaluation problems (shouldn't :-()
+Overloaded operators can lead to order of evaluation problems:
 
 ```cpp
-f1()->m(f2());   // m(f1(), f2())
+f1()->m(f2());          // m(f1(), f2())
 cout << f1() << f2();   // operator<<(operator<<(cout, f1()), f2())
+
+```
+In C++17, these examples work as expected (left to right) and assignments are evaluated right to left (just as ='s binding is right-to-left)
+
+```cpp
+f1() = f2();    // undefined behavior in C++14; in C++17, f2() is evaluated before f1()
 
 ```
 ##### Enforcement
@@ -2284,7 +2523,7 @@ If you feel the need for a lot of casts, there may be a fundamental design probl
 
 ##### Alternatives
 
-Casts are widely (mis) used. Modern C++ has constructs that eliminats the need for casts in many contexts, such as
+Casts are widely (mis) used. Modern C++ has constructs that eliminate the need for casts in many contexts, such as
 
 * Use templates
 * Use `std::variant`
@@ -2352,7 +2591,7 @@ for example.)
 
 ##### Note
 
-`reinterpret_cast` can be essential, but the essential uses (e.g., turning a machine addresses into pointer) are not type safe:
+`reinterpret_cast` can be essential, but the essential uses (e.g., turning a machine address into pointer) are not type safe:
 
 ```cpp
 auto p = reinterpret_cast<Device_register>(0x800);  // inherently dangerous
@@ -2823,6 +3062,107 @@ Circle c2 {sm.copy_circle()};
 ##### Enforcement
 
 Warn against slicing.
+
+### <a name="Res-construct"></a>ES.64: Use the `T{e}`notation for construction
+
+##### Reason
+
+The `T{e}` construction syntax makes it explicit that construction is desired.
+The `T{e}` construction syntax doesn't allow narrowing.
+`T{e}` is the only safe and general expression for constructing a value of type `T` from an expression `e`.
+The casts notations `T(e)` and `(T)e` are neither safe nor general.
+
+##### Example
+
+For built-in types, the construction notation protects against narrowing and reinterpretation
+
+```cpp
+void use(char ch, int i, double d, char* p, long long lng)
+{
+    int x1 = int{ch};     // OK, but redundant
+    int x2 = int{d};      // error: double->int narrowing; use a cast if you need to
+    int x3 = int{p};      // error: pointer to->int; use a reinterpret_cast if you really need to
+    int x4 = int{lng};    // error: long long->int narrowing; use a cast if you need to
+
+    int y1 = int(ch);     // OK, but redundant
+    int y2 = int(d);      // bad: double->int narrowing; use a cast if you need to
+    int y3 = int(p);      // bad: pointer to->int; use a reinterpret_cast if you really need to
+    int y4 = int(lng);    // bad: long->int narrowing; use a cast if you need to
+
+    int z1 = (int)ch;     // OK, but redundant
+    int z2 = (int)d;      // bad: double->int narrowing; use a cast if you need to
+    int z3 = (int)p;      // bad: pointer to->int; use a reinterpret_cast if you really need to
+    int z4 = (int)lng;    // bad: long long->int narrowing; use a cast if you need to
+}
+
+```
+The integer to/from pointer conversions are implementation defined when using the `T(e)` or `(T)e` notations, and non-portable
+between platforms with different integer and pointer sizes.
+
+##### Note
+
+[Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts) (explicit type conversion) and if you must [prefer named casts](07-ES-Expressions%20and%20Statements.md#Res-casts-named).
+
+##### Note
+
+When unambiguous, the `T` can be left out of `T{e}`.
+
+```cpp
+complex<double> f(complex<double>);
+
+auto z = f({2*pi, 1});
+
+```
+##### Note
+
+The construction notation is the most general [initializer notation](07-ES-Expressions%20and%20Statements.md#Res-list).
+
+##### Exception
+
+`std::vector` and other containers were defined before we had `{}` as a notation for construction.
+Consider:
+
+```cpp
+vector<string> vs {10};                           // ten empty strings
+vector<int> vi1 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};  // ten elements 1..10
+vector<int> vi2 {10};                             // one element with the value 10
+
+```
+How do we get a `vector` of 10 default initialized `int`s?
+
+```cpp
+vector<int> v3(10); // ten elements with value 0
+
+```
+The use of `()` rather than `{}` for number of elements is conventional (going back to the early 1980s), hard to change, but still
+a design error: for a container where the element type can be confused with the number of elements, we have an ambiguity that
+must be resolved.
+The conventional resolution is to interpret `{10}` as a list of one element and use `(10)` to distinguish a size.
+
+This mistake need not be repeated in new code.
+We can define a type to represent the number of elements:
+
+```cpp
+struct Count { int n };
+
+template<typename T>
+class Vector {
+public:
+    Vector(Count n);                     // n default-initialized elements
+    Vector(initializer_list<T> init);    // init.size() elements
+    // ...
+};
+
+Vector<int> v1{10};
+Vector<int> v2{Count{10}};
+Vector<Count> v3{Count{10}};    // yes, there is still a very minor problem
+
+```
+The main problem left is to find a suitable name for `Count`.
+
+##### Enforcement
+
+Flag the C-style `(T)e` and functional-style `T(e)` casts.
 
 ## <a name="SS-numbers"></a>Arithmetic
 

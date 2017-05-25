@@ -87,7 +87,7 @@ Functions can be template functions and sets of functions can be classes or clas
 * (Simple) A function should not make control-flow decisions based on the values of variables declared at namespace scope.
 * (Simple) A function should not write to variables declared at namespace scope.
 
-### <a name="Ri-global"></a>I.2 Avoid global variables
+### <a name="Ri-global"></a>I.2: Avoid global variables
 
 ##### Reason
 

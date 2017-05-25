@@ -411,7 +411,7 @@ Concrete type rule summary:
 * [C.10: Prefer concrete types over class hierarchies](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-concrete)
 * [C.11: Make concrete types regular](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-regular)
 
-### <a name="Rc-concrete"></a>C.10 Prefer concrete types over class hierarchies
+### <a name="Rc-concrete"></a>C.10: Prefer concrete types over class hierarchies
 
 ##### Reason
 
@@ -1434,7 +1434,7 @@ struct Shape {  // pure interface: all members are pure virtual functions
 };
 
 ```
-A class that represent a unmodifiable 
+A class that must acquire a resource during construction:
 
 ```cpp
 lock_guard g {mx};  // guard the mutex mx
@@ -3536,7 +3536,7 @@ Factoring out `Utility` makes sense if many derived classes share significant "i
 
 Obviously, the example is too "theoretical", but it is hard to find a *small* realistic example.
 `Interface` is the root of an [interface hierarchy](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-abstract)
-and `Utility` is the root of an [implementation hierarchy](Rh-kind).
+and `Utility` is the root of an [implementation hierarchy](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-kind).
 Here is [a slightly more realistic example](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) with an explanation.
 
 ##### Note
@@ -3750,12 +3750,19 @@ void user(B* pb)
 }
 
 ```
-Use of the other casts casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
+Use of the other casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
 
 ```cpp
 void user2(B* pb)   // bad
 {
-    if (D* pd = static_cast<D*>(pb)) {  // I know that pb really points to a D; trust me
+    D* pd = static_cast<D*>(pb);    // I know that pb really points to a D; trust me
+    // ... use D's interface ...
+}
+
+void user3(B* pb)    // unsafe
+{
+    if (some_condition) {
+        D* pd = static_cast<D*>(pb);   // I know that pb really points to a D; trust me
         // ... use D's interface ...
     }
     else {
@@ -3768,6 +3775,7 @@ void f()
     B b;
     user(&b);   // OK
     user2(&b);  // bad error
+    user3(&b);  // OK *if* the programmer got the some_condition check right
 }
 
 ```
@@ -3791,8 +3799,9 @@ Consider:
 
 ```cpp
 struct B {
-    const char* name {"B"}; 
-    virtual const char* id() const { return name; }     // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+    const char* name {"B"};
+    // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+    virtual const char* id() const { return name; }
     // ...
 };
 
@@ -4017,12 +4026,12 @@ use(a);       // bad: a decays to &a[0] which is converted to a B*
 * Pass an array as a `span` rather than as a pointer, and don't let the array name suffer a derived-to-base conversion before getting into the `span`
 
 
-### <a name="Rh-use-virtual"></a>CC.153: Prefer virtual function to casting
+### <a name="Rh-use-virtual"></a>C.153: Prefer virtual function to casting
 
 ##### Reason
 
 A virtual function call is safe, whereas casting is error-prone.
-A virtual function call reached the most derived function, whereas a cast may reach an intermediate class and therefore
+A virtual function call reaches the most derived function, whereas a cast may reach an intermediate class and therefore
 give a wrong result (especially as a hierarchy is modified during maintenance).
 
 ##### Example
@@ -4033,7 +4042,7 @@ give a wrong result (especially as a hierarchy is modified during maintenance).
 ```
 ##### Enforcement
 
-See [C.146] and [???]
+See [C.146](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-dynamic_cast) and ???
 
 ## <a name="SS-overload"></a>C.over: Overloading and overloaded operators
 
