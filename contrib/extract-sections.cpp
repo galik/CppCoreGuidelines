@@ -64,6 +64,7 @@ struct program_config
 	std::string pathname;
 	bool use_syntax_colors = false;
 	bool list_only = false;
+	bool verbose = false;
 	std::set<output_type> outputs;
 	int exit_status = 2;
 };
@@ -90,12 +91,12 @@ auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::op
 // #1 link_id
 // #2 mini_id
 // #3 title
-std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
+std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"><\/a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
 // #1 link_id
 // #2 mini_id
 // #3 title
-std::regex const e_items{R"~(###\s+<a name="([^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*))~", fast_n_loose};
+std::regex const e_items{R"~(###\s+<a name="([^"]+)"><\/a>(?:((?:[^\s:]| )+):\s+)?(.*))~", fast_n_loose};
 
 // #1 link_id
 std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
@@ -273,11 +274,21 @@ std::tuple<document_part_map, document_link_map> extract_document_sections(std::
 	return {parts, links};
 }
 
+std::size_t line_number(std::string const& doc, pos_type pos)
+{
+	std::size_t count = 1;
+
+	std::istringstream iss{std::string{std::begin(doc), std::next(std::begin(doc), pos)}};
+	for(std::string line; std::getline(iss, line);)
+		++count;
+
+	return count;
+}
+
 // TODO: make this generic between sections and items (provide the ehole document for sections)
 std::tuple<document_part_map, document_link_map> extract_document_items(std::string const& doc,
 	std::tuple<document_part_map, document_link_map> const& section_info)
 {
-	bug_fun();
 	document_part_map parts;
 	document_link_map links;
 
@@ -287,8 +298,6 @@ std::tuple<document_part_map, document_link_map> extract_document_items(std::str
 
 	for(auto const& section: std::get<document_part_map>(section_info))
 	{
-		bug_var(section.first);
-		bug_var(section.second.filename);
 		auto section_beg = std::next(std::begin(doc), section.second.beg);
 		auto section_end = std::next(std::begin(doc), section.second.end);
 
@@ -300,10 +309,15 @@ std::tuple<document_part_map, document_link_map> extract_document_items(std::str
 
 		for(; m != e; ++m, ++idx)
 		{
-			bug_var(m->str(3));
-			part.end = section.second.beg + m->position();
+//			bug_var(m->str(3));
 
-			parts[link_id] = part;
+			if(m->str(2).empty())
+				con_err("item is missing an item tag: " << line_number(doc, section.second.beg + m->position()) << ": " << m->str());
+			else
+			{
+				part.end = section.second.beg + m->position();
+				parts[link_id] = part;
+			}
 
 			link_id = m->str(1);
 			part.filename = section.second.filename + "-" + m->str(2);
@@ -339,12 +353,12 @@ int usage(std::string const& prog, int error_code)
 	con_out("");
 	con_out("OPTIONS");
 	con_out("");
-	con_out(" -h|--help     - Print this help massage.");
 	con_out(" -c|--color    - Output GitHub syntax coloring.");
 	con_out(" -d|--document - Output the whole document.");
-	con_out(" -s|--sections - Output a file for each document section.");
-	con_out(" -i|--items    - Output a file for each section item.");
 	con_out(" -h|--help     - Print this help massage.");
+	con_out(" -i|--items    - Output a file for each section item.");
+	con_out(" -s|--sections - Output a file for each document section.");
+	con_out(" -v|--verbose  - Output more information.");
 	con_out("");
 
 	return error_code;
@@ -368,6 +382,8 @@ program_config parse_commandline(char const* const* argv)
 			cfg.outputs.insert(output_type::items);
 		else if(!std::strcmp(*arg, "-l") || !std::strcmp(*arg, "--list"))
 			cfg.list_only = true;
+		else if(!std::strcmp(*arg, "-v") || !std::strcmp(*arg, "--verbose"))
+			cfg.verbose = true;
 		else if((*arg)[0] == '-')
 			throw_runtime_error("unknown option: " << *arg);
 		else if(cfg.pathname.empty())
@@ -454,7 +470,8 @@ int main(int, char* argv[])
 
 				for(auto const& part: std::get<document_part_map>(item_info))
 				{
-					con_out("creating: " << part.second.filename);
+					if(cfg.verbose)
+						con_out("creating: " << part.second.filename);
 
 					auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
 
