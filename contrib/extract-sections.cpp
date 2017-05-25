@@ -68,33 +68,18 @@ struct program_config
 	int exit_status = 2;
 };
 
-struct section_info
+struct document_part
 {
-	// # <a name="S-expr"></a>ES: Expressions and Statements
-	unsigned index;
-	std::string mini_id; // ES
-	std::string long_id; // S-expr
-	std::string name;    // Expressions and Statements
-
-	// offsets into the document
-	pos_type beg;
-	pos_type end;
+	pos_type beg = 0;
+	pos_type end = 0;
+	std::string filename;
 };
 
-using section_info_vector = std::vector<section_info>;
+// link_id -> {filename, beg, end}
+using document_part_map = std::map<std::string, document_part>;
 
-struct anchor_info
-{
-	// ### <a name="Rc-throw"></a>C.42: If a constructor ...
-	unsigned type = 0;   // 1 = section, 2 = sub-section, 3 = item
-	std::string mini_id; // C
-	std::string long_id; // Rc-throw (unique)
-	std::string item_id; // C.42
-	std::string info;    // If a constructor ...
-	pos_type pos = 0;    // offsets into the document
-};
-
-using anchor_info_vector = std::vector<anchor_info>;
+// link_id -> filename
+using document_link_map = std::map<std::string, std::string>;
 
 //----------------------------------------------------------------------------
 // Regular Expressions
@@ -102,25 +87,16 @@ using anchor_info_vector = std::vector<anchor_info>;
 
 auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::optimize;
 
-// #1 type
-// #2 long_id
-// #3 mini_id
-// #4 item_number
-// #5 info
-// #6 Bibliography
-// item_id = mini_id "." item_number
-std::regex const e_anchors
+// #1 link_id
+// #2 mini_id
+// #3 title
+std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
-{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>(?:(((?:[^\s.]| )+).(?:((?:[^\s:]| )+))?):\s)?((?:\S| )+)|#\s+(Bibliography))~", fast_n_loose};
-//{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>(?:((?:[^\s.]| )+).(?:((?:[^\s:]| )+))?:\s)?((?:\S| )+)|#\s+(Bibliography))~", fast_n_loose};
+//
+std::regex const e_items{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
-//std::vector<std::regex> e_anchors =
-//{
-//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:[^\s.]| )+)\.((?:[^\s:]| )+):\s+((?:\S| )+))~", fast_n_loose},
-//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:[^\s.]| )+):\s+((?:\S| )+))~", fast_n_loose},
-//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:\S| )+))~", fast_n_loose},
-//	std::regex{R"~(#\s+Bibliography)~", fast_n_loose},
-//};
+// #1 link_id
+std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
 
 //----------------------------------------------------------------------------
 // String Utilities
@@ -271,45 +247,13 @@ unsigned calc_line_number(std::string const& doc, pos_type pos)
 	return line_number;
 }
 
-// link_id -> {filename, beg, end}
-
-struct document_part
-{
-	pos_type beg = 0;
-	pos_type end = 0;
-	std::string filename;
-//	std::string link_id; // unique links
-};
-
-using document_part_map = std::map<std::string, document_part>;
-using document_link_map = std::map<std::string, std::string>; // link_id -> filename
-
-/**
- *
- * @param doc
- * @param level 1 -> S, 2 -> SS, 3 -> I
- * @return
- */
 std::tuple<document_part_map, document_link_map> extract_document_sections(std::string const& doc)
 {
-	bug_fun();
-	// #1 level
-	// #2 link_id
-	// #3 item_id
-	// #4 info
-//	std::regex const e_parts{R"~((?:(#{1,3})\s+<a name="([^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|(#\s+Bibliography)))~", fast_n_loose};
-
-	// #1 link_id
-	// #2 mini_id
-	// #3 title
-	std::regex const e_parts{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
-	std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
-
 	document_part_map parts;
 	document_link_map links;
 
 	std::sregex_iterator e;
-	std::sregex_iterator m{std::begin(doc), std::end(doc), e_parts};
+	std::sregex_iterator m{std::begin(doc), std::end(doc), e_sects};
 
 	std::string link_id;
 	document_part part;
@@ -352,44 +296,9 @@ std::tuple<document_part_map, document_link_map> extract_document_sections(std::
 	return {parts, links};
 }
 
-/// Find all the section breaks in doc and store the relevant
-/// info needed to split the document later
-section_info_vector extract_section_info(std::string const& doc);
-
-/// Scan all the anchors in each section and build a URL out of it
-//std::map<std::string, std::string> build_link_database(std::string const& doc,
-//	section_info_vector const& sections);
-anchor_info_vector extract_anchor_info(std::string const& doc);
-
-void output_file(std::string const& dir, std::string const& filename, std::string const& text);
-
 int usage(std::string const& prog, int error_code);
 
-// "S-02-Section Name.md"
-std::string make_section_filename(section_info const& s)
-{
-	return "S-" + pad(s.index, 2) + '-' + s.name + ".md";
-}
-
-// "I-02-Section Name-P.01.md"
-std::string make_item_filename(section_info const& s, unsigned idx)
-{
-	return "I-" + pad(s.index, 2) + '-' + s.name
-		+ '-' + s.mini_id + '.' + pad(idx, 3) + ".md";
-}
-
-std::string make_index_item(std::string const& text, std::string const& link)
-{
-	return "* [" + text + "](" + link + ")";
-}
-
 program_config parse_commandline(char const* const* argv);
-
-void output_section_files(program_config const& cfg, std::string const& doc,
-	section_info_vector const& sections, anchor_info_vector const& links);
-
-void output_item_files(program_config const& cfg, std::string const& doc,
-	section_info_vector const& sections, anchor_info_vector const& links);
 
 int main(int, char* argv[])
 {
@@ -421,24 +330,6 @@ int main(int, char* argv[])
 
 		// TESTING
 
-		auto sections = extract_document_sections(doc);
-
-		for(auto const& part: std::get<document_part_map>(sections))
-		{
-			bug_var(part.second.beg);
-			bug_var(part.second.end);
-			bug_var(part.second.filename);
-			bug("");
-
-			auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
-
-			// ](#Re-postcondition)
-			for(auto const& link: std::get<document_link_map>(sections))
-				replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
-
-			if(!(std::ofstream(part.second.filename) << text))
-				throw_errno(part.second.filename);
-		}
 
 		std::exit(1);
 
@@ -458,30 +349,48 @@ int main(int, char* argv[])
 					throw_errno(new_pathname);
 		}
 
-		if(cfg.outputs.count(output_type::sections)
-		|| cfg.outputs.count(output_type::items))
+		if(cfg.outputs.count(output_type::sections))
 		{
 			con_out("Outputting sections:");
-			// section_id -> section
-//			auto sections = extract_section_info(doc);
-//			auto links = extract_anchor_info(doc);
 
-			// output one file for each section
-			// 00-Index.md
-			// 01-Section Name 1.md
-			// 02-Section Name 2.md
-//			if(cfg.outputs.count(output_type::sections))
-//				output_section_files(cfg, doc, sections, links);
+			auto sections = extract_document_sections(doc);
 
-			// output one index file of all sections (section-index)
-			// I-00-Index.md
-			// output one index file of all items in each section (item-index)
-			// I-01-Section Name 1-S1.00-index.md
-			// I-02-Section Name 2-S2.00-index.md
-			// and one file for each item
-			// I-02-Section Name 2-AB.01.md
-//			if(cfg.outputs.count(output_type::items))
-//				output_item_files(cfg, doc, sections, links);
+			for(auto const& part: std::get<document_part_map>(sections))
+			{
+				con_out("creating: " << part.second.filename);
+
+				auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+
+				for(auto const& link: std::get<document_link_map>(sections))
+					replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
+
+				auto filepath = cfg.output_dir + path_separator() + part.second.filename;
+
+				if(!(std::ofstream(filepath) << text))
+					throw_errno(part.second.filename);
+			}
+		}
+
+		if(cfg.outputs.count(output_type::items))
+		{
+			con_out("Outputting individual items:");
+
+			auto sections = extract_document_sections(doc);
+
+			for(auto const& part: std::get<document_part_map>(sections))
+			{
+				con_out("creating: " << part.second.filename);
+
+				auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+
+				for(auto const& link: std::get<document_link_map>(sections))
+					replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
+
+				auto filepath = cfg.output_dir + path_separator() + part.second.filename;
+
+				if(!(std::ofstream(filepath) << text))
+					throw_errno(part.second.filename);
+			}
 		}
 	}
 	catch(std::exception const& e)
@@ -547,212 +456,4 @@ program_config parse_commandline(char const* const* argv)
 	}
 
 	return cfg;
-}
-
-void output_section_files(program_config const& cfg, std::string const& doc,
-	section_info_vector const& sections, anchor_info_vector const& links)
-{
-//				auto links = build_link_database(doc, sections);
-
-	// Index of all sections
-	std::ofstream index_file("S-00-Index.md");
-
-	for(auto const& s: sections)
-	{
-		auto filename = urlencode(make_section_filename(s));
-
-		// update S-00-Index.md
-		index_file << make_index_item(s.mini_id + ": " + s.name, filename + "#" + s.long_id);
-		index_file << '\n';
-
-		// extract section text from document
-		std::string text = doc.substr(s.beg, s.end - s.beg);
-
-		// rewrite links
-		for(auto const& link: links)
-			text = replace_all(text, "](#" + link.long_id + ")", "](" + filename + "#" + link.long_id + ")");
-
-		if(!cfg.list_only)
-		{
-			std::string index = "\n[SECTIONS](S-00-Index.md)\n";
-			output_file(cfg.output_dir, make_section_filename(s), index + text + index);
-		}
-	}
-}
-
-void output_item_files(program_config const& cfg, std::string const& doc,
-	section_info_vector const& sections, anchor_info_vector const& links)
-{
-	con_out("Outputting items:");
-
-	// Index of all section indexes
-	std::string main_index_file_name = "I-00-Index.md";
-	std::ofstream main_index_file(main_index_file_name);
-
-	for(auto const& s: sections)
-	{
-		auto section_filename = make_section_filename(s);
-
-		// I-01-Section Name 1-S1.00-index.md
-		auto index_file_name = "I-" + pad(s.index, 2)
-			+ '-' + s.name + "-" + s.mini_id + ".000-index.md";
-
-		// update I-00-Index.md
-		main_index_file << make_index_item(s.mini_id + ": " + s.name, index_file_name);
-		main_index_file << '\n';
-
-		// I-01-Section Name 1-S1.00-index.md
-		std::ofstream index_file(index_file_name);
-		index_file << "[SECTIONS](" + main_index_file_name + ")\n\n";
-
-		// #1 item_id // unique
-		// #2 mini_id // section mini_id
-		// #3 number
-		// #4 description
-		// ### <a name="Ri-singleton"></a>I.3: Avoid singletons
-		std::regex const e_item{R"~(#+\s+<a\s+name="([^"]+)"><\/a>([^.]+)\.(\d+):\s+(.*))~"};
-
-		std::sregex_iterator itr_end;
-		std::sregex_iterator itr(std::next(std::begin(doc), s.beg),
-			std::next(std::begin(doc), s.end), e_item);
-
-		pos_type pos = 0;
-		std::string item_id;
-		std::string mini_id;
-		unsigned number = 0;
-		std::string item_filename;
-		std::string description;
-
-		for(; itr != itr_end; ++itr)
-		{
-			std::string text = doc.substr(s.beg + pos, itr->position() - pos);
-
-			// rewrite links
-			// TODO: DOES THIS MAKE SENSE HERE?
-			for(auto const& link: links)
-				text = replace_all(text, "](#" + link.long_id + ")", "](" + item_filename + "#" + link.long_id + ")");
-
-			if(!cfg.list_only)
-			{
-				std::string index;
-				index += "[SECTIONS](" + main_index_file_name + ")";
-				index += "[OTHER ITEMS](" + index_file_name + ")";
-				output_file(cfg.output_dir, make_item_filename(s, number), index + '\n' + text + '\n' + index);
-			}
-
-			// update I-01-Section Name 1-S1.00-index.md
-			if(!pos)
-			{
-				description = "Introduction";
-				item_filename = make_item_filename(s, number);
-			}
-
-			index_file << make_index_item(s.mini_id + "." + std::to_string(number) + ": " + description,
-				item_filename);
-			index_file << '\n';
-
-			pos = itr->position();
-			item_id = itr->str(1);
-			mini_id = itr->str(2);
-			number = unsigned(std::stoul(itr->str(3)));
-			description = itr->str(4);
-			item_filename = make_item_filename(s, number);
-		}
-		index_file << "\n[SECTIONS](" + main_index_file_name + ")";
-	}
-}
-
-/// Find all the section breaks in doc and store the relevant
-/// info needed to split the document later
-section_info_vector extract_section_info(std::string const& doc)
-{
-	bug_fun();
-	section_info_vector sections;
-
-	// #1 long_id
-	// #2 mini_id
-	// #3 name
-	// #4 "Bibliography"
-	std::regex const re_sec_text{R"~(#\s+(?:<a\s+name="(S-[^"]+)"></a>([\w\s-]+):\s+([\w -]+)|(Bibliography)))~"};
-
-	std::sregex_iterator itr(std::begin(doc), std::end(doc), re_sec_text);
-	std::sregex_iterator const itr_end;
-
-	std::string name;
-	pos_type beg = 0;
-	std::string long_id;
-	std::string mini_id;
-
-	for(auto idx = 0U; itr != itr_end; ++itr, ++idx)
-	{
-		con_out("found: " << itr->str(3));
-
-		// #1 long_id
-		// #2 id
-		// #3 name
-		// #4 "Bibliography"
-
-		if(beg)
-		{
-			sections.emplace_back();
-			auto& section = sections.back();
-
-			section.index = idx;
-			section.mini_id = mini_id;
-			section.long_id = long_id;
-			section.name = name;
-			section.beg = beg;
-			section.end = itr->position();
-		}
-
-		if(itr->str(4) == "Bibliography")
-		{
-			sections.emplace_back();
-			auto& section = sections.back();
-
-			section.index = idx + 1;
-			section.mini_id = "Bib";
-			section.long_id = "bibliography";
-			section.name = "Bibliography";
-			section.beg = beg = itr->position();
-			section.end = doc.size();
-		}
-
-		long_id = itr->str(4).empty() ? itr->str(1) : itr->str(4);
-
-		mini_id = itr->str(2).empty() ? std::string("") : itr->str(2);
-
-
-		name = itr->str(3);
-
-		beg = itr->position();
-	}
-
-	return sections;
-}
-
-//// (#{1,3})\s+<a\s+name="([+\w_-]+)"></a>(.*)
-//link_info_vector extract_link_info(std::string const& doc)
-//{
-//	link_info_vector links;
-//
-//	// build link database
-//	std::regex const e_anchors{R"~(<a\s+name="([^"]+)"></a>([^:]+))~"};
-//
-//	std::sregex_iterator itr_end;
-//	std::sregex_iterator itr{std::begin(doc), std::end(doc), e_anchors};
-//
-//	for(; itr != itr_end; ++itr)
-//		links.emplace_back(itr->str(2), itr->str(1));
-//
-//	return links;
-//}
-
-void output_file(std::string const& dir, std::string const& filename, std::string const& text)
-{
-	auto pathname = dir + path_separator() + filename;
-
-	con_out("outputting: " << pathname);
-	if(!(std::ofstream(pathname) << text))
-		throw_errno(filename);
 }
