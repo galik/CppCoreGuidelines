@@ -17,6 +17,7 @@
 #include <regex>
 #include <set>
 #include <vector>
+#include <tuple>
 
 #include <gsl/gsl>
 
@@ -59,7 +60,7 @@ enum class output_type{document, sections, items};
 
 struct program_config
 {
-	std::string dir;
+	std::string output_dir;
 	std::string pathname;
 	bool use_syntax_colors = false;
 	bool list_only = false;
@@ -86,8 +87,10 @@ struct anchor_info
 {
 	// ### <a name="Rc-throw"></a>C.42: If a constructor ...
 	unsigned type = 0;   // 1 = section, 2 = sub-section, 3 = item
-	std::string mini_id; // C.42
-	std::string long_id; // Rc-throw
+	std::string mini_id; // C
+	std::string long_id; // Rc-throw (unique)
+	std::string item_id; // C.42
+	std::string info;    // If a constructor ...
 	pos_type pos = 0;    // offsets into the document
 };
 
@@ -99,8 +102,25 @@ using anchor_info_vector = std::vector<anchor_info>;
 
 auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::optimize;
 
+// #1 type
+// #2 long_id
+// #3 mini_id
+// #4 item_number
+// #5 info
+// #6 Bibliography
+// item_id = mini_id "." item_number
 std::regex const e_anchors
-	{R"~((#{1,3})\s+<a\s+name="([^"]+)"></a>([\w\s_-]+)?:\s+([\w -]+)|(Bibliography)))~", fast_n_loose};
+
+{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>(?:(((?:[^\s.]| )+).(?:((?:[^\s:]| )+))?):\s)?((?:\S| )+)|#\s+(Bibliography))~", fast_n_loose};
+//{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>(?:((?:[^\s.]| )+).(?:((?:[^\s:]| )+))?:\s)?((?:\S| )+)|#\s+(Bibliography))~", fast_n_loose};
+
+//std::vector<std::regex> e_anchors =
+//{
+//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:[^\s.]| )+)\.((?:[^\s:]| )+):\s+((?:\S| )+))~", fast_n_loose},
+//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:[^\s.]| )+):\s+((?:\S| )+))~", fast_n_loose},
+//	std::regex{R"~((#{1,3})\s+<a\s+name="([^"]+)"><\/a>((?:\S| )+))~", fast_n_loose},
+//	std::regex{R"~(#\s+Bibliography)~", fast_n_loose},
+//};
 
 //----------------------------------------------------------------------------
 // String Utilities
@@ -192,9 +212,9 @@ std::string load_file(std::string const& pathname)
  */
 std::string pad(unsigned n, unsigned width, char padding = '0')
 {
-	auto s = std::to_string(u);
-	if(s.size() < n)
-		return std::string(n - s.size(), padding) + s;
+	auto s = std::to_string(n);
+	if(s.size() < width)
+		return std::string(width - s.size(), padding) + s;
 	return s;
 }
 
@@ -251,37 +271,86 @@ unsigned calc_line_number(std::string const& doc, pos_type pos)
 	return line_number;
 }
 
-/**
- * Extract a list of information from all the anchors in
- * the document in order to divide it into sections later.
- *
- * @param doc The CppCoreGuidelines document to be divided.
- *
- * @return A vector containing the relevant anchor information
- * needed to divide the document in various ways.
- */
-anchor_info_vector extract_anchor_info(std::string const& doc)
+// link_id -> {filename, beg, end}
+
+struct document_part
 {
-	anchor_info_vector links;
+	pos_type beg = 0;
+	pos_type end = 0;
+	std::string filename;
+//	std::string link_id; // unique links
+};
 
-	std::sregex_iterator itr_end;
-	std::sregex_iterator itr{std::begin(doc), std::end(doc), e_anchors};
+using document_part_map = std::map<std::string, document_part>;
+using document_link_map = std::map<std::string, std::string>; // link_id -> filename
 
-	for(; itr != itr_end; ++itr)
+/**
+ *
+ * @param doc
+ * @param level 1 -> S, 2 -> SS, 3 -> I
+ * @return
+ */
+std::tuple<document_part_map, document_link_map> extract_document_sections(std::string const& doc)
+{
+	bug_fun();
+	// #1 level
+	// #2 link_id
+	// #3 item_id
+	// #4 info
+//	std::regex const e_parts{R"~((?:(#{1,3})\s+<a name="([^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|(#\s+Bibliography)))~", fast_n_loose};
+
+	// #1 link_id
+	// #2 mini_id
+	// #3 title
+	std::regex const e_parts{R"~((?:#\s+<a name="(main|S-[^"]+)"></a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
+	std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
+
+	document_part_map parts;
+	document_link_map links;
+
+	std::sregex_iterator e;
+	std::sregex_iterator m{std::begin(doc), std::end(doc), e_parts};
+
+	std::string link_id;
+	document_part part;
+
+	unsigned file_number = 0;
+
+	for(; m != e; ++m)
 	{
-		links.emplace_back();
-		links.back().type = gsl::narrow<unsigned>(itr->str(1).size());
-		links.back().mini_id = itr->str(3);
-		links.back().long_id = itr->str(2);
-		links.back().pos = itr->position();
+		bug_var(m->str(0));
+		part.end = m->position();
+
+		if(!link_id.empty())
+		{
+			parts[link_id] = part;
+
+			std::sregex_iterator e;
+			std::sregex_iterator m
+				{std::next(std::begin(doc), part.beg), std::next(std::begin(doc) + part.end), e_links};
+
+			for(; m != e; ++m)
+				links[m->str(1)] = part.filename;
+		}
+
+		link_id = m->str(1);
+		part.beg = m->position();
+		part.filename = "S-" + pad(file_number, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3)) + ".md";
+		++file_number;
 	}
+	{
+		part.end = doc.size();
+		parts[link_id] = part;
 
-	return links;
+		std::sregex_iterator e;
+		std::sregex_iterator m
+			{std::next(std::begin(doc), part.beg), std::next(std::begin(doc) + part.end), e_links};
+
+		for(; m != e; ++m)
+			links[m->str(1)] = part.filename;
+	}
+	return {parts, links};
 }
-
-///// Find all the section breaks in doc and store the relevant
-///// info needed to split the document later
-//std::map<std::string, section_info> extract_section_info(std::string const& doc);
 
 /// Find all the section breaks in doc and store the relevant
 /// info needed to split the document later
@@ -324,6 +393,7 @@ void output_item_files(program_config const& cfg, std::string const& doc,
 
 int main(int, char* argv[])
 {
+	bug_fun();
 	try
 	{
 		program_config cfg = parse_commandline(argv);
@@ -349,6 +419,31 @@ int main(int, char* argv[])
 			? add_syntax_heighlights(load_file(cfg.pathname))
 			: load_file(cfg.pathname);
 
+		// TESTING
+
+		auto sections = extract_document_sections(doc);
+
+		for(auto const& part: std::get<document_part_map>(sections))
+		{
+			bug_var(part.second.beg);
+			bug_var(part.second.end);
+			bug_var(part.second.filename);
+			bug("");
+
+			auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+
+			// ](#Re-postcondition)
+			for(auto const& link: std::get<document_link_map>(sections))
+				replace_all(text, "](#" + link.first + ")", "](" + link.second + "#" + link.first + ")");
+
+			if(!(std::ofstream(part.second.filename) << text))
+				throw_errno(part.second.filename);
+		}
+
+		std::exit(1);
+
+		// TESTING End
+
 		if(cfg.outputs.count(output_type::document))
 		{
 			auto new_pathname = cfg.output_dir + path_separator() + program_name(cfg.pathname);
@@ -368,15 +463,15 @@ int main(int, char* argv[])
 		{
 			con_out("Outputting sections:");
 			// section_id -> section
-			auto sections = extract_section_info(doc);
-			auto links = extract_anchor_info(doc);
+//			auto sections = extract_section_info(doc);
+//			auto links = extract_anchor_info(doc);
 
 			// output one file for each section
 			// 00-Index.md
 			// 01-Section Name 1.md
 			// 02-Section Name 2.md
-			if(cfg.outputs.count(output_type::sections))
-				output_section_files(cfg, doc, sections, links);
+//			if(cfg.outputs.count(output_type::sections))
+//				output_section_files(cfg, doc, sections, links);
 
 			// output one index file of all sections (section-index)
 			// I-00-Index.md
@@ -385,8 +480,8 @@ int main(int, char* argv[])
 			// I-02-Section Name 2-S2.00-index.md
 			// and one file for each item
 			// I-02-Section Name 2-AB.01.md
-			if(cfg.outputs.count(output_type::items))
-				output_item_files(cfg, doc, sections, links);
+//			if(cfg.outputs.count(output_type::items))
+//				output_item_files(cfg, doc, sections, links);
 		}
 	}
 	catch(std::exception const& e)
@@ -475,7 +570,7 @@ void output_section_files(program_config const& cfg, std::string const& doc,
 
 		// rewrite links
 		for(auto const& link: links)
-			text = replace_all(text, "](#" + link + ")", "](" + filename + "#" + link + ")");
+			text = replace_all(text, "](#" + link.long_id + ")", "](" + filename + "#" + link.long_id + ")");
 
 		if(!cfg.list_only)
 		{
@@ -535,7 +630,7 @@ void output_item_files(program_config const& cfg, std::string const& doc,
 			// rewrite links
 			// TODO: DOES THIS MAKE SENSE HERE?
 			for(auto const& link: links)
-				text = replace_all(text, "](#" + link + ")", "](" + item_filename + "#" + link + ")");
+				text = replace_all(text, "](#" + link.long_id + ")", "](" + item_filename + "#" + link.long_id + ")");
 
 			if(!cfg.list_only)
 			{
