@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-May 21, 2017
+May 23, 2017
 
 
 Editors:
@@ -67,7 +67,7 @@ You can sample rules for specific language features:
 [prefer initialization](#Rc-initialize) --
 [copy](#Rc-copy-semantics) --
 [move](#Rc-move-semantics) --
-[other operations](Rc-matched) --
+[other operations](#Rc-matched) --
 [default](#Rc-eqdefault)
 * `class`:
 [data](#Rc-org) --
@@ -108,7 +108,7 @@ You can sample rules for specific language features:
 [may not fail](#Rc-dtor-fail)
 * exception:
 [errors](#S-errors) --
-[`throw`](Re-throw) --
+[`throw`](#Re-throw) --
 [for errors only](#Re-errors) --
 [`noexcept`](#Re-noexcept) --
 [minimize `try`](#Re-catch) --
@@ -131,7 +131,7 @@ You can sample rules for specific language features:
 [lambdas](#Rf-capture-vs-overload)
 * `inline`:
 [small functions](#Rf-inline) --
-[in headers](Rs-inline)
+[in headers](#Rs-inline)
 * initialization:
 [always](#Res-always) --
 [prefer `{}`](#Res-list) --
@@ -142,7 +142,7 @@ You can sample rules for specific language features:
 * lambda expression:
 [when to use](#SS-lambdas)
 * operator:
-[conventional](Ro-conventional) --
+[conventional](#Ro-conventional) --
 [avoid conversion operators](#Ro-conventional) --
 [and lambdas](#Ro-lambda)
 * `public`, `private`, and `protected`:
@@ -166,7 +166,7 @@ You can sample rules for specific language features:
 * `virtual`:
 [interfaces](#Ri-abstract) --
 [not `virtual`](#Rc-concrete) --
-[destructor](Rc-dtor-virtual) --
+[destructor](#Rc-dtor-virtual) --
 [never fail](#Rc-dtor-fail)
 
 You can look at design concepts used to express the rules:
@@ -1257,7 +1257,7 @@ Functions can be template functions and sets of functions can be classes or clas
 * (Simple) A function should not make control-flow decisions based on the values of variables declared at namespace scope.
 * (Simple) A function should not write to variables declared at namespace scope.
 
-### <a name="Ri-global"></a>I.2 Avoid global variables
+### <a name="Ri-global"></a>I.2: Avoid global variables
 
 ##### Reason
 
@@ -4225,7 +4225,7 @@ Concrete type rule summary:
 * [C.10: Prefer concrete types over class hierarchies](#Rc-concrete)
 * [C.11: Make concrete types regular](#Rc-regular)
 
-### <a name="Rc-concrete"></a>C.10 Prefer concrete types over class hierarchies
+### <a name="Rc-concrete"></a>C.10: Prefer concrete types over class hierarchies
 
 ##### Reason
 
@@ -5184,7 +5184,7 @@ A class designed to be useful only as a base does not need a default constructor
             // ...
     };
 
-A class that represent a unmodifiable 
+A class that must acquire a resource during construction:
 
     lock_guard g {mx};  // guard the mutex mx
     lock_guard g2;      // error: guarding nothing
@@ -7140,7 +7140,7 @@ Factoring out `Utility` makes sense if many derived classes share significant "i
 
 Obviously, the example is too "theoretical", but it is hard to find a *small* realistic example.
 `Interface` is the root of an [interface hierarchy](#Rh-abstract)
-and `Utility` is the root of an [implementation hierarchy](Rh-kind).
+and `Utility` is the root of an [implementation hierarchy](#Rh-kind).
 Here is [a slightly more realistic example](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) with an explanation.
 
 ##### Note
@@ -7338,11 +7338,18 @@ Flag all slicing.
         }
     }
 
-Use of the other casts casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
+Use of the other casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
 
     void user2(B* pb)   // bad
     {
-        if (D* pd = static_cast<D*>(pb)) {  // I know that pb really points to a D; trust me
+        D* pd = static_cast<D*>(pb);    // I know that pb really points to a D; trust me
+        // ... use D's interface ...
+    }
+
+    void user3(B* pb)    // unsafe
+    {
+        if (some_condition) {
+            D* pd = static_cast<D*>(pb);   // I know that pb really points to a D; trust me
             // ... use D's interface ...
         }
         else {
@@ -7355,6 +7362,7 @@ Use of the other casts casts can violate type safety and cause the program to ac
         B b;
         user(&b);   // OK
         user2(&b);  // bad error
+        user3(&b);  // OK *if* the programmer got the some_condition check right
     }
 
 ##### Note
@@ -7376,8 +7384,9 @@ the former (`dynamic_cast`) is far harder to implement correctly in general.
 Consider:
 
     struct B {
-        const char* name {"B"}; 
-        virtual const char* id() const { return name; }     // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+        const char* name {"B"};
+        // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+        virtual const char* id() const { return name; }
         // ...
     };
 
@@ -7587,12 +7596,12 @@ Subscripting the resulting base pointer will lead to invalid object access and p
 * Pass an array as a `span` rather than as a pointer, and don't let the array name suffer a derived-to-base conversion before getting into the `span`
 
 
-### <a name="Rh-use-virtual"></a>CC.153: Prefer virtual function to casting
+### <a name="Rh-use-virtual"></a>C.153: Prefer virtual function to casting
 
 ##### Reason
 
 A virtual function call is safe, whereas casting is error-prone.
-A virtual function call reached the most derived function, whereas a cast may reach an intermediate class and therefore
+A virtual function call reaches the most derived function, whereas a cast may reach an intermediate class and therefore
 give a wrong result (especially as a hierarchy is modified during maintenance).
 
 ##### Example
@@ -7601,7 +7610,7 @@ give a wrong result (especially as a hierarchy is modified during maintenance).
 
 ##### Enforcement
 
-See [C.146] and [???]
+See [C.146](#Rh-dynamic_cast) and ???
 
 ## <a name="SS-overload"></a>C.over: Overloading and overloaded operators
 
@@ -9424,6 +9433,7 @@ Expression rules:
 * [ES.61: Delete arrays using `delete[]` and non-arrays using `delete`](#Res-del)
 * [ES.62: Don't compare pointers into different arrays](#Res-arr2)
 * [ES.63: Don't slice](#Res-slice)
+* [ES.64: Use the `T{e}`notation for construction](#Res-construct)
 
 Statement rules:
 
@@ -10052,6 +10062,29 @@ Creating optimal and equivalent code from all of these examples should be well w
 (but don't make performance claims without measuring; a compiler may very well not generate optimal code for every example and
 there may be language rules preventing some optimization that you would have liked in a particular case).
 
+##### Example
+
+This rule covers member variables.
+
+    class X {
+    public:
+        X(int i, int ci) : m2{i}, cm2{ci} {}
+        // ...
+
+    private:
+        int m1 = 7;
+        int m2;
+        int m3;
+
+        const int cm1 = 7;
+        const int cm2;
+        const int cm3;
+    };
+
+The compiler will flag the uninitialized `cm3` because it is a `const`, but it will not catch the lack of initialization of `m3`.
+Usually, a rare spurious member initialization is worth the absence of errors from lack of initialization and often an optimizer
+can eliminate a redundant initialization (e.g., an initialization that occurs immediately before an assignment).
+
 ##### Note
 
 Complex initialization has been popular with clever programmers for decades.
@@ -10590,6 +10623,7 @@ This is basically the way `printf` is implemented.
 
 * Flag definitions of C-style variadic functions.
 * Flag `#include <cstdarg>` and `#include <stdarg.h>`
+
 
 ## ES.stmt: Statements
 
@@ -11192,17 +11226,197 @@ You should know enough not to need parentheses for:
 
 Complicated pointer manipulation is a major source of errors.
 
-* Do all pointer arithmetic on a `span` (exception ++p in simple loop???)
-* Avoid pointers to pointers
-* ???
+##### Note
+
+Use `gsl::span` instead.
+Pointers should [only refer to single objects](#Ri-array).
+Pointer arithmetic is fragile and easy to get wrong, the source of many, many bad bugs and security violations.
+`span` is a bounds-checked, safe type for accessing arrays of data.
+Access into an array with known bounds using a constant as a subscript can be validated by the compiler.
+
+##### Example, bad
+
+    void f(int* p, int count)
+    {
+        if (count < 2) return;
+
+        int* q = p + 1; // BAD
+
+        ptrdiff_t d;
+        int n;
+        d = (p - &n); // OK
+        d = (q - p); // OK
+
+        int n = *p++; // BAD
+
+        if (count < 6) return;
+
+        p[4] = 1; // BAD
+
+        p[count - 1] = 2; // BAD
+
+        use(&p[0], 3); // BAD
+    }
+
+##### Example, good
+
+    void f(span<int> a) // BETTER: use span in the function declaration
+    {
+        if (a.length() < 2) return;
+
+        int n = a[0]; // OK
+
+        span<int> q = a.subspan(1); // OK
+
+        if (a.length() < 6) return;
+
+        a[4] = 1; // OK
+
+        a[count - 1] = 2; // OK
+
+        use(a.data(), 3); // OK
+    }
+
+##### Note
+
+Subscripting with a variable is difficult for both tools and humans to validate as safe.
+`span` is a run-time bounds-checked, safe type for accessing arrays of data.
+`at()` is another alternative that ensures single accesses are bounds-checked.
+If iterators are needed to access an array, use the iterators from a `span` constructed over the array.
+
+##### Example, bad
+
+    void f(array<int, 10> a, int pos)
+    {
+        a[pos / 2] = 1; // BAD
+        a[pos - 1] = 2; // BAD
+        a[-1] = 3;    // BAD (but easily caught by tools) -- no replacement, just don't do this
+        a[10] = 4;    // BAD (but easily caught by tools) -- no replacement, just don't do this
+    }
+
+##### Example, good
+
+Use a `span`:
+
+    void f1(span<int, 10> a, int pos) // A1: Change parameter type to use span
+    {
+        a[pos / 2] = 1; // OK
+        a[pos - 1] = 2; // OK
+    }
+
+    void f2(array<int, 10> arr, int pos) // A2: Add local span and use that
+    {
+        span<int> a = {arr, pos}
+        a[pos / 2] = 1; // OK
+        a[pos - 1] = 2; // OK
+    }
+
+Use a `at()`:
+
+    void f3(array<int, 10> a, int pos) // ALTERNATIVE B: Use at() for access
+    {
+        at(a, pos / 2) = 1; // OK
+        at(a, pos - 1) = 2; // OK
+    }
+
+##### Example, bad
+
+    void f()
+    {
+        int arr[COUNT];
+        for (int i = 0; i < COUNT; ++i)
+            arr[i] = i; // BAD, cannot use non-constant indexer
+    }
+
+##### Example, good
+
+Use a `span`:
+
+    void f1()
+    {
+        int arr[COUNT];
+        span<int> av = arr;
+        for (int i = 0; i < COUNT; ++i)
+            av[i] = i;
+    }
+
+Use a `span` and range-`for`:
+
+    void f1a()
+    {
+         int arr[COUNT];
+         span<int, COUNT> av = arr;
+         int i = 0;
+         for (auto& e : av)
+             e = i++;
+    }
+
+Use `at()` for access:
+
+    void f2()
+    {
+        int arr[COUNT];
+        for (int i = 0; i < COUNT; ++i)
+            at(arr, i) = i;
+    }
+
+Use a range-`for`:
+
+    void f3()
+    {
+        int arr[COUNT];
+        for (auto& e : arr)
+             e = i++;
+    }
+
+##### Note
+
+Tooling can offer rewrites of array accesses that involve dynamic index expressions to use `at()` instead:
+
+    static int a[10];
+
+    void f(int i, int j)
+    {
+        a[i + j] = 12;      // BAD, could be rewritten as ...
+        at(a, i + j) = 12;  // OK -- bounds-checked
+    }
 
 ##### Example
 
-    ???
+Turning an array into a pointer (as the language does essentially always) removes opportunities for checking, so avoid it
+
+    void g(int* p);
+
+    void f()
+    {
+        int a[5];
+        g(a);        // BAD: are we trying to pass an array?
+        g(&a[0]);    // OK: passing one object
+    }
+
+If you want to pass an array, say so:
+
+    void g(int* p, size_t length);  // old (dangerous) code
+
+    void g1(span<int> av); // BETTER: get g() changed.
+
+    void f2()
+    {
+        int a[5];
+        span<int> av = a;
+
+        g(av.data(), av.length());   // OK, if you have no choice
+        g1(a);                       // OK -- no decay here, instead use implicit span ctor
+    }
 
 ##### Enforcement
 
-We need a heuristic limiting the complexity of pointer arithmetic statement.
+* Flag any arithmetic operation on an expression of pointer type that results in a value of pointer type.
+* Flag any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a compile-time constant expression with a value between `0` or and the upper bound of the array.
+* Flag any expression that would rely on implicit conversion of an array type to a pointer type.
+
+This rule is part of the [bounds-safety profile](#SS-bounds).
+
 
 ### <a name="Res-order"></a>ES.43: Avoid expressions with undefined order of evaluation
 
@@ -11243,14 +11457,20 @@ C++17 tightens up the rules for the order of evaluation, but the order of evalua
     int i = 0;
     f(++i, ++i);
 
-The call will most likely be `f(0, 1)` or `f(1, 0)`, but you don't know which. Technically, the behavior is undefined.
+The call will most likely be `f(0, 1)` or `f(1, 0)`, but you don't know which.
+Technically, the behavior is undefined.
+In C++17, this code does not have undefined behavior, but it is still not specified which argument is evaluated first.
 
 ##### Example
 
-??? overloaded operators can lead to order of evaluation problems (shouldn't :-()
+Overloaded operators can lead to order of evaluation problems:
 
-    f1()->m(f2());   // m(f1(), f2())
+    f1()->m(f2());          // m(f1(), f2())
     cout << f1() << f2();   // operator<<(operator<<(cout, f1()), f2())
+
+In C++17, these examples work as expected (left to right) and assignments are evaluated right to left (just as ='s binding is right-to-left)
+
+    f1() = f2();    // undefined behavior in C++14; in C++17, f2() is evaluated before f1()
 
 ##### Enforcement
 
@@ -11399,7 +11619,7 @@ If you feel the need for a lot of casts, there may be a fundamental design probl
 
 ##### Alternatives
 
-Casts are widely (mis) used. Modern C++ has constructs that eliminats the need for casts in many contexts, such as
+Casts are widely (mis) used. Modern C++ has constructs that eliminate the need for casts in many contexts, such as
 
 * Use templates
 * Use `std::variant`
@@ -11463,7 +11683,7 @@ for example.)
 
 ##### Note
 
-`reinterpret_cast` can be essential, but the essential uses (e.g., turning a machine addresses into pointer) are not type safe:
+`reinterpret_cast` can be essential, but the essential uses (e.g., turning a machine address into pointer) are not type safe:
 
     auto p = reinterpret_cast<Device_register>(0x800);  // inherently dangerous
 
@@ -11892,6 +12112,97 @@ For example:
 ##### Enforcement
 
 Warn against slicing.
+
+### <a name="Res-construct"></a>ES.64: Use the `T{e}`notation for construction
+
+##### Reason
+
+The `T{e}` construction syntax makes it explicit that construction is desired.
+The `T{e}` construction syntax doesn't allow narrowing.
+`T{e}` is the only safe and general expression for constructing a value of type `T` from an expression `e`.
+The casts notations `T(e)` and `(T)e` are neither safe nor general.
+
+##### Example
+
+For built-in types, the construction notation protects against narrowing and reinterpretation
+
+    void use(char ch, int i, double d, char* p, long long lng)
+    {
+        int x1 = int{ch};     // OK, but redundant
+        int x2 = int{d};      // error: double->int narrowing; use a cast if you need to
+        int x3 = int{p};      // error: pointer to->int; use a reinterpret_cast if you really need to
+        int x4 = int{lng};    // error: long long->int narrowing; use a cast if you need to
+
+        int y1 = int(ch);     // OK, but redundant
+        int y2 = int(d);      // bad: double->int narrowing; use a cast if you need to
+        int y3 = int(p);      // bad: pointer to->int; use a reinterpret_cast if you really need to
+        int y4 = int(lng);    // bad: long->int narrowing; use a cast if you need to
+
+        int z1 = (int)ch;     // OK, but redundant
+        int z2 = (int)d;      // bad: double->int narrowing; use a cast if you need to
+        int z3 = (int)p;      // bad: pointer to->int; use a reinterpret_cast if you really need to
+        int z4 = (int)lng;    // bad: long long->int narrowing; use a cast if you need to
+    }
+
+The integer to/from pointer conversions are implementation defined when using the `T(e)` or `(T)e` notations, and non-portable
+between platforms with different integer and pointer sizes.
+
+##### Note
+
+[Avoid casts](#Res-casts) (explicit type conversion) and if you must [prefer named casts](#Res-casts-named).
+
+##### Note
+
+When unambiguous, the `T` can be left out of `T{e}`.
+
+    complex<double> f(complex<double>);
+
+    auto z = f({2*pi, 1});
+
+##### Note
+
+The construction notation is the most general [initializer notation](#Res-list).
+
+##### Exception
+
+`std::vector` and other containers were defined before we had `{}` as a notation for construction.
+Consider:
+
+    vector<string> vs {10};                           // ten empty strings
+    vector<int> vi1 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};  // ten elements 1..10
+    vector<int> vi2 {10};                             // one element with the value 10
+
+How do we get a `vector` of 10 default initialized `int`s?
+
+    vector<int> v3(10); // ten elements with value 0
+
+The use of `()` rather than `{}` for number of elements is conventional (going back to the early 1980s), hard to change, but still
+a design error: for a container where the element type can be confused with the number of elements, we have an ambiguity that
+must be resolved.
+The conventional resolution is to interpret `{10}` as a list of one element and use `(10)` to distinguish a size.
+
+This mistake need not be repeated in new code.
+We can define a type to represent the number of elements:
+
+    struct Count { int n };
+
+    template<typename T>
+    class Vector {
+    public:
+        Vector(Count n);                     // n default-initialized elements
+        Vector(initializer_list<T> init);    // init.size() elements
+        // ...
+    };
+
+    Vector<int> v1{10};
+    Vector<int> v2{Count{10}};
+    Vector<Count> v3{Count{10}};    // yes, there is still a very minor problem
+
+The main problem left is to find a suitable name for `Count`.
+
+##### Enforcement
+
+Flag the C-style `(T)e` and functional-style `T(e)` casts.
 
 ## <a name="SS-numbers"></a>Arithmetic
 
@@ -13132,7 +13443,7 @@ If a `thread` joins, we can safely pass pointers to objects in the scope of the 
         // ...
     }
 
-A `gsl::joining_thread` is a `std::thread` with a destructor that joined and cannot be `detached()`.
+A `gsl::joining_thread` is a `std::thread` with a destructor that joins and that cannot be `detached()`.
 By "OK" we mean that the object will be in scope ("live") for as long as a `thread` can use the pointer to it.
 The fact that `thread`s run concurrently doesn't affect the lifetime or ownership issues here;
 these `thread`s can be seen as just a function object called from `some_fct`.
@@ -13261,7 +13572,7 @@ The code determining whether to `join()` or `detach()` may be complicated and ev
         // ... should I join here? ...
     }
 
-This seriously complicted lifetime analysis, and in not too unlikely cases make lifetime analysis impossible.
+This seriously complicates lifetime analysis, and in not too unlikely cases makes lifetime analysis impossible.
 This implies that we cannot safely refer to local objects in `use()` from the thread or refer to local objects in the thread from `use()`.
 
 ##### Note
@@ -13275,7 +13586,7 @@ Because of old code and third party libraries using `std::thread` this rule can 
 
 ##### Enforcement
 
-Flag uses of 'std::thread':
+Flag uses of `std::thread`:
 
 * Suggest use of `gsl::joining_thread`.
 * Suggest ["exporting ownership"](#Rconc-detached_thread) to an enclosing scope if it detaches.
@@ -13286,8 +13597,8 @@ Flag uses of 'std::thread':
 ##### Reason
 
 Often, the need to outlive the scope of its creation is inherent in the `thread`s task,
-but implementing that idea by `detach` makes it harder monitor and communicat with the detached thread.
-In particular, it is harder (though not impossible) to ensure that the thread completed as expected or lived for as long as expected.
+but implementing that idea by `detach` makes it harder to monitor and communicate with the detached thread.
+In particular, it is harder (though not impossible) to ensure that the thread completed as expected or lives for as long as expected.
 
 ##### Example
 
@@ -13303,9 +13614,9 @@ In particular, it is harder (though not impossible) to ensure that the thread co
 This is a reasonable use of a thread, for which `detach()` is commonly used.
 There are problems, though.
 How do we monitor the detached thread to see if it is alive?
-Something might go wrong with the heartbeat, and loosing a haertbeat can be very serious in a system for which it is needed.
-So, we need to communicate with the haertbeat thread
-(e.g., through a stream of messages or notification events using a `conrition_variable`).
+Something might go wrong with the heartbeat, and losing a heartbeat can be very serious in a system for which it is needed.
+So, we need to communicate with the heartbeat thread
+(e.g., through a stream of messages or notification events using a `condition_variable`).
 
 An alternative, and usually superior solution is to control its lifetime by placing it in a scope outside its point of creation (or activation).
 For example:
@@ -13324,7 +13635,8 @@ Sometimes, we need to separate the point of creation from the point of ownership
 
     void use()
     {
-        tick_toc = make_unique(gsl::joining_thread,heartbeat);       // heartbeat is meant to run as long as tick_tock lives
+        // heartbeat is meant to run as long as tick_tock lives
+        tick_tock = make_unique<gsl::joining_thread>(heartbeat);
         // ...
     }
 
@@ -17892,6 +18204,7 @@ Standard-library rule summary:
 * [SL.1: Use libraries wherever possible](#Rsl-lib)
 * [SL.2: Prefer the standard library to other libraries](#Rsl-sl)
 * [SL.3: Do not add non-standard entities to namespace `std`](#sl-std)
+* [SL.4: Use the standard library in a type-safe manner](#sl-safe)
 * ???
 
 ### <a name="Rsl-lib"></a>SL.1:  Use libraries wherever possible
@@ -17926,6 +18239,21 @@ Additions to `std` may clash with future versions of the standard.
 
 Possible, but messy and likely to cause problems with platforms.
 
+### <a name="sl-safe"></a>SL.4: Use the standard library in a type-safe manner
+
+##### Reason
+
+Because, obviously, breaking this rule can lead to undefined behavior, memory corruption, and all kinds of other bad errors.
+
+##### Note
+
+This is a semi-philosophical meta-rule, which needs many supporting concrete rules.
+We need it as a umbrella for the more specific rules.
+
+Summary of more specific rules:
+
+* [SL.4: Use the standard library in a type-safe manner](#sl-safe)
+
 
 ## <a name="SS-con"></a>SL.con: Containers
 
@@ -17935,6 +18263,7 @@ Container rule summary:
 
 * [SL.con.1: Prefer using STL `array` or `vector` instead of a C array](#Rsl-arrays)
 * [SL.con.2: Prefer using STL `vector` by default unless you have a reason to use a different container](#Rsl-vector)
+* [SL.con.3: Avoid bounds errors](#Rsl-bounds)
 *  ???
 
 ### <a name="Rsl-arrays"></a>SL.con.1: Prefer using STL `array` or `vector` instead of a C array
@@ -17958,6 +18287,10 @@ For a variable-length array, use `std::vector`, which additionally can change it
     delete[] v;                         // BAD, manual delete
 
     std::vector<int> w(initial_size);   // ok
+
+##### Note
+
+Use `gsl::span` for non-owning references into a container.
 
 ##### Enforcement
 
@@ -17987,6 +18320,87 @@ If you have a good reason to use another container, use that instead. For exampl
 ##### Enforcement
 
 * Flag a `vector` whose size never changes after construction (such as because it's `const` or because no non-`const` functions are called on it). To fix: Use an `array` instead.
+
+### <a name="Rsl-bounds"></a>SL.con.3: Avoid bounds errors
+
+##### Reason
+
+Read or write beyond an allocated range of elements typically leads to bad errors, wrong results, crashes, and security violations.
+
+##### Note
+
+The standard-library functions that apply to ranges of elements all have (or could have) bounds-safe overloads that take `span`.
+Standard types such as `vector` can be modified to perform bounds-checks under the bounds profile (in a compatible way, such as by adding contracts), or used with `at()`.
+
+Ideally, the in-bounds guarantee should be statically enforced.
+For example:
+
+* a range-`for` cannot loop beyond the range of the container to which it is applied
+* a `v.begin(),v.end()` is easily determined to be bounds safe
+
+Such loops are as fast as any unchecked/unsafe equivalent.
+
+Often a simple pre-check can eliminate the need for checking of individual indices.
+For example
+
+* for `v.begin(),v.begin()+i` the `i` can easily be checked against `v.size()`
+
+Such loops can be much faster than individually checked element accesses.
+
+##### Example, bad
+
+    void f()
+    {
+        array<int, 10> a, b;
+        memset(a.data(), 0, 10);         // BAD, and contains a length error (length = 10 * sizeof(int))
+        memcmp(a.data(), b.data(), 10);  // BAD, and contains a length error (length = 10 * sizeof(int))
+    }
+
+Also, `std::array<>::fill()` or `std::fill()` or even an empty initializer are better candidate than `memset()`.
+
+##### Example, good
+
+    void f()
+    {
+        array<int, 10> a, b, c{};       // c is initialized to zero
+        a.fill(0);
+        fill(b.begin(), b.end(), 0);    // std::fill()
+        fill(b, 0);                     // std::fill() + Ranges TS
+
+        if ( a == b ) {
+          // ...
+        }
+    }
+
+##### Example
+
+If code is using an unmodified standard library, then there are still workarounds that enable use of `std::array` and `std::vector` in a bounds-safe manner. Code can call the `.at()` member function on each class, which will result in an `std::out_of_range` exception being thrown. Alternatively, code can call the `at()` free function, which will result in fail-fast (or a customized action) on a bounds violation.
+
+    void f(std::vector<int>& v, std::array<int, 12> a, int i)
+    {
+        v[0] = a[0];        // BAD
+        v.at(0) = a[0];     // OK (alternative 1)
+        at(v, 0) = a[0];    // OK (alternative 2)
+
+        v.at(0) = a[i];     // BAD
+        v.at(0) = a.at(i);  // OK (alternative 1)
+        v.at(0) = at(a, i); // OK (alternative 2)
+    }
+
+##### Enforcement
+
+* Issue a diagnostic for any call to a standard library function that is not bounds-checked.
+??? insert link to a list of banned functions
+
+This rule is part of the [bounds profile](#SS-bounds).
+
+**TODO Notes**:
+
+* Impact on the standard library will require close coordination with WG21, if only to ensure compatibility even if never standardized.
+* We are considering specifying bounds-safe overloads for stdlib (especially C stdlib) functions like `memcmp` and shipping them in the GSL.
+* For existing stdlib functions and types like `vector` that are not fully bounds-checked, the goal is for these features to be bounds-checked when called from code with the bounds profile on, and unchecked when called from legacy code, possibly using contracts (concurrently being proposed by several WG21 members).
+
+
 
 ## <a name="SS-string"></a>SL.str: String
 
@@ -18446,9 +18860,9 @@ This section contains ideas about higher-level architectural ideas and libraries
 
 Architectural rule summary:
 
-* [A.1 Separate stable from less stable part of code](#Ra-stable)
-* [A.2 Express potentially reusable parts as a library](#Ra-lib)
-* [A.4 There should be no cycles among libraries](#?Ra-dag)
+* [A.1: Separate stable from less stable part of code](#Ra-stable)
+* [A.2: Express potentially reusable parts as a library](#Ra-lib)
+* [A.4: There should be no cycles among libraries](#?Ra-dag)
 * [???](#???)
 * [???](#???)
 * [???](#???)
@@ -18456,11 +18870,11 @@ Architectural rule summary:
 * [???](#???)
 * [???](#???)
 
-### <a name="Ra-stable"></a>A.1 Separate stable from less stable part of code
+### <a name="Ra-stable"></a>A.1: Separate stable from less stable part of code
 
 ???
 
-### <a name="Ra-lib"></a>A.2 Express potentially reusable parts as a library
+### <a name="Ra-lib"></a>A.2: Express potentially reusable parts as a library
 
 ##### Reason
 
@@ -18471,7 +18885,7 @@ A library could be a set of headers (a "header only library") or a set of header
 A library can be statically or dynamically linked into a program, or it may be `#included`
 
 
-### <a name="Ra-dag"></a>A.4 There should be no cycles among libraries
+### <a name="Ra-dag"></a>A.4: There should be no cycles among libraries
 
 ##### Reason
 
@@ -18661,7 +19075,7 @@ If your system consists of a million lines of such code,
 you probably will not be able to use exceptions,
 but that's a problem with excessive and undisciplined pointer use, rather than with exceptions.
 In our opinion, you need RAII to make exception-based error handling simple and safe -- simpler and safer than alternatives.
-* Exception performance is not predictable
+* Exception performance is not predictable.
 If you are in a hard-real-time system where you must guarantee completion of a task in a given time,
 you need tools to back up such guarantees.
 As far as we know such tools are not available (at least not to most programmers).
@@ -18985,23 +19399,21 @@ Type safety profile summary:
 
 * <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`:
 A strict version of [Avoid casts](#Res-casts) and [prefer named casts](#Res-casts-named).
-* <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` downcasts:
+* <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` to downcast:
 [Use `dynamic_cast` instead](#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Don't use `const_cast` to cast away `const` (i.e., at all):
 [Don't cast away const](#Res-casts-const).
-* <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` casts:
-[Prefer static casts](#Res-cast-named).
-* [Type.4.1: Don't use `T(expression)` cast](#Pro-fct-style-cast):
-[Prefer named casts](#Res-casts-named).
-* [Type.5: Don't use a variable before it has been initialized](#Pro-type-init):
+* <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` or functional `T(expression)` casts:
+Prefer [construction](#Res-construct) or [named casts](#Res-cast-named).
+* <a name="Pro-type-init"></a>Type.5: Don't use a variable before it has been initialized:
 [always initialize](#Res-always).
-* [Type.6: Always initialize a member variable](#Pro-type-memberinit):
+* <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable:
 [always initialize](#Res-always),
 possibly using [default constructors](#Rc-default0) or
 [default member initializers](#Rc-in-class-initializers).
-* [Type.7: Avoid naked union](#Pro-fct-style-cast):
+* <a name="Pro-type-unon"></a>Type.7: Avoid naked union:
 [Use `variant` instead](#Ru-naked).
-* [Type.8: Avoid varargs](#Pro-type-varargs):
+* <a name="Pro-type-varargs"></a>Type.8: Avoid varargs:
 [Don't use `va_arg` arguments](#F-varargs).
 
 ##### Impact
@@ -19011,313 +19423,35 @@ Exception may be thrown to indicate errors that cannot be detected statically (a
 Note that this type-safety can be complete only if we also have [Bounds safety](#SS-bounds) and [Lifetime safety](#SS-lifetime).
 Without those guarantees, a region of memory could be accessed independent of which object, objects, or parts of objects are stored in it.
 
-### <a name="Pro-fct-style-cast"></a>Type.4.1: Don't use `T(expression)` for casting.
-
-##### Reason
-
-If `e` is of a built-in type, `T(e)` is equivalent to the error-prone `(T)e`.
-
-##### Example, bad
-
-    int* p = f(x);
-    auto i = int(p);    // Potential damaging cast; don't or use `reinterpret_cast`
-
-    short s = short(i); // potentially narrowing; don't or use `narrow` or `narrow_cast`
-
-##### Note
-
-The {}-syntax makes the desire for construction explicit and doesn't allow narrowing
-
-    f(Foo{bar});
-
-##### Enforcement
-
-Flag `T(e)` if used for `e` of a built-in type.
-
-
-### <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable.
-
-##### Reason
-
-Before a variable has been initialized, it does not contain a deterministic valid value of its type. It could contain any arbitrary bit pattern, which could be different on each call.
-
-##### Example
-
-    struct X { int i; };
-
-    X x;
-    use(x); // BAD, x has not been initialized
-
-    X x2{}; // GOOD
-    use(x2);
-
-##### Enforcement
-
-* Issue a diagnostic for any constructor of a non-trivially-constructible type that does not initialize all member variables. To fix: Write a data member initializer, or mention it in the member initializer list.
-* Issue a diagnostic when constructing an object of a trivially constructible type without `()` or `{}` to initialize its members. To fix: Add `()` or `{}`.
-
-
 
 ## <a name="SS-bounds"></a>Pro.bounds: Bounds safety profile
 
-This profile makes it easier to construct code that operates within the bounds of allocated blocks of memory. It does so by focusing on removing the primary sources of bounds violations: pointer arithmetic and array indexing. One of the core features of this profile is to restrict pointers to only refer to single objects, not arrays.
+This profile makes it easier to construct code that operates within the bounds of allocated blocks of memory.
+It does so by focusing on removing the primary sources of bounds violations: pointer arithmetic and array indexing.
+One of the core features of this profile is to restrict pointers to only refer to single objects, not arrays.
 
-For the purposes of this document, bounds-safety is defined to be the property that a program does not use a variable to access memory outside of the range that was allocated and assigned to that variable. (Note that the safety is intended to be complete when combined also with [Type safety](#SS-type) and [Lifetime safety](#SS-lifetime), which cover other unsafe operations that allow bounds violations, such as type-unsafe casts that 'widen' pointers.)
-
-The following are under consideration but not yet in the rules below, and may be better in other profiles:
-
-* ???
-
-An implementation of this profile shall recognize the following patterns in source code as non-conforming and issue a diagnostic.
+We define bounds-safety to be the property that a program does not use an object to access memory outside of the range that was allocated for it.
+Bounds safety is intended to be complete only when combined with [Type safety](#SS-type) and [Lifetime safety](#SS-lifetime),
+which cover other unsafe operations that allow bounds violations.
 
 Bounds safety profile summary:
 
-* [Bounds.1: Don't use pointer arithmetic. Use `span` instead](#Pro-bounds-arithmetic)
-* [Bounds.2: Only index into arrays using constant expressions](#Pro-bounds-arrayindex)
-* [Bounds.3: No array-to-pointer decay](#Pro-bounds-decay)
-* [Bounds.4: Don't use standard library functions and types that are not bounds-checked](#Pro-bounds-stdlib)
-
-
-### <a name="Pro-bounds-arithmetic"></a>Bounds.1: Don't use pointer arithmetic. Use `span` instead.
-
-##### Reason
-
-Pointers should only refer to single objects, and pointer arithmetic is fragile and easy to get wrong. `span` is a bounds-checked, safe type for accessing arrays of data.
-
-##### Example, bad
-
-    void f(int* p, int count)
-    {
-        if (count < 2) return;
-
-        int* q = p + 1; // BAD
-
-        ptrdiff_t d;
-        int n;
-        d = (p - &n); // OK
-        d = (q - p); // OK
-
-        int n = *p++; // BAD
-
-        if (count < 6) return;
-
-        p[4] = 1; // BAD
-
-        p[count - 1] = 2; // BAD
-
-        use(&p[0], 3); // BAD
-    }
-
-##### Example, good
-
-    void f(span<int> a) // BETTER: use span in the function declaration
-    {
-        if (a.length() < 2) return;
-
-        int n = a[0]; // OK
-
-        span<int> q = a.subspan(1); // OK
-
-        if (a.length() < 6) return;
-
-        a[4] = 1; // OK
-
-        a[count - 1] = 2; // OK
-
-        use(a.data(), 3); // OK
-    }
-
-##### Enforcement
-
-Issue a diagnostic for any arithmetic operation on an expression of pointer type that results in a value of pointer type.
-
-### <a name="Pro-bounds-arrayindex"></a>Bounds.2: Only index into arrays using constant expressions.
-
-##### Reason
-
-Dynamic accesses into arrays are difficult for both tools and humans to validate as safe. `span` is a bounds-checked, safe type for accessing arrays of data. `at()` is another alternative that ensures single accesses are bounds-checked. If iterators are needed to access an array, use the iterators from a `span` constructed over the array.
-
-##### Example, bad
-
-    void f(array<int, 10> a, int pos)
-    {
-        a[pos / 2] = 1; // BAD
-        a[pos - 1] = 2; // BAD
-        a[-1] = 3;    // BAD -- no replacement, just don't do this
-        a[10] = 4;    // BAD -- no replacement, just don't do this
-    }
-
-##### Example, good
-
-    // ALTERNATIVE A: Use a span
-
-    // A1: Change parameter type to use span
-    void f1(span<int, 10> a, int pos)
-    {
-        a[pos / 2] = 1; // OK
-        a[pos - 1] = 2; // OK
-    }
-
-    // A2: Add local span and use that
-    void f2(array<int, 10> arr, int pos)
-    {
-        span<int> a = {arr, pos}
-        a[pos / 2] = 1; // OK
-        a[pos - 1] = 2; // OK
-    }
-
-    // ALTERNATIVE B: Use at() for access
-    void f3(array<int, 10> a, int pos)
-    {
-        at(a, pos / 2) = 1; // OK
-        at(a, pos - 1) = 2; // OK
-    }
-
-##### Example, bad
-
-    void f()
-    {
-        int arr[COUNT];
-        for (int i = 0; i < COUNT; ++i)
-            arr[i] = i; // BAD, cannot use non-constant indexer
-    }
-
-##### Example, good
-
-    // ALTERNATIVE A: Use a span
-    void f1()
-    {
-        int arr[COUNT];
-        span<int> av = arr;
-        for (int i = 0; i < COUNT; ++i)
-            av[i] = i;
-    }
-    
-    // ALTERNATIVE Aa: Use a span and range-for
-    void f1a()
-    {
-         int arr[COUNT];
-         span<int, COUNT> av = arr;
-         int i = 0;
-         for (auto& e : av)
-             e = i++;
-    }
-
-    // ALTERNATIVE B: Use at() for access
-    void f2()
-    {
-        int arr[COUNT];
-        for (int i = 0; i < COUNT; ++i)
-            at(arr, i) = i;
-    }
-
-##### Enforcement
-
-Issue a diagnostic for any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a compile-time constant expression.
-
-Issue a diagnostic for any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a value between `0` or and the upper bound of the array.
-
-**Rewrite support**: Tooling can offer rewrites of array accesses that involve dynamic index expressions to use `at()` instead:
-
-    static int a[10];
-
-    void f(int i, int j)
-    {
-        a[i + j] = 12;      // BAD, could be rewritten as ...
-        at(a, i + j) = 12;  // OK -- bounds-checked
-    }
-
-### <a name="Pro-bounds-decay"></a>Bounds.3: No array-to-pointer decay.
-
-##### Reason
-
-Pointers should not be used as arrays. `span` is a bounds-checked, safe alternative to using pointers to access arrays.
-
-##### Example, bad
-
-    void g(int* p, size_t length);
-
-    void f()
-    {
-        int a[5];
-        g(a, 5);        // BAD
-        g(&a[0], 1);    // OK
-    }
-
-##### Example, good
-
-    void g(int* p, size_t length);
-    void g1(span<int> av); // BETTER: get g() changed.
-
-    void f()
-    {
-        int a[5];
-        span<int> av = a;
-
-        g(av.data(), av.length());   // OK, if you have no choice
-        g1(a);                       // OK -- no decay here, instead use implicit span ctor
-    }
-
-##### Enforcement
-
-Issue a diagnostic for any expression that would rely on implicit conversion of an array type to a pointer type.
-
-### <a name="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard library functions and types that are not bounds-checked.
-
-##### Reason
-
-These functions all have bounds-safe overloads that take `span`. Standard types such as `vector` can be modified to perform bounds-checks under the bounds profile (in a compatible way, such as by adding contracts), or used with `at()`.
-
-##### Example, bad
-
-    void f()
-    {
-        array<int, 10> a, b;
-        memset(a.data(), 0, 10);         // BAD, and contains a length error (length = 10 * sizeof(int))
-        memcmp(a.data(), b.data(), 10);  // BAD, and contains a length error (length = 10 * sizeof(int))
-    }
-
-Also, `std::array<>::fill()` or `std::fill()` or even an empty initializer are better candidate than `memset()`.
-
-##### Example, good
-
-    void f()
-    {
-        array<int, 10> a, b, c{};       // c is initialized to zero
-        a.fill(0);
-        fill(b.begin(), b.end(), 0);    // std::fill()
-        fill(b, 0);                     // std::fill() + Ranges TS
-
-        if ( a == b ) {
-          // ...
-        }
-    }
-
-##### Example
-
-If code is using an unmodified standard library, then there are still workarounds that enable use of `std::array` and `std::vector` in a bounds-safe manner. Code can call the `.at()` member function on each class, which will result in an `std::out_of_range` exception being thrown. Alternatively, code can call the `at()` free function, which will result in fail-fast (or a customized action) on a bounds violation.
-
-    void f(std::vector<int>& v, std::array<int, 12> a, int i)
-    {
-        v[0] = a[0];        // BAD
-        v.at(0) = a[0];     // OK (alternative 1)
-        at(v, 0) = a[0];    // OK (alternative 2)
-
-        v.at(0) = a[i];     // BAD
-        v.at(0) = a.at(i);  // OK (alternative 1)
-        v.at(0) = at(a, i); // OK (alternative 2)
-    }
-
-##### Enforcement
-
-* Issue a diagnostic for any call to a standard library function that is not bounds-checked. ??? insert link to a list of banned functions
-
-**TODO Notes**:
-
-* Impact on the standard library will require close coordination with WG21, if only to ensure compatibility even if never standardized.
-* We are considering specifying bounds-safe overloads for stdlib (especially C stdlib) functions like `memcmp` and shipping them in the GSL.
-* For existing stdlib functions and types like `vector` that are not fully bounds-checked, the goal is for these features to be bounds-checked when called from code with the bounds profile on, and unchecked when called from legacy code, possibly using contracts (concurrently being proposed by several WG21 members).
-
+* <a href="Pro-bounds-arithmetic"></a>Bounds.1: Don't use pointer arithmetic. Use `span` instead:
+[Pass pointers to single objects (only)](#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+* <a href="Pro-bounds-arrayindex"></a>Bounds.2: Only index into arrays using constant expressions:
+[Pass pointers to single objects (only)](#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+* <a href="Pro-bounds-decay"></a>Bounds.3: No array-to-pointer decay:
+[Pass pointers to single objects (only)](#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+* <a href="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard library functions and types that are not bounds-checked:
+[Use the standard library in a type-safe manner](#Rsl-bounds).
+
+##### Impact
+
+Bounds safety implies that access to an object - notably arrays - does not access beyond the object's memory allocation.
+This eliminates a large class of insidious and hard-to-find errors, including the (in)famous "buffer overflow" errors.
+This closes security loopholes as well as a prominent source of memory corruption (when writing out of bounds).
+Even an out-of-bounds access is "just a read", it can lead to invariant violations (when the accessed isn't of the assumed type)
+and "mysterious values."
 
 
 ## <a name="SS-lifetime"></a>Pro.lifetime: Lifetime safety profile
@@ -19332,6 +19466,7 @@ Lifetime safety profile summary:
 * [Lifetime.2: Don't dereference a possibly null pointer.](#Pro-lifetime-null-deref)
 * [Lifetime.3: Don't pass a possibly invalid pointer to a function.](#Pro-lifetime-invalid-argument)
 
+??? These rules will be moved into the main-line sections of these guidelines ???
 
 ### <a name="Pro-lifetime-invalid-deref"></a>Lifetime.1: Don't dereference a possibly invalid pointer.
 
@@ -19569,7 +19704,7 @@ for example, `Expects(p!=nullptr)` will become `[[expects: p!=nullptr]]`.
 * `narrow`        // `narrow<T>(x)` is `static_cast<T>(x)` if `static_cast<T>(x) == x` or it throws `narrowing_error`
 * `[[implicit]]`  // "Marker" to put on single-argument constructors to explicitly make them non-explicit.
 * `move_owner`    // `p = move_owner(q)` means `p = q` but ???
-* `joining_thread` // a RAII style versin of `std::thread` that joins.
+* `joining_thread` // a RAII style version of `std::thread` that joins.
 
 ## <a name="SS-gsl-concepts"></a>GSL.concept: Concepts
 
@@ -19729,7 +19864,7 @@ Always indenting the statement after `if (...)`, `for (...)`, and `while (...)` 
 
 Use a tool.
 
-### <a name="Rl-name-type"></a>NL.5 Don't encode type information in names
+### <a name="Rl-name-type"></a>NL.5: Don't encode type information in names
 
 ##### Rationale
 
