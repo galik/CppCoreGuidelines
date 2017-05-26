@@ -31,8 +31,10 @@
 #define con_err(m) do{std::cerr << m << '\n';}while(0)
 
 #ifdef NDEBUG
+#define DEBUG_ONLY(code) do{}while(0)
 #define throw_exception(e, m) do{std::ostringstream o;o<<m;throw e(o.str());}while(0)
 #else
+#define DEBUG_ONLY(code) do{code}while(0)
 #define throw_exception(e, m) do{ \
 	std::ostringstream o; \
 	o << __FILE__ << ":" << __LINE__ << ":error: " << m; \
@@ -192,6 +194,12 @@ std::string pad(unsigned n, unsigned width, char padding = '0')
 // Document processing
 //
 
+struct line_ender
+{
+	char const* eol = "";
+	char const* operator()(){ auto out = eol; eol = "\n"; return out; }
+};
+
 /**
  * Modify Markdown code sections to use GitHub specific
  * syntax highlights
@@ -202,12 +210,6 @@ std::string pad(unsigned n, unsigned width, char padding = '0')
  */
 std::string add_syntax_heighlights(std::string const& doc)
 {
-	struct line_ender
-	{
-		char const* eol = "";
-		char const* operator()(){ auto out = eol; eol = "\n"; return out; }
-	};
-
 	line_ender eol;
 	bool indented = false;
 
@@ -236,12 +238,48 @@ std::string add_syntax_heighlights(std::string const& doc)
 	return os.str();
 }
 
-std::tuple<document_part_map, document_link_map> extract_document_sections(std::string const& doc)
+
+std::size_t line_number(std::string const& doc, pos_type pos)
 {
-	document_part_map parts;
+	std::size_t count = 1;
+
+	std::istringstream iss{std::string{std::begin(doc), std::next(std::begin(doc), pos)}};
+	for(std::string line; std::getline(iss, line);)
+		++count;
+
+	return count;
+}
+
+void dump_link_map(std::ostream& os, document_link_map const& links)
+{
+	line_ender eol;
+	for(auto const& link: links)
+		os << eol() << link.first << ": " << link.second;
+}
+document_link_map build_link_map(std::string const& doc, document_part_map parts)
+{
 	document_link_map links;
 
-	std::sregex_iterator e;
+	for(auto const& part: parts)
+	{
+		auto part_beg = std::next(std::begin(doc), part.second.beg);
+		auto part_end = std::next(std::begin(doc), part.second.end);
+
+		std::sregex_iterator const e;
+		std::sregex_iterator m{part_beg, part_end, e_links};
+
+		for(; m != e; ++m)
+			links[m->str(1)] = part.second.filename;
+	}
+
+	return links;
+}
+
+document_part_map extract_document_sections(std::string const& doc)
+{
+	document_part_map parts;
+
+	std::sregex_iterator const e;
 	std::sregex_iterator m{std::begin(doc), std::end(doc), e_sects};
 
 	std::string link_id;
@@ -263,62 +301,19 @@ std::tuple<document_part_map, document_link_map> extract_document_sections(std::
 	part.end = doc.size();
 	parts[link_id] = part;
 
-	// TODO: factor this out
-	for(auto const& p: parts)
-	{
-		std::sregex_iterator m
-			{std::next(std::begin(doc), p.second.beg), std::next(std::begin(doc) + p.second.end), e_links};
-
-		for(; m != e; ++m)
-			links[m->str(1)] = p.second.filename;
-	}
-
-	return {parts, links};
+	return parts;
 }
 
-std::size_t line_number(std::string const& doc, pos_type pos)
+document_part_map extract_document_items(std::string const& doc,
+	document_part_map const& sections)
 {
-	std::size_t count = 1;
-
-	std::istringstream iss{std::string{std::begin(doc), std::next(std::begin(doc), pos)}};
-	for(std::string line; std::getline(iss, line);)
-		++count;
-
-	return count;
-}
-
-
-document_link_map build_link_map(std::string const& doc, document_part_map parts)
-{
-	document_link_map links;
-
-	for(auto const& p: parts)
-	{
-		auto part_beg = std::next(std::begin(doc), p.second.beg);
-		auto part_end = std::next(std::begin(doc), p.second.end);
-
-		std::sregex_iterator const e;
-		std::sregex_iterator m{part_beg, part_end, e_items};
-
-		for(; m != e; ++m)
-			links[m->str(1)] = p.second.filename;
-	}
-
-	return links;
-}
-
-// TODO: make this generic between sections and items (provide the ehole document for sections)
-std::tuple<document_part_map, document_link_map> extract_document_items(std::string const& doc,
-	std::tuple<document_part_map, document_link_map> const& section_info)
-{
-	document_part_map parts;
-	document_link_map links;
+	document_part_map items;
 
 	std::sregex_iterator const e;
 
 	auto idx = 0U;
 
-	for(auto const& section: std::get<document_part_map>(section_info))
+	for(auto const& section: sections)
 	{
 		auto section_beg = std::next(std::begin(doc), section.second.beg);
 		auto section_end = std::next(std::begin(doc), section.second.end);
@@ -326,48 +321,35 @@ std::tuple<document_part_map, document_link_map> extract_document_items(std::str
 		std::sregex_iterator m{section_beg, section_end, e_items};
 
 		// initialize for item's section header (index)
-		document_part part = section.second; //{section.second.beg, section.second.end, section.second.mini_id, section.second.filename};
+		document_part item = section.second; //{section.second.beg, section.second.end, section.second.mini_id, section.second.filename};
 		std::string link_id = section.first;
 
 		for(; m != e; ++m, ++idx)
 		{
-//			bug_var(m->str(3));
 			if(m->str(2).empty())
 				con_err("item is missing an item tag: " << line_number(doc, section.second.beg + m->position()) << ": " << m->str());
 
-			part.end = section.second.beg + m->position();
-			parts[link_id] = part;
+			item.end = section.second.beg + m->position();
+			items[link_id] = item;
 
 			link_id = m->str(1);
-			part.mini_id = m->str(2).empty() ? section.second.mini_id : m->str(2);
+			item.mini_id = m->str(2).empty() ? section.second.mini_id : m->str(2);
 
-			bug_var(part.mini_id);
-			std::regex e_mini{R"~(([^.]+)\.(\d+))~"};
+//			std::regex e_mini{R"~(([^.]+)\.(\d+))~"};
+			std::regex e_mini{R"~((.*?)\.(\d+))~"};
 			std::smatch sm;
-			if(std::regex_match(part.mini_id, sm, e_mini))
-				part.mini_id = sm.str(1) + "." + pad(gsl::narrow<unsigned>(std::stoul(sm.str(2))), 3);
+			if(std::regex_match(item.mini_id, sm, e_mini))
+				item.mini_id = sm.str(1) + "." + pad(gsl::narrow<unsigned>(std::stoul(sm.str(2))), 3);
 
-			part.filename = section.second.filename + "-" + part.mini_id;
-			part.beg = part.end;
+			item.filename = section.second.filename + "-" + item.mini_id;
+			item.beg = item.end;
 		}
 
-		part.end = section.second.end;
-		parts[link_id] = part;
+		item.end = section.second.end;
+		items[link_id] = item;
 	}
 
-	// TODO: factor this out
-	for(auto const& p: parts)
-	{
-		auto part_beg = std::next(std::begin(doc), p.second.beg);
-		auto part_end = std::next(std::begin(doc), p.second.end);
-
-		std::sregex_iterator m{part_beg, part_end, e_items};
-
-		for(; m != e; ++m)
-			links[m->str(1)] = p.second.filename;
-	}
-
-	return {parts, links};
+	return items;
 }
 
 int usage(std::string const& prog, int error_code)
@@ -467,25 +449,27 @@ int main(int, char* argv[])
 		if(cfg.outputs.count(output_type::sections)
 		|| cfg.outputs.count(output_type::items))
 		{
-			auto section_info = extract_document_sections(doc);
+			auto sections = extract_document_sections(doc);
 
 			if(cfg.outputs.count(output_type::sections))
 			{
+				auto links = build_link_map(doc, sections);
+
 				con_out("Outputting sections:");
 
-				for(auto const& part: std::get<document_part_map>(section_info))
+				for(auto const& section: sections)
 				{
-					con_out("creating: " << part.second.filename);
+					con_out("creating: " << section.second.filename);
 
-					auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+					auto text = doc.substr(section.second.beg, section.second.end - section.second.beg);
 
-					for(auto const& link: std::get<document_link_map>(section_info))
+					for(auto const& link: links)
 						replace_all(text, "](#" + link.first + ")", "](S-" + link.second + ".md#" + link.first + ")");
 
-					auto filepath = cfg.output_dir + path_separator() + "S-" + part.second.filename + ".md";
+					auto filepath = cfg.output_dir + path_separator() + "S-" + section.second.filename + ".md";
 
 					if(!(std::ofstream(filepath) << text))
-						throw_errno(part.second.filename);
+						throw_errno(section.second.filename);
 				}
 			}
 
@@ -493,19 +477,20 @@ int main(int, char* argv[])
 			{
 				con_out("Outputting individual items:");
 
-				auto item_info = extract_document_items(doc, section_info);
+				auto items = extract_document_items(doc, sections);
+				auto links = build_link_map(doc, items);
 
-				for(auto const& part: std::get<document_part_map>(item_info))
+				for(auto const& item: items)
 				{
 					if(cfg.verbose)
-						con_out("creating: " << part.second.filename);
+						con_out("creating: " << item.second.filename);
 
-					auto text = doc.substr(part.second.beg, part.second.end - part.second.beg);
+					auto text = doc.substr(item.second.beg, item.second.end - item.second.beg);
 
-					for(auto const& link: std::get<document_link_map>(item_info))
+					for(auto const& link: links)
 						replace_all(text, "](#" + link.first + ")", "](I-" + link.second + ".md#" + link.first + ")");
 
-					auto filepath = cfg.output_dir + path_separator() + "I-" + part.second.filename + ".md";
+					auto filepath = cfg.output_dir + path_separator() + "I-" + item.second.filename + ".md";
 
 					if(!(std::ofstream(filepath) << text))
 						throw_errno(filepath);
