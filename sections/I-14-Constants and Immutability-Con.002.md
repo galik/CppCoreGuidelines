@@ -35,7 +35,7 @@ This is a problem for people modernizing code.
 You can
 
 * update the library to be `const`-correct; preferred long-term solution
-* "cast away `const`"; [best avoided](I-10-Expressions and Statements-ES.050.md#Res-casts-const)
+* "cast away `const`"; [best avoided](I-10-Expressions%20and%20Statements-ES.050.md#Res-casts-const)
 * provide a wrapper function
 
 Example:

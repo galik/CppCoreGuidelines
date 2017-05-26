@@ -17,7 +17,7 @@ public:
 };
 
 ```
-Here, the conventional semantics is maintained: [Copies compare equal](I-07-Constructors, assignments, and destructors-C.052.md#SS-copy).
+Here, the conventional semantics is maintained: [Copies compare equal](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.052.md#SS-copy).
 
 ##### Example, bad
 
@@ -27,8 +27,8 @@ X operator+(X a, X b) { return a.v - b.v; }   // bad: makes + subtract
 ```
 ##### Note
 
-Non-member operators should be either friends or defined in [the same namespace as their operands](I-07-Constructors, assignments, and destructors-C.168.md#Ro-namespace).
-[Binary operators should treat their operands equivalently](I-07-Constructors, assignments, and destructors-C.161.md#Ro-symmetric).
+Non-member operators should be either friends or defined in [the same namespace as their operands](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.168.md#Ro-namespace).
+[Binary operators should treat their operands equivalently](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.161.md#Ro-symmetric).
 
 ##### Enforcement
 

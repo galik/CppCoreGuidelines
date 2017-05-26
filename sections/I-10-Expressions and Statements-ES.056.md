@@ -4,7 +4,7 @@
 
 We move, rather than copy, to avoid duplication and for improved performance.
 
-A move typically leaves behind an empty object ([C.64](I-07-Constructors, assignments, and destructors-C.064.md#Rc-move-semantic)), which can be surprising or even dangerous, so we try to avoid moving from lvalues (they might be accessed later).
+A move typically leaves behind an empty object ([C.64](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.064.md#Rc-move-semantic)), which can be surprising or even dangerous, so we try to avoid moving from lvalues (they might be accessed later).
 
 ##### Notes
 
@@ -35,7 +35,7 @@ void user()
 
 ```
 Usually, a `std::move()` is used as an argument to a `&&` parameter.
-And after you do that, assume the object has been moved from (see [C.64](I-07-Constructors, assignments, and destructors-C.064.md#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
+And after you do that, assume the object has been moved from (see [C.64](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.064.md#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
 
 ```cpp
 void f() {

@@ -4,7 +4,7 @@
 
 The `dynamic_cast` conversion allows to test whether a pointer is pointing at a polymorphic object that has a given class in its hierarchy. Since failure to find the class merely returns a null value, it can be tested during run-time. This allows writing code that can choose alternative paths depending on the results.
 
-Contrast with [C.147](I-07-Constructors, assignments, and destructors-C.148.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
+Contrast with [C.147](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.148.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
 
 ##### Example
 

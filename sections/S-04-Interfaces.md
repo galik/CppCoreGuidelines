@@ -28,12 +28,12 @@ Interface rule summary:
 See also
 
 * [F: Functions](S-05-Functions.md#S-functions)
-* [C.concrete: Concrete types](S-06-Classes and Class Hierarchies.md#SS-concrete)
-* [C.hier: Class hierarchies](S-07-Constructors, assignments, and destructors.md#SS-hier)
-* [C.over: Overloading and overloaded operators](S-07-Constructors, assignments, and destructors.md#SS-overload)
-* [C.con: Containers and other resource handles](S-07-Constructors, assignments, and destructors.md#SS-containers)
-* [E: Error handling](S-13-Error handling.md#S-errors)
-* [T: Templates and generic programming](S-15-Templates and generic programming.md#S-templates)
+* [C.concrete: Concrete types](S-06-Classes%20and%20Class%20Hierarchies.md#SS-concrete)
+* [C.hier: Class hierarchies](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-hier)
+* [C.over: Overloading and overloaded operators](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-overload)
+* [C.con: Containers and other resource handles](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-containers)
+* [E: Error handling](S-13-Error%20handling.md#S-errors)
+* [T: Templates and generic programming](S-15-Templates%20and%20generic%20programming.md#S-templates)
 
 ### <a name="Ri-explicit"></a>I.1: Make interfaces explicit
 
@@ -336,7 +336,7 @@ double sqrt(double x) { Expects(x >= 0); /* ... */ }
 ```
 Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but that's not easily done. For now, we place it in the definition (function body).
 
-**References**: `Expects()` is described in [GSL](S-23-Guideline support library.md#S-gsl).
+**References**: `Expects()` is described in [GSL](S-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Note
 
@@ -389,7 +389,7 @@ Once language support becomes available (e.g., see the [contract proposal](http:
 
 ##### Note
 
-No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](S-10-Expressions and Statements.md#Res-nonnegative).
+No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](S-10-Expressions%20and%20Statements.md#Res-nonnegative).
 
 ##### Enforcement
 
@@ -483,7 +483,7 @@ void manipulate(Record& r)    // postcondition: m is unlocked upon exit
 ```
 The bug is now obvious (but only to a human reading comments).
 
-Better still, use [RAII](S-09-Resource management.md#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
+Better still, use [RAII](S-09-Resource%20management.md#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
 
 ```cpp
 void manipulate(Record& r)    // best
@@ -528,7 +528,7 @@ void f()
 Postconditions can be stated in many ways, including comments, `if`-statements, and `assert()`.
 This can make them hard to distinguish from ordinary code, hard to update, hard to manipulate by tools, and may have the wrong semantics.
 
-**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](S-09-Resource management.md#Rr-raii).
+**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](S-09-Resource%20management.md#Rr-raii).
 
 ##### Note
 
@@ -564,7 +564,7 @@ Iter find(Iter first, Iter last, Val v)
 Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.
 For now, the concept TS is supported only in GCC 6.1.
 
-**See also**: [Generic programming](S-15-Templates and generic programming.md#SS-GP) and [concepts](#SS-t-concepts).
+**See also**: [Generic programming](S-15-Templates%20and%20generic%20programming.md#SS-GP) and [concepts](#SS-t-concepts).
 
 ##### Enforcement
 
@@ -674,12 +674,12 @@ vector<double> compute(args)  // good
 }
 
 ```
-**Alternative**: [Pass ownership](S-09-Resource management.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
+**Alternative**: [Pass ownership](S-09-Resource%20management.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
 However, that is less elegant and often less efficient than returning the object itself,
 so use smart pointers only if reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from the [guideline support library](S-23-Guideline support library.md#S-gsl):
+In that case, mark owning pointers using `owner` from the [guideline support library](S-23-Guideline%20support%20library.md#S-gsl):
 
 ```cpp
 owner<X*> compute(args)    // It is now clear that ownership is transferred
@@ -702,7 +702,7 @@ caller, so that its lifetime is handled by the caller. Viewed another way:
 ownership transferring APIs are relatively rare compared to pointer-passing APIs,
 so the default is "no ownership transfer."
 
-**See also**: [Argument passing](S-05-Functions.md#Rf-conventional), [use of smart pointer arguments](S-09-Resource management.md#Rr-smartptrparam), and [value return](#Rf-T-return).
+**See also**: [Argument passing](S-05-Functions.md#Rf-conventional), [use of smart pointer arguments](S-09-Resource%20management.md#Rr-smartptrparam), and [value return](#Rf-T-return).
 
 ##### Enforcement
 
@@ -733,7 +733,7 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](S-23-Guideline support library.md#S-gsl).
+`not_null` is defined in the [guideline support library](S-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Note
 
@@ -1090,9 +1090,9 @@ case file:          owned = true;  inp = new ifstream{argv[2]};
 istream& in = *inp;
 
 ```
-This violated the rule [against uninitialized variables](S-10-Expressions and Statements.md#Res-always),
+This violated the rule [against uninitialized variables](S-10-Expressions%20and%20Statements.md#Res-always),
 the rule against [ignoring ownership](S-04-Interfaces.md#Ri-raw),
-and the rule [against magic constants](S-10-Expressions and Statements.md#Res-magic) .
+and the rule [against magic constants](S-10-Expressions%20and%20Statements.md#Res-magic) .
 In particular, someone has to remember to somewhere write
 
 ```cpp

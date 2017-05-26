@@ -35,6 +35,6 @@ Unfortunately, compilers cannot catch all such errors and unfortunately, the bug
 
 ##### Alternative
 
-* [Always initialize an object](I-10-Expressions and Statements-ES.020.md#Res-always)
-* [ES.21: Don't introduce a variable (or constant) before you need to use it](I-10-Expressions and Statements-ES.021.md#Res-introduce)
+* [Always initialize an object](I-10-Expressions%20and%20Statements-ES.020.md#Res-always)
+* [ES.21: Don't introduce a variable (or constant) before you need to use it](I-10-Expressions%20and%20Statements-ES.021.md#Res-introduce)
 

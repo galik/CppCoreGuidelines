@@ -45,10 +45,10 @@ If a class has any `private` data, a user cannot completely initialize an object
 Hence, the class definer will provide a constructor and must specify its meaning.
 This effectively means the definer need to define an invariant.
 
-* See also [define a class with private data as `class`](I-06-Classes and Class Hierarchies-C.008.md#Rc-class).
-* See also [Prefer to place the interface first in a class](I-24-Naming and layout rules-NL.016.md#Rl-order).
-* See also [minimize exposure of members](I-06-Classes and Class Hierarchies-C.009.md#Rc-private).
-* See also [Avoid `protected` data](I-07-Constructors, assignments, and destructors-C.133.md#Rh-protected).
+* See also [define a class with private data as `class`](I-06-Classes%20and%20Class%20Hierarchies-C.008.md#Rc-class).
+* See also [Prefer to place the interface first in a class](I-24-Naming%20and%20layout%20rules-NL.016.md#Rl-order).
+* See also [minimize exposure of members](I-06-Classes%20and%20Class%20Hierarchies-C.009.md#Rc-private).
+* See also [Avoid `protected` data](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.133.md#Rh-protected).
 
 ##### Enforcement
 

@@ -15,7 +15,7 @@ void sink(vector<int>&& v) {   // sink takes ownership of whatever the argument 
 
 ```
 Note that the `std::move(v)` makes it possible for `store_somewhere()` to leave `v` in a moved-from state.
-[That could be dangerous](I-07-Constructors, assignments, and destructors-C.064.md#Rc-move-semantic).
+[That could be dangerous](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.064.md#Rc-move-semantic).
 
 
 ##### Exception

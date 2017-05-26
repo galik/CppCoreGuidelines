@@ -47,7 +47,7 @@ of objects with static storage duration, and thus accesses to such objects might
 
 ##### Note
 
-This rule is redundant if you [don't `detach()`](I-12-Concurrency and Parallelism-CP.026.md#Rconc-detached_thread) and [use `gsl::joining_thread`](I-12-Concurrency and Parallelism-CP.025.md#Rconc-joining_thread).
+This rule is redundant if you [don't `detach()`](I-12-Concurrency%20and%20Parallelism-CP.026.md#Rconc-detached_thread) and [use `gsl::joining_thread`](I-12-Concurrency%20and%20Parallelism-CP.025.md#Rconc-joining_thread).
 However, converting code to follow those guidelines could be difficult and even impossible for third-party libraries.
 In such cases, the rule becomes essential for lifetime safety and type safety.
 

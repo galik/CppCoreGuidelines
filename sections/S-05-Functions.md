@@ -460,7 +460,7 @@ Destructors, `swap` functions, move operations, and default constructors should 
 
 ##### Reason
 
-Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](S-09-Resource management.md#Rr-smartptrparam)).
+Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](S-09-Resource%20management.md#Rr-smartptrparam)).
 Passing by smart pointer restricts the use of a function to callers that use smart pointers.
 Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost.
 
@@ -495,7 +495,7 @@ void f(shared_ptr<widget>& w)
 };
 
 ```
-See further in [R.30](S-09-Resource management.md#Rr-smartptrparam).
+See further in [R.30](S-09-Resource%20management.md#Rr-smartptrparam).
 
 ##### Note
 
@@ -503,7 +503,7 @@ We can catch dangling pointers statically, so we don't need to rely on resource 
 
 **See also**: [when to prefer `T*` and when to prefer `T&`](S-05-Functions.md#Rf-ptr-ref).
 
-**See also**: Discussion of [smart pointer use](S-09-Resource management.md#Rr-summary-smartptrs).
+**See also**: Discussion of [smart pointer use](S-09-Resource%20management.md#Rr-summary-smartptrs).
 
 ##### Enforcement
 
@@ -717,7 +717,7 @@ void sink(vector<int>&& v) {   // sink takes ownership of whatever the argument 
 
 ```
 Note that the `std::move(v)` makes it possible for `store_somewhere()` to leave `v` in a moved-from state.
-[That could be dangerous](S-07-Constructors, assignments, and destructors.md#Rc-move-semantic).
+[That could be dangerous](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-move-semantic).
 
 
 ##### Exception
@@ -1004,7 +1004,7 @@ void use2(span<int> p, zstring s, owner<int*> q)
 
 **Also**: Assume that a `T*` obtained from a smart pointer to `T` (e.g., `unique_ptr<T>`) points to a single element.
 
-**See also**: [Support library](S-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](S-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Enforcement
 
@@ -1102,7 +1102,7 @@ A `span<T>` object does not own its elements and is so small that it can be pass
 
 Passing a `span` object as an argument is exactly as efficient as passing a pair of pointer arguments or passing a pointer and an integer count.
 
-**See also**: [Support library](S-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](S-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Enforcement
 
@@ -1137,7 +1137,7 @@ int length(not_null<zstring> p);
 
 `zstring` do not represent ownership.
 
-**See also**: [Support library](S-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](S-23-Guideline%20support%20library.md#S-gsl).
 
 ### <a name="Rf-unique_ptr"></a>F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed
 
@@ -1145,7 +1145,7 @@ int length(not_null<zstring> p);
 
 Using `unique_ptr` is the cheapest way to pass a pointer safely.
 
-See also [C.50](S-07-Constructors, assignments, and destructors.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
+See also [C.50](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
 
 ##### Example
 
@@ -1603,7 +1603,7 @@ void print(zstring);
 ##### See also
 
 
-[Default arguments for virtual functions](S-07-Constructors, assignments, and destructors.md#Rh-virtual-default-arg)
+[Default arguments for virtual functions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-virtual-default-arg)
 
 ##### Enforcement
 

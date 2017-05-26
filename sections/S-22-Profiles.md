@@ -4,7 +4,7 @@ Ideally, we would follow all of the guidelines.
 That would give the cleanest, most regular, least error-prone, and often the fastest code.
 Unfortunately, that is usually impossible because we have to fit our code into large code bases and use existing libraries.
 Often, such code has been written over decades and does not follow these guidelines.
-We must aim for [gradual adoption](S-27-Modernizing code.md#S-modernizing).
+We must aim for [gradual adoption](S-27-Modernizing%20code.md#S-modernizing).
 
 Whatever strategy for gradual adoption we adopt, we need to be able to apply sets of related guidelines to address some set
 of problems first and leave the rest until later.
@@ -70,21 +70,21 @@ An implementation of this profile shall recognize the following patterns in sour
 Type safety profile summary:
 
 * <a name="Pro-type-reinterpretcast"></a>Type.1: Don't use `reinterpret_cast`:
-A strict version of [Avoid casts](S-10-Expressions and Statements.md#Res-casts) and [prefer named casts](S-10-Expressions and Statements.md#Res-casts-named).
+A strict version of [Avoid casts](S-10-Expressions%20and%20Statements.md#Res-casts) and [prefer named casts](S-10-Expressions%20and%20Statements.md#Res-casts-named).
 * <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` to downcast:
-[Use `dynamic_cast` instead](S-07-Constructors, assignments, and destructors.md#Rh-dynamic_cast).
+[Use `dynamic_cast` instead](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Don't use `const_cast` to cast away `const` (i.e., at all):
-[Don't cast away const](S-10-Expressions and Statements.md#Res-casts-const).
+[Don't cast away const](S-10-Expressions%20and%20Statements.md#Res-casts-const).
 * <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` or functional `T(expression)` casts:
-Prefer [construction](S-10-Expressions and Statements.md#Res-construct) or [named casts](#Res-cast-named).
+Prefer [construction](S-10-Expressions%20and%20Statements.md#Res-construct) or [named casts](#Res-cast-named).
 * <a name="Pro-type-init"></a>Type.5: Don't use a variable before it has been initialized:
-[always initialize](S-10-Expressions and Statements.md#Res-always).
+[always initialize](S-10-Expressions%20and%20Statements.md#Res-always).
 * <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable:
-[always initialize](S-10-Expressions and Statements.md#Res-always),
-possibly using [default constructors](S-07-Constructors, assignments, and destructors.md#Rc-default0) or
+[always initialize](S-10-Expressions%20and%20Statements.md#Res-always),
+possibly using [default constructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-default0) or
 [default member initializers](#Rc-in-class-initializers).
 * <a name="Pro-type-unon"></a>Type.7: Avoid naked union:
-[Use `variant` instead](S-07-Constructors, assignments, and destructors.md#Ru-naked).
+[Use `variant` instead](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-naked).
 * <a name="Pro-type-varargs"></a>Type.8: Avoid varargs:
 [Don't use `va_arg` arguments](S-05-Functions.md#F-varargs).
 
@@ -115,7 +115,7 @@ Bounds safety profile summary:
 * <a href="Pro-bounds-decay"></a>Bounds.3: No array-to-pointer decay:
 [Pass pointers to single objects (only)](S-04-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
 * <a href="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard library functions and types that are not bounds-checked:
-[Use the standard library in a type-safe manner](S-18-The Standard Library.md#Rsl-bounds).
+[Use the standard library in a type-safe manner](S-18-The%20Standard%20Library.md#Rsl-bounds).
 
 ##### Impact
 

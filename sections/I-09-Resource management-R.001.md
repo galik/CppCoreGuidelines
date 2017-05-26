@@ -62,7 +62,7 @@ public:
 ```
 ##### Note
 
-Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](I-23-Guideline support library.md#S-gsl)
+Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](I-23-Guideline%20support%20library.md#S-gsl)
 
-**See also**: [RAII](I-09-Resource management-R.001.md#Rr-raii).
+**See also**: [RAII](I-09-Resource%20management-R.001.md#Rr-raii).
 

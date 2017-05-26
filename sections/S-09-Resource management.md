@@ -13,37 +13,37 @@ Here, we ignore such cases.
 
 * Resource management rule summary:
 
-  * [R.1: Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)](S-09-Resource management.md#Rr-raii)
-  * [R.2: In interfaces, use raw pointers to denote individual objects (only)](S-09-Resource management.md#Rr-use-ptr)
-  * [R.3: A raw pointer (a `T*`) is non-owning](S-09-Resource management.md#Rr-ptr)
-  * [R.4: A raw reference (a `T&`) is non-owning](S-09-Resource management.md#Rr-ref)
-  * [R.5: Prefer scoped objects, don't heap-allocate unnecessarily](S-09-Resource management.md#Rr-scoped)
-  * [R.6: Avoid non-`const` global variables](S-09-Resource management.md#Rr-global)
+  * [R.1: Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)](S-09-Resource%20management.md#Rr-raii)
+  * [R.2: In interfaces, use raw pointers to denote individual objects (only)](S-09-Resource%20management.md#Rr-use-ptr)
+  * [R.3: A raw pointer (a `T*`) is non-owning](S-09-Resource%20management.md#Rr-ptr)
+  * [R.4: A raw reference (a `T&`) is non-owning](S-09-Resource%20management.md#Rr-ref)
+  * [R.5: Prefer scoped objects, don't heap-allocate unnecessarily](S-09-Resource%20management.md#Rr-scoped)
+  * [R.6: Avoid non-`const` global variables](S-09-Resource%20management.md#Rr-global)
 
 * Allocation and deallocation rule summary:
 
-  * [R.10: Avoid `malloc()` and `free()`](S-09-Resource management.md#Rr-mallocfree)
-  * [R.11: Avoid calling `new` and `delete` explicitly](S-09-Resource management.md#Rr-newdelete)
-  * [R.12: Immediately give the result of an explicit resource allocation to a manager object](S-09-Resource management.md#Rr-immediate-alloc)
-  * [R.13: Perform at most one explicit resource allocation in a single expression statement](S-09-Resource management.md#Rr-single-alloc)
-  * [R.14: ??? array vs. pointer parameter](S-09-Resource management.md#Rr-ap)
-  * [R.15: Always overload matched allocation/deallocation pairs](S-09-Resource management.md#Rr-pair)
+  * [R.10: Avoid `malloc()` and `free()`](S-09-Resource%20management.md#Rr-mallocfree)
+  * [R.11: Avoid calling `new` and `delete` explicitly](S-09-Resource%20management.md#Rr-newdelete)
+  * [R.12: Immediately give the result of an explicit resource allocation to a manager object](S-09-Resource%20management.md#Rr-immediate-alloc)
+  * [R.13: Perform at most one explicit resource allocation in a single expression statement](S-09-Resource%20management.md#Rr-single-alloc)
+  * [R.14: ??? array vs. pointer parameter](S-09-Resource%20management.md#Rr-ap)
+  * [R.15: Always overload matched allocation/deallocation pairs](S-09-Resource%20management.md#Rr-pair)
 
 * <a name="Rr-summary-smartptrs"></a>Smart pointer rule summary:
 
-  * [R.20: Use `unique_ptr` or `shared_ptr` to represent ownership](S-09-Resource management.md#Rr-owner)
-  * [R.21: Prefer `unique_ptr` over `shared_ptr` unless you need to share ownership](S-09-Resource management.md#Rr-unique)
-  * [R.22: Use `make_shared()` to make `shared_ptr`s](S-09-Resource management.md#Rr-make_shared)
-  * [R.23: Use `make_unique()` to make `unique_ptr`s](S-09-Resource management.md#Rr-make_unique)
-  * [R.24: Use `std::weak_ptr` to break cycles of `shared_ptr`s](S-09-Resource management.md#Rr-weak_ptr)
-  * [R.30: Take smart pointers as parameters only to explicitly express lifetime semantics](S-09-Resource management.md#Rr-smartptrparam)
-  * [R.31: If you have non-`std` smart pointers, follow the basic pattern from `std`](S-09-Resource management.md#Rr-smart)
-  * [R.32: Take a `unique_ptr<widget>` parameter to express that a function assumes ownership of a `widget`](S-09-Resource management.md#Rr-uniqueptrparam)
-  * [R.33: Take a `unique_ptr<widget>&` parameter to express that a function reseats the `widget`](S-09-Resource management.md#Rr-reseat)
-  * [R.34: Take a `shared_ptr<widget>` parameter to express that a function is part owner](S-09-Resource management.md#Rr-sharedptrparam-owner)
-  * [R.35: Take a `shared_ptr<widget>&` parameter to express that a function might reseat the shared pointer](S-09-Resource management.md#Rr-sharedptrparam)
-  * [R.36: Take a `const shared_ptr<widget>&` parameter to express that it might retain a reference count to the object ???](S-09-Resource management.md#Rr-sharedptrparam-const)
-  * [R.37: Do not pass a pointer or reference obtained from an aliased smart pointer](S-09-Resource management.md#Rr-smartptrget)
+  * [R.20: Use `unique_ptr` or `shared_ptr` to represent ownership](S-09-Resource%20management.md#Rr-owner)
+  * [R.21: Prefer `unique_ptr` over `shared_ptr` unless you need to share ownership](S-09-Resource%20management.md#Rr-unique)
+  * [R.22: Use `make_shared()` to make `shared_ptr`s](S-09-Resource%20management.md#Rr-make_shared)
+  * [R.23: Use `make_unique()` to make `unique_ptr`s](S-09-Resource%20management.md#Rr-make_unique)
+  * [R.24: Use `std::weak_ptr` to break cycles of `shared_ptr`s](S-09-Resource%20management.md#Rr-weak_ptr)
+  * [R.30: Take smart pointers as parameters only to explicitly express lifetime semantics](S-09-Resource%20management.md#Rr-smartptrparam)
+  * [R.31: If you have non-`std` smart pointers, follow the basic pattern from `std`](S-09-Resource%20management.md#Rr-smart)
+  * [R.32: Take a `unique_ptr<widget>` parameter to express that a function assumes ownership of a `widget`](S-09-Resource%20management.md#Rr-uniqueptrparam)
+  * [R.33: Take a `unique_ptr<widget>&` parameter to express that a function reseats the `widget`](S-09-Resource%20management.md#Rr-reseat)
+  * [R.34: Take a `shared_ptr<widget>` parameter to express that a function is part owner](S-09-Resource%20management.md#Rr-sharedptrparam-owner)
+  * [R.35: Take a `shared_ptr<widget>&` parameter to express that a function might reseat the shared pointer](S-09-Resource%20management.md#Rr-sharedptrparam)
+  * [R.36: Take a `const shared_ptr<widget>&` parameter to express that it might retain a reference count to the object ???](S-09-Resource%20management.md#Rr-sharedptrparam-const)
+  * [R.37: Do not pass a pointer or reference obtained from an aliased smart pointer](S-09-Resource%20management.md#Rr-smartptrget)
 
 ### <a name="Rr-raii"></a>R.1: Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)
 
@@ -109,9 +109,9 @@ public:
 ```
 ##### Note
 
-Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](S-23-Guideline support library.md#S-gsl)
+Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](S-23-Guideline%20support%20library.md#S-gsl)
 
-**See also**: [RAII](S-09-Resource management.md#Rr-raii).
+**See also**: [RAII](S-09-Resource%20management.md#Rr-raii).
 
 ### <a name="Rr-use-ptr"></a>R.2: In interfaces, use raw pointers to denote individual objects (only)
 
@@ -292,11 +292,11 @@ void f()
 }
 
 ```
-**See also**: [The raw pointer rule](S-09-Resource management.md#Rr-ptr)
+**See also**: [The raw pointer rule](S-09-Resource%20management.md#Rr-ptr)
 
 ##### Enforcement
 
-See [the raw pointer rule](S-09-Resource management.md#Rr-ptr)
+See [the raw pointer rule](S-09-Resource%20management.md#Rr-ptr)
 
 ### <a name="Rr-scoped"></a>R.5: Prefer scoped objects, don't heap-allocate unnecessarily
 
@@ -754,7 +754,7 @@ void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
 }
 
 ```
-Both cases are an error under the [`sharedptrparam` guideline](S-09-Resource management.md#Rr-smartptrparam):
+Both cases are an error under the [`sharedptrparam` guideline](S-09-Resource%20management.md#Rr-smartptrparam):
 `p` is a `Shared_ptr`, but nothing about its sharedness is used here and passing it by value is a silent pessimization;
 these functions should accept a smart pointer only if they need to participate in the widget's lifetime management. Otherwise they should accept a `widget*`, if it can be `nullptr`. Otherwise, and ideally, the function should accept a `widget&`.
 These smart pointers match the `Shared_ptr` concept, so these guideline enforcement rules work on them out of the box and expose this common pessimization.

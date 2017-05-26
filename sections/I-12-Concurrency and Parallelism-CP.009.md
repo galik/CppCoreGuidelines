@@ -42,28 +42,28 @@ It is up to an application builder to choose which support tools are valuable fo
 
 This section focuses on relatively ad-hoc uses of multiple threads communicating through shared data.
 
-* For parallel algorithms, see [parallelism](I-12-Concurrency and Parallelism-P.050.md#SScp-par)
-* For inter-task communication without explicit sharing, see [messaging](I-12-Concurrency and Parallelism-P.050.md#SScp-mess)
-* For vector parallel code, see [vectorization](I-12-Concurrency and Parallelism-CP.061.md#SScp-vec)
-* For lock-free programming, see [lock free](I-12-Concurrency and Parallelism-CP.061.md#SScp-free)
+* For parallel algorithms, see [parallelism](I-12-Concurrency%20and%20Parallelism-P.050.md#SScp-par)
+* For inter-task communication without explicit sharing, see [messaging](I-12-Concurrency%20and%20Parallelism-P.050.md#SScp-mess)
+* For vector parallel code, see [vectorization](I-12-Concurrency%20and%20Parallelism-CP.061.md#SScp-vec)
+* For lock-free programming, see [lock free](I-12-Concurrency%20and%20Parallelism-CP.061.md#SScp-free)
 
 Concurrency rule summary:
 
-* [CP.20: Use RAII, never plain `lock()`/`unlock()`](I-12-Concurrency and Parallelism-CP.020.md#Rconc-raii)
-* [CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es](I-12-Concurrency and Parallelism-CP.021.md#Rconc-lock)
-* [CP.22: Never call unknown code while holding a lock (e.g., a callback)](I-12-Concurrency and Parallelism-CP.022.md#Rconc-unknown)
-* [CP.23: Think of a joining `thread` as a scoped container](I-12-Concurrency and Parallelism-CP.023.md#Rconc-join)
-* [CP.24: Think of a `thread` as a global container](I-12-Concurrency and Parallelism-CP.024.md#Rconc-detach)
-* [CP.25: Prefer `gsl::joining_thread` over `std::thread`](I-12-Concurrency and Parallelism-CP.025.md#Rconc-joining_thread)
-* [CP.26: Don't `detach()` a thread](I-12-Concurrency and Parallelism-CP.026.md#Rconc-detached_thread)
-* [CP.31: Pass small amounts of data between threads by value, rather than by reference or pointer](I-12-Concurrency and Parallelism-CP.031.md#Rconc-data-by-value)
-* [CP.32: To share ownership between unrelated `thread`s use `shared_ptr`](I-12-Concurrency and Parallelism-[CP.032.md#Rconc-shared)
-* [CP.40: Minimize context switching](I-12-Concurrency and Parallelism-CP.040.md#Rconc-switch)
-* [CP.41: Minimize thread creation and destruction](I-12-Concurrency and Parallelism-CP.041.md#Rconc-create)
-* [CP.42: Don't `wait` without a condition](I-12-Concurrency and Parallelism-CP.042.md#Rconc-wait)
-* [CP.43: Minimize time spent in a critical section](I-12-Concurrency and Parallelism-CP.043.md#Rconc-time)
-* [CP.44: Remember to name your `lock_guard`s and `unique_lock`s](I-12-Concurrency and Parallelism-CP.044.md#Rconc-name)
-* [CP.50: Define a `mutex` together with the data it protects](I-12-Concurrency and Parallelism-P.050.md#Rconc-mutex)
+* [CP.20: Use RAII, never plain `lock()`/`unlock()`](I-12-Concurrency%20and%20Parallelism-CP.020.md#Rconc-raii)
+* [CP.21: Use `std::lock()` or `std::scoped_lock` to acquire multiple `mutex`es](I-12-Concurrency%20and%20Parallelism-CP.021.md#Rconc-lock)
+* [CP.22: Never call unknown code while holding a lock (e.g., a callback)](I-12-Concurrency%20and%20Parallelism-CP.022.md#Rconc-unknown)
+* [CP.23: Think of a joining `thread` as a scoped container](I-12-Concurrency%20and%20Parallelism-CP.023.md#Rconc-join)
+* [CP.24: Think of a `thread` as a global container](I-12-Concurrency%20and%20Parallelism-CP.024.md#Rconc-detach)
+* [CP.25: Prefer `gsl::joining_thread` over `std::thread`](I-12-Concurrency%20and%20Parallelism-CP.025.md#Rconc-joining_thread)
+* [CP.26: Don't `detach()` a thread](I-12-Concurrency%20and%20Parallelism-CP.026.md#Rconc-detached_thread)
+* [CP.31: Pass small amounts of data between threads by value, rather than by reference or pointer](I-12-Concurrency%20and%20Parallelism-CP.031.md#Rconc-data-by-value)
+* [CP.32: To share ownership between unrelated `thread`s use `shared_ptr`](I-12-Concurrency%20and%20Parallelism-%5BCP.032.md#Rconc-shared)
+* [CP.40: Minimize context switching](I-12-Concurrency%20and%20Parallelism-CP.040.md#Rconc-switch)
+* [CP.41: Minimize thread creation and destruction](I-12-Concurrency%20and%20Parallelism-CP.041.md#Rconc-create)
+* [CP.42: Don't `wait` without a condition](I-12-Concurrency%20and%20Parallelism-CP.042.md#Rconc-wait)
+* [CP.43: Minimize time spent in a critical section](I-12-Concurrency%20and%20Parallelism-CP.043.md#Rconc-time)
+* [CP.44: Remember to name your `lock_guard`s and `unique_lock`s](I-12-Concurrency%20and%20Parallelism-CP.044.md#Rconc-name)
+* [CP.50: Define a `mutex` together with the data it protects](I-12-Concurrency%20and%20Parallelism-P.050.md#Rconc-mutex)
 * ??? when to use a spinlock
 * ??? when to use `try_lock()`
 * ??? when to prefer `lock_guard` over `unique_lock`

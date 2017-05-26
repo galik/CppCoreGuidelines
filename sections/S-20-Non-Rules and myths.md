@@ -14,13 +14,13 @@ The positive arguments for alternatives to these non-rules are listed in the rul
 
 Non-rule summary:
 
-* [NR.1: Don't: All declarations should be at the top of a function](S-20-Non-Rules and myths.md#Rnr-top)
-* [NR.2: Don't: Have only a single `return`-statement in a function](S-20-Non-Rules and myths.md#Rnr-single-return)
-* [NR.3: Don't: Don't use exceptions](S-20-Non-Rules and myths.md#Rnr-no-exceptions)
-* [NR.4: Don't: Place each class declaration in its own source file](S-20-Non-Rules and myths.md#Rnr-lots-of-files)
-* [NR.5: Don't: Don't do substantive work in a constructor; instead use two-phase initialization](S-20-Non-Rules and myths.md#Rnr-two-phase-init)
-* [NR.6: Don't: Place all cleanup actions at the end of a function and `goto exit`](S-20-Non-Rules and myths.md#Rnr-goto-exit)
-* [NR.7: Don't: Make all data members `protected`](S-20-Non-Rules and myths.md#Rnr-protected-data)
+* [NR.1: Don't: All declarations should be at the top of a function](S-20-Non-Rules%20and%20myths.md#Rnr-top)
+* [NR.2: Don't: Have only a single `return`-statement in a function](S-20-Non-Rules%20and%20myths.md#Rnr-single-return)
+* [NR.3: Don't: Don't use exceptions](S-20-Non-Rules%20and%20myths.md#Rnr-no-exceptions)
+* [NR.4: Don't: Place each class declaration in its own source file](S-20-Non-Rules%20and%20myths.md#Rnr-lots-of-files)
+* [NR.5: Don't: Don't do substantive work in a constructor; instead use two-phase initialization](S-20-Non-Rules%20and%20myths.md#Rnr-two-phase-init)
+* [NR.6: Don't: Place all cleanup actions at the end of a function and `goto exit`](S-20-Non-Rules%20and%20myths.md#Rnr-goto-exit)
+* [NR.7: Don't: Make all data members `protected`](S-20-Non-Rules%20and%20myths.md#Rnr-protected-data)
 * ???
 
 ### <a name="Rnr-top"></a>NR.1: Don't: All declarations should be at the top of a function
@@ -60,8 +60,8 @@ Unfortunately, compilers cannot catch all such errors and unfortunately, the bug
 
 ##### Alternative
 
-* [Always initialize an object](S-10-Expressions and Statements.md#Res-always)
-* [ES.21: Don't introduce a variable (or constant) before you need to use it](S-10-Expressions and Statements.md#Res-introduce)
+* [Always initialize an object](S-10-Expressions%20and%20Statements.md#Res-always)
+* [ES.21: Don't introduce a variable (or constant) before you need to use it](S-10-Expressions%20and%20Statements.md#Res-introduce)
 
 ### <a name="Rnr-single-return"></a>NR.2: Don't: Have only a single `return`-statement in a function
 
@@ -134,7 +134,7 @@ int index2(const char* p)
 
 ```
 Note that we (deliberately) violated the rule against uninitialized variables because this style commonly leads to that.
-Also, this style is a temptation to use the [goto exit](S-20-Non-Rules and myths.md#Rnr-goto-exit) non-rule.
+Also, this style is a temptation to use the [goto exit](S-20-Non-Rules%20and%20myths.md#Rnr-goto-exit) non-rule.
 
 ##### Alternative
 
@@ -209,7 +209,7 @@ Remember
 ```
 ##### Alternative
 
-* [RAII](S-13-Error handling.md#Re-raii)
+* [RAII](S-13-Error%20handling.md#Re-raii)
 * Contracts/assertions: Use GSL's `Expects` and `Ensures` (until we get language support for contracts)
 
 ### <a name="Rnr-lots-of-files"></a>NR.4: Don't: Place each class declaration in its own source file
@@ -275,8 +275,8 @@ and spot the bug.
 
 ##### Alternative
 
-* Use exceptions and [RAII](S-13-Error handling.md#Re-raii)
-* for non-RAII resources, use [`finally`](S-13-Error handling.md#Re-finally).
+* Use exceptions and [RAII](S-13-Error%20handling.md#Re-raii)
+* for non-RAII resources, use [`finally`](S-13-Error%20handling.md#Re-finally).
 
 ### <a name="Rnr-protected-data"></a>NR.7: Don't: Make all data members `protected`
 
@@ -294,6 +294,6 @@ and spot the bug.
 ```
 ##### Alternative
 
-* [Make member data `public` or (preferably) `private`](S-07-Constructors, assignments, and destructors.md#Rh-protected)
+* [Make member data `public` or (preferably) `private`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-protected)
 
 

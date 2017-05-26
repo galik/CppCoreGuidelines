@@ -4,11 +4,11 @@
 
 It is simple and efficient.
 
-**See**: [The rule for copy-assignment](I-07-Constructors, assignments, and destructors-C.060.md#Rc-copy-assignment).
+**See**: [The rule for copy-assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.060.md#Rc-copy-assignment).
 
 ##### Enforcement
 
-Equivalent to what is done for [copy-assignment](I-07-Constructors, assignments, and destructors-C.060.md#Rc-copy-assignment).
+Equivalent to what is done for [copy-assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.060.md#Rc-copy-assignment).
 
 * (Simple) An assignment operator should not be virtual. Here be dragons!
 * (Simple) An assignment operator should return `T&` to enable chaining, not alternatives like `const T&` which interfere with composability and putting objects in containers.

@@ -26,7 +26,7 @@ double sqrt(double x) { Expects(x >= 0); /* ... */ }
 ```
 Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but that's not easily done. For now, we place it in the definition (function body).
 
-**References**: `Expects()` is described in [GSL](I-23-Guideline support library.md#S-gsl).
+**References**: `Expects()` is described in [GSL](I-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Note
 

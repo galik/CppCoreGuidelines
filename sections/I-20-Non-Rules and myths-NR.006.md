@@ -25,6 +25,6 @@ and spot the bug.
 
 ##### Alternative
 
-* Use exceptions and [RAII](I-13-Error handling-E.006.md#Re-raii)
-* for non-RAII resources, use [`finally`](I-13-Error handling-E.019.md#Re-finally).
+* Use exceptions and [RAII](I-13-Error%20handling-E.006.md#Re-raii)
+* for non-RAII resources, use [`finally`](I-13-Error%20handling-E.019.md#Re-finally).
 

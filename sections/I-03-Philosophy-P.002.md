@@ -18,7 +18,7 @@ portability will be impacted.
 ##### Note
 
 Using valid ISO C++ does not guarantee portability (let alone correctness).
-Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](I-10-Expressions and Statements-ES.043.md#Res-order))
+Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](I-10-Expressions%20and%20Statements-ES.043.md#Res-order))
 and be aware of constructs with implementation defined meaning (e.g., `sizeof(int)`).
 
 ##### Note

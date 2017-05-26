@@ -17,91 +17,91 @@ If you use GCC 6.1, you can uncomment them.
 
 Template use rule summary:
 
-* [T.1: Use templates to raise the level of abstraction of code](S-15-Templates and generic programming.md#Rt-raise)
-* [T.2: Use templates to express algorithms that apply to many argument types](S-15-Templates and generic programming.md#Rt-algo)
-* [T.3: Use templates to express containers and ranges](S-15-Templates and generic programming.md#Rt-cont)
-* [T.4: Use templates to express syntax tree manipulation](S-15-Templates and generic programming.md#Rt-expr)
-* [T.5: Combine generic and OO techniques to amplify their strengths, not their costs](S-15-Templates and generic programming.md#Rt-generic-oo)
+* [T.1: Use templates to raise the level of abstraction of code](S-15-Templates%20and%20generic%20programming.md#Rt-raise)
+* [T.2: Use templates to express algorithms that apply to many argument types](S-15-Templates%20and%20generic%20programming.md#Rt-algo)
+* [T.3: Use templates to express containers and ranges](S-15-Templates%20and%20generic%20programming.md#Rt-cont)
+* [T.4: Use templates to express syntax tree manipulation](S-15-Templates%20and%20generic%20programming.md#Rt-expr)
+* [T.5: Combine generic and OO techniques to amplify their strengths, not their costs](S-15-Templates%20and%20generic%20programming.md#Rt-generic-oo)
 
 Concept use rule summary:
 
-* [T.10: Specify concepts for all template arguments](S-15-Templates and generic programming.md#Rt-concepts)
-* [T.11: Whenever possible use standard concepts](S-15-Templates and generic programming.md#Rt-std-concepts)
-* [T.12: Prefer concept names over `auto` for local variables](S-15-Templates and generic programming.md#Rt-auto)
-* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](S-15-Templates and generic programming.md#Rt-shorthand)
+* [T.10: Specify concepts for all template arguments](S-15-Templates%20and%20generic%20programming.md#Rt-concepts)
+* [T.11: Whenever possible use standard concepts](S-15-Templates%20and%20generic%20programming.md#Rt-std-concepts)
+* [T.12: Prefer concept names over `auto` for local variables](S-15-Templates%20and%20generic%20programming.md#Rt-auto)
+* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](S-15-Templates%20and%20generic%20programming.md#Rt-shorthand)
 * ???
 
 Concept definition rule summary:
 
-* [T.20: Avoid "concepts" without meaningful semantics](S-15-Templates and generic programming.md#Rt-low)
+* [T.20: Avoid "concepts" without meaningful semantics](S-15-Templates%20and%20generic%20programming.md#Rt-low)
 * [T.21: Require a complete set of operations for a concept](#Rt-complete)
-* [T.22: Specify axioms for concepts](S-15-Templates and generic programming.md#Rt-axiom)
-* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](S-15-Templates and generic programming.md#Rt-refine)
-* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](S-15-Templates and generic programming.md#Rt-tag)
-* [T.25: Avoid complementary constraints](S-15-Templates and generic programming.md#Rt-not)
-* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](S-15-Templates and generic programming.md#Rt-use)
-* [T.30: Use concept negation (`!C<T>`) sparingly to express a minor difference](S-15-Templates and generic programming.md#Rt-not)
+* [T.22: Specify axioms for concepts](S-15-Templates%20and%20generic%20programming.md#Rt-axiom)
+* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](S-15-Templates%20and%20generic%20programming.md#Rt-refine)
+* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](S-15-Templates%20and%20generic%20programming.md#Rt-tag)
+* [T.25: Avoid complementary constraints](S-15-Templates%20and%20generic%20programming.md#Rt-not)
+* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](S-15-Templates%20and%20generic%20programming.md#Rt-use)
+* [T.30: Use concept negation (`!C<T>`) sparingly to express a minor difference](S-15-Templates%20and%20generic%20programming.md#Rt-not)
 * [T.31: Use concept disjunction (`C1<T> || C2<T>`) sparingly to express alternatives](#Rt-or)
 * ???
 
 Template interface rule summary:
 
-* [T.40: Use function objects to pass operations to algorithms](S-15-Templates and generic programming.md#Rt-fo)
-* [T.41: Require only essential properties in a template's concepts](S-15-Templates and generic programming.md#Rt-essential)
-* [T.42: Use template aliases to simplify notation and hide implementation details](S-15-Templates and generic programming.md#Rt-alias)
-* [T.43: Prefer `using` over `typedef` for defining aliases](S-15-Templates and generic programming.md#Rt-using)
-* [T.44: Use function templates to deduce class template argument types (where feasible)](S-15-Templates and generic programming.md#Rt-deduce)
-* [T.46: Require template arguments to be at least `Regular` or `SemiRegular`](S-15-Templates and generic programming.md#Rt-regular)
-* [T.47: Avoid highly visible unconstrained templates with common names](S-15-Templates and generic programming.md#Rt-visible)
-* [T.48: If your compiler does not support concepts, fake them with `enable_if`](S-15-Templates and generic programming.md#Rt-concept-def)
-* [T.49: Where possible, avoid type-erasure](S-15-Templates and generic programming.md#Rt-erasure)
+* [T.40: Use function objects to pass operations to algorithms](S-15-Templates%20and%20generic%20programming.md#Rt-fo)
+* [T.41: Require only essential properties in a template's concepts](S-15-Templates%20and%20generic%20programming.md#Rt-essential)
+* [T.42: Use template aliases to simplify notation and hide implementation details](S-15-Templates%20and%20generic%20programming.md#Rt-alias)
+* [T.43: Prefer `using` over `typedef` for defining aliases](S-15-Templates%20and%20generic%20programming.md#Rt-using)
+* [T.44: Use function templates to deduce class template argument types (where feasible)](S-15-Templates%20and%20generic%20programming.md#Rt-deduce)
+* [T.46: Require template arguments to be at least `Regular` or `SemiRegular`](S-15-Templates%20and%20generic%20programming.md#Rt-regular)
+* [T.47: Avoid highly visible unconstrained templates with common names](S-15-Templates%20and%20generic%20programming.md#Rt-visible)
+* [T.48: If your compiler does not support concepts, fake them with `enable_if`](S-15-Templates%20and%20generic%20programming.md#Rt-concept-def)
+* [T.49: Where possible, avoid type-erasure](S-15-Templates%20and%20generic%20programming.md#Rt-erasure)
 
 Template definition rule summary:
 
-* [T.60: Minimize a template's context dependencies](S-15-Templates and generic programming.md#Rt-depend)
-* [T.61: Do not over-parameterize members (SCARY)](S-15-Templates and generic programming.md#Rt-scary)
-* [T.62: Place non-dependent class template members in a non-templated base class](S-15-Templates and generic programming.md#Rt-nondependent)
-* [T.64: Use specialization to provide alternative implementations of class templates](S-15-Templates and generic programming.md#Rt-specialization)
-* [T.65: Use tag dispatch to provide alternative implementations of functions](S-15-Templates and generic programming.md#Rt-tag-dispatch)
-* [T.67: Use specialization to provide alternative implementations for irregular types](S-15-Templates and generic programming.md#Rt-specialization2)
-* [T.68: Use `{}` rather than `()` within templates to avoid ambiguities](S-15-Templates and generic programming.md#Rt-cast)
-* [T.69: Inside a template, don't make an unqualified nonmember function call unless you intend it to be a customization point](S-15-Templates and generic programming.md#Rt-customization)
+* [T.60: Minimize a template's context dependencies](S-15-Templates%20and%20generic%20programming.md#Rt-depend)
+* [T.61: Do not over-parameterize members (SCARY)](S-15-Templates%20and%20generic%20programming.md#Rt-scary)
+* [T.62: Place non-dependent class template members in a non-templated base class](S-15-Templates%20and%20generic%20programming.md#Rt-nondependent)
+* [T.64: Use specialization to provide alternative implementations of class templates](S-15-Templates%20and%20generic%20programming.md#Rt-specialization)
+* [T.65: Use tag dispatch to provide alternative implementations of functions](S-15-Templates%20and%20generic%20programming.md#Rt-tag-dispatch)
+* [T.67: Use specialization to provide alternative implementations for irregular types](S-15-Templates%20and%20generic%20programming.md#Rt-specialization2)
+* [T.68: Use `{}` rather than `()` within templates to avoid ambiguities](S-15-Templates%20and%20generic%20programming.md#Rt-cast)
+* [T.69: Inside a template, don't make an unqualified nonmember function call unless you intend it to be a customization point](S-15-Templates%20and%20generic%20programming.md#Rt-customization)
 
 Template and hierarchy rule summary:
 
-* [T.80: Do not naively templatize a class hierarchy](S-15-Templates and generic programming.md#Rt-hier)
-* [T.81: Do not mix hierarchies and arrays](S-15-Templates and generic programming.md#Rt-array) // ??? somewhere in "hierarchies"
-* [T.82: Linearize a hierarchy when virtual functions are undesirable](S-15-Templates and generic programming.md#Rt-linear)
-* [T.83: Do not declare a member function template virtual](S-15-Templates and generic programming.md#Rt-virtual)
-* [T.84: Use a non-template core implementation to provide an ABI-stable interface](S-15-Templates and generic programming.md#Rt-abi)
+* [T.80: Do not naively templatize a class hierarchy](S-15-Templates%20and%20generic%20programming.md#Rt-hier)
+* [T.81: Do not mix hierarchies and arrays](S-15-Templates%20and%20generic%20programming.md#Rt-array) // ??? somewhere in "hierarchies"
+* [T.82: Linearize a hierarchy when virtual functions are undesirable](S-15-Templates%20and%20generic%20programming.md#Rt-linear)
+* [T.83: Do not declare a member function template virtual](S-15-Templates%20and%20generic%20programming.md#Rt-virtual)
+* [T.84: Use a non-template core implementation to provide an ABI-stable interface](S-15-Templates%20and%20generic%20programming.md#Rt-abi)
 * [T.??: ????](#Rt-???)
 
 Variadic template rule summary:
 
-* [T.100: Use variadic templates when you need a function that takes a variable number of arguments of a variety of types](S-15-Templates and generic programming.md#Rt-variadic)
-* [T.101: ??? How to pass arguments to a variadic template ???](S-15-Templates and generic programming.md#Rt-variadic-pass)
-* [T.102: ??? How to process arguments to a variadic template ???](S-15-Templates and generic programming.md#Rt-variadic-process)
-* [T.103: Don't use variadic templates for homogeneous argument lists](S-15-Templates and generic programming.md#Rt-variadic-not)
+* [T.100: Use variadic templates when you need a function that takes a variable number of arguments of a variety of types](S-15-Templates%20and%20generic%20programming.md#Rt-variadic)
+* [T.101: ??? How to pass arguments to a variadic template ???](S-15-Templates%20and%20generic%20programming.md#Rt-variadic-pass)
+* [T.102: ??? How to process arguments to a variadic template ???](S-15-Templates%20and%20generic%20programming.md#Rt-variadic-process)
+* [T.103: Don't use variadic templates for homogeneous argument lists](S-15-Templates%20and%20generic%20programming.md#Rt-variadic-not)
 * [T.??: ????](#Rt-???)
 
 Metaprogramming rule summary:
 
-* [T.120: Use template metaprogramming only when you really need to](S-15-Templates and generic programming.md#Rt-metameta)
-* [T.121: Use template metaprogramming primarily to emulate concepts](S-15-Templates and generic programming.md#Rt-emulate)
-* [T.122: Use templates (usually template aliases) to compute types at compile time](S-15-Templates and generic programming.md#Rt-tmp)
-* [T.123: Use `constexpr` functions to compute values at compile time](S-15-Templates and generic programming.md#Rt-fct)
-* [T.124: Prefer to use standard-library TMP facilities](S-15-Templates and generic programming.md#Rt-std-tmp)
-* [T.125: If you need to go beyond the standard-library TMP facilities, use an existing library](S-15-Templates and generic programming.md#Rt-lib)
+* [T.120: Use template metaprogramming only when you really need to](S-15-Templates%20and%20generic%20programming.md#Rt-metameta)
+* [T.121: Use template metaprogramming primarily to emulate concepts](S-15-Templates%20and%20generic%20programming.md#Rt-emulate)
+* [T.122: Use templates (usually template aliases) to compute types at compile time](S-15-Templates%20and%20generic%20programming.md#Rt-tmp)
+* [T.123: Use `constexpr` functions to compute values at compile time](S-15-Templates%20and%20generic%20programming.md#Rt-fct)
+* [T.124: Prefer to use standard-library TMP facilities](S-15-Templates%20and%20generic%20programming.md#Rt-std-tmp)
+* [T.125: If you need to go beyond the standard-library TMP facilities, use an existing library](S-15-Templates%20and%20generic%20programming.md#Rt-lib)
 * [T.??: ????](#Rt-???)
 
 Other template rules summary:
 
-* [T.140: Name all operations with potential for reuse](S-15-Templates and generic programming.md#Rt-name)
-* [T.141: Use an unnamed lambda if you need a simple function object in one place only](S-15-Templates and generic programming.md#Rt-lambda)
-* [T.142: Use template variables to simplify notation](S-15-Templates and generic programming.md#Rt-var)
-* [T.143: Don't write unintentionally nongeneric code](S-15-Templates and generic programming.md#Rt-nongeneric)
-* [T.144: Don't specialize function templates](S-15-Templates and generic programming.md#Rt-specialize-function)
-* [T.150: Check that a class matches a concept using `static_assert`](S-15-Templates and generic programming.md#Rt-check-class)
+* [T.140: Name all operations with potential for reuse](S-15-Templates%20and%20generic%20programming.md#Rt-name)
+* [T.141: Use an unnamed lambda if you need a simple function object in one place only](S-15-Templates%20and%20generic%20programming.md#Rt-lambda)
+* [T.142: Use template variables to simplify notation](S-15-Templates%20and%20generic%20programming.md#Rt-var)
+* [T.143: Don't write unintentionally nongeneric code](S-15-Templates%20and%20generic%20programming.md#Rt-nongeneric)
+* [T.144: Don't specialize function templates](S-15-Templates%20and%20generic%20programming.md#Rt-specialize-function)
+* [T.150: Check that a class matches a concept using `static_assert`](S-15-Templates%20and%20generic%20programming.md#Rt-check-class)
 * [T.??: ????](#Rt-???)
 
 ## <a name="SS-GP"></a>T.gp: Generic programming
@@ -250,7 +250,7 @@ This doesn't directly express the intent of the programmer and hides the structu
 Hiding the `void*` behind macros simply obscures the problems and introduces new opportunities for confusion.
 
 **Exceptions**: If you need an ABI-stable interface, you might have to provide a base implementation and express the (type-safe) template in terms of that.
-See [Stable base](S-15-Templates and generic programming.md#Rt-abi).
+See [Stable base](S-15-Templates%20and%20generic%20programming.md#Rt-abi).
 
 ##### Enforcement
 
@@ -295,7 +295,7 @@ class ConcreteCommand : public Command {
 ##### Example
 
 Dynamic helps static: Offer a generic, comfortable, statically bound interface, but internally dispatch dynamically, so you offer a uniform object layout.
-Examples include type erasure as with `std::shared_ptr`'s deleter (but [don't overuse type erasure](S-15-Templates and generic programming.md#Rt-erasure)).
+Examples include type erasure as with `std::shared_ptr`'s deleter (but [don't overuse type erasure](S-15-Templates%20and%20generic%20programming.md#Rt-erasure)).
 
 ##### Note
 
@@ -324,21 +324,21 @@ This section assumes concept support
 
 Concept use rule summary:
 
-* [T.10: Specify concepts for all template arguments](S-15-Templates and generic programming.md#Rt-concepts)
-* [T.11: Whenever possible use standard concepts](S-15-Templates and generic programming.md#Rt-std-concepts)
-* [T.12: Prefer concept names over `auto`](S-15-Templates and generic programming.md#Rt-auto)
-* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](S-15-Templates and generic programming.md#Rt-shorthand)
+* [T.10: Specify concepts for all template arguments](S-15-Templates%20and%20generic%20programming.md#Rt-concepts)
+* [T.11: Whenever possible use standard concepts](S-15-Templates%20and%20generic%20programming.md#Rt-std-concepts)
+* [T.12: Prefer concept names over `auto`](S-15-Templates%20and%20generic%20programming.md#Rt-auto)
+* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](S-15-Templates%20and%20generic%20programming.md#Rt-shorthand)
 * ???
 
 Concept definition rule summary:
 
-* [T.20: Avoid "concepts" without meaningful semantics](S-15-Templates and generic programming.md#Rt-low)
+* [T.20: Avoid "concepts" without meaningful semantics](S-15-Templates%20and%20generic%20programming.md#Rt-low)
 * [T.21: Require a complete set of operations for a concept](#Rt-complete)
-* [T.22: Specify axioms for concepts](S-15-Templates and generic programming.md#Rt-axiom)
-* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](S-15-Templates and generic programming.md#Rt-refine)
-* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](S-15-Templates and generic programming.md#Rt-tag)
-* [T.25: Avoid complimentary constraints](S-15-Templates and generic programming.md#Rt-not)
-* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](S-15-Templates and generic programming.md#Rt-use)
+* [T.22: Specify axioms for concepts](S-15-Templates%20and%20generic%20programming.md#Rt-axiom)
+* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](S-15-Templates%20and%20generic%20programming.md#Rt-refine)
+* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](S-15-Templates%20and%20generic%20programming.md#Rt-tag)
+* [T.25: Avoid complimentary constraints](S-15-Templates%20and%20generic%20programming.md#Rt-not)
+* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](S-15-Templates%20and%20generic%20programming.md#Rt-use)
 * ???
 
 ## <a name="SS-concept-use"></a>T.con-use: Concept use
@@ -594,7 +594,7 @@ Helps implementers and maintainers.
 
 ##### Note
 
-This is a specific variant of the general rule that [a concept must make semantic sense](S-15-Templates and generic programming.md#Rt-low).
+This is a specific variant of the general rule that [a concept must make semantic sense](S-15-Templates%20and%20generic%20programming.md#Rt-low).
 
 ##### Example, bad (using TS concepts)
 
@@ -771,7 +771,7 @@ If two concepts have exactly the same requirements, they are logically equivalen
 ##### Enforcement
 
 * Flag a concept that has exactly the same requirements as another already-seen concept (neither is more refined).
-To disambiguate them, see [T.24](S-15-Templates and generic programming.md#Rt-tag).
+To disambiguate them, see [T.24](S-15-Templates%20and%20generic%20programming.md#Rt-tag).
 
 ### <a name="Rt-tag"></a>T.24: Use tag classes or traits to differentiate concepts that differ only in semantics.
 
@@ -1337,7 +1337,7 @@ Templates typically appear in header files so their context dependencies are mor
 Having a template operate only on its arguments would be one way of reducing the number of dependencies to a minimum, but that would generally be unmanageable.
 For example, an algorithm usually uses other algorithms and invoke operations that does not exclusively operate on arguments.
 And don't get us started on macros!
-See also [T.69](S-15-Templates and generic programming.md#Rt-customization)
+See also [T.69](S-15-Templates%20and%20generic%20programming.md#Rt-customization)
 
 ##### Enforcement
 
@@ -1448,7 +1448,7 @@ public:
 
 A more general version of this rule would be
 "If a template class member depends on only N template parameters out of M, place it in a base class with only N parameters."
-For N == 1, we have a choice of a base class of a class in the surrounding scope as in [T.61](S-15-Templates and generic programming.md#Rt-scary).
+For N == 1, we have a choice of a base class of a class in the surrounding scope as in [T.61](S-15-Templates%20and%20generic%20programming.md#Rt-scary).
 
 ??? What about constants? class statics?
 
@@ -1687,7 +1687,7 @@ Imagine what this would do to a class hierarchy with dozens of member functions 
 ##### Note
 
 In many cases you can provide a stable interface by not parameterizing a base;
-see ["stable base"](S-15-Templates and generic programming.md#Rt-abi) and [OO and GP](S-15-Templates and generic programming.md#Rt-generic-oo)
+see ["stable base"](S-15-Templates%20and%20generic%20programming.md#Rt-abi) and [OO and GP](S-15-Templates%20and%20generic%20programming.md#Rt-generic-oo)
 
 ##### Enforcement
 
@@ -1941,7 +1941,7 @@ For example, if you really need AST manipulation at compile time (e.g., for opti
 enable_if
 
 ```
-Instead, use concepts. But see [How to emulate concepts if you don't have language support](S-15-Templates and generic programming.md#Rt-emulate).
+Instead, use concepts. But see [How to emulate concepts if you don't have language support](S-15-Templates%20and%20generic%20programming.md#Rt-emulate).
 
 ##### Example
 
@@ -1949,7 +1949,7 @@ Instead, use concepts. But see [How to emulate concepts if you don't have langua
 ??? good
 
 ```
-**Alternative**: If the result is a value, rather than a type, use a [`constexpr` function](S-15-Templates and generic programming.md#Rt-fct).
+**Alternative**: If the result is a value, rather than a type, use a [`constexpr` function](S-15-Templates%20and%20generic%20programming.md#Rt-fct).
 
 ##### Note
 

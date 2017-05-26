@@ -23,7 +23,7 @@ public:
 };
 
 ```
-Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](I-07-Constructors, assignments, and destructors-C.067.md#Rc-copy-virtual).
+Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual).
 
 ##### Enforcement
 

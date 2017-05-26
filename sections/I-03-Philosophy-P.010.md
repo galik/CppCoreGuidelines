@@ -7,5 +7,5 @@ Something immutable cannot change unexpectedly.
 Sometimes immutability enables better optimization.
 You can't have a data race on a constant.
 
-See [Con: Constants and Immutability](I-14-Constants and Immutability.md#S-const)
+See [Con: Constants and Immutability](I-14-Constants%20and%20Immutability.md#S-const)
 

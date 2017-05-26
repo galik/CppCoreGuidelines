@@ -86,7 +86,7 @@ void manipulate(Record& r)    // postcondition: m is unlocked upon exit
 ```
 The bug is now obvious (but only to a human reading comments).
 
-Better still, use [RAII](I-09-Resource management-R.001.md#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
+Better still, use [RAII](I-09-Resource%20management-R.001.md#Rr-raii) to ensure that the postcondition ("the lock must be released") is enforced in code:
 
 ```cpp
 void manipulate(Record& r)    // best

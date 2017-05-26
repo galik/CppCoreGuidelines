@@ -48,7 +48,7 @@ A `span<T>` object does not own its elements and is so small that it can be pass
 
 Passing a `span` object as an argument is exactly as efficient as passing a pair of pointer arguments or passing a pointer and an integer count.
 
-**See also**: [Support library](I-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](I-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Enforcement
 

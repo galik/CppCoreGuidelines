@@ -19,7 +19,7 @@ but that should be done only when the called function is supposed to modify the 
 
 ##### Note
 
-[Do not cast away `const`](I-10-Expressions and Statements-ES.050.md#Res-casts-const).
+[Do not cast away `const`](I-10-Expressions%20and%20Statements-ES.050.md#Res-casts-const).
 
 ##### Enforcement
 

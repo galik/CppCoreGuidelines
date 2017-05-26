@@ -38,8 +38,8 @@ The last variant makes it clear that we are not interested in the order in which
 
 A programmer should be familiar with
 
-* [The guideline support library](I-23-Guideline support library.md#S-gsl)
-* [The ISO C++ standard library](I-18-The Standard Library.md#S-stdlib)
+* [The guideline support library](I-23-Guideline%20support%20library.md#S-gsl)
+* [The ISO C++ standard library](I-18-The%20Standard%20Library.md#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
 ##### Note

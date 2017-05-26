@@ -38,8 +38,8 @@ void f2(zstring s)
 ```
 ##### Alternatives
 
-* proper resource handles and [RAII](I-13-Error handling-E.006.md#Re-raii)
-* [`finally`](I-13-Error handling-E.019.md#Re-finally)
+* proper resource handles and [RAII](I-13-Error%20handling-E.006.md#Re-raii)
+* [`finally`](I-13-Error%20handling-E.019.md#Re-finally)
 
 ##### Enforcement
 

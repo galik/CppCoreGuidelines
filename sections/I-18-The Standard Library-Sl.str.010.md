@@ -2,7 +2,7 @@
 
 ##### Reason
 
-`std::string` supports standard-library [`locale` facilities](I-18-The Standard Library-Sl.str.010.md#Rstr-locale)
+`std::string` supports standard-library [`locale` facilities](I-18-The%20Standard%20Library-Sl.str.010.md#Rstr-locale)
 
 ##### Example
 

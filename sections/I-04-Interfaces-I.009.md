@@ -22,7 +22,7 @@ Iter find(Iter first, Iter last, Val v)
 Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.
 For now, the concept TS is supported only in GCC 6.1.
 
-**See also**: [Generic programming](I-15-Templates and generic programming.md#SS-GP) and [concepts](#SS-t-concepts).
+**See also**: [Generic programming](I-15-Templates%20and%20generic%20programming.md#SS-GP) and [concepts](#SS-t-concepts).
 
 ##### Enforcement
 

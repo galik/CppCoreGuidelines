@@ -19,7 +19,7 @@ For example, if you really need AST manipulation at compile time (e.g., for opti
 enable_if
 
 ```
-Instead, use concepts. But see [How to emulate concepts if you don't have language support](I-15-Templates and generic programming-T.121.md#Rt-emulate).
+Instead, use concepts. But see [How to emulate concepts if you don't have language support](I-15-Templates%20and%20generic%20programming-T.121.md#Rt-emulate).
 
 ##### Example
 
@@ -27,7 +27,7 @@ Instead, use concepts. But see [How to emulate concepts if you don't have langua
 ??? good
 
 ```
-**Alternative**: If the result is a value, rather than a type, use a [`constexpr` function](I-15-Templates and generic programming-T.123.md#Rt-fct).
+**Alternative**: If the result is a value, rather than a type, use a [`constexpr` function](I-15-Templates%20and%20generic%20programming-T.123.md#Rt-fct).
 
 ##### Note
 

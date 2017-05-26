@@ -32,7 +32,7 @@ class X2 {     // bad
 
 ##### Note
 
-What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](I-07-Constructors, assignments, and destructors-C.036.md#Rc-dtor-fail).
+What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.036.md#Rc-dtor-fail).
 If it does nevertheless, we have a problem that has no really good solution.
 For starters, the writer of a destructor does not know why the destructor is called and cannot "refuse to act" by throwing an exception.
 See [discussion](I-28-Discussion-Discussion.md#Sd-never-fail).

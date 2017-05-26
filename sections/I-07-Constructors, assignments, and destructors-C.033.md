@@ -7,7 +7,7 @@ An owned object must be `deleted` upon destruction of the object that owns it.
 ##### Example
 
 A pointer member may represent a resource.
-[A `T*` should not do so](I-09-Resource management-R.003.md#Rr-ptr), but in older code, that's common.
+[A `T*` should not do so](I-09-Resource%20management-R.003.md#Rr-ptr), but in older code, that's common.
 Consider a `T*` a possible owner and therefore suspect.
 
 ```cpp
@@ -26,7 +26,7 @@ void use(Smart_ptr<int> p1)
 }
 
 ```
-Note that if you define a destructor, you must define or delete [all default operations](I-07-Constructors, assignments, and destructors-C.021.md#Rc-five):
+Note that if you define a destructor, you must define or delete [all default operations](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.021.md#Rc-five):
 
 ```cpp
 template<typename T>

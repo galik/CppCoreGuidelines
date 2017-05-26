@@ -65,7 +65,7 @@ This may be something best avoided.
 
 ##### See also
 
-This is a special case of the rule that [helper functions should be defined in the same namespace as their class](I-06-Classes and Class Hierarchies-C.005.md#Rc-helper).
+This is a special case of the rule that [helper functions should be defined in the same namespace as their class](I-06-Classes%20and%20Class%20Hierarchies-C.005.md#Rc-helper).
 
 ##### Enforcement
 

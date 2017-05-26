@@ -4,7 +4,7 @@
 
 Catching an exception in a function that cannot take a meaningful recovery action leads to complexity and waste.
 Let an exception propagate until it reaches a function that can handle it.
-Let cleanup actions on the unwinding path be handled by [RAII](I-13-Error handling-E.006.md#Re-raii).
+Let cleanup actions on the unwinding path be handled by [RAII](I-13-Error%20handling-E.006.md#Re-raii).
 
 ##### Example, don't
 

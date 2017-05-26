@@ -19,7 +19,7 @@ v.d = 987.654;  // now v holds a double
 cout << v.d << '\n';    // write 987.654
 
 ```
-But heed the warning: [Avoid "naked" `union`s](I-07-Constructors, assignments, and destructors-C.181.md#Ru-naked)
+But heed the warning: [Avoid "naked" `union`s](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.181.md#Ru-naked)
 
 ##### Example
 

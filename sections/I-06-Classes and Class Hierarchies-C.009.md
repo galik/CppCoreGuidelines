@@ -84,15 +84,15 @@ void user(Foo& x)
 ```
 ##### Note
 
-[`protected` data is a bad idea](I-07-Constructors, assignments, and destructors-C.133.md#Rh-protected).
+[`protected` data is a bad idea](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.133.md#Rh-protected).
 
 ##### Note
 
-Prefer the order `public` members before `protected` members before `private` members [see](I-24-Naming and layout rules-NL.016.md#Rl-order).
+Prefer the order `public` members before `protected` members before `private` members [see](I-24-Naming%20and%20layout%20rules-NL.016.md#Rl-order).
 
 ##### Enforcement
 
-* [Flag protected data](I-07-Constructors, assignments, and destructors-C.133.md#Rh-protected).
+* [Flag protected data](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.133.md#Rh-protected).
 * Flag mixtures of `public` and private `data`
 
 ## <a name="SS-concrete"></a>C.concrete: Concrete types
@@ -107,6 +107,6 @@ Concrete types are also often referred to as value types to distinguish them fro
 
 Concrete type rule summary:
 
-* [C.10: Prefer concrete types over class hierarchies](I-06-Classes and Class Hierarchies-C.010.md#Rc-concrete)
-* [C.11: Make concrete types regular](I-06-Classes and Class Hierarchies-C.011.md#Rc-regular)
+* [C.10: Prefer concrete types over class hierarchies](I-06-Classes%20and%20Class%20Hierarchies-C.010.md#Rc-concrete)
+* [C.11: Make concrete types regular](I-06-Classes%20and%20Class%20Hierarchies-C.011.md#Rc-regular)
 

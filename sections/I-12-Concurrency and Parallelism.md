@@ -39,19 +39,19 @@ but please think about the majority of programmers who are struggling to get the
 
 Concurrency and parallelism rule summary:
 
-* [CP.1: Assume that your code will run as part of a multi-threaded program](I-12-Concurrency and Parallelism-CP.001.md#Rconc-multi)
-* [CP.2: Avoid data races](I-12-Concurrency and Parallelism-CP.002.md#Rconc-races)
-* [CP.3: Minimize explicit sharing of writable data](I-12-Concurrency and Parallelism-CP.003.md#Rconc-data)
-* [CP.4: Think in terms of tasks, rather than threads](I-12-Concurrency and Parallelism-CP.004.md#Rconc-task)
-* [CP.8: Don't try to use `volatile` for synchronization](I-12-Concurrency and Parallelism-CP.008.md#Rconc-volatile)
-* [CP.9: Whenever feasible use tools to validate your concurrent code](I-12-Concurrency and Parallelism-CP.009.md#Rconc-tools)
+* [CP.1: Assume that your code will run as part of a multi-threaded program](I-12-Concurrency%20and%20Parallelism-CP.001.md#Rconc-multi)
+* [CP.2: Avoid data races](I-12-Concurrency%20and%20Parallelism-CP.002.md#Rconc-races)
+* [CP.3: Minimize explicit sharing of writable data](I-12-Concurrency%20and%20Parallelism-CP.003.md#Rconc-data)
+* [CP.4: Think in terms of tasks, rather than threads](I-12-Concurrency%20and%20Parallelism-CP.004.md#Rconc-task)
+* [CP.8: Don't try to use `volatile` for synchronization](I-12-Concurrency%20and%20Parallelism-CP.008.md#Rconc-volatile)
+* [CP.9: Whenever feasible use tools to validate your concurrent code](I-12-Concurrency%20and%20Parallelism-CP.009.md#Rconc-tools)
 
 See also:
 
-* [CP.con: Concurrency](I-12-Concurrency and Parallelism-CP.009.md#SScp-con)
-* [CP.par: Parallelism](I-12-Concurrency and Parallelism-P.050.md#SScp-par)
-* [CP.mess: Message passing](I-12-Concurrency and Parallelism-P.050.md#SScp-mess)
-* [CP.vec: Vectorization](I-12-Concurrency and Parallelism-CP.061.md#SScp-vec)
-* [CP.free: Lock-free programming](I-12-Concurrency and Parallelism-CP.061.md#SScp-free)
-* [CP.etc: Etc. concurrency rules](I-12-Concurrency and Parallelism-CP.111.md#SScp-etc)
+* [CP.con: Concurrency](I-12-Concurrency%20and%20Parallelism-CP.009.md#SScp-con)
+* [CP.par: Parallelism](I-12-Concurrency%20and%20Parallelism-P.050.md#SScp-par)
+* [CP.mess: Message passing](I-12-Concurrency%20and%20Parallelism-P.050.md#SScp-mess)
+* [CP.vec: Vectorization](I-12-Concurrency%20and%20Parallelism-CP.061.md#SScp-vec)
+* [CP.free: Lock-free programming](I-12-Concurrency%20and%20Parallelism-CP.061.md#SScp-free)
+* [CP.etc: Etc. concurrency rules](I-12-Concurrency%20and%20Parallelism-CP.111.md#SScp-etc)
 

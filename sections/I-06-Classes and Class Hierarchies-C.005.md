@@ -22,7 +22,7 @@ namespace Chrono { // here we keep time-related services
 ```
 ##### Note
 
-This is especially important for [overloaded operators](I-07-Constructors, assignments, and destructors-C.168.md#Ro-namespace).
+This is especially important for [overloaded operators](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.168.md#Ro-namespace).
 
 ##### Enforcement
 

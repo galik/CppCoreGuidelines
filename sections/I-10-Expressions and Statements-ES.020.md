@@ -227,7 +227,7 @@ Value v = [] {
 }();
 
 ```
-**See also**: [ES.28](I-10-Expressions and Statements-ES.028.md#Res-lambda-init)
+**See also**: [ES.28](I-10-Expressions%20and%20Statements-ES.028.md#Res-lambda-init)
 
 ##### Enforcement
 

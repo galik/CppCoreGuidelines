@@ -51,7 +51,7 @@ and M functions each containing a `using namespace X`with N lines of code in tot
 
 ##### Note
 
-[Don't write `using namespace` in a header file](I-17-Source files-SF.007.md#Rs-using-directive).
+[Don't write `using namespace` in a header file](I-17-Source%20files-SF.007.md#Rs-using-directive).
 
 ##### Enforcement
 

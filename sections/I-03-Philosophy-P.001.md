@@ -56,7 +56,7 @@ A well-designed library expresses intent (what is to be done, rather than just h
 
 A C++ programmer should know the basics of the standard library, and use it where appropriate.
 Any programmer should know the basics of the foundation libraries of the project being worked on, and use them appropriately.
-Any programmer using these guidelines should know the [guideline support library](I-23-Guideline support library.md#S-gsl), and use it appropriately.
+Any programmer using these guidelines should know the [guideline support library](I-23-Guideline%20support%20library.md#S-gsl), and use it appropriately.
 
 ##### Example
 

@@ -7,7 +7,7 @@ A default constructor often simplifies the task of defining a suitable [moved-fr
 
 ##### Note
 
-We have not (yet) formally defined [value type](I-06-Classes and Class Hierarchies-C.009.md#SS-concrete), but think of it as a class that behaves much as an `int`:
+We have not (yet) formally defined [value type](I-06-Classes%20and%20Class%20Hierarchies-C.009.md#SS-concrete), but think of it as a class that behaves much as an `int`:
 it can be copied using `=` and usually compared using `==`.
 It is closely related to the notion of Regular type from [EoP](http://elementsofprogramming.com/) and [the Palo Alto TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
 
@@ -36,7 +36,7 @@ However, most realistic `Date` classes have a "first date" (e.g. January 1, 1970
 class Date {
 public:
     Date(int dd, int mm, int yyyy);
-    Date() = default; // [See also](I-07-Constructors, assignments, and destructors-C.045.md#Rc-default)
+    Date() = default; // [See also](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.045.md#Rc-default)
     // ...
 private:
     int dd = 1;

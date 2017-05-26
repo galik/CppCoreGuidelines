@@ -18,7 +18,7 @@ void f(int n)
 ##### Note
 
 `finally` is not as messy as `try`/`catch`, but it is still ad-hoc.
-Prefer [proper resource management objects](I-13-Error handling-E.006.md#Re-raii).
+Prefer [proper resource management objects](I-13-Error%20handling-E.006.md#Re-raii).
 Consider `finally` a last resort.
 
 ##### Note

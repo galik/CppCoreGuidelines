@@ -14,12 +14,12 @@ The positive arguments for alternatives to these non-rules are listed in the rul
 
 Non-rule summary:
 
-* [NR.1: Don't: All declarations should be at the top of a function](I-20-Non-Rules and myths-NR.001.md#Rnr-top)
-* [NR.2: Don't: Have only a single `return`-statement in a function](I-20-Non-Rules and myths-NR.002.md#Rnr-single-return)
-* [NR.3: Don't: Don't use exceptions](I-20-Non-Rules and myths-NR.003.md#Rnr-no-exceptions)
-* [NR.4: Don't: Place each class declaration in its own source file](I-20-Non-Rules and myths-NR.004.md#Rnr-lots-of-files)
-* [NR.5: Don't: Don't do substantive work in a constructor; instead use two-phase initialization](I-20-Non-Rules and myths-NR.005.md#Rnr-two-phase-init)
-* [NR.6: Don't: Place all cleanup actions at the end of a function and `goto exit`](I-20-Non-Rules and myths-NR.006.md#Rnr-goto-exit)
-* [NR.7: Don't: Make all data members `protected`](I-20-Non-Rules and myths-NR.007.md#Rnr-protected-data)
+* [NR.1: Don't: All declarations should be at the top of a function](I-20-Non-Rules%20and%20myths-NR.001.md#Rnr-top)
+* [NR.2: Don't: Have only a single `return`-statement in a function](I-20-Non-Rules%20and%20myths-NR.002.md#Rnr-single-return)
+* [NR.3: Don't: Don't use exceptions](I-20-Non-Rules%20and%20myths-NR.003.md#Rnr-no-exceptions)
+* [NR.4: Don't: Place each class declaration in its own source file](I-20-Non-Rules%20and%20myths-NR.004.md#Rnr-lots-of-files)
+* [NR.5: Don't: Don't do substantive work in a constructor; instead use two-phase initialization](I-20-Non-Rules%20and%20myths-NR.005.md#Rnr-two-phase-init)
+* [NR.6: Don't: Place all cleanup actions at the end of a function and `goto exit`](I-20-Non-Rules%20and%20myths-NR.006.md#Rnr-goto-exit)
+* [NR.7: Don't: Make all data members `protected`](I-20-Non-Rules%20and%20myths-NR.007.md#Rnr-protected-data)
 * ???
 

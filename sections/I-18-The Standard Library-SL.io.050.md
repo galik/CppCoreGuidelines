@@ -40,7 +40,7 @@ It provides clocks for registering `time_points`.
 
 C standard library rule summary:
 
-* [S.C.1: Don't use setjmp/longjmp](I-18-The Standard Library-SL.C.001.md#Rclib-jmp)
+* [S.C.1: Don't use setjmp/longjmp](I-18-The%20Standard%20Library-SL.C.001.md#Rclib-jmp)
 * [???](#???)
 * [???](#???)
 

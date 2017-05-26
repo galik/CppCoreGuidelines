@@ -42,5 +42,5 @@ void no_leak_simplified(int x)
 
 If you have local "things" that requires cleanup, but is not represented by an object with a destructor, such cleanup must
 also be done before a `throw`.
-Sometimes, [`finally()`](I-13-Error handling-E.019.md#Re-finally) can make such unsystematic cleanup a bit more manageable.
+Sometimes, [`finally()`](I-13-Error%20handling-E.019.md#Re-finally) can make such unsystematic cleanup a bit more manageable.
 

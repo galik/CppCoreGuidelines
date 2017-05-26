@@ -41,8 +41,8 @@ Factoring out `Utility` makes sense if many derived classes share significant "i
 ##### Note
 
 Obviously, the example is too "theoretical", but it is hard to find a *small* realistic example.
-`Interface` is the root of an [interface hierarchy](I-07-Constructors, assignments, and destructors-C.121.md#Rh-abstract)
-and `Utility` is the root of an [implementation hierarchy](I-07-Constructors, assignments, and destructors-C.129.md#Rh-kind).
+`Interface` is the root of an [interface hierarchy](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.121.md#Rh-abstract)
+and `Utility` is the root of an [implementation hierarchy](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.129.md#Rh-kind).
 Here is [a slightly more realistic example](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) with an explanation.
 
 ##### Note

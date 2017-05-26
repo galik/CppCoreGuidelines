@@ -34,7 +34,7 @@ public:
 
 A more general version of this rule would be
 "If a template class member depends on only N template parameters out of M, place it in a base class with only N parameters."
-For N == 1, we have a choice of a base class of a class in the surrounding scope as in [T.61](I-15-Templates and generic programming-T.061.md#Rt-scary).
+For N == 1, we have a choice of a base class of a class in the surrounding scope as in [T.61](I-15-Templates%20and%20generic%20programming-T.061.md#Rt-scary).
 
 ??? What about constants? class statics?
 

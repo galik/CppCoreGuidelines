@@ -39,7 +39,7 @@ For example, see [Stroustrup94](I-31-Bibliography.md#Stroustrup94).
 
 ##### Note
 
-If no exception may be thrown, use [`noexcept`](I-13-Error handling-E.012.md#Re-noexcept) or its equivalent `throw()`.
+If no exception may be thrown, use [`noexcept`](I-13-Error%20handling-E.012.md#Re-noexcept) or its equivalent `throw()`.
 
 ##### Enforcement
 

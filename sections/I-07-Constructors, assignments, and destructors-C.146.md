@@ -60,7 +60,7 @@ void f()
 ##### Note
 
 Like other casts, `dynamic_cast` is overused.
-[Prefer virtual functions to casting](I-07-Constructors, assignments, and destructors-C.153.md#Rh-use-virtual).
+[Prefer virtual functions to casting](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.153.md#Rh-use-virtual).
 Prefer [static polymorphism](#???) to hierarchy navigation where it is possible (no run-time resolution necessary)
 and reasonably convenient.
 

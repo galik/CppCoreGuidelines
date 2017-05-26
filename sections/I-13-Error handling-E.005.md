@@ -26,7 +26,7 @@ The class invariant - here stated as a comment - is established by the construct
 `new` throws if it cannot allocate the required memory.
 The operators, notably the subscript operator, relies on the invariant.
 
-**See also**: [If a constructor cannot construct a valid object, throw an exception](I-07-Constructors, assignments, and destructors-C.042.md#Rc-throw)
+**See also**: [If a constructor cannot construct a valid object, throw an exception](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.042.md#Rc-throw)
 
 ##### Enforcement
 

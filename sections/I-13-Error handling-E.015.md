@@ -28,7 +28,7 @@ of - typically better still - a `const` reference:
 catch (const exception& e) { /* ... */ }
 
 ```
-Most handlers do not modify their exception and in general we [recommend use of `const`](I-10-Expressions and Statements-ES.025.md#Res-const).
+Most handlers do not modify their exception and in general we [recommend use of `const`](I-10-Expressions%20and%20Statements-ES.025.md#Res-const).
 
 ##### Enforcement
 

@@ -2,7 +2,7 @@
 
 ##### Reason
 
-Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](I-09-Resource management-R.030.md#Rr-smartptrparam)).
+Passing a smart pointer transfers or shares ownership and should only be used when ownership semantics are intended (see [R.30](I-09-Resource%20management-R.030.md#Rr-smartptrparam)).
 Passing by smart pointer restricts the use of a function to callers that use smart pointers.
 Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost.
 
@@ -37,7 +37,7 @@ void f(shared_ptr<widget>& w)
 };
 
 ```
-See further in [R.30](I-09-Resource management-R.030.md#Rr-smartptrparam).
+See further in [R.30](I-09-Resource%20management-R.030.md#Rr-smartptrparam).
 
 ##### Note
 
@@ -45,7 +45,7 @@ We can catch dangling pointers statically, so we don't need to rely on resource 
 
 **See also**: [when to prefer `T*` and when to prefer `T&`](I-05-Functions-F.060.md#Rf-ptr-ref).
 
-**See also**: Discussion of [smart pointer use](I-09-Resource management.md#Rr-summary-smartptrs).
+**See also**: Discussion of [smart pointer use](I-09-Resource%20management.md#Rr-summary-smartptrs).
 
 ##### Enforcement
 

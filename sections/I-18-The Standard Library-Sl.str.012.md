@@ -32,10 +32,10 @@ and user-defines extensions, such as streaming across networks (asio: not yet st
 
 Iostream rule summary:
 
-* [SL.io.1: Use character-level input only when you have to](I-18-The Standard Library-SL.io.001.md#Rio-low)
-* [SL.io.2: When reading, always consider ill-formed input](I-18-The Standard Library-SL.io.002.md#Rio-validate)
-* [SL.io.3: Prefer iostreams for I/O](I-18-The Standard Library-SL.io.003.md#Rio-streams)
-* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](I-18-The Standard Library-SL.io.010.md#Rio-sync) 
-* [SL.io.50: Avoid `endl`](I-18-The Standard Library-SL.io.050.md#Rio-endl)
+* [SL.io.1: Use character-level input only when you have to](I-18-The%20Standard%20Library-SL.io.001.md#Rio-low)
+* [SL.io.2: When reading, always consider ill-formed input](I-18-The%20Standard%20Library-SL.io.002.md#Rio-validate)
+* [SL.io.3: Prefer iostreams for I/O](I-18-The%20Standard%20Library-SL.io.003.md#Rio-streams)
+* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](I-18-The%20Standard%20Library-SL.io.010.md#Rio-sync) 
+* [SL.io.50: Avoid `endl`](I-18-The%20Standard%20Library-SL.io.050.md#Rio-endl)
 * [???](#???)
 

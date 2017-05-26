@@ -32,7 +32,7 @@ b = b;   // correct and efficient
 ```
 ##### Note
 
-You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](I-07-Constructors, assignments, and destructors-C.083.md#Rc-swap)).
+You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.083.md#Rc-swap)).
 
 ```cpp
 class Foo {

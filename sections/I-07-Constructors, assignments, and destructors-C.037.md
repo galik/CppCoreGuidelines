@@ -2,7 +2,7 @@
 
 ##### Reason
 
- [A destructor may not fail](I-07-Constructors, assignments, and destructors-C.036.md#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
+ [A destructor may not fail](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.036.md#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
 
 ##### Note
 

@@ -14,7 +14,7 @@ Introduction summary:
 
 ## <a name="SS-readers"></a>In.target: Target readership
 
-All C++ programmers. This includes [programmers who might consider C](S-16-C-style programming.md#S-cpl).
+All C++ programmers. This includes [programmers who might consider C](S-16-C-style%20programming.md#S-cpl).
 
 ## <a name="SS-aims"></a>In.aims: Aims
 
@@ -31,7 +31,7 @@ Take the time to understand the implications of a guideline rule on your program
 
 These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](S-31-Bibliography.md#Stroustrup05)).
 They do not simply define a subset of C++ to be used (for reliability, safety, performance, or whatever).
-Instead, they strongly recommend the use of a few simple "extensions" ([library components](S-23-Guideline support library.md#S-gsl))
+Instead, they strongly recommend the use of a few simple "extensions" ([library components](S-23-Guideline%20support%20library.md#S-gsl))
 that make the use of the most error-prone features of C++ redundant, so that they can be banned (in our set of rules).
 
 The rules emphasize static type safety and resource safety.
@@ -49,7 +49,7 @@ For example, hard real-time programmers typically can't use free store (dynamic 
 We encourage the development of such more specific rules as addenda to these core guidelines.
 Build your ideal small foundation library and use that, rather than lowering your level of programming to glorified assembly code.
 
-The rules are designed to allow [gradual adoption](S-27-Modernizing code.md#S-modernizing).
+The rules are designed to allow [gradual adoption](S-27-Modernizing%20code.md#S-modernizing).
 
 Some rules aim to increase various forms of safety while others aim to reduce the likelihood of accidents, many do both.
 The guidelines aimed at preventing accidents often ban perfectly legal C++.
@@ -75,7 +75,7 @@ If you need a tutorial for some given level of experience, see [the references](
 
 This is not a guide on how to convert old C++ code to more modern code.
 It is meant to articulate ideas for new code in a concrete fashion.
-However, see [the modernization section](S-27-Modernizing code.md#S-modernizing) for some possible approaches to modernizing/rejuvenating/upgrading.
+However, see [the modernization section](S-27-Modernizing%20code.md#S-modernizing) for some possible approaches to modernizing/rejuvenating/upgrading.
 Importantly, the rules support gradual adoption: It is typically infeasible to completely convert a large code base all at once.
 
 These guidelines are not meant to be complete or exact in every language-technical detail.
@@ -140,7 +140,7 @@ Tools that implement these rules shall respect the following syntax to explicitl
 [[gsl::suppress(tag)]]
 
 ```
-where "tag" is the anchor name of the item where the Enforcement rule appears (e.g., for [C.134](S-07-Constructors, assignments, and destructors.md#Rh-public) it is "Rh-public"), the
+where "tag" is the anchor name of the item where the Enforcement rule appears (e.g., for [C.134](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-public) it is "Rh-public"), the
 name of a profile group-of-rules ("type", "bounds", or "lifetime"),
 or a specific rule in a profile ([type.4](S-22-Profiles.md#Pro-type-cstylecast), or [bounds.2](#Pro-bounds-arrayindex)).
 
@@ -181,32 +181,32 @@ Recommended information sources can be found in [the references](S-21-References
 * [P: Philosophy](S-03-Philosophy.md#S-philosophy)
 * [I: Interfaces](S-04-Interfaces.md#S-interfaces)
 * [F: Functions](S-05-Functions.md#S-functions)
-* [C: Classes and class hierarchies](S-06-Classes and Class Hierarchies.md#S-class)
+* [C: Classes and class hierarchies](S-06-Classes%20and%20Class%20Hierarchies.md#S-class)
 * [Enum: Enumerations](S-08-Enumerations.md#S-enum)
-* [R: Resource management](S-09-Resource management.md#S-resource)
-* [ES: Expressions and statements](S-10-Expressions and Statements.md#S-expr)
-* [E: Error handling](S-13-Error handling.md#S-errors)
-* [Con: Constants and immutability](S-14-Constants and Immutability.md#S-const)
-* [T: Templates and generic programming](S-15-Templates and generic programming.md#S-templates)
-* [CP: Concurrency](S-12-Concurrency and Parallelism.md#S-concurrency)
-* [SL: The Standard library](S-18-The Standard Library.md#S-stdlib)
-* [SF: Source files](S-17-Source files.md#S-source)
-* [CPL: C-style programming](S-16-C-style programming.md#S-cpl)
+* [R: Resource management](S-09-Resource%20management.md#S-resource)
+* [ES: Expressions and statements](S-10-Expressions%20and%20Statements.md#S-expr)
+* [E: Error handling](S-13-Error%20handling.md#S-errors)
+* [Con: Constants and immutability](S-14-Constants%20and%20Immutability.md#S-const)
+* [T: Templates and generic programming](S-15-Templates%20and%20generic%20programming.md#S-templates)
+* [CP: Concurrency](S-12-Concurrency%20and%20Parallelism.md#S-concurrency)
+* [SL: The Standard library](S-18-The%20Standard%20Library.md#S-stdlib)
+* [SF: Source files](S-17-Source%20files.md#S-source)
+* [CPL: C-style programming](S-16-C-style%20programming.md#S-cpl)
 * [Pro: Profiles](S-22-Profiles.md#S-profile)
-* [GSL: Guideline support library](S-23-Guideline support library.md#S-gsl)
-* [FAQ: Answers to frequently asked questions](S-25-Answers to frequently asked questions.md#S-faq)
+* [GSL: Guideline support library](S-23-Guideline%20support%20library.md#S-gsl)
+* [FAQ: Answers to frequently asked questions](S-25-Answers%20to%20frequently%20asked%20questions.md#S-faq)
 
 Supporting sections:
 
-* [NL: Naming and layout](S-24-Naming and layout rules.md#S-naming)
+* [NL: Naming and layout](S-24-Naming%20and%20layout%20rules.md#S-naming)
 * [Per: Performance](S-11-Performance.md#S-performance)
-* [N: Non-Rules and myths](S-20-Non-Rules and myths.md#S-not)
+* [N: Non-Rules and myths](S-20-Non-Rules%20and%20myths.md#S-not)
 * [RF: References](S-21-References.md#S-references)
 * [Appendix A: Libraries](S-26-Libraries.md#S-libraries)
-* [Appendix B: Modernizing code](S-27-Modernizing code.md#S-modernizing)
+* [Appendix B: Modernizing code](S-27-Modernizing%20code.md#S-modernizing)
 * [Appendix C: Discussion](S-28-Discussion.md#S-discussion)
 * [Glossary](S-29-Glossary.md#S-glossary)
-* [To-do: Unclassified proto-rules](S-30-Unclassified proto-rules.md#S-unclassified)
+* [To-do: Unclassified proto-rules](S-30-Unclassified%20proto-rules.md#S-unclassified)
 
 These sections are not orthogonal.
 

@@ -31,9 +31,9 @@ A type that is a `union` plus an indicator of which member is currently held is 
 
 Union rule summary:
 
-* [C.180: Use `union`s to save Memory](I-07-Constructors, assignments, and destructors-C.180.md#Ru-union)
-* [C.181: Avoid "naked" `union`s](I-07-Constructors, assignments, and destructors-C.181.md#Ru-naked)
-* [C.182: Use anonymous `union`s to implement tagged unions](I-07-Constructors, assignments, and destructors-C.182.md#Ru-anonymous)
-* [C.183: Don't use a `union` for type punning](I-07-Constructors, assignments, and destructors-C.183.md#Ru-pun)
+* [C.180: Use `union`s to save Memory](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.180.md#Ru-union)
+* [C.181: Avoid "naked" `union`s](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.181.md#Ru-naked)
+* [C.182: Use anonymous `union`s to implement tagged unions](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.182.md#Ru-anonymous)
+* [C.183: Don't use a `union` for type punning](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.183.md#Ru-pun)
 * ???
 

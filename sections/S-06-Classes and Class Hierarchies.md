@@ -5,24 +5,24 @@ Class hierarchies are used to organize related classes into hierarchical structu
 
 Class rule summary:
 
-* [C.1: Organize related data into structures (`struct`s or `class`es)](S-06-Classes and Class Hierarchies.md#Rc-org)
-* [C.2: Use `class` if the class has an invariant; use `struct` if the data members can vary independently](S-06-Classes and Class Hierarchies.md#Rc-struct)
-* [C.3: Represent the distinction between an interface and an implementation using a class](S-06-Classes and Class Hierarchies.md#Rc-interface)
-* [C.4: Make a function a member only if it needs direct access to the representation of a class](S-06-Classes and Class Hierarchies.md#Rc-member)
-* [C.5: Place helper functions in the same namespace as the class they support](S-06-Classes and Class Hierarchies.md#Rc-helper)
-* [C.7: Don't define a class or enum and declare a variable of its type in the same statement](S-06-Classes and Class Hierarchies.md#Rc-standalone)
-* [C.8: Use `class` rather than `struct` if any member is non-public](S-06-Classes and Class Hierarchies.md#Rc-class)
-* [C.9: Minimize exposure of members](S-06-Classes and Class Hierarchies.md#Rc-private)
+* [C.1: Organize related data into structures (`struct`s or `class`es)](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-org)
+* [C.2: Use `class` if the class has an invariant; use `struct` if the data members can vary independently](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-struct)
+* [C.3: Represent the distinction between an interface and an implementation using a class](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-interface)
+* [C.4: Make a function a member only if it needs direct access to the representation of a class](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-member)
+* [C.5: Place helper functions in the same namespace as the class they support](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-helper)
+* [C.7: Don't define a class or enum and declare a variable of its type in the same statement](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-standalone)
+* [C.8: Use `class` rather than `struct` if any member is non-public](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-class)
+* [C.9: Minimize exposure of members](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-private)
 
 Subsections:
 
-* [C.concrete: Concrete types](S-06-Classes and Class Hierarchies.md#SS-concrete)
-* [C.ctor: Constructors, assignments, and destructors](S-07-Constructors, assignments, and destructors.md#S-ctor)
-* [C.con: Containers and other resource handles](S-07-Constructors, assignments, and destructors.md#SS-containers)
-* [C.lambdas: Function objects and lambdas](S-07-Constructors, assignments, and destructors.md#SS-lambdas)
-* [C.hier: Class hierarchies (OOP)](S-07-Constructors, assignments, and destructors.md#SS-hier)
-* [C.over: Overloading and overloaded operators](S-07-Constructors, assignments, and destructors.md#SS-overload)
-* [C.union: Unions](S-07-Constructors, assignments, and destructors.md#SS-union)
+* [C.concrete: Concrete types](S-06-Classes%20and%20Class%20Hierarchies.md#SS-concrete)
+* [C.ctor: Constructors, assignments, and destructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#S-ctor)
+* [C.con: Containers and other resource handles](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-containers)
+* [C.lambdas: Function objects and lambdas](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-lambdas)
+* [C.hier: Class hierarchies (OOP)](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-hier)
+* [C.over: Overloading and overloaded operators](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-overload)
+* [C.union: Unions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-union)
 
 ### <a name="Rc-org"></a>C.1: Organize related data into structures (`struct`s or `class`es)
 
@@ -97,10 +97,10 @@ If a class has any `private` data, a user cannot completely initialize an object
 Hence, the class definer will provide a constructor and must specify its meaning.
 This effectively means the definer need to define an invariant.
 
-* See also [define a class with private data as `class`](S-06-Classes and Class Hierarchies.md#Rc-class).
-* See also [Prefer to place the interface first in a class](S-24-Naming and layout rules.md#Rl-order).
-* See also [minimize exposure of members](S-06-Classes and Class Hierarchies.md#Rc-private).
-* See also [Avoid `protected` data](S-07-Constructors, assignments, and destructors.md#Rh-protected).
+* See also [define a class with private data as `class`](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-class).
+* See also [Prefer to place the interface first in a class](S-24-Naming%20and%20layout%20rules.md#Rl-order).
+* See also [minimize exposure of members](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-private).
+* See also [Avoid `protected` data](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-protected).
 
 ##### Enforcement
 
@@ -230,7 +230,7 @@ namespace Chrono { // here we keep time-related services
 ```
 ##### Note
 
-This is especially important for [overloaded operators](S-07-Constructors, assignments, and destructors.md#Ro-namespace).
+This is especially important for [overloaded operators](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-namespace).
 
 ##### Enforcement
 
@@ -289,7 +289,7 @@ All of this decreases readability and complicates maintenance.
 
 ##### Note
 
-Prefer to place the interface first in a class [see](S-24-Naming and layout rules.md#Rl-order).
+Prefer to place the interface first in a class [see](S-24-Naming%20and%20layout%20rules.md#Rl-order).
 
 ##### Enforcement
 
@@ -381,15 +381,15 @@ void user(Foo& x)
 ```
 ##### Note
 
-[`protected` data is a bad idea](S-07-Constructors, assignments, and destructors.md#Rh-protected).
+[`protected` data is a bad idea](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-protected).
 
 ##### Note
 
-Prefer the order `public` members before `protected` members before `private` members [see](S-24-Naming and layout rules.md#Rl-order).
+Prefer the order `public` members before `protected` members before `private` members [see](S-24-Naming%20and%20layout%20rules.md#Rl-order).
 
 ##### Enforcement
 
-* [Flag protected data](S-07-Constructors, assignments, and destructors.md#Rh-protected).
+* [Flag protected data](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-protected).
 * Flag mixtures of `public` and private `data`
 
 ## <a name="SS-concrete"></a>C.concrete: Concrete types
@@ -404,8 +404,8 @@ Concrete types are also often referred to as value types to distinguish them fro
 
 Concrete type rule summary:
 
-* [C.10: Prefer concrete types over class hierarchies](S-06-Classes and Class Hierarchies.md#Rc-concrete)
-* [C.11: Make concrete types regular](S-06-Classes and Class Hierarchies.md#Rc-regular)
+* [C.10: Prefer concrete types over class hierarchies](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-concrete)
+* [C.11: Make concrete types regular](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-regular)
 
 ### <a name="Rc-concrete"></a>C.10: Prefer concrete types over class hierarchies
 

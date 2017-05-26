@@ -66,6 +66,6 @@ Remember
 ```
 ##### Alternative
 
-* [RAII](I-13-Error handling-E.006.md#Re-raii)
+* [RAII](I-13-Error%20handling-E.006.md#Re-raii)
 * Contracts/assertions: Use GSL's `Expects` and `Ensures` (until we get language support for contracts)
 

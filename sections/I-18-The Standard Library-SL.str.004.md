@@ -24,7 +24,7 @@ The array `arr` is not a C-style string because it is not zero-terminated.
 
 ##### Alternative
 
-See [`zstring`](I-18-The Standard Library-SL.str.003.md#Rstr-zstring), [`string`](I-18-The Standard Library-SL.str.001.md#Rstr-string), and [`string_span`](I-18-The Standard Library-SL.str.002.md#Rstr-view).
+See [`zstring`](I-18-The%20Standard%20Library-SL.str.003.md#Rstr-zstring), [`string`](I-18-The%20Standard%20Library-SL.str.001.md#Rstr-string), and [`string_span`](I-18-The%20Standard%20Library-SL.str.002.md#Rstr-view).
 
 ##### Enforcement
   

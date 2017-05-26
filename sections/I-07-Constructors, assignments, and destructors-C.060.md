@@ -60,10 +60,10 @@ Vector& Vector::operator=(const Vector& a)
 }
 
 ```
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](I-07-Constructors, assignments, and destructors-C.062.md#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.062.md#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
-See [copy constructor vs. `clone()`](I-07-Constructors, assignments, and destructors-C.067.md#Rc-copy-virtual).
+See [copy constructor vs. `clone()`](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual).
 
 ##### Enforcement
 

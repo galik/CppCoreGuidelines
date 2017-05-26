@@ -80,7 +80,7 @@ A well-designed library expresses intent (what is to be done, rather than just h
 
 A C++ programmer should know the basics of the standard library, and use it where appropriate.
 Any programmer should know the basics of the foundation libraries of the project being worked on, and use them appropriately.
-Any programmer using these guidelines should know the [guideline support library](S-23-Guideline support library.md#S-gsl), and use it appropriately.
+Any programmer using these guidelines should know the [guideline support library](S-23-Guideline%20support%20library.md#S-gsl), and use it appropriately.
 
 ##### Example
 
@@ -130,7 +130,7 @@ portability will be impacted.
 ##### Note
 
 Using valid ISO C++ does not guarantee portability (let alone correctness).
-Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](S-10-Expressions and Statements.md#Res-order))
+Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](S-10-Expressions%20and%20Statements.md#Res-order))
 and be aware of constructs with implementation defined meaning (e.g., `sizeof(int)`).
 
 ##### Note
@@ -182,8 +182,8 @@ The last variant makes it clear that we are not interested in the order in which
 
 A programmer should be familiar with
 
-* [The guideline support library](S-23-Guideline support library.md#S-gsl)
-* [The ISO C++ standard library](S-18-The Standard Library.md#S-stdlib)
+* [The guideline support library](S-23-Guideline%20support%20library.md#S-gsl)
+* [The ISO C++ standard library](S-18-The%20Standard%20Library.md#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
 ##### Note
@@ -559,7 +559,7 @@ void f(char* name)
 }
 
 ```
-Prefer [RAII](S-09-Resource management.md#Rr-raii):
+Prefer [RAII](S-09-Resource%20management.md#Rr-raii):
 
 ```cpp
 void f(char* name)
@@ -571,7 +571,7 @@ void f(char* name)
 }
 
 ```
-**See also**: [The resource management section](S-09-Resource management.md#S-resource)
+**See also**: [The resource management section](S-09-Resource%20management.md#S-resource)
 
 ##### Note
 
@@ -585,14 +585,14 @@ However, relying on abstractions that implicitly clean up can be as simple, and 
 ##### Note
 
 Enforcing [the lifetime profile](#In.force) eliminates leaks.
-When combined with resource safety provided by [RAII](S-09-Resource management.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
+When combined with resource safety provided by [RAII](S-09-Resource%20management.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
 Combine this with enforcement of [the type and bounds profiles](#In.force) and you get complete type- and resource-safety, guaranteed by tools.
 
 ##### Enforcement
 
 * Look at pointers: Classify them into non-owners (the default) and owners.
   Where feasible, replace owners with standard-library resource handles (as in the example above).
-  Alternatively, mark an owner as such using `owner` from [the GSL](S-23-Guideline support library.md#S-gsl).
+  Alternatively, mark an owner as such using `owner` from [the GSL](S-23-Guideline%20support%20library.md#S-gsl).
 * Look for naked `new` and `delete`
 * Look for known resource allocating functions returning raw pointers (such as `fopen`, `malloc`, and `strdup`)
 
@@ -682,7 +682,7 @@ Something immutable cannot change unexpectedly.
 Sometimes immutability enables better optimization.
 You can't have a data race on a constant.
 
-See [Con: Constants and Immutability](S-14-Constants and Immutability.md#S-const)
+See [Con: Constants and Immutability](S-14-Constants%20and%20Immutability.md#S-const)
 
 ### <a name="Rp-library"></a>P.11: Encapsulate messy constructs, rather than spreading through the code
 
@@ -755,7 +755,7 @@ Run a static analyzer to verify that your code follows the guidelines you want i
 See
 
 * [Static analysis tools](???)
-* [Concurrency tools](S-12-Concurrency and Parallelism.md#Rconc-tools)
+* [Concurrency tools](S-12-Concurrency%20and%20Parallelism.md#Rconc-tools)
 * [Testing tools](???)
 
 There are many other kinds of tools, such as source code depositories, build tools, etc.,
@@ -793,8 +793,8 @@ You need a reason not to use the standard library (or whatever foundational libr
 
 By default use
 
-* The [ISO C++ standard library](S-18-The Standard Library.md#S-stdlib)
-* The [Guidelines Support Library](S-23-Guideline support library.md#S-gsl)
+* The [ISO C++ standard library](S-18-The%20Standard%20Library.md#S-stdlib)
+* The [Guidelines Support Library](S-23-Guideline%20support%20library.md#S-gsl)
 
 ##### Note
 

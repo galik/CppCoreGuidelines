@@ -28,10 +28,10 @@ Interface rule summary:
 See also
 
 * [F: Functions](I-05-Functions.md#S-functions)
-* [C.concrete: Concrete types](I-06-Classes and Class Hierarchies-C.009.md#SS-concrete)
-* [C.hier: Class hierarchies](I-07-Constructors, assignments, and destructors-C.089.md#SS-hier)
-* [C.over: Overloading and overloaded operators](I-07-Constructors, assignments, and destructors-C.153.md#SS-overload)
-* [C.con: Containers and other resource handles](I-07-Constructors, assignments, and destructors-C.089.md#SS-containers)
-* [E: Error handling](I-13-Error handling.md#S-errors)
-* [T: Templates and generic programming](I-15-Templates and generic programming.md#S-templates)
+* [C.concrete: Concrete types](I-06-Classes%20and%20Class%20Hierarchies-C.009.md#SS-concrete)
+* [C.hier: Class hierarchies](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.089.md#SS-hier)
+* [C.over: Overloading and overloaded operators](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.153.md#SS-overload)
+* [C.con: Containers and other resource handles](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.089.md#SS-containers)
+* [E: Error handling](I-13-Error%20handling.md#S-errors)
+* [T: Templates and generic programming](I-15-Templates%20and%20generic%20programming.md#S-templates)
 

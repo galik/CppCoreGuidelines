@@ -29,12 +29,12 @@ vector<double> compute(args)  // good
 }
 
 ```
-**Alternative**: [Pass ownership](I-09-Resource management-R.030.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
+**Alternative**: [Pass ownership](I-09-Resource%20management-R.030.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
 However, that is less elegant and often less efficient than returning the object itself,
 so use smart pointers only if reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from the [guideline support library](I-23-Guideline support library.md#S-gsl):
+In that case, mark owning pointers using `owner` from the [guideline support library](I-23-Guideline%20support%20library.md#S-gsl):
 
 ```cpp
 owner<X*> compute(args)    // It is now clear that ownership is transferred
@@ -57,7 +57,7 @@ caller, so that its lifetime is handled by the caller. Viewed another way:
 ownership transferring APIs are relatively rare compared to pointer-passing APIs,
 so the default is "no ownership transfer."
 
-**See also**: [Argument passing](I-05-Functions-F.015.md#Rf-conventional), [use of smart pointer arguments](I-09-Resource management-R.030.md#Rr-smartptrparam), and [value return](#Rf-T-return).
+**See also**: [Argument passing](I-05-Functions-F.015.md#Rf-conventional), [use of smart pointer arguments](I-09-Resource%20management-R.030.md#Rr-smartptrparam), and [value return](#Rf-T-return).
 
 ##### Enforcement
 

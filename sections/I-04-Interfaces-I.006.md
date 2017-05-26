@@ -32,7 +32,7 @@ Once language support becomes available (e.g., see the [contract proposal](http:
 
 ##### Note
 
-No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](I-10-Expressions and Statements-ES.106.md#Res-nonnegative).
+No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](I-10-Expressions%20and%20Statements-ES.106.md#Res-nonnegative).
 
 ##### Enforcement
 

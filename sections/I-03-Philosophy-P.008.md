@@ -18,7 +18,7 @@ void f(char* name)
 }
 
 ```
-Prefer [RAII](I-09-Resource management-R.001.md#Rr-raii):
+Prefer [RAII](I-09-Resource%20management-R.001.md#Rr-raii):
 
 ```cpp
 void f(char* name)
@@ -30,7 +30,7 @@ void f(char* name)
 }
 
 ```
-**See also**: [The resource management section](I-09-Resource management.md#S-resource)
+**See also**: [The resource management section](I-09-Resource%20management.md#S-resource)
 
 ##### Note
 
@@ -44,14 +44,14 @@ However, relying on abstractions that implicitly clean up can be as simple, and 
 ##### Note
 
 Enforcing [the lifetime profile](#In.force) eliminates leaks.
-When combined with resource safety provided by [RAII](I-09-Resource management-R.001.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
+When combined with resource safety provided by [RAII](I-09-Resource%20management-R.001.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
 Combine this with enforcement of [the type and bounds profiles](#In.force) and you get complete type- and resource-safety, guaranteed by tools.
 
 ##### Enforcement
 
 * Look at pointers: Classify them into non-owners (the default) and owners.
   Where feasible, replace owners with standard-library resource handles (as in the example above).
-  Alternatively, mark an owner as such using `owner` from [the GSL](I-23-Guideline support library.md#S-gsl).
+  Alternatively, mark an owner as such using `owner` from [the GSL](I-23-Guideline%20support%20library.md#S-gsl).
 * Look for naked `new` and `delete`
 * Look for known resource allocating functions returning raw pointers (such as `fopen`, `malloc`, and `strdup`)
 

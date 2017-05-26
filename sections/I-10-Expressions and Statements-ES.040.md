@@ -37,7 +37,7 @@ Some of these expressions are unconditionally bad (e.g., they rely on undefined 
 ##### Note
 
 C++17 tightens up the rules for the order of evaluation
-(left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified; [see ES.43](I-10-Expressions and Statements-ES.043.md#Res-order)),
+(left-to-right except right-to-left in assignments, and the order of evaluation of function arguments is unspecified; [see ES.43](I-10-Expressions%20and%20Statements-ES.043.md#Res-order)),
 but that doesn't change the fact that complicated expressions are potentially confusing.
 
 ##### Note

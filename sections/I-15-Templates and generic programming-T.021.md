@@ -8,7 +8,7 @@ Helps implementers and maintainers.
 
 ##### Note
 
-This is a specific variant of the general rule that [a concept must make semantic sense](I-15-Templates and generic programming-T.020.md#Rt-low).
+This is a specific variant of the general rule that [a concept must make semantic sense](I-15-Templates%20and%20generic%20programming-T.020.md#Rt-low).
 
 ##### Example, bad (using TS concepts)
 

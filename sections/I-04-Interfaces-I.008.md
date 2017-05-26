@@ -21,7 +21,7 @@ void f()
 Postconditions can be stated in many ways, including comments, `if`-statements, and `assert()`.
 This can make them hard to distinguish from ordinary code, hard to update, hard to manipulate by tools, and may have the wrong semantics.
 
-**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](I-09-Resource management-R.001.md#Rr-raii).
+**Alternative**: Postconditions of the form "this resource must be released" are best expressed by [RAII](I-09-Resource%20management-R.001.md#Rr-raii).
 
 ##### Note
 

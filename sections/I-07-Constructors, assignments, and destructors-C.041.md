@@ -31,7 +31,7 @@ Compilers do not read comments.
 
 ##### Exception
 
-If a valid object cannot conveniently be constructed by a constructor, [use a factory function](I-07-Constructors, assignments, and destructors-C.050.md#Rc-factory).
+If a valid object cannot conveniently be constructed by a constructor, [use a factory function](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.050.md#Rc-factory).
 
 ##### Enforcement
 
@@ -40,6 +40,6 @@ If a valid object cannot conveniently be constructed by a constructor, [use a fa
 
 ##### Note
 
-If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](I-07-Constructors, assignments, and destructors-C.031.md#Rc-dtor-release).
-The idiom of having constructors acquire resources and destructors release them is called [RAII](I-09-Resource management-R.001.md#Rr-raii) ("Resource Acquisition Is Initialization").
+If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.031.md#Rc-dtor-release).
+The idiom of having constructors acquire resources and destructors release them is called [RAII](I-09-Resource%20management-R.001.md#Rr-raii) ("Resource Acquisition Is Initialization").
 

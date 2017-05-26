@@ -29,7 +29,7 @@ struct Point {
 };
 
 ```
-Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](I-07-Constructors, assignments, and destructors-C.049.md#Rc-initialize).
+Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.049.md#Rc-initialize).
 
 ##### Note
 

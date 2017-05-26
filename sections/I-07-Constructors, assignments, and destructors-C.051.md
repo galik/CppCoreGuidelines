@@ -43,7 +43,7 @@ public:
 };
 
 ```
-**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](I-07-Constructors, assignments, and destructors-C.048.md#Rc-in-class-initializer).
+**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.048.md#Rc-in-class-initializer).
 
 ##### Enforcement
 

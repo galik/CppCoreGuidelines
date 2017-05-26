@@ -29,7 +29,7 @@ Often. a loop that uses `continue` can equivalently and as clearly be expressed 
 ```
 ##### Note
 
-If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](I-10-Expressions and Statements-ES.086.md#Res-loop-counter) or a [`goto`](I-10-Expressions and Statements-ES.076.md#Res-goto):
+If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](I-10-Expressions%20and%20Statements-ES.086.md#Res-loop-counter) or a [`goto`](I-10-Expressions%20and%20Statements-ES.076.md#Res-goto):
 
 
 ##### Enforcement

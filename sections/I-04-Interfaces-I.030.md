@@ -25,9 +25,9 @@ case file:          owned = true;  inp = new ifstream{argv[2]};
 istream& in = *inp;
 
 ```
-This violated the rule [against uninitialized variables](I-10-Expressions and Statements-ES.020.md#Res-always),
+This violated the rule [against uninitialized variables](I-10-Expressions%20and%20Statements-ES.020.md#Res-always),
 the rule against [ignoring ownership](I-04-Interfaces-I.011.md#Ri-raw),
-and the rule [against magic constants](I-10-Expressions and Statements-ES.045.md#Res-magic) .
+and the rule [against magic constants](I-10-Expressions%20and%20Statements-ES.045.md#Res-magic) .
 In particular, someone has to remember to somewhere write
 
 ```cpp

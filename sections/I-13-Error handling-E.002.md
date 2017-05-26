@@ -44,7 +44,7 @@ However, that's a bit circular because "what is exceptional?"
 Examples:
 
 * A precondition that cannot be met
-* A constructor that cannot construct an object (failure to establish its class's [invariant](I-06-Classes and Class Hierarchies-C.002.md#Rc-struct))
+* A constructor that cannot construct an object (failure to establish its class's [invariant](I-06-Classes%20and%20Class%20Hierarchies-C.002.md#Rc-struct))
 * An out-of-range error (e.g., `v[v.size()] = 7`)
 * Inability to acquire a resource (e.g., the network is down)
 
@@ -59,13 +59,13 @@ Don't use a `throw` as simply an alternative way of returning a value from a fun
 
 Some systems, such as hard-real time systems require a guarantee that an action is taken in a (typically short) constant maximum time known before execution starts. Such systems can use exceptions only if there is tool support for accurately predicting the maximum time to recover from a `throw`.
 
-**See also**: [RAII](I-13-Error handling-E.006.md#Re-raii)
+**See also**: [RAII](I-13-Error%20handling-E.006.md#Re-raii)
 
 **See also**: [discussion](I-28-Discussion-Discussion.md#Sd-noexcept)
 
 ##### Note
 
-Before deciding that you cannot afford or don't like exception-based error handling, have a look at the [alternatives](I-13-Error handling-E.025.md#Re-no-throw-raii);
+Before deciding that you cannot afford or don't like exception-based error handling, have a look at the [alternatives](I-13-Error%20handling-E.025.md#Re-no-throw-raii);
 they have their own complexities and problems.
 Also, as far as possible, measure before making claims about efficiency.
 

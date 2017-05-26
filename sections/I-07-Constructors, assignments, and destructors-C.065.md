@@ -24,7 +24,7 @@ Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
 }
 
 ```
-The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](I-07-Constructors, assignments, and destructors-C.062.md#Rc-copy-self) is even more relevant for self-move.
+The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.062.md#Rc-copy-self) is even more relevant for self-move.
 
 ##### Note
 

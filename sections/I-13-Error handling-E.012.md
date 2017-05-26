@@ -35,7 +35,7 @@ That is, I consider memory exhaustion a serious design error (on par with hardwa
 
 ##### Note
 
-Do not use traditional [exception-specifications](I-13-Error handling-E.030.md#Re-specifications).
+Do not use traditional [exception-specifications](I-13-Error%20handling-E.030.md#Re-specifications).
 
 ##### See also
 

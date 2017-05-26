@@ -5,20 +5,20 @@ Use header files to represent interfaces and to emphasize logical structure.
 
 Source file rule summary:
 
-* [SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention](S-17-Source files.md#Rs-file-suffix)
-* [SF.2: A `.h` file may not contain object definitions or non-inline function definitions](S-17-Source files.md#Rs-inline)
-* [SF.3: Use `.h` files for all declarations used in multiple source files](S-17-Source files.md#Rs-declaration-header)
-* [SF.4: Include `.h` files before other declarations in a file](S-17-Source files.md#Rs-include-order)
-* [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](S-17-Source files.md#Rs-consistency)
-* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)](S-17-Source files.md#Rs-using)
-* [SF.7: Don't write `using namespace` in a header file](S-17-Source files.md#Rs-using-directive)
-* [SF.8: Use `#include` guards for all `.h` files](S-17-Source files.md#Rs-guards)
-* [SF.9: Avoid cyclic dependencies among source files](S-17-Source files.md#Rs-cycles)
-* [SF.10: Avoid dependencies on implicitly `#included` names](S-17-Source files.md#Rs-implicit)
+* [SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention](S-17-Source%20files.md#Rs-file-suffix)
+* [SF.2: A `.h` file may not contain object definitions or non-inline function definitions](S-17-Source%20files.md#Rs-inline)
+* [SF.3: Use `.h` files for all declarations used in multiple source files](S-17-Source%20files.md#Rs-declaration-header)
+* [SF.4: Include `.h` files before other declarations in a file](S-17-Source%20files.md#Rs-include-order)
+* [SF.5: A `.cpp` file must include the `.h` file(s) that defines its interface](S-17-Source%20files.md#Rs-consistency)
+* [SF.6: Use `using namespace` directives for transition, for foundation libraries (such as `std`), or within a local scope (only)](S-17-Source%20files.md#Rs-using)
+* [SF.7: Don't write `using namespace` in a header file](S-17-Source%20files.md#Rs-using-directive)
+* [SF.8: Use `#include` guards for all `.h` files](S-17-Source%20files.md#Rs-guards)
+* [SF.9: Avoid cyclic dependencies among source files](S-17-Source%20files.md#Rs-cycles)
+* [SF.10: Avoid dependencies on implicitly `#included` names](S-17-Source%20files.md#Rs-implicit)
 
-* [SF.20: Use `namespace`s to express logical structure](S-17-Source files.md#Rs-namespace)
-* [SF.21: Don't use an unnamed (anonymous) namespace in a header](S-17-Source files.md#Rs-unnamed)
-* [SF.22: Use an unnamed (anonymous) namespace for all internal/nonexported entities](S-17-Source files.md#Rs-unnamed2)
+* [SF.20: Use `namespace`s to express logical structure](S-17-Source%20files.md#Rs-namespace)
+* [SF.21: Don't use an unnamed (anonymous) namespace in a header](S-17-Source%20files.md#Rs-unnamed)
+* [SF.22: Use an unnamed (anonymous) namespace for all internal/nonexported entities](S-17-Source%20files.md#Rs-unnamed2)
 
 ### <a name="Rs-file-suffix"></a>SF.1: Use a `.cpp` suffix for code files and `.h` for interface files if your project doesn't already follow another convention
 
@@ -283,7 +283,7 @@ and M functions each containing a `using namespace X`with N lines of code in tot
 
 ##### Note
 
-[Don't write `using namespace` in a header file](S-17-Source files.md#Rs-using-directive).
+[Don't write `using namespace` in a header file](S-17-Source%20files.md#Rs-using-directive).
 
 ##### Enforcement
 

@@ -33,8 +33,8 @@ The protected data has de facto become global to a large body of code.
 
 Protected data often looks tempting to enable arbitrary improvements through derivation.
 Often, what you get is unprincipled changes and errors.
-[Prefer `private` data](I-06-Classes and Class Hierarchies-C.009.md#Rc-private) with a well-specified and enforced invariant.
-Alternative, and often better, [keep data out of any class used as an interface](I-07-Constructors, assignments, and destructors-C.121.md#Rh-abstract).
+[Prefer `private` data](I-06-Classes%20and%20Class%20Hierarchies-C.009.md#Rc-private) with a well-specified and enforced invariant.
+Alternative, and often better, [keep data out of any class used as an interface](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.121.md#Rh-abstract).
 
 ##### Note
 

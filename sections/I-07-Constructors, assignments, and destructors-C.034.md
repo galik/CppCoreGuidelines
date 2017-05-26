@@ -4,7 +4,7 @@
 
 A reference member may represent a resource.
 It should not do so, but in older code, that's common.
-See [pointer members and destructors](I-07-Constructors, assignments, and destructors-C.032.md#Rc-dtor-ptr).
+See [pointer members and destructors](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.032.md#Rc-dtor-ptr).
 Also, copying may lead to slicing.
 
 ##### Example, bad
@@ -20,7 +20,7 @@ public:
 };
 
 ```
-The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](I-07-Constructors, assignments, and destructors-C.032.md#Rc-dtor-ptr):
+The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.032.md#Rc-dtor-ptr):
 If the `Handle` owns the object referred to by `s` it must have a destructor.
 
 ##### Example
@@ -48,7 +48,7 @@ x = y;     // the default assignment will try *x.s = *y.s
 ```
 That `x = y` is highly suspect.
 Assigning a `Triangle` to a `Circle`?
-Unless `Shape` has its [copy assignment `=deleted`](I-07-Constructors, assignments, and destructors-C.067.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
+Unless `Shape` has its [copy assignment `=deleted`](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
 
 ##### Note
 

@@ -54,9 +54,9 @@ Rec2 r2 {"Bar"};
 
 ```
 The `Rec2` constructor is redundant.
-Also, the default for `int` would be better done as a [member initializer](I-07-Constructors, assignments, and destructors-C.048.md#Rc-in-class-initializer).
+Also, the default for `int` would be better done as a [member initializer](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.048.md#Rc-in-class-initializer).
 
-**See also**: [construct valid object](I-07-Constructors, assignments, and destructors-C.041.md#Rc-complete) and [constructor throws](I-07-Constructors, assignments, and destructors-C.042.md#Rc-throw).
+**See also**: [construct valid object](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.041.md#Rc-complete) and [constructor throws](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.042.md#Rc-throw).
 
 ##### Enforcement
 

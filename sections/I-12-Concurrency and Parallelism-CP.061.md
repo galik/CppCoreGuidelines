@@ -46,14 +46,14 @@ Lock free programming is also used to implement higher-level concurrency mechani
 
 Lock-free programming rule summary:
 
-* [CP.100: Don't use lock-free programming unless you absolutely have to](I-12-Concurrency and Parallelism-CP.100.md#Rconc-lockfree)
-* [CP.101: Distrust your hardware/compiler combination](I-12-Concurrency and Parallelism-CP.101.md#Rconc-distrust)
-* [CP.102: Carefully study the literature](I-12-Concurrency and Parallelism-CP.102.md#Rconc-literature)
+* [CP.100: Don't use lock-free programming unless you absolutely have to](I-12-Concurrency%20and%20Parallelism-CP.100.md#Rconc-lockfree)
+* [CP.101: Distrust your hardware/compiler combination](I-12-Concurrency%20and%20Parallelism-CP.101.md#Rconc-distrust)
+* [CP.102: Carefully study the literature](I-12-Concurrency%20and%20Parallelism-CP.102.md#Rconc-literature)
 * how/when to use atomics
 * avoid starvation
 * use a lock free data structure rather than hand-crafting specific lock-free access
-* [CP.110: Do not write your own double-checked locking for initialization](I-12-Concurrency and Parallelism-CP.110.md#Rconc-double)
-* [CP.111: Use a conventional pattern if you really need double-checked locking](I-12-Concurrency and Parallelism-CP.111.md#Rconc-double-pattern)
+* [CP.110: Do not write your own double-checked locking for initialization](I-12-Concurrency%20and%20Parallelism-CP.110.md#Rconc-double)
+* [CP.111: Use a conventional pattern if you really need double-checked locking](I-12-Concurrency%20and%20Parallelism-CP.111.md#Rconc-double-pattern)
 * how/when to compare and swap
 
 

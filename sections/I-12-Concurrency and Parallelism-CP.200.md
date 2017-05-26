@@ -62,7 +62,7 @@ class My_type {
 ```
 ##### Note
 
-In C++, unlike in some other languages, `volatile` has [nothing to do with synchronization](I-12-Concurrency and Parallelism-CP.008.md#Rconc-volatile).
+In C++, unlike in some other languages, `volatile` has [nothing to do with synchronization](I-12-Concurrency%20and%20Parallelism-CP.008.md#Rconc-volatile).
 
 ##### Enforcement
 

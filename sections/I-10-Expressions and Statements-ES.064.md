@@ -36,7 +36,7 @@ between platforms with different integer and pointer sizes.
 
 ##### Note
 
-[Avoid casts](I-10-Expressions and Statements-ES.048.md#Res-casts) (explicit type conversion) and if you must [prefer named casts](I-10-Expressions and Statements-ES.049.md#Res-casts-named).
+[Avoid casts](I-10-Expressions%20and%20Statements-ES.048.md#Res-casts) (explicit type conversion) and if you must [prefer named casts](I-10-Expressions%20and%20Statements-ES.049.md#Res-casts-named).
 
 ##### Note
 
@@ -50,7 +50,7 @@ auto z = f({2*pi, 1});
 ```
 ##### Note
 
-The construction notation is the most general [initializer notation](I-10-Expressions and Statements-ES.023.md#Res-list).
+The construction notation is the most general [initializer notation](I-10-Expressions%20and%20Statements-ES.023.md#Res-list).
 
 ##### Exception
 

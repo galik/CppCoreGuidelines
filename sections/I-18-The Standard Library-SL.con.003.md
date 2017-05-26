@@ -92,22 +92,22 @@ Text manipulation is a huge topic.
 This section primarily tries to clarify `std::string`'s relation to `char*`, `zstring`, `string_view`, and `gsl::string_span`.
 The important issue of non-ASCII character sets and encodings (e.g., `wchar_t`, Unicode, and UTF-8) will be covered elsewhere.
 
-See also [regular expressions](I-18-The Standard Library-SL.io.050.md#SS-regex).
+See also [regular expressions](I-18-The%20Standard%20Library-SL.io.050.md#SS-regex).
 
 Here, we use "sequence of characters" or "string" to refer to a sequence of characters meant to be read as text (somehow, eventually).
 We don't consider 
 
 String summary:
 
-* [SL.str.1: Use `std::string` to own character sequences](I-18-The Standard Library-SL.str.001.md#Rstr-string)
-* [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](I-18-The Standard Library-SL.str.002.md#Rstr-view)
-* [SL.str.3: Use `zstring` or `czstring` to refer to a C-style, zero-terminated, sequence of characters](I-18-The Standard Library-SL.str.003.md#Rstr-zstring)
-* [SL.str.4: Use `char*` to refer to a single character](I-18-The Standard Library-SL.str.004.md#Rstr-char*)
-* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](I-18-The Standard Library-Sl.str.005.md#Rstr-byte)
+* [SL.str.1: Use `std::string` to own character sequences](I-18-The%20Standard%20Library-SL.str.001.md#Rstr-string)
+* [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](I-18-The%20Standard%20Library-SL.str.002.md#Rstr-view)
+* [SL.str.3: Use `zstring` or `czstring` to refer to a C-style, zero-terminated, sequence of characters](I-18-The%20Standard%20Library-SL.str.003.md#Rstr-zstring)
+* [SL.str.4: Use `char*` to refer to a single character](I-18-The%20Standard%20Library-SL.str.004.md#Rstr-char*)
+* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](I-18-The%20Standard%20Library-Sl.str.005.md#Rstr-byte)
 
-* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations](I-18-The Standard Library-Sl.str.010.md#Rstr-locale)
-* [Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](I-18-The Standard Library-Sl.str.011.md#Rstr-span)
-* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](I-18-The Standard Library-Sl.str.012.md#Rstr-s)
+* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations](I-18-The%20Standard%20Library-Sl.str.010.md#Rstr-locale)
+* [Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](I-18-The%20Standard%20Library-Sl.str.011.md#Rstr-span)
+* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](I-18-The%20Standard%20Library-Sl.str.012.md#Rstr-s)
 
 See also
 

@@ -578,7 +578,7 @@ Now `Named` has a default constructor, a destructor, and efficient copy and move
 
 ##### Enforcement
 
-In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](S-07-Constructors, assignments, and destructors.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
+In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
 
 ### <a name="Cr-list"></a>If a class is a container, give it an initializer-list constructor
 

@@ -2,7 +2,7 @@
 
 ##### Reason
 
-A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](I-07-Constructors, assignments, and destructors-C.035.md#Rc-dtor-virtual).
+A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.035.md#Rc-dtor-virtual).
 
 ##### Example, bad
 

@@ -17,7 +17,7 @@ void f(int n)
 ```
 ##### Note
 
-This example not only violates the [no naked `new` rule](I-10-Expressions and Statements-ES.060.md#Res-new) as in the previous example, it has many more problems.
+This example not only violates the [no naked `new` rule](I-10-Expressions%20and%20Statements-ES.060.md#Res-new) as in the previous example, it has many more problems.
 
 ##### Enforcement
 

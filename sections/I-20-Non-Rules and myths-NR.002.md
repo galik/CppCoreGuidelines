@@ -69,7 +69,7 @@ int index2(const char* p)
 
 ```
 Note that we (deliberately) violated the rule against uninitialized variables because this style commonly leads to that.
-Also, this style is a temptation to use the [goto exit](I-20-Non-Rules and myths-NR.006.md#Rnr-goto-exit) non-rule.
+Also, this style is a temptation to use the [goto exit](I-20-Non-Rules%20and%20myths-NR.006.md#Rnr-goto-exit) non-rule.
 
 ##### Alternative
 

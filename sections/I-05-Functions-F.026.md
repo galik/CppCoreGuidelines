@@ -4,7 +4,7 @@
 
 Using `unique_ptr` is the cheapest way to pass a pointer safely.
 
-See also [C.50](I-07-Constructors, assignments, and destructors-C.050.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
+See also [C.50](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.050.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
 
 ##### Example
 

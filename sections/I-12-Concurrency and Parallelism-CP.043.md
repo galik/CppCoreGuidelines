@@ -32,7 +32,7 @@ void do_something() // bad
 }
 
 ```
-But that compromises safety and violates the [use RAII](I-12-Concurrency and Parallelism-CP.020.md#Rconc-raii) rule.
+But that compromises safety and violates the [use RAII](I-12-Concurrency%20and%20Parallelism-CP.020.md#Rconc-raii) rule.
 Instead, add a block for the critical section:
 
 ```cpp

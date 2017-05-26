@@ -4,7 +4,7 @@
 
 If you can't do a good job at recovering, at least you can get out before too much consequential damage is done.
 
-See also [Simulating RAII](I-13-Error handling-E.025.md#Re-no-throw-raii).
+See also [Simulating RAII](I-13-Error%20handling-E.025.md#Re-no-throw-raii).
 
 ##### Note
 

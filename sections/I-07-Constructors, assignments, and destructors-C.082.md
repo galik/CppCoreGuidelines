@@ -40,7 +40,7 @@ public:
 ```
 Note that calling a specific explicitly qualified function is not a virtual call even if the function is `virtual`.
 
-**See also** [factory functions](I-07-Constructors, assignments, and destructors-C.050.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
+**See also** [factory functions](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.050.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
 
 ##### Note
 

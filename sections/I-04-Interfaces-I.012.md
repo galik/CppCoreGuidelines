@@ -21,7 +21,7 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](I-23-Guideline support library.md#S-gsl).
+`not_null` is defined in the [guideline support library](I-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Note
 

@@ -28,7 +28,7 @@ void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
 }
 
 ```
-Both cases are an error under the [`sharedptrparam` guideline](I-09-Resource management-R.030.md#Rr-smartptrparam):
+Both cases are an error under the [`sharedptrparam` guideline](I-09-Resource%20management-R.030.md#Rr-smartptrparam):
 `p` is a `Shared_ptr`, but nothing about its sharedness is used here and passing it by value is a silent pessimization;
 these functions should accept a smart pointer only if they need to participate in the widget's lifetime management. Otherwise they should accept a `widget*`, if it can be `nullptr`. Otherwise, and ideally, the function should accept a `widget&`.
 These smart pointers match the `Shared_ptr` concept, so these guideline enforcement rules work on them out of the box and expose this common pessimization.

@@ -16,9 +16,9 @@ void f()
 }
 
 ```
-**See also**: [The raw pointer rule](I-09-Resource management-R.003.md#Rr-ptr)
+**See also**: [The raw pointer rule](I-09-Resource%20management-R.003.md#Rr-ptr)
 
 ##### Enforcement
 
-See [the raw pointer rule](I-09-Resource management-R.003.md#Rr-ptr)
+See [the raw pointer rule](I-09-Resource%20management-R.003.md#Rr-ptr)
 

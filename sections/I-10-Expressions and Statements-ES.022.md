@@ -35,7 +35,7 @@ This would be fine if there was a default initialization for `SomeLargeType` tha
 Otherwise, a programmer might very well wonder if every possible path through the maze of conditions has been covered.
 If not, we have a "use before set" bug. This is a maintenance trap.
 
-For initializers of moderate complexity, including for `const` variables, consider using a lambda to express the initializer; see [ES.28](I-10-Expressions and Statements-ES.028.md#Res-lambda-init).
+For initializers of moderate complexity, including for `const` variables, consider using a lambda to express the initializer; see [ES.28](I-10-Expressions%20and%20Statements-ES.028.md#Res-lambda-init).
 
 ##### Enforcement
 

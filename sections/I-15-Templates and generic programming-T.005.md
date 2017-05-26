@@ -23,7 +23,7 @@ class ConcreteCommand : public Command {
 ##### Example
 
 Dynamic helps static: Offer a generic, comfortable, statically bound interface, but internally dispatch dynamically, so you offer a uniform object layout.
-Examples include type erasure as with `std::shared_ptr`'s deleter (but [don't overuse type erasure](I-15-Templates and generic programming-T.049.md#Rt-erasure)).
+Examples include type erasure as with `std::shared_ptr`'s deleter (but [don't overuse type erasure](I-15-Templates%20and%20generic%20programming-T.049.md#Rt-erasure)).
 
 ##### Note
 
@@ -52,21 +52,21 @@ This section assumes concept support
 
 Concept use rule summary:
 
-* [T.10: Specify concepts for all template arguments](I-15-Templates and generic programming-T.010.md#Rt-concepts)
-* [T.11: Whenever possible use standard concepts](I-15-Templates and generic programming-T.011.md#Rt-std-concepts)
-* [T.12: Prefer concept names over `auto`](I-15-Templates and generic programming-T.012.md#Rt-auto)
-* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](I-15-Templates and generic programming-T.013.md#Rt-shorthand)
+* [T.10: Specify concepts for all template arguments](I-15-Templates%20and%20generic%20programming-T.010.md#Rt-concepts)
+* [T.11: Whenever possible use standard concepts](I-15-Templates%20and%20generic%20programming-T.011.md#Rt-std-concepts)
+* [T.12: Prefer concept names over `auto`](I-15-Templates%20and%20generic%20programming-T.012.md#Rt-auto)
+* [T.13: Prefer the shorthand notation for simple, single-type argument concepts](I-15-Templates%20and%20generic%20programming-T.013.md#Rt-shorthand)
 * ???
 
 Concept definition rule summary:
 
-* [T.20: Avoid "concepts" without meaningful semantics](I-15-Templates and generic programming-T.020.md#Rt-low)
+* [T.20: Avoid "concepts" without meaningful semantics](I-15-Templates%20and%20generic%20programming-T.020.md#Rt-low)
 * [T.21: Require a complete set of operations for a concept](#Rt-complete)
-* [T.22: Specify axioms for concepts](I-15-Templates and generic programming-T.022.md#Rt-axiom)
-* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](I-15-Templates and generic programming-T.023.md#Rt-refine)
-* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](I-15-Templates and generic programming-T.024.md#Rt-tag)
-* [T.25: Avoid complimentary constraints](I-15-Templates and generic programming-T.025.md#Rt-not)
-* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](I-15-Templates and generic programming-T.026.md#Rt-use)
+* [T.22: Specify axioms for concepts](I-15-Templates%20and%20generic%20programming-T.022.md#Rt-axiom)
+* [T.23: Differentiate a refined concept from its more general case by adding new use patterns](I-15-Templates%20and%20generic%20programming-T.023.md#Rt-refine)
+* [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](I-15-Templates%20and%20generic%20programming-T.024.md#Rt-tag)
+* [T.25: Avoid complimentary constraints](I-15-Templates%20and%20generic%20programming-T.025.md#Rt-not)
+* [T.26: Prefer to define concepts in terms of use-patterns rather than simple syntax](I-15-Templates%20and%20generic%20programming-T.026.md#Rt-use)
 * ???
 
 ## <a name="SS-concept-use"></a>T.con-use: Concept use

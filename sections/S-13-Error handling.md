@@ -20,31 +20,31 @@ The rules are designed to help avoid several kinds of errors:
 
 Error-handling rule summary:
 
-* [E.1: Develop an error-handling strategy early in a design](S-13-Error handling.md#Re-design)
-* [E.2: Throw an exception to signal that a function can't perform its assigned task](S-13-Error handling.md#Re-throw)
-* [E.3: Use exceptions for error handling only](S-13-Error handling.md#Re-errors)
-* [E.4: Design your error-handling strategy around invariants](S-13-Error handling.md#Re-design-invariants)
-* [E.5: Let a constructor establish an invariant, and throw if it cannot](S-13-Error handling.md#Re-invariant)
-* [E.6: Use RAII to prevent leaks](S-13-Error handling.md#Re-raii)
-* [E.7: State your preconditions](S-13-Error handling.md#Re-precondition)
-* [E.8: State your postconditions](S-13-Error handling.md#Re-postcondition)
+* [E.1: Develop an error-handling strategy early in a design](S-13-Error%20handling.md#Re-design)
+* [E.2: Throw an exception to signal that a function can't perform its assigned task](S-13-Error%20handling.md#Re-throw)
+* [E.3: Use exceptions for error handling only](S-13-Error%20handling.md#Re-errors)
+* [E.4: Design your error-handling strategy around invariants](S-13-Error%20handling.md#Re-design-invariants)
+* [E.5: Let a constructor establish an invariant, and throw if it cannot](S-13-Error%20handling.md#Re-invariant)
+* [E.6: Use RAII to prevent leaks](S-13-Error%20handling.md#Re-raii)
+* [E.7: State your preconditions](S-13-Error%20handling.md#Re-precondition)
+* [E.8: State your postconditions](S-13-Error%20handling.md#Re-postcondition)
 
-* [E.12: Use `noexcept` when exiting a function because of a `throw` is impossible or unacceptable](S-13-Error handling.md#Re-noexcept)
-* [E.13: Never throw while being the direct owner of an object](S-13-Error handling.md#Re-never-throw)
-* [E.14: Use purpose-designed user-defined types as exceptions (not built-in types)](S-13-Error handling.md#Re-exception-types)
-* [E.15: Catch exceptions from a hierarchy by reference](S-13-Error handling.md#Re-exception-ref)
-* [E.16: Destructors, deallocation, and `swap` must never fail](S-13-Error handling.md#Re-never-fail)
-* [E.17: Don't try to catch every exception in every function](S-13-Error handling.md#Re-not-always)
-* [E.18: Minimize the use of explicit `try`/`catch`](S-13-Error handling.md#Re-catch)
-* [E.19: Use a `final_action` object to express cleanup if no suitable resource handle is available](S-13-Error handling.md#Re-finally)
+* [E.12: Use `noexcept` when exiting a function because of a `throw` is impossible or unacceptable](S-13-Error%20handling.md#Re-noexcept)
+* [E.13: Never throw while being the direct owner of an object](S-13-Error%20handling.md#Re-never-throw)
+* [E.14: Use purpose-designed user-defined types as exceptions (not built-in types)](S-13-Error%20handling.md#Re-exception-types)
+* [E.15: Catch exceptions from a hierarchy by reference](S-13-Error%20handling.md#Re-exception-ref)
+* [E.16: Destructors, deallocation, and `swap` must never fail](S-13-Error%20handling.md#Re-never-fail)
+* [E.17: Don't try to catch every exception in every function](S-13-Error%20handling.md#Re-not-always)
+* [E.18: Minimize the use of explicit `try`/`catch`](S-13-Error%20handling.md#Re-catch)
+* [E.19: Use a `final_action` object to express cleanup if no suitable resource handle is available](S-13-Error%20handling.md#Re-finally)
 
-* [E.25: If you can't throw exceptions, simulate RAII for resource management](S-13-Error handling.md#Re-no-throw-raii)
-* [E.26: If you can't throw exceptions, consider failing fast](S-13-Error handling.md#Re-no-throw-crash)
-* [E.27: If you can't throw exceptions, use error codes systematically](S-13-Error handling.md#Re-no-throw-codes)
-* [E.28: Avoid error handling based on global state (e.g. `errno`)](S-13-Error handling.md#Re-no-throw)
+* [E.25: If you can't throw exceptions, simulate RAII for resource management](S-13-Error%20handling.md#Re-no-throw-raii)
+* [E.26: If you can't throw exceptions, consider failing fast](S-13-Error%20handling.md#Re-no-throw-crash)
+* [E.27: If you can't throw exceptions, use error codes systematically](S-13-Error%20handling.md#Re-no-throw-codes)
+* [E.28: Avoid error handling based on global state (e.g. `errno`)](S-13-Error%20handling.md#Re-no-throw)
 
-* [E.30: Don't use exception specifications](S-13-Error handling.md#Re-specifications)
-* [E.31: Properly order your `catch`-clauses](S-13-Error handling.md#Re_catch)
+* [E.30: Don't use exception specifications](S-13-Error%20handling.md#Re-specifications)
+* [E.31: Properly order your `catch`-clauses](S-13-Error%20handling.md#Re_catch)
 
 ### <a name="Re-design"></a>E.1: Develop an error-handling strategy early in a design
 
@@ -98,7 +98,7 @@ However, that's a bit circular because "what is exceptional?"
 Examples:
 
 * A precondition that cannot be met
-* A constructor that cannot construct an object (failure to establish its class's [invariant](S-06-Classes and Class Hierarchies.md#Rc-struct))
+* A constructor that cannot construct an object (failure to establish its class's [invariant](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-struct))
 * An out-of-range error (e.g., `v[v.size()] = 7`)
 * Inability to acquire a resource (e.g., the network is down)
 
@@ -113,13 +113,13 @@ Don't use a `throw` as simply an alternative way of returning a value from a fun
 
 Some systems, such as hard-real time systems require a guarantee that an action is taken in a (typically short) constant maximum time known before execution starts. Such systems can use exceptions only if there is tool support for accurately predicting the maximum time to recover from a `throw`.
 
-**See also**: [RAII](S-13-Error handling.md#Re-raii)
+**See also**: [RAII](S-13-Error%20handling.md#Re-raii)
 
 **See also**: [discussion](S-28-Discussion.md#Sd-noexcept)
 
 ##### Note
 
-Before deciding that you cannot afford or don't like exception-based error handling, have a look at the [alternatives](S-13-Error handling.md#Re-no-throw-raii);
+Before deciding that you cannot afford or don't like exception-based error handling, have a look at the [alternatives](S-13-Error%20handling.md#Re-no-throw-raii);
 they have their own complexities and problems.
 Also, as far as possible, measure before making claims about efficiency.
 
@@ -162,7 +162,7 @@ To use an object it must be in a valid state (defined formally or informally by 
 
 ##### Note
 
-An [invariant](S-06-Classes and Class Hierarchies.md#Rc-struct) is logical condition for the members of an object that a constructor must establish for the public member functions to assume.
+An [invariant](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-struct) is logical condition for the members of an object that a constructor must establish for the public member functions to assume.
 
 ##### Enforcement
 
@@ -196,7 +196,7 @@ The class invariant - here stated as a comment - is established by the construct
 `new` throws if it cannot allocate the required memory.
 The operators, notably the subscript operator, relies on the invariant.
 
-**See also**: [If a constructor cannot construct a valid object, throw an exception](S-07-Constructors, assignments, and destructors.md#Rc-throw)
+**See also**: [If a constructor cannot construct a valid object, throw an exception](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-throw)
 
 ##### Enforcement
 
@@ -278,7 +278,7 @@ That's even simpler and safer, and often more efficient.
 ##### Note
 
 If there is no obvious resource handle and for some reason defining a proper RAII object/handle is infeasible,
-as a last resort, cleanup actions can be represented by a [`final_action`](S-13-Error handling.md#Re-finally) object.
+as a last resort, cleanup actions can be represented by a [`final_action`](S-13-Error%20handling.md#Re-finally) object.
 
 ##### Note
 
@@ -379,7 +379,7 @@ That is, I consider memory exhaustion a serious design error (on par with hardwa
 
 ##### Note
 
-Do not use traditional [exception-specifications](S-13-Error handling.md#Re-specifications).
+Do not use traditional [exception-specifications](S-13-Error%20handling.md#Re-specifications).
 
 ##### See also
 
@@ -429,7 +429,7 @@ void no_leak_simplified(int x)
 
 If you have local "things" that requires cleanup, but is not represented by an object with a destructor, such cleanup must
 also be done before a `throw`.
-Sometimes, [`finally()`](S-13-Error handling.md#Re-finally) can make such unsystematic cleanup a bit more manageable.
+Sometimes, [`finally()`](S-13-Error%20handling.md#Re-finally) can make such unsystematic cleanup a bit more manageable.
 
 ### <a name="Re-exception-types"></a>E.14: Use purpose-designed user-defined types as exceptions (not built-in types)
 
@@ -546,7 +546,7 @@ of - typically better still - a `const` reference:
 catch (const exception& e) { /* ... */ }
 
 ```
-Most handlers do not modify their exception and in general we [recommend use of `const`](S-10-Expressions and Statements.md#Res-const).
+Most handlers do not modify their exception and in general we [recommend use of `const`](S-10-Expressions%20and%20Statements.md#Res-const).
 
 ##### Enforcement
 
@@ -604,7 +604,7 @@ Catch such operations that are not `noexcept`.
 
 Catching an exception in a function that cannot take a meaningful recovery action leads to complexity and waste.
 Let an exception propagate until it reaches a function that can handle it.
-Let cleanup actions on the unwinding path be handled by [RAII](S-13-Error handling.md#Re-raii).
+Let cleanup actions on the unwinding path be handled by [RAII](S-13-Error%20handling.md#Re-raii).
 
 ##### Example, don't
 
@@ -666,8 +666,8 @@ void f2(zstring s)
 ```
 ##### Alternatives
 
-* proper resource handles and [RAII](S-13-Error handling.md#Re-raii)
-* [`finally`](S-13-Error handling.md#Re-finally)
+* proper resource handles and [RAII](S-13-Error%20handling.md#Re-raii)
+* [`finally`](S-13-Error%20handling.md#Re-finally)
 
 ##### Enforcement
 
@@ -693,7 +693,7 @@ void f(int n)
 ##### Note
 
 `finally` is not as messy as `try`/`catch`, but it is still ad-hoc.
-Prefer [proper resource management objects](S-13-Error handling.md#Re-raii).
+Prefer [proper resource management objects](S-13-Error%20handling.md#Re-raii).
 Consider `finally` a last resort.
 
 ##### Note
@@ -709,7 +709,7 @@ Heuristic: Detect `goto exit;`
 
 ##### Reason
 
-Even without exceptions, [RAII](S-13-Error handling.md#Re-raii) is usually the best and most systematic way of dealing with resources.
+Even without exceptions, [RAII](S-13-Error%20handling.md#Re-raii) is usually the best and most systematic way of dealing with resources.
 
 ##### Note
 
@@ -727,13 +727,13 @@ Some hard real-time systems are an example: An operation has to be completed wit
 In the absence of appropriate time estimation tools, this is hard to guarantee for exceptions.
 Such systems (e.g. flight control software) typically also ban the use of dynamic (heap) memory.
 
-So, the primary guideline for error handling is "use exceptions and [RAII](S-13-Error handling.md#Re-raii)."
+So, the primary guideline for error handling is "use exceptions and [RAII](S-13-Error%20handling.md#Re-raii)."
 This section deals with the cases where you either do not have an efficient implementation of exceptions,
 or have such a rat's nest of old-style code
 (e.g., lots of pointers, ill-defined ownership, and lots of unsystematic error handling based on tests of error codes)
 that it is infeasible to introduce simple and systematic exception handling.
 
-Before condemning exceptions or complaining too much about their cost, consider examples of the use of [error codes](S-13-Error handling.md#Re-no-throw-codes).
+Before condemning exceptions or complaining too much about their cost, consider examples of the use of [error codes](S-13-Error%20handling.md#Re-no-throw-codes).
 Consider the cost and complexity of the use of error codes.
 If performance is your worry, measure.
 
@@ -776,7 +776,7 @@ Possible (only) for specific versions of this idea: e.g., test for systematic te
 
 If you can't do a good job at recovering, at least you can get out before too much consequential damage is done.
 
-See also [Simulating RAII](S-13-Error handling.md#Re-no-throw-raii).
+See also [Simulating RAII](S-13-Error%20handling.md#Re-no-throw-raii).
 
 ##### Note
 
@@ -823,7 +823,7 @@ Awkward
 
 Systematic use of any error-handling strategy minimizes the chance of forgetting to handle an error.
 
-See also [Simulating RAII](S-13-Error handling.md#Re-no-throw-raii).
+See also [Simulating RAII](S-13-Error%20handling.md#Re-no-throw-raii).
 
 ##### Note
 
@@ -855,7 +855,7 @@ void user()
 }
 
 ```
-This approach fits with [simulated RAII resource management](S-13-Error handling.md#Re-no-throw-raii).
+This approach fits with [simulated RAII resource management](S-13-Error%20handling.md#Re-no-throw-raii).
 The `valid()` function could return an `error_indicator` (e.g. a member of an `error_indicator` enumeration).
 
 ##### Example
@@ -972,10 +972,10 @@ exit:
 
 ```
 The larger the function, the more tempting this technique becomes.
-`finally` can [ease the pain a bit](S-13-Error handling.md#Re-finally).
+`finally` can [ease the pain a bit](S-13-Error%20handling.md#Re-finally).
 Also, the larger the program becomes the harder it is to apply an error-indicator-based error handling strategy systematically.
 
-We [prefer exception-based error handling](S-13-Error handling.md#Re-throw) and recommend [keeping functions short](S-05-Functions.md#Rf-single).
+We [prefer exception-based error handling](S-13-Error%20handling.md#Re-throw) and recommend [keeping functions short](S-05-Functions.md#Rf-single).
 
 **See also**: [Discussion](#Sd-???).
 
@@ -992,7 +992,7 @@ Awkward.
 Global state is hard to manage and it is easy to forget to check it.
 When did you last test the return value of `printf()`?
 
-See also [Simulating RAII](S-13-Error handling.md#Re-no-throw-raii).
+See also [Simulating RAII](S-13-Error%20handling.md#Re-no-throw-raii).
 
 ##### Example, bad
 
@@ -1050,7 +1050,7 @@ For example, see [Stroustrup94](S-31-Bibliography.md#Stroustrup94).
 
 ##### Note
 
-If no exception may be thrown, use [`noexcept`](S-13-Error handling.md#Re-noexcept) or its equivalent `throw()`.
+If no exception may be thrown, use [`noexcept`](S-13-Error%20handling.md#Re-noexcept) or its equivalent `throw()`.
 
 ##### Enforcement
 

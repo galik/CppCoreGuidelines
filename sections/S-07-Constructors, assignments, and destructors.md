@@ -19,59 +19,59 @@ By default, C++ treats classes as value-like types, but not all types are value-
 
 Set of default operations rules:
 
-* [C.20: If you can avoid defining any default operations, do](S-07-Constructors, assignments, and destructors.md#Rc-zero)
-* [C.21: If you define or `=delete` any default operation, define or `=delete` them all](S-07-Constructors, assignments, and destructors.md#Rc-five)
-* [C.22: Make default operations consistent](S-07-Constructors, assignments, and destructors.md#Rc-matched)
+* [C.20: If you can avoid defining any default operations, do](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-zero)
+* [C.21: If you define or `=delete` any default operation, define or `=delete` them all](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-five)
+* [C.22: Make default operations consistent](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-matched)
 
 Destructor rules:
 
-* [C.30: Define a destructor if a class needs an explicit action at object destruction](S-07-Constructors, assignments, and destructors.md#Rc-dtor)
-* [C.31: All resources acquired by a class must be released by the class's destructor](S-07-Constructors, assignments, and destructors.md#Rc-dtor-release)
-* [C.32: If a class has a raw pointer (`T*`) or reference (`T&`), consider whether it might be owning](S-07-Constructors, assignments, and destructors.md#Rc-dtor-ptr)
-* [C.33: If a class has an owning pointer member, define or `=delete` a destructor](S-07-Constructors, assignments, and destructors.md#Rc-dtor-ptr2)
-* [C.34: If a class has an owning reference member, define or `=delete` a destructor](S-07-Constructors, assignments, and destructors.md#Rc-dtor-ref)
-* [C.35: A base class with a virtual function needs a virtual destructor](S-07-Constructors, assignments, and destructors.md#Rc-dtor-virtual)
-* [C.36: A destructor may not fail](S-07-Constructors, assignments, and destructors.md#Rc-dtor-fail)
-* [C.37: Make destructors `noexcept`](S-07-Constructors, assignments, and destructors.md#Rc-dtor-noexcept)
+* [C.30: Define a destructor if a class needs an explicit action at object destruction](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor)
+* [C.31: All resources acquired by a class must be released by the class's destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-release)
+* [C.32: If a class has a raw pointer (`T*`) or reference (`T&`), consider whether it might be owning](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-ptr)
+* [C.33: If a class has an owning pointer member, define or `=delete` a destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-ptr2)
+* [C.34: If a class has an owning reference member, define or `=delete` a destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-ref)
+* [C.35: A base class with a virtual function needs a virtual destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-virtual)
+* [C.36: A destructor may not fail](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-fail)
+* [C.37: Make destructors `noexcept`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-noexcept)
 
 Constructor rules:
 
-* [C.40: Define a constructor if a class has an invariant](S-07-Constructors, assignments, and destructors.md#Rc-ctor)
-* [C.41: A constructor should create a fully initialized object](S-07-Constructors, assignments, and destructors.md#Rc-complete)
-* [C.42: If a constructor cannot construct a valid object, throw an exception](S-07-Constructors, assignments, and destructors.md#Rc-throw)
-* [C.43: Ensure that a value type class has a default constructor](S-07-Constructors, assignments, and destructors.md#Rc-default0)
-* [C.44: Prefer default constructors to be simple and non-throwing](S-07-Constructors, assignments, and destructors.md#Rc-default00)
-* [C.45: Don't define a default constructor that only initializes data members; use member initializers instead](S-07-Constructors, assignments, and destructors.md#Rc-default)
-* [C.46: By default, declare single-argument constructors `explicit`](S-07-Constructors, assignments, and destructors.md#Rc-explicit)
-* [C.47: Define and initialize member variables in the order of member declaration](S-07-Constructors, assignments, and destructors.md#Rc-order)
-* [C.48: Prefer in-class initializers to member initializers in constructors for constant initializers](S-07-Constructors, assignments, and destructors.md#Rc-in-class-initializer)
-* [C.49: Prefer initialization to assignment in constructors](S-07-Constructors, assignments, and destructors.md#Rc-initialize)
-* [C.50: Use a factory function if you need "virtual behavior" during initialization](S-07-Constructors, assignments, and destructors.md#Rc-factory)
-* [C.51: Use delegating constructors to represent common actions for all constructors of a class](S-07-Constructors, assignments, and destructors.md#Rc-delegating)
-* [C.52: Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization](S-07-Constructors, assignments, and destructors.md#Rc-inheriting)
+* [C.40: Define a constructor if a class has an invariant](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-ctor)
+* [C.41: A constructor should create a fully initialized object](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-complete)
+* [C.42: If a constructor cannot construct a valid object, throw an exception](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-throw)
+* [C.43: Ensure that a value type class has a default constructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-default0)
+* [C.44: Prefer default constructors to be simple and non-throwing](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-default00)
+* [C.45: Don't define a default constructor that only initializes data members; use member initializers instead](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-default)
+* [C.46: By default, declare single-argument constructors `explicit`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-explicit)
+* [C.47: Define and initialize member variables in the order of member declaration](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-order)
+* [C.48: Prefer in-class initializers to member initializers in constructors for constant initializers](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-in-class-initializer)
+* [C.49: Prefer initialization to assignment in constructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-initialize)
+* [C.50: Use a factory function if you need "virtual behavior" during initialization](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-factory)
+* [C.51: Use delegating constructors to represent common actions for all constructors of a class](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-delegating)
+* [C.52: Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-inheriting)
 
 Copy and move rules:
 
-* [C.60: Make copy assignment non-`virtual`, take the parameter by `const&`, and return by non-`const&`](S-07-Constructors, assignments, and destructors.md#Rc-copy-assignment)
-* [C.61: A copy operation should copy](S-07-Constructors, assignments, and destructors.md#Rc-copy-semantic)
-* [C.62: Make copy assignment safe for self-assignment](S-07-Constructors, assignments, and destructors.md#Rc-copy-self)
-* [C.63: Make move assignment non-`virtual`, take the parameter by `&&`, and return by non-`const&`](S-07-Constructors, assignments, and destructors.md#Rc-move-assignment)
-* [C.64: A move operation should move and leave its source in a valid state](S-07-Constructors, assignments, and destructors.md#Rc-move-semantic)
-* [C.65: Make move assignment safe for self-assignment](S-07-Constructors, assignments, and destructors.md#Rc-move-self)
-* [C.66: Make move operations `noexcept`](S-07-Constructors, assignments, and destructors.md#Rc-move-noexcept)
-* [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](S-07-Constructors, assignments, and destructors.md#Rc-copy-virtual)
+* [C.60: Make copy assignment non-`virtual`, take the parameter by `const&`, and return by non-`const&`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-assignment)
+* [C.61: A copy operation should copy](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-semantic)
+* [C.62: Make copy assignment safe for self-assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-self)
+* [C.63: Make move assignment non-`virtual`, take the parameter by `&&`, and return by non-`const&`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-move-assignment)
+* [C.64: A move operation should move and leave its source in a valid state](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-move-semantic)
+* [C.65: Make move assignment safe for self-assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-move-self)
+* [C.66: Make move operations `noexcept`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-move-noexcept)
+* [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-virtual)
 
 Other default operations rules:
 
-* [C.80: Use `=default` if you have to be explicit about using the default semantics](S-07-Constructors, assignments, and destructors.md#Rc-eqdefault)
-* [C.81: Use `=delete` when you want to disable default behavior (without wanting an alternative)](S-07-Constructors, assignments, and destructors.md#Rc-delete)
-* [C.82: Don't call virtual functions in constructors and destructors](S-07-Constructors, assignments, and destructors.md#Rc-ctor-virtual)
-* [C.83: For value-like types, consider providing a `noexcept` swap function](S-07-Constructors, assignments, and destructors.md#Rc-swap)
-* [C.84: A `swap` may not fail](S-07-Constructors, assignments, and destructors.md#Rc-swap-fail)
-* [C.85: Make `swap` `noexcept`](S-07-Constructors, assignments, and destructors.md#Rc-swap-noexcept)
-* [C.86: Make `==` symmetric with respect of operand types and `noexcept`](S-07-Constructors, assignments, and destructors.md#Rc-eq)
-* [C.87: Beware of `==` on base classes](S-07-Constructors, assignments, and destructors.md#Rc-eq-base)
-* [C.89: Make a `hash` `noexcept`](S-07-Constructors, assignments, and destructors.md#Rc-hash)
+* [C.80: Use `=default` if you have to be explicit about using the default semantics](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-eqdefault)
+* [C.81: Use `=delete` when you want to disable default behavior (without wanting an alternative)](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-delete)
+* [C.82: Don't call virtual functions in constructors and destructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-ctor-virtual)
+* [C.83: For value-like types, consider providing a `noexcept` swap function](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-swap)
+* [C.84: A `swap` may not fail](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-swap-fail)
+* [C.85: Make `swap` `noexcept`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-swap-noexcept)
+* [C.86: Make `==` symmetric with respect of operand types and `noexcept`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-eq)
+* [C.87: Beware of `==` on base classes](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-eq-base)
+* [C.89: Make a `hash` `noexcept`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-hash)
 
 ## <a name="SS-defop"></a>C.defop: Default Operations
 
@@ -195,9 +195,9 @@ These operations disagree about copy semantics. This will lead to confusion and 
 ## <a name="SS-dtor"></a>C.dtor: Destructors
 
 "Does this class need a destructor?" is a surprisingly powerful design question.
-For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](S-07-Constructors, assignments, and destructors.md#Rc-zero);
+For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-zero);
 that is, its members can take care of themselves as concerns destruction.
-If the answer is "yes", much of the design of the class follows (see [the rule of five](S-07-Constructors, assignments, and destructors.md#Rc-five)).
+If the answer is "yes", much of the design of the class follows (see [the rule of five](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-five)).
 
 ### <a name="Rc-dtor"></a>C.30: Define a destructor if a class needs an explicit action at object destruction
 
@@ -299,7 +299,7 @@ class X2 {     // bad
 
 ##### Note
 
-What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](S-07-Constructors, assignments, and destructors.md#Rc-dtor-fail).
+What about a sockets that won't close? A destructor, close, or cleanup operation [should never fail](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-fail).
 If it does nevertheless, we have a problem that has no really good solution.
 For starters, the writer of a destructor does not know why the destructor is called and cannot "refuse to act" by throwing an exception.
 See [discussion](S-28-Discussion.md#Sd-never-fail).
@@ -358,7 +358,7 @@ An owned object must be `deleted` upon destruction of the object that owns it.
 ##### Example
 
 A pointer member may represent a resource.
-[A `T*` should not do so](S-09-Resource management.md#Rr-ptr), but in older code, that's common.
+[A `T*` should not do so](S-09-Resource%20management.md#Rr-ptr), but in older code, that's common.
 Consider a `T*` a possible owner and therefore suspect.
 
 ```cpp
@@ -377,7 +377,7 @@ void use(Smart_ptr<int> p1)
 }
 
 ```
-Note that if you define a destructor, you must define or delete [all default operations](S-07-Constructors, assignments, and destructors.md#Rc-five):
+Note that if you define a destructor, you must define or delete [all default operations](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-five):
 
 ```cpp
 template<typename T>
@@ -434,7 +434,7 @@ That would sometimes require non-trivial code changes and may affect ABIs.
 
 A reference member may represent a resource.
 It should not do so, but in older code, that's common.
-See [pointer members and destructors](S-07-Constructors, assignments, and destructors.md#Rc-dtor-ptr).
+See [pointer members and destructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-ptr).
 Also, copying may lead to slicing.
 
 ##### Example, bad
@@ -450,7 +450,7 @@ public:
 };
 
 ```
-The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](S-07-Constructors, assignments, and destructors.md#Rc-dtor-ptr):
+The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-ptr):
 If the `Handle` owns the object referred to by `s` it must have a destructor.
 
 ##### Example
@@ -478,7 +478,7 @@ x = y;     // the default assignment will try *x.s = *y.s
 ```
 That `x = y` is highly suspect.
 Assigning a `Triangle` to a `Circle`?
-Unless `Shape` has its [copy assignment `=deleted`](S-07-Constructors, assignments, and destructors.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
+Unless `Shape` has its [copy assignment `=deleted`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.
 
 ##### Note
 
@@ -615,7 +615,7 @@ If a destructor uses operations that may fail, it can catch exceptions and in so
 
 ##### Reason
 
- [A destructor may not fail](S-07-Constructors, assignments, and destructors.md#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
+ [A destructor may not fail](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-fail). If a destructor tries to exit with an exception, it's a bad design error and the program had better terminate.
 
 ##### Note
 
@@ -685,9 +685,9 @@ Rec2 r2 {"Bar"};
 
 ```
 The `Rec2` constructor is redundant.
-Also, the default for `int` would be better done as a [member initializer](S-07-Constructors, assignments, and destructors.md#Rc-in-class-initializer).
+Also, the default for `int` would be better done as a [member initializer](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-in-class-initializer).
 
-**See also**: [construct valid object](S-07-Constructors, assignments, and destructors.md#Rc-complete) and [constructor throws](S-07-Constructors, assignments, and destructors.md#Rc-throw).
+**See also**: [construct valid object](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-complete) and [constructor throws](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-throw).
 
 ##### Enforcement
 
@@ -726,7 +726,7 @@ Compilers do not read comments.
 
 ##### Exception
 
-If a valid object cannot conveniently be constructed by a constructor, [use a factory function](S-07-Constructors, assignments, and destructors.md#Rc-factory).
+If a valid object cannot conveniently be constructed by a constructor, [use a factory function](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-factory).
 
 ##### Enforcement
 
@@ -735,8 +735,8 @@ If a valid object cannot conveniently be constructed by a constructor, [use a fa
 
 ##### Note
 
-If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](S-07-Constructors, assignments, and destructors.md#Rc-dtor-release).
-The idiom of having constructors acquire resources and destructors release them is called [RAII](S-09-Resource management.md#Rr-raii) ("Resource Acquisition Is Initialization").
+If a constructor acquires a resource (to create a valid object), that resource should be [released by the destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-release).
+The idiom of having constructors acquire resources and destructors release them is called [RAII](S-09-Resource%20management.md#Rr-raii) ("Resource Acquisition Is Initialization").
 
 ### <a name="Rc-throw"></a>C.42: If a constructor cannot construct a valid object, throw an exception
 
@@ -814,18 +814,18 @@ Leaving behind an invalid object and relying on users to consistently check an `
 ##### Exception
 
 There are domains, such as some hard-real-time systems (think airplane controls) where (without additional tool support) exception handling is not sufficiently predictable from a timing perspective.
-There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](S-09-Resource management.md#Rr-raii).
+There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](S-09-Resource%20management.md#Rr-raii).
 
 ##### Alternative
 
 If you feel tempted to use some "post-constructor initialization" or "two-stage initialization" idiom, try not to do that.
-If you really have to, look at [factory functions](S-07-Constructors, assignments, and destructors.md#Rc-factory).
+If you really have to, look at [factory functions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-factory).
 
 ##### Note
 
 One reason people have used `init()` functions rather than doing the initialization work in a constructor has been to avoid code replication.
-[Delegating constructors](S-07-Constructors, assignments, and destructors.md#Rc-delegating) and [default member initialization](S-07-Constructors, assignments, and destructors.md#Rc-in-class-initializer) do that better.
-Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](S-10-Expressions and Statements.md#Res-init)
+[Delegating constructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-delegating) and [default member initialization](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-in-class-initializer) do that better.
+Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](S-10-Expressions%20and%20Statements.md#Res-init)
 
 ##### Enforcement
 
@@ -840,7 +840,7 @@ A default constructor often simplifies the task of defining a suitable [moved-fr
 
 ##### Note
 
-We have not (yet) formally defined [value type](S-06-Classes and Class Hierarchies.md#SS-concrete), but think of it as a class that behaves much as an `int`:
+We have not (yet) formally defined [value type](S-06-Classes%20and%20Class%20Hierarchies.md#SS-concrete), but think of it as a class that behaves much as an `int`:
 it can be copied using `=` and usually compared using `==`.
 It is closely related to the notion of Regular type from [EoP](http://elementsofprogramming.com/) and [the Palo Alto TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
 
@@ -869,7 +869,7 @@ However, most realistic `Date` classes have a "first date" (e.g. January 1, 1970
 class Date {
 public:
     Date(int dd, int mm, int yyyy);
-    Date() = default; // [See also](S-07-Constructors, assignments, and destructors.md#Rc-default)
+    Date() = default; // [See also](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-default)
     // ...
 private:
     int dd = 1;
@@ -1085,7 +1085,7 @@ public:
 Complex z = 10.7;   // unsurprising conversion
 
 ```
-**See also**: [Discussion of implicit conversions](S-07-Constructors, assignments, and destructors.md#Ro-conversion).
+**See also**: [Discussion of implicit conversions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-conversion).
 
 ##### Enforcement
 
@@ -1320,7 +1320,7 @@ public:
 };
 
 ```
-**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](S-07-Constructors, assignments, and destructors.md#Rc-in-class-initializer).
+**See also**: If the "repeated action" is a simple initialization, consider [an in-class member initializer](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-in-class-initializer).
 
 ##### Enforcement
 
@@ -1432,10 +1432,10 @@ Vector& Vector::operator=(const Vector& a)
 }
 
 ```
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](S-07-Constructors, assignments, and destructors.md#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
-See [copy constructor vs. `clone()`](S-07-Constructors, assignments, and destructors.md#Rc-copy-virtual).
+See [copy constructor vs. `clone()`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-virtual).
 
 ##### Enforcement
 
@@ -1553,7 +1553,7 @@ b = b;   // correct and efficient
 ```
 ##### Note
 
-You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](S-07-Constructors, assignments, and destructors.md#Rc-swap)).
+You can handle self-assignment by explicitly testing for self-assignment, but often it is faster and more elegant to cope without such a test (e.g., [using `swap`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-swap)).
 
 ```cpp
 class Foo {
@@ -1599,11 +1599,11 @@ Foo& Foo::operator=(const Foo& a)   // simpler, and probably much better
 
 It is simple and efficient.
 
-**See**: [The rule for copy-assignment](S-07-Constructors, assignments, and destructors.md#Rc-copy-assignment).
+**See**: [The rule for copy-assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-assignment).
 
 ##### Enforcement
 
-Equivalent to what is done for [copy-assignment](S-07-Constructors, assignments, and destructors.md#Rc-copy-assignment).
+Equivalent to what is done for [copy-assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-assignment).
 
 * (Simple) An assignment operator should not be virtual. Here be dragons!
 * (Simple) An assignment operator should return `T&` to enable chaining, not alternatives like `const T&` which interfere with composability and putting objects in containers.
@@ -1692,7 +1692,7 @@ Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
 }
 
 ```
-The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](S-07-Constructors, assignments, and destructors.md#Rc-copy-self) is even more relevant for self-move.
+The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-self) is even more relevant for self-move.
 
 ##### Note
 
@@ -1815,7 +1815,7 @@ It's good to return a smart pointer, but unlike with raw pointers the return typ
 
 ##### Exception
 
-If you need covariant return types, return an `owner<derived*>`. See [C.130](S-07-Constructors, assignments, and destructors.md#Rh-copy).
+If you need covariant return types, return an `owner<derived*>`. See [C.130](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-copy).
 
 ##### Enforcement
 
@@ -1969,7 +1969,7 @@ public:
 ```
 Note that calling a specific explicitly qualified function is not a virtual call even if the function is `virtual`.
 
-**See also** [factory functions](S-07-Constructors, assignments, and destructors.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
+**See also** [factory functions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.
 
 ##### Note
 
@@ -1985,7 +1985,7 @@ However, experience shows that such calls are rarely needed, easily confuse main
 
 ##### Reason
 
-A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](S-13-Error handling.md#Re-never-fail).
+A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](S-13-Error%20handling.md#Re-never-fail).
 
 ##### Example, good
 
@@ -2045,7 +2045,7 @@ This is not just slow, but if a memory allocation occurs for the elements in `tm
 
 ##### Reason
 
- [A `swap` may not fail](S-07-Constructors, assignments, and destructors.md#Rc-swap-fail).
+ [A `swap` may not fail](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-swap-fail).
 If a `swap` tries to exit with an exception, it's a bad design error and the program had better terminate.
 
 ##### Enforcement
@@ -2208,7 +2208,7 @@ Summary of container rules:
 * ???
 * [C.109: If a resource handle has pointer semantics, provide `*` and `->`](#rcon-ptr)
 
-**See also**: [Resources](S-09-Resource management.md#S-resource)
+**See also**: [Resources](S-09-Resource%20management.md#S-resource)
 
 ## <a name="SS-lambdas"></a>C.lambdas: Function objects and lambdas
 
@@ -2221,7 +2221,7 @@ Summary:
 * [F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)](S-05-Functions.md#Rf-capture-vs-overload)
 * [F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms](S-05-Functions.md#Rf-reference-capture)
 * [F.53: Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread](S-05-Functions.md#Rf-value-capture)
-* [ES.28: Use lambdas for complex initialization, especially of `const` variables](S-10-Expressions and Statements.md#Res-lambda-init)
+* [ES.28: Use lambdas for complex initialization, especially of `const` variables](S-10-Expressions%20and%20Statements.md#Res-lambda-init)
 
 ## <a name="SS-hier"></a>C.hier: Class hierarchies (OOP)
 
@@ -2231,39 +2231,39 @@ There are two major uses for hierarchies, often named implementation inheritance
 
 Class hierarchy rule summary:
 
-* [C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)](S-07-Constructors, assignments, and destructors.md#Rh-domain)
-* [C.121: If a base class is used as an interface, make it a pure abstract class](S-07-Constructors, assignments, and destructors.md#Rh-abstract)
-* [C.122: Use abstract classes as interfaces when complete separation of interface and implementation is needed](S-07-Constructors, assignments, and destructors.md#Rh-separation)
+* [C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-domain)
+* [C.121: If a base class is used as an interface, make it a pure abstract class](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-abstract)
+* [C.122: Use abstract classes as interfaces when complete separation of interface and implementation is needed](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-separation)
 
 Designing rules for classes in a hierarchy summary:
 
-* [C.126: An abstract class typically doesn't need a constructor](S-07-Constructors, assignments, and destructors.md#Rh-abstract-ctor)
-* [C.127: A class with a virtual function should have a virtual or protected destructor](S-07-Constructors, assignments, and destructors.md#Rh-dtor)
-* [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](S-07-Constructors, assignments, and destructors.md#Rh-override)
-* [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](S-07-Constructors, assignments, and destructors.md#Rh-kind)
-* [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](S-07-Constructors, assignments, and destructors.md#Rh-copy)
-* [C.131: Avoid trivial getters and setters](S-07-Constructors, assignments, and destructors.md#Rh-get)
-* [C.132: Don't make a function `virtual` without reason](S-07-Constructors, assignments, and destructors.md#Rh-virtual)
-* [C.133: Avoid `protected` data](S-07-Constructors, assignments, and destructors.md#Rh-protected)
-* [C.134: Ensure all non-`const` data members have the same access level](S-07-Constructors, assignments, and destructors.md#Rh-public)
-* [C.135: Use multiple inheritance to represent multiple distinct interfaces](S-07-Constructors, assignments, and destructors.md#Rh-mi-interface)
-* [C.136: Use multiple inheritance to represent the union of implementation attributes](S-07-Constructors, assignments, and destructors.md#Rh-mi-implementation)
-* [C.137: Use `virtual` bases to avoid overly general base classes](S-07-Constructors, assignments, and destructors.md#Rh-vbase)
-* [C.138: Create an overload set for a derived class and its bases with `using`](S-07-Constructors, assignments, and destructors.md#Rh-using)
-* [C.139: Use `final` sparingly](S-07-Constructors, assignments, and destructors.md#Rh-final)
-* [C.140: Do not provide different default arguments for a virtual function and an overrider](S-07-Constructors, assignments, and destructors.md#Rh-virtual-default-arg)
+* [C.126: An abstract class typically doesn't need a constructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-abstract-ctor)
+* [C.127: A class with a virtual function should have a virtual or protected destructor](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-dtor)
+* [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-override)
+* [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-kind)
+* [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-copy)
+* [C.131: Avoid trivial getters and setters](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-get)
+* [C.132: Don't make a function `virtual` without reason](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-virtual)
+* [C.133: Avoid `protected` data](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-protected)
+* [C.134: Ensure all non-`const` data members have the same access level](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-public)
+* [C.135: Use multiple inheritance to represent multiple distinct interfaces](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-mi-interface)
+* [C.136: Use multiple inheritance to represent the union of implementation attributes](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-mi-implementation)
+* [C.137: Use `virtual` bases to avoid overly general base classes](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-vbase)
+* [C.138: Create an overload set for a derived class and its bases with `using`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-using)
+* [C.139: Use `final` sparingly](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-final)
+* [C.140: Do not provide different default arguments for a virtual function and an overrider](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-virtual-default-arg)
 
 Accessing objects in a hierarchy rule summary:
 
-* [C.145: Access polymorphic objects through pointers and references](S-07-Constructors, assignments, and destructors.md#Rh-poly)
-* [C.146: Use `dynamic_cast` where class hierarchy navigation is unavoidable](S-07-Constructors, assignments, and destructors.md#Rh-dynamic_cast)
-* [C.147: Use `dynamic_cast` to a reference type when failure to find the required class is considered an error](S-07-Constructors, assignments, and destructors.md#Rh-ref-cast)
-* [C.148: Use `dynamic_cast` to a pointer type when failure to find the required class is considered a valid alternative](S-07-Constructors, assignments, and destructors.md#Rh-ptr-cast)
-* [C.149: Use `unique_ptr` or `shared_ptr` to avoid forgetting to `delete` objects created using `new`](S-07-Constructors, assignments, and destructors.md#Rh-smart)
-* [C.150: Use `make_unique()` to construct objects owned by `unique_ptr`s](S-07-Constructors, assignments, and destructors.md#Rh-make_unique)
-* [C.151: Use `make_shared()` to construct objects owned by `shared_ptr`s](S-07-Constructors, assignments, and destructors.md#Rh-make_shared)
-* [C.152: Never assign a pointer to an array of derived class objects to a pointer to its base](S-07-Constructors, assignments, and destructors.md#Rh-array)
-* [C.153: Prefer virtual function to casting](S-07-Constructors, assignments, and destructors.md#Rh-use-virtual)
+* [C.145: Access polymorphic objects through pointers and references](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-poly)
+* [C.146: Use `dynamic_cast` where class hierarchy navigation is unavoidable](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-dynamic_cast)
+* [C.147: Use `dynamic_cast` to a reference type when failure to find the required class is considered an error](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-ref-cast)
+* [C.148: Use `dynamic_cast` to a pointer type when failure to find the required class is considered a valid alternative](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-ptr-cast)
+* [C.149: Use `unique_ptr` or `shared_ptr` to avoid forgetting to `delete` objects created using `new`](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-smart)
+* [C.150: Use `make_unique()` to construct objects owned by `unique_ptr`s](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-make_unique)
+* [C.151: Use `make_shared()` to construct objects owned by `shared_ptr`s](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-make_shared)
+* [C.152: Never assign a pointer to an array of derived class objects to a pointer to its base](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-array)
+* [C.153: Prefer virtual function to casting](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-use-virtual)
 
 ### <a name="Rh-domain"></a>C.120: Use class hierarchies to represent concepts with inherent hierarchical structure (only)
 
@@ -2447,7 +2447,7 @@ Flag abstract classes with constructors.
 
 ##### Reason
 
-A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](S-07-Constructors, assignments, and destructors.md#Rc-dtor-virtual).
+A class with a virtual function is usually (and in general) used via a pointer to base. Usually, the last user has to call delete on a pointer to base, often via a smart pointer to base, so the destructor should be public and virtual. Less commonly, if deletion through a pointer to base is not intended to be supported, the destructor should be protected and nonvirtual; see [C.35](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-dtor-virtual).
 
 ##### Example, bad
 
@@ -2773,7 +2773,7 @@ public:
 };
 
 ```
-Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](S-07-Constructors, assignments, and destructors.md#Rc-copy-virtual).
+Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-copy-virtual).
 
 ##### Enforcement
 
@@ -2811,7 +2811,7 @@ struct Point {
 };
 
 ```
-Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](S-07-Constructors, assignments, and destructors.md#Rc-initialize).
+Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rc-initialize).
 
 ##### Note
 
@@ -2885,8 +2885,8 @@ The protected data has de facto become global to a large body of code.
 
 Protected data often looks tempting to enable arbitrary improvements through derivation.
 Often, what you get is unprincipled changes and errors.
-[Prefer `private` data](S-06-Classes and Class Hierarchies.md#Rc-private) with a well-specified and enforced invariant.
-Alternative, and often better, [keep data out of any class used as an interface](S-07-Constructors, assignments, and destructors.md#Rh-abstract).
+[Prefer `private` data](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-private) with a well-specified and enforced invariant.
+Alternative, and often better, [keep data out of any class used as an interface](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-abstract).
 
 ##### Note
 
@@ -2920,7 +2920,7 @@ Data members in category B should be `private` or `const`. This is because encap
 Most classes are either all A or all B:
 
 * *All public*: If you're writing an aggregate bundle-of-variables without an invariant across those variables, then all the variables should be `public`.
-  [By convention, declare such classes `struct` rather than `class`](S-06-Classes and Class Hierarchies.md#Rc-struct)
+  [By convention, declare such classes `struct` rather than `class`](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-struct)
 * *All private*: If you're writing a type that maintains an invariant, then all the non-`const` variables should be private -- it should be encapsulated.
 
 ##### Exception
@@ -3038,8 +3038,8 @@ Factoring out `Utility` makes sense if many derived classes share significant "i
 ##### Note
 
 Obviously, the example is too "theoretical", but it is hard to find a *small* realistic example.
-`Interface` is the root of an [interface hierarchy](S-07-Constructors, assignments, and destructors.md#Rh-abstract)
-and `Utility` is the root of an [implementation hierarchy](S-07-Constructors, assignments, and destructors.md#Rh-kind).
+`Interface` is the root of an [interface hierarchy](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-abstract)
+and `Utility` is the root of an [implementation hierarchy](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-kind).
 Here is [a slightly more realistic example](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) with an explanation.
 
 ##### Note
@@ -3285,7 +3285,7 @@ void f()
 ##### Note
 
 Like other casts, `dynamic_cast` is overused.
-[Prefer virtual functions to casting](S-07-Constructors, assignments, and destructors.md#Rh-use-virtual).
+[Prefer virtual functions to casting](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-use-virtual).
 Prefer [static polymorphism](#???) to hierarchy navigation where it is possible (no run-time resolution necessary)
 and reasonably convenient.
 
@@ -3389,7 +3389,7 @@ Casting to a reference expresses that you intend to end up with a valid object, 
 
 The `dynamic_cast` conversion allows to test whether a pointer is pointing at a polymorphic object that has a given class in its hierarchy. Since failure to find the class merely returns a null value, it can be tested during run-time. This allows writing code that can choose alternative paths depending on the results.
 
-Contrast with [C.147](S-07-Constructors, assignments, and destructors.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
+Contrast with [C.147](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
 
 ##### Example
 
@@ -3545,7 +3545,7 @@ give a wrong result (especially as a hierarchy is modified during maintenance).
 ```
 ##### Enforcement
 
-See [C.146](S-07-Constructors, assignments, and destructors.md#Rh-dynamic_cast) and ???
+See [C.146](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Rh-dynamic_cast) and ???
 
 ## <a name="SS-overload"></a>C.over: Overloading and overloaded operators
 
@@ -3554,16 +3554,16 @@ You cannot overload function objects.
 
 Overload rule summary:
 
-* [C.160: Define operators primarily to mimic conventional usage](S-07-Constructors, assignments, and destructors.md#Ro-conventional)
-* [C.161: Use nonmember functions for symmetric operators](S-07-Constructors, assignments, and destructors.md#Ro-symmetric)
-* [C.162: Overload operations that are roughly equivalent](S-07-Constructors, assignments, and destructors.md#Ro-equivalent)
-* [C.163: Overload only for operations that are roughly equivalent](S-07-Constructors, assignments, and destructors.md#Ro-equivalent-2)
-* [C.164: Avoid conversion operators](S-07-Constructors, assignments, and destructors.md#Ro-conversion)
-* [C.165: Use `using` for customization points](S-07-Constructors, assignments, and destructors.md#Ro-custom)
-* [C.166: Overload unary `&` only as part of a system of smart pointers and references](S-07-Constructors, assignments, and destructors.md#Ro-address-of)
-* [C.167: Use an operator for an operation with its conventional meaning](S-07-Constructors, assignments, and destructors.md#Ro-overload)
-* [C.168: Define overloaded operators in the namespace of their operands](S-07-Constructors, assignments, and destructors.md#Ro-namespace)
-* [C.170: If you feel like overloading a lambda, use a generic lambda](S-07-Constructors, assignments, and destructors.md#Ro-lambda)
+* [C.160: Define operators primarily to mimic conventional usage](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-conventional)
+* [C.161: Use nonmember functions for symmetric operators](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-symmetric)
+* [C.162: Overload operations that are roughly equivalent](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-equivalent)
+* [C.163: Overload only for operations that are roughly equivalent](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-equivalent-2)
+* [C.164: Avoid conversion operators](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-conversion)
+* [C.165: Use `using` for customization points](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-custom)
+* [C.166: Overload unary `&` only as part of a system of smart pointers and references](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-address-of)
+* [C.167: Use an operator for an operation with its conventional meaning](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-overload)
+* [C.168: Define overloaded operators in the namespace of their operands](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-namespace)
+* [C.170: If you feel like overloading a lambda, use a generic lambda](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-lambda)
 
 ### <a name="Ro-conventional"></a>C.160: Define operators primarily to mimic conventional usage
 
@@ -3584,7 +3584,7 @@ public:
 };
 
 ```
-Here, the conventional semantics is maintained: [Copies compare equal](S-07-Constructors, assignments, and destructors.md#SS-copy).
+Here, the conventional semantics is maintained: [Copies compare equal](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#SS-copy).
 
 ##### Example, bad
 
@@ -3594,8 +3594,8 @@ X operator+(X a, X b) { return a.v - b.v; }   // bad: makes + subtract
 ```
 ##### Note
 
-Non-member operators should be either friends or defined in [the same namespace as their operands](S-07-Constructors, assignments, and destructors.md#Ro-namespace).
-[Binary operators should treat their operands equivalently](S-07-Constructors, assignments, and destructors.md#Ro-symmetric).
+Non-member operators should be either friends or defined in [the same namespace as their operands](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-namespace).
+[Binary operators should treat their operands equivalently](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ro-symmetric).
 
 ##### Enforcement
 
@@ -3878,7 +3878,7 @@ This may be something best avoided.
 
 ##### See also
 
-This is a special case of the rule that [helper functions should be defined in the same namespace as their class](S-06-Classes and Class Hierarchies.md#Rc-helper).
+This is a special case of the rule that [helper functions should be defined in the same namespace as their class](S-06-Classes%20and%20Class%20Hierarchies.md#Rc-helper).
 
 ##### Enforcement
 
@@ -3960,10 +3960,10 @@ A type that is a `union` plus an indicator of which member is currently held is 
 
 Union rule summary:
 
-* [C.180: Use `union`s to save Memory](S-07-Constructors, assignments, and destructors.md#Ru-union)
-* [C.181: Avoid "naked" `union`s](S-07-Constructors, assignments, and destructors.md#Ru-naked)
-* [C.182: Use anonymous `union`s to implement tagged unions](S-07-Constructors, assignments, and destructors.md#Ru-anonymous)
-* [C.183: Don't use a `union` for type punning](S-07-Constructors, assignments, and destructors.md#Ru-pun)
+* [C.180: Use `union`s to save Memory](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-union)
+* [C.181: Avoid "naked" `union`s](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-naked)
+* [C.182: Use anonymous `union`s to implement tagged unions](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-anonymous)
+* [C.183: Don't use a `union` for type punning](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-pun)
 * ???
 
 ### <a name="Ru-union"></a>C.180: Use `union`s to save memory
@@ -3987,7 +3987,7 @@ v.d = 987.654;  // now v holds a double
 cout << v.d << '\n';    // write 987.654
 
 ```
-But heed the warning: [Avoid "naked" `union`s](S-07-Constructors, assignments, and destructors.md#Ru-naked)
+But heed the warning: [Avoid "naked" `union`s](S-07-Constructors%2C%20assignments%2C%20and%20destructors.md#Ru-naked)
 
 ##### Example
 

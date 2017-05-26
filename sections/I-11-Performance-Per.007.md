@@ -91,7 +91,7 @@ The ideal is zero-overhead generalization.
 * Libraries:
 Use libraries with good interfaces.
 If no library is available build one yourself and imitate the interface style from a good library.
-The [standard library](I-18-The Standard Library.md#S-stdlib) is a good first place to look for inspiration.
+The [standard library](I-18-The%20Standard%20Library.md#S-stdlib) is a good first place to look for inspiration.
 * Isolation:
 Isolate your code from messy and/or old style code by providing an interface of your choosing to it.
 This is sometimes called "providing a wrapper" for the useful/necessary but messy code.

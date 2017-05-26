@@ -2,7 +2,7 @@
 
 ##### Reason
 
-Even without exceptions, [RAII](I-13-Error handling-E.006.md#Re-raii) is usually the best and most systematic way of dealing with resources.
+Even without exceptions, [RAII](I-13-Error%20handling-E.006.md#Re-raii) is usually the best and most systematic way of dealing with resources.
 
 ##### Note
 
@@ -20,13 +20,13 @@ Some hard real-time systems are an example: An operation has to be completed wit
 In the absence of appropriate time estimation tools, this is hard to guarantee for exceptions.
 Such systems (e.g. flight control software) typically also ban the use of dynamic (heap) memory.
 
-So, the primary guideline for error handling is "use exceptions and [RAII](I-13-Error handling-E.006.md#Re-raii)."
+So, the primary guideline for error handling is "use exceptions and [RAII](I-13-Error%20handling-E.006.md#Re-raii)."
 This section deals with the cases where you either do not have an efficient implementation of exceptions,
 or have such a rat's nest of old-style code
 (e.g., lots of pointers, ill-defined ownership, and lots of unsystematic error handling based on tests of error codes)
 that it is infeasible to introduce simple and systematic exception handling.
 
-Before condemning exceptions or complaining too much about their cost, consider examples of the use of [error codes](I-13-Error handling-E.027.md#Re-no-throw-codes).
+Before condemning exceptions or complaining too much about their cost, consider examples of the use of [error codes](I-13-Error%20handling-E.027.md#Re-no-throw-codes).
 Consider the cost and complexity of the use of error codes.
 If performance is your worry, measure.
 

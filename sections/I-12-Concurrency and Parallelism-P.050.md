@@ -50,8 +50,8 @@ This section looks at passing messages so that a programmer doesn't have to do e
 
 Message passing rules summary:
 
-* [CP.60: Use a `future` to return a value from a concurrent task](I-12-Concurrency and Parallelism-CP.060.md#Rconc-future)
-* [CP.61: Use a `async()` to spawn a concurrent task](I-12-Concurrency and Parallelism-CP.061.md#Rconc-async)
+* [CP.60: Use a `future` to return a value from a concurrent task](I-12-Concurrency%20and%20Parallelism-CP.060.md#Rconc-future)
+* [CP.61: Use a `async()` to spawn a concurrent task](I-12-Concurrency%20and%20Parallelism-CP.061.md#Rconc-async)
 * message queues
 * messaging libraries
 

@@ -27,5 +27,5 @@ int length(not_null<zstring> p);
 
 `zstring` do not represent ownership.
 
-**See also**: [Support library](I-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](I-23-Guideline%20support%20library.md#S-gsl).
 

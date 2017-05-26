@@ -74,18 +74,18 @@ Leaving behind an invalid object and relying on users to consistently check an `
 ##### Exception
 
 There are domains, such as some hard-real-time systems (think airplane controls) where (without additional tool support) exception handling is not sufficiently predictable from a timing perspective.
-There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](I-09-Resource management-R.001.md#Rr-raii).
+There the `is_valid()` technique must be used. In such cases, check `is_valid()` consistently and immediately to simulate [RAII](I-09-Resource%20management-R.001.md#Rr-raii).
 
 ##### Alternative
 
 If you feel tempted to use some "post-constructor initialization" or "two-stage initialization" idiom, try not to do that.
-If you really have to, look at [factory functions](I-07-Constructors, assignments, and destructors-C.050.md#Rc-factory).
+If you really have to, look at [factory functions](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.050.md#Rc-factory).
 
 ##### Note
 
 One reason people have used `init()` functions rather than doing the initialization work in a constructor has been to avoid code replication.
-[Delegating constructors](I-07-Constructors, assignments, and destructors-C.051.md#Rc-delegating) and [default member initialization](I-07-Constructors, assignments, and destructors-C.048.md#Rc-in-class-initializer) do that better.
-Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](I-10-Expressions and Statements-ES.022.md#Res-init)
+[Delegating constructors](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.051.md#Rc-delegating) and [default member initialization](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.048.md#Rc-in-class-initializer) do that better.
+Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](I-10-Expressions%20and%20Statements-ES.022.md#Res-init)
 
 ##### Enforcement
 

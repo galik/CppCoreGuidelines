@@ -50,7 +50,7 @@ void use2(span<int> p, zstring s, owner<int*> q)
 
 **Also**: Assume that a `T*` obtained from a smart pointer to `T` (e.g., `unique_ptr<T>`) points to a single element.
 
-**See also**: [Support library](I-23-Guideline support library.md#S-gsl).
+**See also**: [Support library](I-23-Guideline%20support%20library.md#S-gsl).
 
 ##### Enforcement
 

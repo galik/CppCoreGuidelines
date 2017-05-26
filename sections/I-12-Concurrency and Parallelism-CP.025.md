@@ -69,7 +69,7 @@ This implies that we cannot safely refer to local objects in `use()` from the th
 ##### Note
 
 Make "immortal threads" globals, put them in an enclosing scope, or put them on the on the free store rather than `detach()`.
-[don't `detach`](I-12-Concurrency and Parallelism-CP.026.md#Rconc-detached_thread).
+[don't `detach`](I-12-Concurrency%20and%20Parallelism-CP.026.md#Rconc-detached_thread).
 
 ##### Note
 
@@ -80,6 +80,6 @@ Because of old code and third party libraries using `std::thread` this rule can 
 Flag uses of `std::thread`:
 
 * Suggest use of `gsl::joining_thread`.
-* Suggest ["exporting ownership"](I-12-Concurrency and Parallelism-CP.026.md#Rconc-detached_thread) to an enclosing scope if it detaches.
+* Suggest ["exporting ownership"](I-12-Concurrency%20and%20Parallelism-CP.026.md#Rconc-detached_thread) to an enclosing scope if it detaches.
 * Seriously warn if it is not obvious whether if joins of detaches.
 

@@ -49,7 +49,7 @@ It's good to return a smart pointer, but unlike with raw pointers the return typ
 
 ##### Exception
 
-If you need covariant return types, return an `owner<derived*>`. See [C.130](I-07-Constructors, assignments, and destructors-C.130.md#Rh-copy).
+If you need covariant return types, return an `owner<derived*>`. See [C.130](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.130.md#Rh-copy).
 
 ##### Enforcement
 

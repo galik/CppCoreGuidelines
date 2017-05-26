@@ -28,7 +28,7 @@ All of this decreases readability and complicates maintenance.
 
 ##### Note
 
-Prefer to place the interface first in a class [see](I-24-Naming and layout rules-NL.016.md#Rl-order).
+Prefer to place the interface first in a class [see](I-24-Naming%20and%20layout%20rules-NL.016.md#Rl-order).
 
 ##### Enforcement
 

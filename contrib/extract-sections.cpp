@@ -434,7 +434,7 @@ int main(int, char* argv[])
 
 		if(cfg.outputs.count(output_type::document))
 		{
-			auto new_pathname = cfg.output_dir + path_separator() + program_name(cfg.pathname);
+			auto new_pathname = cfg.output_dir + path_separator() + "D-" + program_name(cfg.pathname);
 
 			// TODO: Use <filesystem> to makes this more reliable
 			if(new_pathname == cfg.pathname)
@@ -464,7 +464,7 @@ int main(int, char* argv[])
 					auto text = doc.substr(section.second.beg, section.second.end - section.second.beg);
 
 					for(auto const& link: links)
-						replace_all(text, "](#" + link.first + ")", "](S-" + link.second + ".md#" + link.first + ")");
+						replace_all(text, "](#" + link.first + ")", "](S-" + urlencode(link.second) + ".md#" + link.first + ")");
 
 					auto filepath = cfg.output_dir + path_separator() + "S-" + section.second.filename + ".md";
 
@@ -488,7 +488,7 @@ int main(int, char* argv[])
 					auto text = doc.substr(item.second.beg, item.second.end - item.second.beg);
 
 					for(auto const& link: links)
-						replace_all(text, "](#" + link.first + ")", "](I-" + link.second + ".md#" + link.first + ")");
+						replace_all(text, "](#" + link.first + ")", "](I-" + urlencode(link.second) + ".md#" + link.first + ")");
 
 					auto filepath = cfg.output_dir + path_separator() + "I-" + item.second.filename + ".md";
 

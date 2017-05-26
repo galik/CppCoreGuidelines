@@ -35,7 +35,7 @@ Imagine what this would do to a class hierarchy with dozens of member functions 
 ##### Note
 
 In many cases you can provide a stable interface by not parameterizing a base;
-see ["stable base"](I-15-Templates and generic programming-T.084.md#Rt-abi) and [OO and GP](I-15-Templates and generic programming-T.005.md#Rt-generic-oo)
+see ["stable base"](I-15-Templates%20and%20generic%20programming-T.084.md#Rt-abi) and [OO and GP](I-15-Templates%20and%20generic%20programming-T.005.md#Rt-generic-oo)
 
 ##### Enforcement
 

@@ -21,7 +21,7 @@ void f(int n)
 ```
 There can be code in the `...` part that causes the `delete` never to happen.
 
-**See also**: [R: Resource management](I-09-Resource management.md#S-resource).
+**See also**: [R: Resource management](I-09-Resource%20management.md#S-resource).
 
 ##### Enforcement
 

@@ -22,7 +22,7 @@ Data members in category B should be `private` or `const`. This is because encap
 Most classes are either all A or all B:
 
 * *All public*: If you're writing an aggregate bundle-of-variables without an invariant across those variables, then all the variables should be `public`.
-  [By convention, declare such classes `struct` rather than `class`](I-06-Classes and Class Hierarchies-C.002.md#Rc-struct)
+  [By convention, declare such classes `struct` rather than `class`](I-06-Classes%20and%20Class%20Hierarchies-C.002.md#Rc-struct)
 * *All private*: If you're writing a type that maintains an invariant, then all the non-`const` variables should be private -- it should be encapsulated.
 
 ##### Exception

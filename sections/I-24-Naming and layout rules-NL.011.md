@@ -26,7 +26,7 @@ auto interval = 100ms;  // using <chrono>
 ```
 ##### Note
 
-Literals should not be sprinkled all over the code as ["magic constants"](I-10-Expressions and Statements-ES.045.md#Res-magic),
+Literals should not be sprinkled all over the code as ["magic constants"](I-10-Expressions%20and%20Statements-ES.045.md#Res-magic),
 but it is still a good idea to make them readable where they are defined.
 It is easy to make a typo in a long string of integers.
 

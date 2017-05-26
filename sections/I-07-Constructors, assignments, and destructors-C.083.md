@@ -2,7 +2,7 @@
 
 ##### Reason
 
-A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](I-13-Error handling-E.016.md#Re-never-fail).
+A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](I-13-Error%20handling-E.016.md#Re-never-fail).
 
 ##### Example, good
 

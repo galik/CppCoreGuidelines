@@ -22,5 +22,5 @@ If two concepts have exactly the same requirements, they are logically equivalen
 ##### Enforcement
 
 * Flag a concept that has exactly the same requirements as another already-seen concept (neither is more refined).
-To disambiguate them, see [T.24](I-15-Templates and generic programming-T.024.md#Rt-tag).
+To disambiguate them, see [T.24](I-15-Templates%20and%20generic%20programming-T.024.md#Rt-tag).
 

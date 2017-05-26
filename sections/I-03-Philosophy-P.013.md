@@ -24,8 +24,8 @@ You need a reason not to use the standard library (or whatever foundational libr
 
 By default use
 
-* The [ISO C++ standard library](I-18-The Standard Library.md#S-stdlib)
-* The [Guidelines Support Library](I-23-Guideline support library.md#S-gsl)
+* The [ISO C++ standard library](I-18-The%20Standard%20Library.md#S-stdlib)
+* The [Guidelines Support Library](I-23-Guideline%20support%20library.md#S-gsl)
 
 ##### Note
 

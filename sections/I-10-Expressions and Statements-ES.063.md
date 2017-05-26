@@ -17,7 +17,7 @@ Shape s {c};    // copy Shape part of Circle
 
 ```
 The result will be meaningless because the center and radius will not be copied from `c` into `s`.
-The first defense against this is to [define the base class `Shape` not to allow this](I-07-Constructors, assignments, and destructors-C.067.md#Rc-copy-virtual).
+The first defense against this is to [define the base class `Shape` not to allow this](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual).
 
 ##### Alternative
 

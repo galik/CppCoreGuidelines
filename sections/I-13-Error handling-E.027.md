@@ -4,7 +4,7 @@
 
 Systematic use of any error-handling strategy minimizes the chance of forgetting to handle an error.
 
-See also [Simulating RAII](I-13-Error handling-E.025.md#Re-no-throw-raii).
+See also [Simulating RAII](I-13-Error%20handling-E.025.md#Re-no-throw-raii).
 
 ##### Note
 
@@ -36,7 +36,7 @@ void user()
 }
 
 ```
-This approach fits with [simulated RAII resource management](I-13-Error handling-E.025.md#Re-no-throw-raii).
+This approach fits with [simulated RAII resource management](I-13-Error%20handling-E.025.md#Re-no-throw-raii).
 The `valid()` function could return an `error_indicator` (e.g. a member of an `error_indicator` enumeration).
 
 ##### Example
@@ -153,10 +153,10 @@ exit:
 
 ```
 The larger the function, the more tempting this technique becomes.
-`finally` can [ease the pain a bit](I-13-Error handling-E.019.md#Re-finally).
+`finally` can [ease the pain a bit](I-13-Error%20handling-E.019.md#Re-finally).
 Also, the larger the program becomes the harder it is to apply an error-indicator-based error handling strategy systematically.
 
-We [prefer exception-based error handling](I-13-Error handling-E.002.md#Re-throw) and recommend [keeping functions short](I-05-Functions-F.003.md#Rf-single).
+We [prefer exception-based error handling](I-13-Error%20handling-E.002.md#Re-throw) and recommend [keeping functions short](I-05-Functions-F.003.md#Rf-single).
 
 **See also**: [Discussion](#Sd-???).
 

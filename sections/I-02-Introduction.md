@@ -14,7 +14,7 @@ Introduction summary:
 
 ## <a name="SS-readers"></a>In.target: Target readership
 
-All C++ programmers. This includes [programmers who might consider C](I-16-C-style programming.md#S-cpl).
+All C++ programmers. This includes [programmers who might consider C](I-16-C-style%20programming.md#S-cpl).
 
 ## <a name="SS-aims"></a>In.aims: Aims
 

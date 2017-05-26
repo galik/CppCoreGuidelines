@@ -23,7 +23,7 @@ for (j = 0; j < 100; ++j) {
 // j is still visible here and isn't needed
 
 ```
-**See also**: [Don't use a variable for two unrelated purposes](I-10-Expressions and Statements-ES.026.md#Res-recycle)
+**See also**: [Don't use a variable for two unrelated purposes](I-10-Expressions%20and%20Statements-ES.026.md#Res-recycle)
 
 ##### Example
 

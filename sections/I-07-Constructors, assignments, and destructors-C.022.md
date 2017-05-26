@@ -32,7 +32,7 @@ These operations disagree about copy semantics. This will lead to confusion and 
 ## <a name="SS-dtor"></a>C.dtor: Destructors
 
 "Does this class need a destructor?" is a surprisingly powerful design question.
-For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](I-07-Constructors, assignments, and destructors-C.020.md#Rc-zero);
+For most classes the answer is "no" either because the class holds no resources or because destruction is handled by [the rule of zero](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.020.md#Rc-zero);
 that is, its members can take care of themselves as concerns destruction.
-If the answer is "yes", much of the design of the class follows (see [the rule of five](I-07-Constructors, assignments, and destructors-C.021.md#Rc-five)).
+If the answer is "yes", much of the design of the class follows (see [the rule of five](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.021.md#Rc-five)).
 
