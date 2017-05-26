@@ -1,0 +1,22 @@
+#########################################################
+##
+## For local settings rename this file to Makefile.local
+##
+## Set paths to libraries and debug/release flags etc..
+##
+## eg.
+##
+
+## Path to GSL headers (uncomment and set path accordingly)
+##
+# CPPFLAGS += -I../../GSL/include
+
+## Compile for debugging (uncomment)
+##
+# CXXFLAGS += -O0 -g3 -D DEBUG -U NDEBUG
+
+
+## Compile for release (uncomment)
+##
+# CXXFLAGS += -O3 -g0 -D NDEBUG -U DEBUG
+
