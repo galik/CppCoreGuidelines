@@ -73,6 +73,7 @@ struct document_part
 {
 	pos_type beg = 0;
 	pos_type end = 0;
+	std::string mini_id;
 	std::string filename;
 };
 
@@ -255,6 +256,7 @@ std::tuple<document_part_map, document_link_map> extract_document_sections(std::
 
 		link_id = m->str(1);
 		part.beg = m->position();
+		part.mini_id = m->str(2);
 		part.filename = pad(idx, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3));
 	}
 
@@ -285,6 +287,26 @@ std::size_t line_number(std::string const& doc, pos_type pos)
 	return count;
 }
 
+
+document_link_map build_link_map(std::string const& doc, document_part_map parts)
+{
+	document_link_map links;
+
+	for(auto const& p: parts)
+	{
+		auto part_beg = std::next(std::begin(doc), p.second.beg);
+		auto part_end = std::next(std::begin(doc), p.second.end);
+
+		std::sregex_iterator const e;
+		std::sregex_iterator m{part_beg, part_end, e_items};
+
+		for(; m != e; ++m)
+			links[m->str(1)] = p.second.filename;
+	}
+
+	return links;
+}
+
 // TODO: make this generic between sections and items (provide the ehole document for sections)
 std::tuple<document_part_map, document_link_map> extract_document_items(std::string const& doc,
 	std::tuple<document_part_map, document_link_map> const& section_info)
@@ -304,23 +326,28 @@ std::tuple<document_part_map, document_link_map> extract_document_items(std::str
 		std::sregex_iterator m{section_beg, section_end, e_items};
 
 		// initialize for item's section header (index)
-		document_part part{section.second.beg, section.second.end, section.second.filename};
+		document_part part = section.second; //{section.second.beg, section.second.end, section.second.mini_id, section.second.filename};
 		std::string link_id = section.first;
 
 		for(; m != e; ++m, ++idx)
 		{
 //			bug_var(m->str(3));
-
 			if(m->str(2).empty())
 				con_err("item is missing an item tag: " << line_number(doc, section.second.beg + m->position()) << ": " << m->str());
-			else
-			{
-				part.end = section.second.beg + m->position();
-				parts[link_id] = part;
-			}
+
+			part.end = section.second.beg + m->position();
+			parts[link_id] = part;
 
 			link_id = m->str(1);
-			part.filename = section.second.filename + "-" + m->str(2);
+			part.mini_id = m->str(2).empty() ? section.second.mini_id : m->str(2);
+
+			bug_var(part.mini_id);
+			std::regex e_mini{R"~(([^.]+)\.(\d+))~"};
+			std::smatch sm;
+			if(std::regex_match(part.mini_id, sm, e_mini))
+				part.mini_id = sm.str(1) + "." + pad(gsl::narrow<unsigned>(std::stoul(sm.str(2))), 3);
+
+			part.filename = section.second.filename + "-" + part.mini_id;
 			part.beg = part.end;
 		}
 
