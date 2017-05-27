@@ -75,14 +75,14 @@ struct document_part
 {
 	pos_type beg = 0;
 	pos_type end = 0;
-	std::string mini_id;
+	std::string id;
 	std::string filename;
 };
 
-// link_id -> {filename, beg, end}
+// anchor -> {filename, beg, end}
 using document_part_map = std::map<std::string, document_part>;
 
-// link_id -> filename
+// anchor -> filename
 using document_link_map = std::map<std::string, std::string>;
 
 //----------------------------------------------------------------------------
@@ -91,18 +91,20 @@ using document_link_map = std::map<std::string, std::string>;
 
 auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::optimize;
 
-// #1 link_id
-// #2 mini_id
+// #1 anchor
+// #2 id
 // #3 title
 std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"><\/a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
-// #1 link_id
-// #2 mini_id
+// #1 anchor
+// #2 id
 // #3 title
 std::regex const e_items{R"~(###\s+<a name="([^"]+)"><\/a>(?:((?:[^\s:]| )+):\s+)?(.*))~", fast_n_loose};
 
-// #1 link_id
+// #1 anchor
 std::regex const e_links{R"~(<a name="([^"]+)">)~", fast_n_loose};
+
+std::regex const e_item_id{R"~((.*?)\.(\d+))~", fast_n_loose};
 
 //----------------------------------------------------------------------------
 // String Utilities
@@ -197,7 +199,7 @@ std::string pad(unsigned n, unsigned width, char padding = '0')
 struct line_ender
 {
 	char const* eol = "";
-	char const* operator()(){ auto out = eol; eol = "\n"; return out; }
+	char const* operator()(){ auto s = eol; eol = "\n"; return s; }
 };
 
 /**
@@ -250,12 +252,16 @@ std::size_t line_number(std::string const& doc, pos_type pos)
 	return count;
 }
 
-void dump_link_map(std::ostream& os, document_link_map const& links)
-{
-	line_ender eol;
-	for(auto const& link: links)
-		os << eol() << link.first << ": " << link.second;
-}
+/**
+ * Build a map linking every unique `target` to the output file
+ * in which it exists so that `links` can be re-written later to
+ * point to the `target` in the correct file.
+ *
+ * @param doc
+ * @param parts
+ *
+ * @return
+ */
 document_link_map build_link_map(std::string const& doc, document_part_map parts)
 {
 	document_link_map links;
@@ -282,24 +288,24 @@ document_part_map extract_document_sections(std::string const& doc)
 	std::sregex_iterator const e;
 	std::sregex_iterator m{std::begin(doc), std::end(doc), e_sects};
 
-	std::string link_id;
+	std::string anchor;
 	document_part part;
 
 	for(auto idx = 0U; m != e; ++m, ++idx)
 	{
 		part.end = m->position();
 
-		if(!link_id.empty())
-			parts[link_id] = part;
+		if(!anchor.empty())
+			parts[anchor] = part;
 
-		link_id = m->str(1);
+		anchor = m->str(1);
 		part.beg = m->position();
-		part.mini_id = m->str(2);
+		part.id = m->str(2);
 		part.filename = pad(idx, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3));
 	}
 
 	part.end = doc.size();
-	parts[link_id] = part;
+	parts[anchor] = part;
 
 	return parts;
 }
@@ -313,40 +319,46 @@ document_part_map extract_document_items(std::string const& doc,
 
 	auto idx = 0U;
 
-	for(auto const& section: sections)
+	for(auto const& section_pair: sections)
 	{
-		auto section_beg = std::next(std::begin(doc), section.second.beg);
-		auto section_end = std::next(std::begin(doc), section.second.end);
+		auto const& section_anchor = std::get<const std::string>(section_pair);
+		auto const& section = std::get<document_part>(section_pair);
 
-		std::sregex_iterator m{section_beg, section_end, e_items};
+		auto const beg_itr = std::next(std::begin(doc), section.beg);
+		auto const end_itr = std::next(std::begin(doc), section.end);
 
-		// initialize for item's section header (index)
-		document_part item = section.second; //{section.second.beg, section.second.end, section.second.mini_id, section.second.filename};
-		std::string link_id = section.first;
+		std::sregex_iterator m{beg_itr, end_itr, e_items};
+
+		// initialize item to this section's header (index) between
+		// the start of the section and the start of the first item
+		document_part item = section;
+		std::string item_anchor = section_anchor;
 
 		for(; m != e; ++m, ++idx)
 		{
 			if(m->str(2).empty())
-				con_err("item is missing an item tag: " << line_number(doc, section.second.beg + m->position()) << ": " << m->str());
+				con_err("item is missing an item tag: " << line_number(doc, section.beg + m->position()) << ": " << m->str());
 
-			item.end = section.second.beg + m->position();
-			items[link_id] = item;
+			item.end = section.beg + m->position();
+			items[item_anchor] = item;
 
-			link_id = m->str(1);
-			item.mini_id = m->str(2).empty() ? section.second.mini_id : m->str(2);
+			item_anchor = m->str(1);
+			item.id = m->str(2).empty() ? section.id : m->str(2);
 
-//			std::regex e_mini{R"~(([^.]+)\.(\d+))~"};
-			std::regex e_mini{R"~((.*?)\.(\d+))~"};
+			// pad any item id that ends in numbers to maintain
+			// correct ordering when listing alphabetically
+			std::string item_id = item.id;
+
 			std::smatch sm;
-			if(std::regex_match(item.mini_id, sm, e_mini))
-				item.mini_id = sm.str(1) + "." + pad(gsl::narrow<unsigned>(std::stoul(sm.str(2))), 3);
+			if(std::regex_match(item_id, sm, e_item_id))
+				item_id = sm.str(1) + "." + pad(gsl::narrow<unsigned>(std::stoul(sm.str(2))), 3);
 
-			item.filename = section.second.filename + "-" + item.mini_id;
+			item.filename = section.filename + "-" + item_id;
 			item.beg = item.end;
 		}
 
-		item.end = section.second.end;
-		items[link_id] = item;
+		item.end = section.end;
+		items[item_anchor] = item;
 	}
 
 	return items;
