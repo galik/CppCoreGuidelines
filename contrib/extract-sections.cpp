@@ -68,18 +68,21 @@ struct program_config
 	bool list_only = false;
 	bool verbose = false;
 	std::set<output_type> outputs;
-	int exit_status = 2;
+
+	enum { success = EXIT_SUCCESS, failure = EXIT_FAILURE, ready = 2};
+	int exit_status = ready;
+	explicit operator bool() const { return exit_status == ready; }
 };
 
 struct document_part
 {
-	pos_type beg = 0;
-	pos_type end = 0;
 	std::string id;
 	std::string filename;
+	pos_type beg = 0;
+	pos_type end = 0;
 };
 
-// anchor -> {filename, beg, end}
+// anchor -> {id, filename, beg, end}
 using document_part_map = std::map<std::string, document_part>;
 
 // anchor -> filename
@@ -89,11 +92,12 @@ using document_link_map = std::map<std::string, std::string>;
 // Regular Expressions
 //
 
-auto const fast_n_loose = std::regex_constants::icase | std::regex_constants::optimize;
+auto const fast_n_loose = std::regex_constants::optimize | std::regex_constants::icase;
 
 // #1 anchor
 // #2 id
 // #3 title
+// #4 Biography
 std::regex const e_sects{R"~((?:#\s+<a name="(main|S-[^"]+)"><\/a>(?:((?:[^\s:]| )+):\s+)?(.*)|#\s+(Bibliography)))~", fast_n_loose};
 
 // #1 anchor
@@ -112,9 +116,11 @@ std::regex const e_item_id{R"~((.*?)\.(\d+))~", fast_n_loose};
 
 /**
  * For all substrings `from` in `s` replace them with `to`.
+ *
  * @param s The string to modify.
  * @param from The sunbtring to change.
  * @param to The replacement text.
+ *
  * @return The same `std::string` with substrings replaced.
  */
 std::string& replace_all(std::string& s, std::string const& from, std::string const& to)
@@ -127,12 +133,14 @@ std::string& replace_all(std::string& s, std::string const& from, std::string co
 
 /**
  * Make the URL internet safe
+ *
  * @param url The URL to encode
+ *
  * @return Properly encoded URL
  */
 std::string urlencode(std::string const& url)
 {
-	static const std::string plain = "-_.";
+	static std::string const plain = "-_.";
 
 	std::ostringstream oss;
 
@@ -149,7 +157,9 @@ std::string urlencode(std::string const& url)
 
 /**
  * Extract only the program name from the full path
+ *
  * @param pathname The full path name used to run the program
+ *
  * @return Just the program name
  */
 std::string program_name(std::string pathname)
@@ -299,9 +309,9 @@ document_part_map extract_document_sections(std::string const& doc)
 			parts[anchor] = part;
 
 		anchor = m->str(1);
-		part.beg = m->position();
 		part.id = m->str(2);
 		part.filename = pad(idx, 2) + '-' + (m->str(3).empty() ? m->str(4) : m->str(3));
+		part.beg = m->position();
 	}
 
 	part.end = doc.size();
@@ -423,7 +433,7 @@ int main(int, char* argv[])
 	{
 		program_config cfg = parse_commandline(argv);
 
-		if(cfg.exit_status != 2)
+		if(!cfg)
 			return cfg.exit_status;
 
 		if(cfg.outputs.empty())
@@ -461,6 +471,7 @@ int main(int, char* argv[])
 		if(cfg.outputs.count(output_type::sections)
 		|| cfg.outputs.count(output_type::items))
 		{
+			// section information is needed by BOTH section & item output
 			auto sections = extract_document_sections(doc);
 
 			if(cfg.outputs.count(output_type::sections))
@@ -491,6 +502,32 @@ int main(int, char* argv[])
 
 				auto items = extract_document_items(doc, sections);
 				auto links = build_link_map(doc, items);
+
+				DEBUG_ONLY
+				(
+					std::vector<std::string> item_targets;
+					std::vector<std::string> link_targets;
+
+					for(auto const& item: items)
+						item_targets.push_back(item.second.filename + "\n");
+
+					for(auto const& link: links)
+						link_targets.push_back(link.second + "\n");
+
+					std::sort(std::begin(item_targets), std::end(item_targets));
+					std::sort(std::begin(link_targets), std::end(link_targets));
+					{
+						std::ofstream ofs("item_targets.txt");
+						std::copy(std::begin(item_targets), std::end(item_targets), std::ostream_iterator<std::string>(ofs));
+					}
+					{
+						std::ofstream ofs("link_targets.txt");
+						std::copy(std::begin(link_targets), std::end(link_targets), std::ostream_iterator<std::string>(ofs));
+					}
+					bug_var(item_targets.size());
+					bug_var(link_targets.size());
+					bug_var((item_targets == link_targets));
+				);
 
 				for(auto const& item: items)
 				{
