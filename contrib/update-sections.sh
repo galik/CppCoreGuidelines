@@ -11,25 +11,23 @@ if ! [[ $(basename $1) == "CppCoreGuidelines.md" ]]; then
 fi
 
 if ! [[ -f "$1" ]]; then
-	echo "error: filr $1 does not exist"
+	echo "error: file $1 does not exist"
 	exit 1
 fi
 
-PATH=${1%%CppCoreGuidelines.md}
-SOURCE=${PATH}/contrib
-SECTIONS=${PATH}/sections
+DIR=$(dirname $1)
+SOURCE=${DIR}/contrib
+SECTIONS=${DIR}/sections
 
-echo "PATH: $PATH"
+echo "DIR: $DIR"
 echo "SOURCE: $SOURCE"
 echo "SECTIONS: $SECTIONS"
 
-cd ${SOURCE}
-make
-cd -
+make -C ${SOURCE}
 
-echo git rm "${SECTIONS}/*.md"
-echo ${SOURCE}/extract-sections -c -d -s -i "$1" "${SECTIONS}"
-echo git add "${SECTIONS}/*.md"
-echo git commit -m "update-sections.sh" "${SECTIONS}/*.md"
+git rm --ignore-unmatch "${SECTIONS}/*.md"
+${SOURCE}/extract-sections -c -d -s -i "$1" "${SECTIONS}"
+git add "${SECTIONS}/*.md"
+git commit -m "update-sections.sh" "${SECTIONS}/*.md"
 
-#rm -f ../sections/*.md && make && ./extract-sections ../CppCoreGuidelines.md ../sections -c -d -s -i
+#echo rm -f ${SECIONS}/*.md && make && ./extract-sections ../CppCoreGuidelines.md ../sections -c -d -s -i
