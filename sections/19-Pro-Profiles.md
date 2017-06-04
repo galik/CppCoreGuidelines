@@ -50,7 +50,7 @@ Enabling a profile is implementation defined; typically, it is set in the analys
 To suppress enforcement of a profile check, place a `suppress` annotation on a language contract. For example:
 
 ```cpp
-[[suppress(bounds)]] char* raw_find(char* p, int n, char x)    // find x in p[0]..p[n-1]
+[[suppress(bounds)]] char* raw_find(char* p, int n, char x)    // find x in p[0]..p[n - 1]
 {
     // ...
 }
@@ -132,158 +132,26 @@ and "mysterious values."
 
 ## <a name="SS-lifetime"></a>Pro.lifetime: Lifetime safety profile
 
-See /docs folder for the initial design. The detailed formal rules are in progress (as of May 2017).
+Accessing through a pointer that doesn't point to anything is a major source of errors,
+and very hard to avoid in many traditional C or C++ styles of programming.
+For example, a pointer my be uninitialized, the `nullptr`, point beyond the range of an array, or to a deleted object.
 
-The following are specific rules that are being enforced.
+See /docs folder for the initial design. The detailed formal rules are in progress (as of May 2017).
 
 Lifetime safety profile summary:
 
-* [Lifetime.1: Don't dereference a possibly invalid pointer.](19-Pro-Profiles.md#Pro-lifetime-invalid-deref)
-* [Lifetime.2: Don't dereference a possibly null pointer.](19-Pro-Profiles.md#Pro-lifetime-null-deref)
-* [Lifetime.3: Don't pass a possibly invalid pointer to a function.](19-Pro-Profiles.md#Pro-lifetime-invalid-argument)
+* <a href="Pro-lifetime-invalid-deref"></a>Lifetime.1: Don't dereference a possibly invalid pointer:
+[detect or avoid](07-ES-Expressions%20and%20Statements.md#Res-deref).
 
-??? These rules will be moved into the main-line sections of these guidelines ???
+##### Impact
 
-### <a name="Pro-lifetime-invalid-deref"></a>Lifetime.1: Don't dereference a possibly invalid pointer.
+Once completely enforced through a combilnation of style rules, static analysis, and library support, this profile
 
-##### Reason
-
-It is undefined behavior.
-
-To resolve the problem, either extend the lifetime of the object the pointer is intended to refer to, or shorten the lifetime of the pointer (move the dereference to before the pointed-to object's lifetime ends).
-
-##### Example, bad
-
-```cpp
-void f()
-{
-    int x = 0;
-    int* p = &x;
-
-    if (condition()) {
-        int y = 0;
-        p = &y;
-    } // invalidates p
-
-    *p = 42;            // BAD, p might be invalid if the branch was taken
-}
-
-```
-##### Example, good
-
-```cpp
-void f()
-{
-    int x = 0;
-    int* p = &x;
-
-    int y = 0;
-    if (condition()) {
-        p = &y;
-    }
-
-    *p = 42;            // OK, p points to x or y and both are still in scope
-}
-
-```
-##### Enforcement
-
-* Issue a diagnostic for any dereference of a pointer that could have been invalidated (could point to an object that was destroyed) along a local code path leading to the dereference. To fix: Extend the lifetime of the pointed-to object, or move the dereference to before the pointed-to object's lifetime ends.
-
-
-
-### <a name="Pro-lifetime-null-deref"></a>Lifetime.2: Don't dereference a possibly null pointer.
-
-##### Reason
-
-It is undefined behavior.
-
-##### Example, bad
-
-```cpp
-void f(int* p1)
-{
-    *p1 = 42;           // BAD, p1 might be null
-
-    int i = 0;
-    int* p2 = condition() ? &i : nullptr;
-    *p2 = 42;           // BAD, p2 might be null
-}
-
-```
-##### Example, good
-
-```cpp
-void f(int* p1, not_null<int*> p3)
-{
-    if (p1 != nullptr) {
-        *p1 = 42;       // OK, must be not null in this branch
-    }
-
-    int i = 0;
-    int* p2 = condition() ? &i : nullptr;
-    if (p2 != nullptr) {
-        *p2 = 42;       // OK, must be not null in this branch
-    }
-
-    *p3 = 42;           // OK, not_null does not need to be tested for nullness
-}
-
-```
-##### Enforcement
-
-* Issue a diagnostic for any dereference of a pointer that could have been set to null along a local code path leading to the dereference. To fix: Add a null check and dereference the pointer only in a branch that has tested to ensure non-null.
-
-
-
-### <a name="Pro-lifetime-invalid-argument"></a>Lifetime.3: Don't pass a possibly invalid pointer to a function.
-
-##### Reason
-
-The function cannot do anything useful with the pointer.
-
-To resolve the problem, either extend the lifetime of the object the pointer is intended to refer to, or shorten the lifetime of the pointer (move the function call to before the pointed-to object's lifetime ends).
-
-##### Example, bad
-
-```cpp
-void f(int*);
-
-void g()
-{
-    int x = 0;
-    int* p = &x;
-
-    if (condition()) {
-        int y = 0;
-        p = &y;
-    } // invalidates p
-
-    f(p);               // BAD, p might be invalid if the branch was taken
-}
-
-```
-##### Example, good
-
-```cpp
-void f()
-{
-    int x = 0;
-    int* p = &x;
-
-    int y = 0;
-    if (condition()) {
-        p = &y;
-    }
-
-    f(p);               // OK, p points to x or y and both are still in scope
-}
-
-```
-##### Enforcement
-
-* Issue a diagnostic for any function argument that is a pointer that could have been invalidated (could point to an object that was destroyed) along a local code path leading to the dereference. To fix: Extend the lifetime of the pointed-to object, or move the function call to before the pointed-to object's lifetime ends.
-
+* eliminates one of the major sources of nasty errors in C++
+* eliminates a major source of potential security violations
+* improves performance by eliminating redundant "paranoia" checks
+* increases confidence in correctness of code
+* avoids undefined behavior by enforcinga key C++ language rule
 
 
 

@@ -1031,7 +1031,7 @@ int use(int arg)
 }
 
 ```
-if `f()` throws an exception different from `X` and `Y` the unexpected handler is invoked, which by default terminates.
+If `f()` throws an exception different from `X` and `Y` the unexpected handler is invoked, which by default terminates.
 That's OK, but say that we have checked that this cannot happen and `f` is changed to throw a new exception `Z`,
 we now have a crash on our hands unless we change `use()` (and re-test everything).
 The snag is that `f()` may be in a library we do not control and the new exception is not anything that `use()` can do

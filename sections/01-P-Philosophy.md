@@ -463,7 +463,7 @@ void use2(int m)
 }
 
 ```
-Now, `m<=n` can be checked at the point of call (early) rather than later.
+Now, `m <= n` can be checked at the point of call (early) rather than later.
 If all we had was a typo so that we meant to use `n` as the bound, the code could be further simplified (eliminating the possibility of an error):
 
 ```cpp

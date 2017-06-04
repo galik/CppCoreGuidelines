@@ -206,8 +206,8 @@ Functions with complex control structures are more likely to be long and more li
 Consider:
 
 ```cpp
-double simpleFunc(double val, int flag1, int flag2)
-    // simpleFunc: takes a value and calculates the expected ASIC output,
+double simple_func(double val, int flag1, int flag2)
+    // simple_func: takes a value and calculates the expected ASIC output,
     // given the two mode flags.
 {
     double intermediate;
@@ -252,8 +252,8 @@ double funct1_tau(double val, int flag1, int flag2)
     // ???
 }
 
-double simpleFunc(double val, int flag1, int flag2)
-    // simpleFunc: takes a value and calculates the expected ASIC output,
+double simple_func(double val, int flag1, int flag2)
+    // simple_func: takes a value and calculates the expected ASIC output,
     // given the two mode flags.
 {
     if (flag1 > 0)
@@ -353,7 +353,7 @@ Most computation is best done at run time.
 
 Any API that may eventually depend on high-level runtime configuration or
 business logic should not be made `constexpr`. Such customization can not be
-evaluated by the compiler, and any `constexpr` functions that depended upon 
+evaluated by the compiler, and any `constexpr` functions that depended upon
 that API would have to be refactored or drop `constexpr`.
 
 ##### Enforcement
@@ -1075,7 +1075,7 @@ auto p = find({vec.begin(), vec.end()}, X{});  // find X{} in vec
 ##### Note
 
 Ranges are extremely common in C++ code. Typically, they are implicit and their correct use is very hard to ensure.
-In particular, given a pair of arguments `(p, n)` designating an array \[`p`:`p+n`),
+In particular, given a pair of arguments `(p, n)` designating an array \[`p`:`p + n`),
 it is in general impossible to know if there really are `n` elements to access following `*p`.
 `span<T>` and `span_p<T>` are simple helper classes designating a \[`p`:`q`) range and a range starting with `p` and ending with the first element for which a predicate is true, respectively.
 

@@ -247,7 +247,7 @@ The important issue of non-ASCII character sets and encodings (e.g., `wchar_t`, 
 See also [regular expressions](15-SL-The%20Standard%20Library.md#SS-regex).
 
 Here, we use "sequence of characters" or "string" to refer to a sequence of characters meant to be read as text (somehow, eventually).
-We don't consider 
+We don't consider
 
 String summary:
 
@@ -255,11 +255,11 @@ String summary:
 * [SL.str.2: Use `std::string_view` or `gsl::string_span` to refer to character sequences](15-SL-The%20Standard%20Library.md#Rstr-view)
 * [SL.str.3: Use `zstring` or `czstring` to refer to a C-style, zero-terminated, sequence of characters](15-SL-The%20Standard%20Library.md#Rstr-zstring)
 * [SL.str.4: Use `char*` to refer to a single character](15-SL-The%20Standard%20Library.md#Rstr-char*)
-* [Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](15-SL-The%20Standard%20Library.md#Rstr-byte)
+* [SL.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters](15-SL-The%20Standard%20Library.md#Rstr-byte)
 
-* [Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations](15-SL-The%20Standard%20Library.md#Rstr-locale)
-* [Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](15-SL-The%20Standard%20Library.md#Rstr-span)
-* [Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](15-SL-The%20Standard%20Library.md#Rstr-s)
+* [SL.str.10: Use `std::string` when you need to perform locale-sensitive string operations](15-SL-The%20Standard%20Library.md#Rstr-locale)
+* [SL.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](15-SL-The%20Standard%20Library.md#Rstr-span)
+* [SL.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](15-SL-The%20Standard%20Library.md#Rstr-s)
 
 See also
 
@@ -322,11 +322,11 @@ char* cat(const char* s1, const char* s2)   // beware!
 {
     int l1 = strlen(s1);
     int l2 = strlen(s2);
-    char* p = (char*)malloc(l1+l2+2);
+    char* p = (char*) malloc(l1 + l2 + 2);
     strcpy(p, s1, l1);
     p[l1] = '.';
-    strcpy(p+l1+1, s2, l2);
-    p[l1+l2+1] = 0;
+    strcpy(p + l1 + 1, s2, l2);
+    p[l1 + l2 + 1] = 0;
     return res;
 }
 
@@ -446,10 +446,10 @@ The array `arr` is not a C-style string because it is not zero-terminated.
 See [`zstring`](15-SL-The%20Standard%20Library.md#Rstr-zstring), [`string`](15-SL-The%20Standard%20Library.md#Rstr-string), and [`string_span`](15-SL-The%20Standard%20Library.md#Rstr-view).
 
 ##### Enforcement
-  
+
 * Flag uses of `[]` on a `char*`
 
-### <a name="Rstr-byte"></a>Sl.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters
+### <a name="Rstr-byte"></a>SL.str.5: Use `std::byte` to refer to byte values that do not necessarily represent characters
 
 ##### Reason
 
@@ -469,11 +469,9 @@ C++17
 ##### Enforcement
 
 ???
-```cpp
 
 
-```
-### <a name="Rstr-locale"></a>Sl.str.10: Use `std::string` when you need to perform locale-sensitive string operations
+### <a name="Rstr-locale"></a>SL.str.10: Use `std::string` when you need to perform locale-sensitive string operations
 
 ##### Reason
 
@@ -493,7 +491,7 @@ C++17
 
 ???
 
-### <a name="Rstr-span"></a>Sl.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string
+### <a name="Rstr-span"></a>SL.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string
 
 ##### Reason
 
@@ -511,7 +509,7 @@ C++17
 
 The compiler will flag attempts to write to a `string_view`.
 
-### <a name="Rstr-s"></a>Sl.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s
+### <a name="Rstr-s"></a>SL.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s
 
 ##### Reason
 
@@ -548,7 +546,7 @@ Iostream rule summary:
 * [SL.io.1: Use character-level input only when you have to](15-SL-The%20Standard%20Library.md#Rio-low)
 * [SL.io.2: When reading, always consider ill-formed input](15-SL-The%20Standard%20Library.md#Rio-validate)
 * [SL.io.3: Prefer iostreams for I/O](15-SL-The%20Standard%20Library.md#Rio-streams)
-* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](15-SL-The%20Standard%20Library.md#Rio-sync) 
+* [SL.io.10: Unless you use `printf`-family functions call `ios_base::sync_with_stdio(false)`](15-SL-The%20Standard%20Library.md#Rio-sync)
 * [SL.io.50: Avoid `endl`](15-SL-The%20Standard%20Library.md#Rio-endl)
 * [???](#???)
 

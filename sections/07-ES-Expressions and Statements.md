@@ -58,6 +58,7 @@ Expression rules:
 * [ES.62: Don't compare pointers into different arrays](07-ES-Expressions%20and%20Statements.md#Res-arr2)
 * [ES.63: Don't slice](07-ES-Expressions%20and%20Statements.md#Res-slice)
 * [ES.64: Use the `T{e}`notation for construction](07-ES-Expressions%20and%20Statements.md#Res-construct)
+* [ES.65: Don't dereference an invalid pointer](07-ES-Expressions%20and%20Statements.md#Res-deref)
 
 Statement rules:
 
@@ -555,8 +556,8 @@ ForwardIterator p = algo(x, y, z);
 
 ```
 ##### Example (C++17)
-```cpp
 
+```cpp
 auto [ quotient, remainder ] = div(123456, 73);   // break out the members of the div_t result
 
 ```
@@ -1137,17 +1138,17 @@ void use()
 As an optimization, you may want to reuse a buffer as a scratch pad, but even then prefer to limit the variable's scope as much as possible and be careful not to cause bugs from data left in a recycled buffer as this is a common source of security bugs.
 
 ```cpp
-{
+void write_to_file() {
     std::string buffer;             // to avoid reallocations on every loop iteration
     for (auto& o : objects)
     {
         // First part of the work.
-        generateFirstString(buffer, o);
-        writeToFile(buffer);
+        generate_first_String(buffer, o);
+        write_to_file(buffer);
 
         // Second part of the work.
-        generateSecondString(buffer, o);
-        writeToFile(buffer);
+        generate_second_string(buffer, o);
+        write_to_file(buffer);
 
         // etc...
     }
@@ -1890,16 +1891,12 @@ There are exceedingly clever used of this "idiom", but they are far rarer than t
 
 ##### Note
 
-```cpp
 Unnamed function arguments are fine.
 
-```
 ##### Enforcement
 
-```cpp
 Flag statements that are just a temporary
 
-```
 ### <a name="Res-empty"></a>ES.85: Make empty statements visible
 
 ##### Reason
@@ -2089,22 +2086,22 @@ void f(int* p, int count)
 {
     if (count < 2) return;
 
-    int* q = p + 1; // BAD
+    int* q = p + 1;    // BAD
 
     ptrdiff_t d;
     int n;
-    d = (p - &n); // OK
-    d = (q - p); // OK
+    d = (p - &n);      // OK
+    d = (q - p);       // OK
 
-    int n = *p++; // BAD
+    int n = *p++;      // BAD
 
     if (count < 6) return;
 
-    p[4] = 1; // BAD
+    p[4] = 1;          // BAD
 
-    p[count - 1] = 2; // BAD
+    p[count - 1] = 2;  // BAD
 
-    use(&p[0], 3); // BAD
+    use(&p[0], 3);     // BAD
 }
 
 ```
@@ -2115,17 +2112,17 @@ void f(span<int> a) // BETTER: use span in the function declaration
 {
     if (a.length() < 2) return;
 
-    int n = a[0]; // OK
+    int n = a[0];      // OK
 
     span<int> q = a.subspan(1); // OK
 
     if (a.length() < 6) return;
 
-    a[4] = 1; // OK
+    a[4] = 1;          // OK
 
-    a[count - 1] = 2; // OK
+    a[count - 1] = 2;  // OK
 
-    use(a.data(), 3); // OK
+    use(a.data(), 3);  // OK
 }
 
 ```
@@ -2489,14 +2486,14 @@ What would you think this fragment prints? The result is at best implementation 
 2 0 4611686018427387904
 
 ```
-Adding 
+Adding
 
 ```cpp
 *q = 666;
 cout << d << ' ' << *p << ' ' << *q << '\n';
 
 ```
-I got 
+I got
 
 ```cpp
 3.29048e-321 666 666
@@ -3164,6 +3161,164 @@ The main problem left is to find a suitable name for `Count`.
 
 Flag the C-style `(T)e` and functional-style `T(e)` casts.
 
+
+### <a name="Res-deref"></a>ES.65: Don't dereference an invalid pointer
+
+##### Reason
+
+Dereferencing an invalid pointer, such as `nullptr`, is undefined behavior, typically leading to immediate crashes,
+wrong results, or memory corruption.
+
+##### Note
+
+This rule is an obvious and well-known language rule, but can be hard to follow.
+It takes good coding style, library support, and static analysis to eliminate violations without major overhead.
+This is a major part of the discussion of [C++'s resource- and type-safety model](#Stroustrup15).
+
+See also
+
+* Use [RAII](06-R-Resource%20management.md#Rr-raii) to avoid lifetime problems.
+* Use [unique_ptr](03-F-Functions.md#Rf-unique_ptr) to avoid lifetime problems.
+* Use [shared_ptr](03-F-Functions.md#Rf-shared_ptr) to avoid lifetime problems.
+* Use [references](03-F-Functions.md#Rf-ptr-ref) when `nulllptr` isn't a possibility.
+* Use [not_null](#Rf-not_null) to catch unexpected `nullptr` early.
+* Use the [bounds profile](19-Pro-Profiles.md#SS-bounds) to avoid range errors.
+
+
+##### Example
+
+```cpp
+void f()
+{
+    int x = 0;
+    int* p = &x;
+
+    if (condition()) {
+        int y = 0;
+        p = &y;
+    } // invalidates p
+
+    *p = 42;            // BAD, p might be invalid if the branch was taken
+}
+
+```
+To resolve the problem, either extend the lifetime of the object the pointer is intended to refer to, or shorten the lifetime of the pointer (move the dereference to before the pointed-to object's lifetime ends).
+
+```cpp
+void f1()
+{
+    int x = 0;
+    int* p = &x;
+
+    int y = 0;
+    if (condition()) {
+        p = &y;
+    }
+
+    *p = 42;            // OK, p points to x or y and both are still in scope
+}
+
+```
+Unfortunately, most invalid pointer problems are harder to spot and harder to fix.
+
+##### Example
+
+```cpp
+void f(int* p)
+{
+    int x = *p; // BAD: how do we know that p is valid?
+}
+
+```
+There is a huge amount of such code.
+Most works -- after lots of testing -- but in isolation it is impossible to tell whether `p` could be the `nullptr`.
+Consequently, it this is also a major source of errors.
+There are many approaches to dealing with this potential problem:
+
+```cpp
+void f1(int* p) // deal with nullptr
+{
+    if (p==nullptr) {
+        // deal with nullptr (allocate, return, throw, make p point to something, whatever
+    }
+    int x = *p;
+}
+
+```
+There are two potential problems with testing for `nullptr`:
+
+* it is not always obvious what to do what to do if we find `nullptr`
+* the test can be redundant and/or relatively expensive
+* it is not obvious if the test is to protect against a violation or part of the required logic.
+
+```cpp
+void f2(int* p) // state that p is not supposed to be nullptr
+{
+    Assert(p!=nullptr);     
+    int x = *p;
+}
+
+```
+This would carry a cost only when the assertion checking was ensbled and would give a compiler/analyser useful information.
+This would work even better if/when C++ gets direct support for contracts:
+
+```cpp
+void f3(int* p) // state that p is not supposed to be nullptr
+    [[expects: p!=nullptr]]
+{
+    int x = *p;
+}
+
+```
+Alternatively, we could use `gsl::not_null` to ensure that `p` is not the `nullptr`.
+
+```cpp
+void f(not_null<int*> p)
+{
+    int x = *p;
+}
+
+```
+There remedies take care of `nullptr` only.
+Remember that there are other ways of getting an invalid pointer.
+
+##### Example
+
+```cpp
+void f(int* p)  // old code, doesn't use owner
+{
+    delete p;
+}
+
+void g()        // old code: uses naked new
+{
+    auto q = new int{7};
+    f(q);
+    int x = *q; // BAD: dereferences invalid pointer
+}
+
+```
+##### Example
+
+```cpp
+void f()
+{
+    vector<int> v(10);
+    int* p = v(5);
+    v.pushback(99); // could rellocate v's elements
+    int x = *p; // BAD: dereferences potentially invalid pointer
+}
+
+```
+##### Enforcement
+
+This rule is part ot the [lifetime profile](#Pro.lifetime)
+
+* Flag a dereference of a pointer that points to an object that has gone out of scope
+* Flag a dereference of a pointer that may have beed invalidated by assigning a `nullptr`
+* Flag a dereference of a pointer that may have been invalidated by a `delete`
+* Flag a dereference to a pointer to a container element that may have been invalidated by dereference
+
 ## <a name="SS-numbers"></a>Arithmetic
 
 ### <a name="Res-mix"></a>ES.100: Don't mix signed and unsigned arithmetic
@@ -3224,7 +3379,7 @@ can be surprising for many programmers.
 ##### Reason
 
 Because most arithmetic is assumed to be signed;
-`x-y` yields a negative number when `y>x` except in the rare cases where you really want modulo arithmetic.
+`x - y` yields a negative number when `y > x` except in the rare cases where you really want modulo arithmetic.
 
 ##### Example
 
@@ -3235,24 +3390,24 @@ This is even more true for mixed signed and unsigned arithmetic.
 template<typename T, typename T2>
 T subtract(T x, T2 y)
 {
-    return x-y;
+    return x - y;
 }
 
 void test()
 {
     int s = 5;
     unsigned int us = 5;
-    cout << subtract(s, 7) << '\n';     // -2
-    cout << subtract(us, 7u) << '\n';   // 4294967294
-    cout << subtract(s, 7u) << '\n';    // -2
-    cout << subtract(us, 7) << '\n';    // 4294967294
-    cout << subtract(s, us+2) << '\n';  // -2
-    cout << subtract(us, s+2) << '\n';  // 4294967294
+    cout << subtract(s, 7) << '\n';       // -2
+    cout << subtract(us, 7u) << '\n';     // 4294967294
+    cout << subtract(s, 7u) << '\n';      // -2
+    cout << subtract(us, 7) << '\n';      // 4294967294
+    cout << subtract(s, us + 2) << '\n';  // -2
+    cout << subtract(us, s + 2) << '\n';  // 4294967294
 }
 
 ```
 Here we have been very explicit about what's happening,
-but if you had seen `us-(s+2)` or `s+=2; ... us-s`, would you reliably have suspected that the result would print as `4294967294`?
+but if you had seen `us - (s + 2)` or `s += 2; ...; us - s`, would you reliably have suspected that the result would print as `4294967294`?
 
 ##### Exception
 
@@ -3268,10 +3423,10 @@ This makes surprises (and bugs) inevitable.
 
 ```cpp
 int a[10];
-for (int i=0; i < 10; ++i) a[i]=i;
+for (int i = 0; i < 10; ++i) a[i] = i;
 vector<int> v(10);
 // compares signed to unsigned; some compilers warn
-for (int i=0; v.size() < 10; ++i) v[i]=i;
+for (int i = 0; v.size() < 10; ++i) v[i] = i;
 
 int a2[-2];         // error: negative size
 
@@ -3480,13 +3635,13 @@ To enable better error detection.
 ```cpp
 vector<int> vec {1, 2, 3, 4, 5};
 
-for (int i=0; i < vec.size(); i+=2)                    // mix int and unsigned
+for (int i = 0; i < vec.size(); i += 2)                    // mix int and unsigned
     cout << vec[i] << '\n';
-for (unsigned i=0; i < vec.size(); i+=2)               // risk wraparound
+for (unsigned i = 0; i < vec.size(); i += 2)               // risk wraparound
     cout << vec[i] << '\n';
-for (vector<int>::size_type i=0; i < vec.size(); i+=2) // verbose
+for (vector<int>::size_type i = 0; i < vec.size(); i += 2) // verbose
     cout << vec[i] << '\n';
-for (auto i=0; i < vec.size(); i+=2)                   // mix int and unsigned
+for (auto i = 0; i < vec.size(); i += 2)                   // mix int and unsigned
     cout << vec[i] << '\n';
 
 ```

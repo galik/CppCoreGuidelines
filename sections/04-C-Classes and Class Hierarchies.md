@@ -371,7 +371,7 @@ class Dir : public Foo {
     int mem(int x, int y)
     {
         /* ... do something ... */
-        return do_bar(x+y); // OK: derived class can bypass check
+        return do_bar(x + y); // OK: derived class can bypass check
     }
 }
 
@@ -3357,16 +3357,16 @@ This kind of "vector" isn't meant to be used as a base class at all.
 
 ##### Example, bad
 
-   class Shape {
-   public:
 ```cpp
+class Shape {
+public:
     // ... interface functions ...
-rotected:
+protected:
     // data for use in derived classes:
     Color fill_color;
     Color edge_color;
     Style st;
-;
+};
 
 ```
 Now it is up to every derived `Shape` to manipulate the protected data correctly.
@@ -3444,7 +3444,7 @@ class iostream : public istream, public ostream {   // very simplified
 
 ```
 `istream` provides the interface to input operations; `ostream` provides the interface to output operations.
-`iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream. 
+`iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream.
 
 ##### Note
 
@@ -3475,7 +3475,7 @@ If the operations are virtual the use of inheritance is necessary, if not using 
 
 ```
 `istream` provides the interface to input operations (and some data); `ostream` provides the interface to output operations (and some data).
-`iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream. 
+`iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream.
 
 ##### Note
 
@@ -3484,13 +3484,13 @@ This a relatively rare use because implementation can often be organized into a 
 ##### Example
 
 Sometimes, an "implementation attribute" is more like a "mixin" that determine the behavior of an implementation and inject
-members to enable the implementation of the policies it requires. 
+members to enable the implementation of the policies it requires.
 For example, see `std::enable_shared_from_this`
 or various bases from boost.intrusive (e.g. `list_base_hook` or `intrusive_ref_counter`).
 
 ##### Enforcement
 
-??? 
+???
 
 ### <a name="Rh-vbase"></a>C.137: Use `virtual` bases to avoid overly general base classes
 
@@ -3564,7 +3564,7 @@ public:
 };
 class D: public B {
 public:
-    int f(int i) override { std::cout << "f(int): "; return i+1; }
+    int f(int i) override { std::cout << "f(int): "; return i + 1; }
 };
 int main()
 {
@@ -3579,7 +3579,7 @@ int main()
 ```cpp
 class D: public B {
 public:
-    int f(int i) override { std::cout << "f(int): "; return i+1; }
+    int f(int i) override { std::cout << "f(int): "; return i + 1; }
     using B::f; // exposes f(double)
 };
 

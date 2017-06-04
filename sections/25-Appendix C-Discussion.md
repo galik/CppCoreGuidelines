@@ -611,7 +611,7 @@ When is a class a container? ???
 A relatively informal definition of terms used in the guidelines
 (based of the glossary in [Programming: Principles and Practice using C++](http://www.stroustrup.com/programming.html))
 
-More information on many topics about C++ can be found on the [Standard C++ Foundation](https://isocpp.org)'s site. 
+More information on many topics about C++ can be found on the [Standard C++ Foundation](https://isocpp.org)'s site.
 
 * *ABI*: Application Binary Interface, a specification for a specific hardware platform combined with the operating system. Contrast with API.
 * *abstract class*: a class that cannot be directly used to create objects; often used to define an interface to derived classes.
@@ -739,7 +739,7 @@ In particular, an object of a regular type can be copied and the result of a cop
 * *subtype*: derived type; a type that has all the properties of a type and possibly more.
 * *supertype*: base type; a type that has a subset of the properties of a type.
 * *system*: (1) a program or a set of programs for performing a task on a computer; (2) a shorthand for "operating system", that is, the fundamental execution environment and tools for a computer.
-* *TS*: [Technical Specification](https://www.iso.org/deliverables-all.html?type=ts), A Technical Specification addresses work still under technical development, or where it is believed that there will be a future, but not immediate, possibility of agreement on an International Standard. A Technical Specification is published for immediate use, but it also provides a means to obtain feedback. The aim is that it will eventually be transformed and republished as an International Standard. 
+* *TS*: [Technical Specification](https://www.iso.org/deliverables-all.html?type=ts), A Technical Specification addresses work still under technical development, or where it is believed that there will be a future, but not immediate, possibility of agreement on an International Standard. A Technical Specification is published for immediate use, but it also provides a means to obtain feedback. The aim is that it will eventually be transformed and republished as an International Standard.
 * *template*: a class or a function parameterized by one or more types or (compile-time) values; the basic C++ language construct supporting generic programming.
 * *testing*: a systematic search for errors in a program.
 * *trade-off*: the result of balancing several design and implementation criteria.

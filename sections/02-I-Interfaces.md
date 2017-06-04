@@ -767,7 +767,7 @@ Note: `length()` is, of course, `std::strlen()` in disguise.
 Consider:
 
 ```cpp
-void copy_n(const T* p, T* q, int n); // copy from [p:p+n) to [q:q+n)
+void copy_n(const T* p, T* q, int n); // copy from [p:p + n) to [q:q + n)
 
 ```
 What if there are fewer than `n` elements in the array pointed to by `q`? Then, we overwrite some probably unrelated memory.
@@ -866,16 +866,15 @@ Having many arguments opens opportunities for confusion. Passing lots of argumen
 
 The two most common reasons why functions have too many parameters are:
 
-```cpp
-1. *Missing an abstraction.* There is an abstraction missing, so that a compound value is being
-passed as individual elements instead of as a single object that enforces an invariant.
-This not only expands the parameter list, but it leads to errors because the component values
-are no longer protected by an enforced invariant.
+1. *Missing an abstraction.*
+   There is an abstraction missing, so that a compound value is being
+   passed as individual elements instead of as a single object that enforces an invariant.
+   This not only expands the parameter list, but it leads to errors because the component values
+   are no longer protected by an enforced invariant.
 
-2. *Violating "one function, one responsibility."* The function is trying to do more than one
-job and should probably be refactored.
+2. *Violating "one function, one responsibility."*
+   The function is trying to do more than one job and should probably be refactored.
 
-```
 ##### Example
 
 The standard-library `merge()` is at the limit of what we can comfortably handle:
@@ -957,7 +956,7 @@ Adjacent arguments of the same type are easily swapped by mistake.
 Consider:
 
 ```cpp
-void copy_n(T* p, T* q, int n);  // copy from [p:p+n) to [q:q+n)
+void copy_n(T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 
 ```
 This is a nasty variant of a K&R C-style interface. It is easy to reverse the "to" and "from" arguments.
@@ -965,7 +964,7 @@ This is a nasty variant of a K&R C-style interface. It is easy to reverse the "t
 Use `const` for the "from" argument:
 
 ```cpp
-void copy_n(const T* p, T* q, int n);  // copy from [p:p+n) to [q:q+n)
+void copy_n(const T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 
 ```
 ##### Exception

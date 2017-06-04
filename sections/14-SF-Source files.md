@@ -18,7 +18,7 @@ Source file rule summary:
 * [SF.7: Don't write `using namespace` in a header file](14-SF-Source%20files.md#Rs-using-directive)
 * [SF.8: Use `#include` guards for all `.h` files](14-SF-Source%20files.md#Rs-guards)
 * [SF.9: Avoid cyclic dependencies among source files](14-SF-Source%20files.md#Rs-cycles)
-* [SF.10: Avoid dependencies on implicitly `#included` names](14-SF-Source%20files.md#Rs-implicit)
+* [SF.10: Avoid dependencies on implicitly `#include`d names](14-SF-Source%20files.md#Rs-implicit)
 
 * [SF.20: Use `namespace`s to express logical structure](14-SF-Source%20files.md#Rs-namespace)
 * [SF.21: Don't use an unnamed (anonymous) namespace in a header](14-SF-Source%20files.md#Rs-unnamed)
@@ -245,11 +245,11 @@ The argument-type error for `bar` cannot be caught until link time because of th
 ##### Example
 
 ```cpp
-#include<string>
-#include<vector>
-#include<iostream>
-#include<memory>
-#include<algorithm>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <memory>
+#include <algorithm>
 
 using namespace std;
 
@@ -264,7 +264,7 @@ could be distracting.
 The use of `using namespace std;` leaves the programmer open to a name clash with a name from the standard library
 
 ```cpp
-#include<cmath>
+#include <cmath>
 using namespace std;
 
 int g(int x)
@@ -380,7 +380,7 @@ Eliminate cycles; don't just break them with `#include` guards.
 Flag all cycles.
 
 
-### <a name="Rs-implicit"></a>SF.10: Avoid dependencies on implicitly `#included` names
+### <a name="Rs-implicit"></a>SF.10: Avoid dependencies on implicitly `#include`d names
 
 ##### Reason
 
@@ -405,12 +405,12 @@ void use()                  // bad
 }
 
 ```
-<iostream> exposes the definition of `std::string` ("why?" makes for a fun trivia question),
+`<iostream>` exposes the definition of `std::string` ("why?" makes for a fun trivia question),
 but it is not required to do so by transitively including the entire `<string>` header,
 resulting in the popular beginner question "why doesn't `getline(cin,s);` work?"
 or even an occasional "`string`s cannot be compared with `==`).
 
-The solution is to explicitly `#include<string>`:
+The solution is to explicitly `#include <string>`:
 
 ```cpp
 #include <iostream>
