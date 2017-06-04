@@ -6,29 +6,25 @@ Simple code can be very fast. Optimizers sometimes do marvels with simple code
 
 ##### Example, good
 
-```cpp
-// clear expression of intent, fast execution
+    // clear expression of intent, fast execution
 
-vector<uint8_t> v(100000);
+    vector<uint8_t> v(100000);
 
-for (auto& c : v)
-    c = ~c;
+    for (auto& c : v)
+        c = ~c;
 
-```
 ##### Example, bad
 
-```cpp
-// intended to be faster, but is actually slower
+    // intended to be faster, but is actually slower
 
-vector<uint8_t> v(100000);
+    vector<uint8_t> v(100000);
 
-for (size_t i = 0; i < v.size(); i += sizeof(uint64_t))
-{
-    uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
-    quad_word = ~quad_word;
-}
+    for (size_t i = 0; i < v.size(); i += sizeof(uint64_t))
+    {
+        uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
+        quad_word = ~quad_word;
+    }
 
-```
 ##### Note
 
 ???

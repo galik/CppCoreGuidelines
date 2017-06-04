@@ -6,28 +6,22 @@ To prevent slicing.
 
 ##### Example
 
-```cpp
-void f()
-try {
-    // ...
-}
-catch (exception e) {   // don't: may slice
-    // ...
-}
+    void f()
+    try {
+        // ...
+    }
+    catch (exception e) {   // don't: may slice
+        // ...
+    }
 
-```
 Instead, use a reference:
 
-```cpp
-catch (exception& e) { /* ... */ }
+    catch (exception& e) { /* ... */ }
 
-```
 of - typically better still - a `const` reference:
 
-```cpp
-catch (const exception& e) { /* ... */ }
+    catch (const exception& e) { /* ... */ }
 
-```
 Most handlers do not modify their exception and in general we [recommend use of `const`](I-10-Expressions%20and%20Statements-ES.025.md#Res-const).
 
 ##### Enforcement

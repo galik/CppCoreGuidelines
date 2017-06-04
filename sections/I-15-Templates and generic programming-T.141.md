@@ -6,12 +6,10 @@ That makes the code concise and gives better locality than alternatives.
 
 ##### Example
 
-```cpp
-auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
-                                    [](const User &a) { return a.id > 100; });
+    auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
+                                        [](const User &a) { return a.id > 100; });
 
 
-```
 ##### Exception
 
 Naming a lambda can be useful for clarity even if it is used only once.

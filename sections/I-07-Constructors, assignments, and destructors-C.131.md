@@ -6,29 +6,25 @@ A trivial getter or setter adds no semantic value; the data item could just as w
 
 ##### Example
 
-```cpp
-class Point {   // Bad: verbose
-    int x;
-    int y;
-public:
-    Point(int xx, int yy) : x{xx}, y{yy} { }
-    int get_x() const { return x; }
-    void set_x(int xx) { x = xx; }
-    int get_y() const { return y; }
-    void set_y(int yy) { y = yy; }
-    // no behavioral member functions
-};
+    class Point {   // Bad: verbose
+        int x;
+        int y;
+    public:
+        Point(int xx, int yy) : x{xx}, y{yy} { }
+        int get_x() const { return x; }
+        void set_x(int xx) { x = xx; }
+        int get_y() const { return y; }
+        void set_y(int yy) { y = yy; }
+        // no behavioral member functions
+    };
 
-```
 Consider making such a class a `struct` -- that is, a behaviorless bunch of variables, all public data and no member functions.
 
-```cpp
-struct Point {
-    int x {0};
-    int y {0};
-};
+    struct Point {
+        int x {0};
+        int y {0};
+    };
 
-```
 Note that we can put default initializers on member variables: [C.49: Prefer initialization to assignment in constructors](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.049.md#Rc-initialize).
 
 ##### Note

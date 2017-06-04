@@ -8,18 +8,16 @@
 
 ##### Example
 
-```cpp
-#include<string>
-#include<vector>
-#include<iostream>
-#include<memory>
-#include<algorithm>
+    #include<string>
+    #include<vector>
+    #include<iostream>
+    #include<memory>
+    #include<algorithm>
 
-using namespace std;
+    using namespace std;
 
-// ...
+    // ...
 
-```
 Here (obviously), the standard library is used pervasively and apparently no other library is used, so requiring `std::` everywhere
 could be distracting.
 
@@ -27,18 +25,16 @@ could be distracting.
 
 The use of `using namespace std;` leaves the programmer open to a name clash with a name from the standard library
 
-```cpp
-#include<cmath>
-using namespace std;
+    #include<cmath>
+    using namespace std;
 
-int g(int x)
-{
-    int sqrt = 7;
-    // ...
-    return sqrt(x); // error
-}
+    int g(int x)
+    {
+        int sqrt = 7;
+        // ...
+        return sqrt(x); // error
+    }
 
-```
 However, this is not particularly likely to lead to a resolution that is not an error and
 people who use `using namespace std` are supposed to know about `std` and about this risk.
 

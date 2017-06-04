@@ -6,10 +6,8 @@ An array decays to a pointer, thereby losing its size, opening the opportunity f
 
 ##### Example
 
-```cpp
-??? what do we recommend: f(int*[]) or f(int**) ???
+    ??? what do we recommend: f(int*[]) or f(int**) ???
 
-```
 **Alternative**: Use `span` to preserve size information.
 
 ##### Enforcement

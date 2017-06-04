@@ -7,10 +7,8 @@ The is no explicit locking and both correct (value) return and error (exception)
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 Unfortunately, `async()` is not perfect.

@@ -6,14 +6,12 @@ Informal/non-explicit ranges are a source of errors.
 
 ##### Example
 
-```cpp
-X* find(span<X> r, const X& v);    // find v in r
+    X* find(span<X> r, const X& v);    // find v in r
 
-vector<X> vec;
-// ...
-auto p = find({vec.begin(), vec.end()}, X{});  // find X{} in vec
+    vector<X> vec;
+    // ...
+    auto p = find({vec.begin(), vec.end()}, X{});  // find X{} in vec
 
-```
 ##### Note
 
 Ranges are extremely common in C++ code. Typically, they are implicit and their correct use is very hard to ensure.
@@ -25,23 +23,21 @@ it is in general impossible to know if there really are `n` elements to access f
 
 A `span` represents a range of elements, but how do we manipulate elements of that range?
 
-```cpp
-void f(span<int> s)
-{
-    // range traversal (guaranteed correct)
-    for (int x : s) cout << x << '\n';
+    void f(span<int> s)
+    {
+        // range traversal (guaranteed correct)
+        for (int x : s) cout << x << '\n';
 
-    // C-style traversal (potentially checked)
-    for (int i = 0; i < s.size(); ++i) cout << s[i] << '\n';
+        // C-style traversal (potentially checked)
+        for (int i = 0; i < s.size(); ++i) cout << s[i] << '\n';
 
-    // random access (potentially checked)
-    s[7] = 9;
+        // random access (potentially checked)
+        s[7] = 9;
 
-    // extract pointers (potentially checked)
-    std::sort(&s[0], &s[s.size() / 2]);
-}
+        // extract pointers (potentially checked)
+        std::sort(&s[0], &s[s.size() / 2]);
+    }
 
-```
 ##### Note
 
 A `span<T>` object does not own its elements and is so small that it can be passed by value.

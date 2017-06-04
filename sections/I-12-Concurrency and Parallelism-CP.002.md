@@ -14,13 +14,11 @@ For further information of how to use synchronization well to eliminate data rac
 There are many examples of data races that exist, some of which are running in
 production software at this very moment. One very simple example:
 
-```cpp
-int get_id() {
-  static int id = 1;
-  return id++;
-}
+    int get_id() {
+      static int id = 1;
+      return id++;
+    }
 
-```
 The increment here is an example of a data race. This can go wrong in many ways,
 including:
 
@@ -35,20 +33,18 @@ Local static variables are a common source of data races.
 
 ##### Example, bad:
 
-```cpp
-void f(fstream&  fs, regex pat)
-{
-    array<double, max> buf;
-    int sz = read_vec(fs, buf, max);            // read from fs into buf
-    gsl::span<double> s {buf};
-    // ...
-    auto h1 = async([&]{ sort(par, s); });     // spawn a task to sort
-    // ...
-    auto h2 = async([&]{ return find_all(buf, sz, pat); });   // span a task to find matches
-    // ...
-}
+    void f(fstream&  fs, regex pat)
+    {
+        array<double, max> buf;
+        int sz = read_vec(fs, buf, max);            // read from fs into buf
+        gsl::span<double> s {buf};
+        // ...
+        auto h1 = async([&]{ sort(par, s); });     // spawn a task to sort
+        // ...
+        auto h2 = async([&]{ return find_all(buf, sz, pat); });   // span a task to find matches
+        // ...
+    }
 
-```
 Here, we have a (nasty) data race on the elements of `buf` (`sort` will both read and write).
 All data races are nasty.
 Here, we managed to get a data race on data on the stack.
@@ -56,23 +52,21 @@ Not all data races are as easy to spot as this one.
 
 ##### Example, bad:
 
-```cpp
-// code not controlled by a lock
+    // code not controlled by a lock
 
-unsigned val;
+    unsigned val;
 
-if (val < 5) {
-    // ... other thread can change val here ...
-    switch (val) {
-    case 0: // ...
-    case 1: // ...
-    case 2: // ...
-    case 3: // ...
-    case 4: // ...
+    if (val < 5) {
+        // ... other thread can change val here ...
+        switch (val) {
+        case 0: // ...
+        case 1: // ...
+        case 2: // ...
+        case 3: // ...
+        case 4: // ...
+        }
     }
-}
 
-```
 Now, a compiler that does not know that `val` can change will  most likely implement that `switch` using a jump table with five entries.
 Then, a `val` outside the `[0..4]` range will cause a jump to an address that could be anywhere in the program, and execution would proceed there.
 Really, "all bets are off" if you get a data race.

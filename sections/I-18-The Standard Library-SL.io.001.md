@@ -7,25 +7,21 @@ and potentially inefficient composition of tokens out of characters.
 
 ##### Example
 
-```cpp
-char c;
-char buf[128];
-int i = 0;
-while (cin.get(c) && !isspace(c) && i < 128)
-    buf[i++] = c;
-if (i == 128) {
-    // ... handle too long string ....
-}
+    char c;
+    char buf[128];
+    int i = 0;
+    while (cin.get(c) && !isspace(c) && i < 128)
+        buf[i++] = c;
+    if (i == 128) {
+        // ... handle too long string ....
+    }
 
-```
 Better (much simpler and probably faster):
 
-```cpp
-string s;
-s.reserve(128);
-cin >> s;
+    string s;
+    s.reserve(128);
+    cin >> s;
 
-```
 and the `reserve(128)` is probably not worthwhile.
 
 ##### Enforcement

@@ -8,30 +8,26 @@ If you need those constructors for a derived class, re-implementing them is tedi
 
 `std::vector` has a lot of tricky constructors, so if I want my own `vector`, I don't want to reimplement them:
 
-```cpp
-class Rec {
-    // ... data and lots of nice constructors ...
-};
+    class Rec {
+        // ... data and lots of nice constructors ...
+    };
 
-class Oper : public Rec {
-    using Rec::Rec;
-    // ... no data members ...
-    // ... lots of nice utility functions ...
-};
+    class Oper : public Rec {
+        using Rec::Rec;
+        // ... no data members ...
+        // ... lots of nice utility functions ...
+    };
 
-```
 ##### Example, bad
 
-```cpp
-struct Rec2 : public Rec {
-    int x;
-    using Rec::Rec;
-};
+    struct Rec2 : public Rec {
+        int x;
+        using Rec::Rec;
+    };
 
-Rec2 r {"foo", 7};
-int val = r.x;   // uninitialized
+    Rec2 r {"foo", 7};
+    int val = r.x;   // uninitialized
 
-```
 ##### Enforcement
 
 Make sure that every member of the derived class is initialized.

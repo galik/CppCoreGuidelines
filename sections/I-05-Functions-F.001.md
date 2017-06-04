@@ -7,17 +7,15 @@ If something is a well-specified action, separate it out from its surrounding co
 
 ##### Example, don't
 
-```cpp
-void read_and_print(istream& is)    // read and print an int
-{
-    int x;
-    if (is >> x)
-        cout << "the int is " << x << '\n';
-    else
-        cerr << "no int on input\n";
-}
+    void read_and_print(istream& is)    // read and print an int
+    {
+        int x;
+        if (is >> x)
+            cout << "the int is " << x << '\n';
+        else
+            cerr << "no int on input\n";
+    }
 
-```
 Almost everything is wrong with `read_and_print`.
 It reads, it writes (to a fixed `ostream`), it writes error messages (to a fixed `ostream`), it handles only `int`s.
 There is nothing to reuse, logically separate operations are intermingled and local variables are in scope after the end of their logical use.
@@ -30,19 +28,15 @@ If you write a non-trivial lambda that potentially can be used in more than one 
 
 ##### Example
 
-```cpp
-sort(a, b, [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value(); });
+    sort(a, b, [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value(); });
 
-```
 Naming that lambda breaks up the expression into its logical parts and provides a strong hint to the meaning of the lambda.
 
-```cpp
-auto lessT = [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value(); };
+    auto lessT = [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value(); };
 
-sort(a, b, lessT);
-find_if(a, b, lessT);
+    sort(a, b, lessT);
+    find_if(a, b, lessT);
 
-```
 The shortest code is not always the best for performance or maintainability.
 
 ##### Exception

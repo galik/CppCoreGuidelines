@@ -6,10 +6,8 @@
 
 ##### Example
 
-```cpp
-??? forwarding, type checking, references
+    ??? forwarding, type checking, references
 
-```
 ##### Enforcement
 
 ???

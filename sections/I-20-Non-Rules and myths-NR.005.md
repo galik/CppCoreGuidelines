@@ -8,10 +8,8 @@ and errors (when we didn't deal correctly with semi-constructed objects consiste
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Alternative
 
 * Always establish a class invariant in a constructor.

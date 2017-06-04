@@ -6,23 +6,21 @@ Such names are commonly used for macros. Thus, `ALL_CAPS` name are vulnerable to
 
 ##### Example
 
-```cpp
-// somewhere in some header:
-#define NE !=
+    // somewhere in some header:
+    #define NE !=
 
-// somewhere else in some other header:
-enum Coord { N, NE, NW, S, SE, SW, E, W };
+    // somewhere else in some other header:
+    enum Coord { N, NE, NW, S, SE, SW, E, W };
 
-// somewhere third in some poor programmer's .cpp:
-switch (direction) {
-case N:
+    // somewhere third in some poor programmer's .cpp:
+    switch (direction) {
+    case N:
+        // ...
+    case NE:
+        // ...
     // ...
-case NE:
-    // ...
-// ...
-}
+    }
 
-```
 ##### Note
 
 Do not use `ALL_CAPS` for constants just because constants used to be macros.

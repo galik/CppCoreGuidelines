@@ -7,10 +7,8 @@ Individual classes are rarely a good logical unit of maintenance and distributio
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Alternative
 
 * Use namespaces containing logically cohesive sets of classes and functions.

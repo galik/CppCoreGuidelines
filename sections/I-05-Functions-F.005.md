@@ -9,10 +9,8 @@ Specifying `inline` encourages the compiler to do a better job.
 
 ##### Example
 
-```cpp
-inline string cat(const string& s, const string& s2) { return s + s2; }
+    inline string cat(const string& s, const string& s2) { return s + s2; }
 
-```
 ##### Exception
 
 Do not put an `inline` function in what is meant to be a stable interface unless you are certain that it will not change.

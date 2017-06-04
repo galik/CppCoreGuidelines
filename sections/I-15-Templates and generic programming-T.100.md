@@ -6,10 +6,8 @@ Variadic templates is the most general mechanism for that, and is both efficient
 
 ##### Example
 
-```cpp
-??? printf
+    ??? printf
 
-```
 ##### Enforcement
 
 * Flag uses of `va_arg` in user code.

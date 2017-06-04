@@ -6,20 +6,18 @@ An explicit distinction between interface and implementation improves readabilit
 
 ##### Example
 
-```cpp
-class Date {
-    // ... some representation ...
-public:
-    Date();
-    // validate that {yy, mm, dd} is a valid date and initialize
-    Date(int yy, Month mm, char dd);
+    class Date {
+        // ... some representation ...
+    public:
+        Date();
+        // validate that {yy, mm, dd} is a valid date and initialize
+        Date(int yy, Month mm, char dd);
 
-    int day() const;
-    Month month() const;
-    // ...
-};
+        int day() const;
+        Month month() const;
+        // ...
+    };
 
-```
 For example, we can now change the representation of a `Date` without affecting its users (recompilation is likely, though).
 
 ##### Note

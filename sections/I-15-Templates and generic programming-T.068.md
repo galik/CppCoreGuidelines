@@ -6,18 +6,16 @@
 
 ##### Example
 
-```cpp
-template<typename T, typename U>
-void f(T t, U u)
-{
-    T v1(x);    // is v1 a function of a variable?
-    T v2 {x};   // variable
-    auto x = T(u);  // construction or cast?
-}
+    template<typename T, typename U>
+    void f(T t, U u)
+    {
+        T v1(x);    // is v1 a function of a variable?
+        T v2 {x};   // variable
+        auto x = T(u);  // construction or cast?
+    }
 
-f(1, "asdf"); // bad: cast from const char* to int
+    f(1, "asdf"); // bad: cast from const char* to int
 
-```
 ##### Enforcement
 
 * flag `()` initializers

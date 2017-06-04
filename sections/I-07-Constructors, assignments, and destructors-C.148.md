@@ -11,26 +11,24 @@ Contrast with [C.147](I-07-Constructors%2C%20assignments%2C%20and%20destructors-
 The example below describes the `add` method of a `Shape_owner` that takes ownership of constructed `Shape` objects. The objects are also sorted into views, according to their geometric attributes.
 In this example, `Shape` does not inherit from `Geometric_attributes`. Only its subclasses do.
 
-```cpp
-void add(Shape* const item)
-{
-  // Ownership is always taken
-  owned_shapes.emplace_back(item);
+    void add(Shape* const item)
+    {
+      // Ownership is always taken
+      owned_shapes.emplace_back(item);
 
-  // Check the Geometric_attributes and add the shape to none/one/some/all of the views
+      // Check the Geometric_attributes and add the shape to none/one/some/all of the views
 
-  if (auto even = dynamic_cast<Even_sided*>(item))
-  {
-    view_of_evens.emplace_back(even);
-  }
+      if (auto even = dynamic_cast<Even_sided*>(item))
+      {
+        view_of_evens.emplace_back(even);
+      }
 
-  if (auto trisym = dynamic_cast<Trilaterally_symmetrical*>(item))
-  {
-    view_of_trisyms.emplace_back(trisym);
-  }
-}
+      if (auto trisym = dynamic_cast<Trilaterally_symmetrical*>(item))
+      {
+        view_of_trisyms.emplace_back(trisym);
+      }
+    }
 
-```
 ##### Notes
 
 A failure to find the required class will cause `dynamic_cast` to return a null value, and de-referencing a null-valued pointer will lead to undefined behavior.

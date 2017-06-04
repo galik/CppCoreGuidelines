@@ -9,66 +9,62 @@ Functions with complex control structures are more likely to be long and more li
 
 Consider:
 
-```cpp
-double simpleFunc(double val, int flag1, int flag2)
-    // simpleFunc: takes a value and calculates the expected ASIC output,
-    // given the two mode flags.
-{
-    double intermediate;
-    if (flag1 > 0) {
-        intermediate = func1(val);
-        if (flag2 % 2)
-             intermediate = sqrt(intermediate);
+    double simpleFunc(double val, int flag1, int flag2)
+        // simpleFunc: takes a value and calculates the expected ASIC output,
+        // given the two mode flags.
+    {
+        double intermediate;
+        if (flag1 > 0) {
+            intermediate = func1(val);
+            if (flag2 % 2)
+                 intermediate = sqrt(intermediate);
+        }
+        else if (flag1 == -1) {
+            intermediate = func1(-val);
+            if (flag2 % 2)
+                 intermediate = sqrt(-intermediate);
+            flag1 = -flag1;
+        }
+        if (abs(flag2) > 10) {
+            intermediate = func2(intermediate);
+        }
+        switch (flag2 / 10) {
+            case 1: if (flag1 == -1) return finalize(intermediate, 1.171);
+                    break;
+            case 2: return finalize(intermediate, 13.1);
+            default: break;
+        }
+        return finalize(intermediate, 0.);
     }
-    else if (flag1 == -1) {
-        intermediate = func1(-val);
-        if (flag2 % 2)
-             intermediate = sqrt(-intermediate);
-        flag1 = -flag1;
-    }
-    if (abs(flag2) > 10) {
-        intermediate = func2(intermediate);
-    }
-    switch (flag2 / 10) {
-        case 1: if (flag1 == -1) return finalize(intermediate, 1.171);
-                break;
-        case 2: return finalize(intermediate, 13.1);
-        default: break;
-    }
-    return finalize(intermediate, 0.);
-}
 
-```
 This is too complex (and long).
 How would you know if all possible alternatives have been correctly handled?
 Yes, it breaks other rules also.
 
 We can refactor:
 
-```cpp
-double func1_muon(double val, int flag)
-{
-    // ???
-}
+    double func1_muon(double val, int flag)
+    {
+        // ???
+    }
 
-double funct1_tau(double val, int flag1, int flag2)
-{
-    // ???
-}
+    double funct1_tau(double val, int flag1, int flag2)
+    {
+        // ???
+    }
 
-double simpleFunc(double val, int flag1, int flag2)
-    // simpleFunc: takes a value and calculates the expected ASIC output,
-    // given the two mode flags.
-{
-    if (flag1 > 0)
-        return func1_muon(val, flag2);
-    if (flag1 == -1)
-        // handled by func1_tau: flag1 = -flag1;
-        return func1_tau(-val, flag1, flag2);
-    return 0.;
-}
+    double simpleFunc(double val, int flag1, int flag2)
+        // simpleFunc: takes a value and calculates the expected ASIC output,
+        // given the two mode flags.
+    {
+        if (flag1 > 0)
+            return func1_muon(val, flag2);
+        if (flag1 == -1)
+            // handled by func1_tau: flag1 = -flag1;
+            return func1_tau(-val, flag1, flag2);
+        return 0.;
+    }
 
-```
 ##### Note
 
 "It doesn't fit on a screen" is often a good practical definition of "far too large."

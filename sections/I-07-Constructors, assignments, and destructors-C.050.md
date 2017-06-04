@@ -10,53 +10,49 @@ The return type of the factory should normally be `unique_ptr` by default; if so
 
 ##### Example, bad
 
-```cpp
-class B {
-public:
-    B()
-    {
+    class B {
+    public:
+        B()
+        {
+            // ...
+            f();   // BAD: virtual call in constructor
+            // ...
+        }
+
+        virtual void f() = 0;
+
         // ...
-        f();   // BAD: virtual call in constructor
-        // ...
-    }
+    };
 
-    virtual void f() = 0;
-
-    // ...
-};
-
-```
 ##### Example
 
-```cpp
-class B {
-protected:
-    B() { /* ... */ }              // create an imperfectly initialized object
+    class B {
+    protected:
+        B() { /* ... */ }              // create an imperfectly initialized object
 
-    virtual void PostInitialize()  // to be called right after construction
-    {
-        // ...
-        f();    // GOOD: virtual dispatch is safe
-        // ...
-    }
+        virtual void PostInitialize()  // to be called right after construction
+        {
+            // ...
+            f();    // GOOD: virtual dispatch is safe
+            // ...
+        }
 
-public:
-    virtual void f() = 0;
+    public:
+        virtual void f() = 0;
 
-    template<class T>
-    static shared_ptr<T> Create()  // interface for creating shared objects
-    {
-        auto p = make_shared<T>();
-        p->PostInitialize();
-        return p;
-    }
-};
+        template<class T>
+        static shared_ptr<T> Create()  // interface for creating shared objects
+        {
+            auto p = make_shared<T>();
+            p->PostInitialize();
+            return p;
+        }
+    };
 
-class D : public B { /* ... */ };  // some derived class
+    class D : public B { /* ... */ };  // some derived class
 
-shared_ptr<D> p = D::Create<D>();  // creating a D object
+    shared_ptr<D> p = D::Create<D>();  // creating a D object
 
-```
 By making the constructor `protected` we avoid an incompletely constructed object escaping into the wild.
 By providing the factory function `Create()`, we make construction (on the free store) convenient.
 

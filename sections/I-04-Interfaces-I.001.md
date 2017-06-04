@@ -8,13 +8,11 @@ Correctness. Assumptions not stated in an interface are easily overlooked and ha
 
 Controlling the behavior of a function through a global (namespace scope) variable (a call mode) is implicit and potentially confusing. For example:
 
-```cpp
-int rnd(double d)
-{
-    return (rnd_up) ? ceil(d) : d;    // don't: "invisible" dependency
-}
+    int rnd(double d)
+    {
+        return (rnd_up) ? ceil(d) : d;    // don't: "invisible" dependency
+    }
 
-```
 It will not be obvious to a caller that the meaning of two calls of `rnd(7.2)` might give different results.
 
 ##### Exception
@@ -26,11 +24,9 @@ The use of a non-local control is potentially confusing, but controls only imple
 
 Reporting through non-local variables (e.g., `errno`) is easily ignored. For example:
 
-```cpp
-// don't: no test of printf's return value
-fprintf(connection, "logging: %d %d %d\n", x, y, s);
+    // don't: no test of printf's return value
+    fprintf(connection, "logging: %d %d %d\n", x, y, s);
 
-```
 What if the connection goes down so that no logging output is produced? See I.??.
 
 **Alternative**: Throw an exception. An exception cannot be ignored.

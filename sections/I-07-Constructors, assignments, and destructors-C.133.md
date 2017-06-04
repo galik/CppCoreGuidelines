@@ -10,16 +10,14 @@
 
    class Shape {
    public:
-```cpp
-    // ... interface functions ...
-rotected:
-    // data for use in derived classes:
-    Color fill_color;
-    Color edge_color;
-    Style st;
-;
+        // ... interface functions ...
+   protected:
+        // data for use in derived classes:
+        Color fill_color;
+        Color edge_color;
+        Style st;
+   };
 
-```
 Now it is up to every derived `Shape` to manipulate the protected data correctly.
 This has been popular, but also a major source of maintenance problems.
 In a large class hierarchy, the consistent use of protected data is hard to maintain because there can be a lot of code,

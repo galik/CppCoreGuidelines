@@ -8,17 +8,15 @@ In particular, it is harder (though not impossible) to ensure that the thread co
 
 ##### Example
 
-```cpp
-void heartbeat();
+    void heartbeat();
 
-void use()
-{
-    std::thread t(heartbeat);             // don't join; heartbeat is meant to run forever
-    t.detach();
-    // ...
-}
+    void use()
+    {
+        std::thread t(heartbeat);             // don't join; heartbeat is meant to run forever
+        t.detach();
+        // ...
+    }
 
-```
 This is a reasonable use of a thread, for which `detach()` is commonly used.
 There are problems, though.
 How do we monitor the detached thread to see if it is alive?
@@ -29,29 +27,25 @@ So, we need to communicate with the heartbeat thread
 An alternative, and usually superior solution is to control its lifetime by placing it in a scope outside its point of creation (or activation).
 For example:
 
-```cpp
-void heartbeat();
+    void heartbeat();
 
-gsl::joining_thread t(heartbeat);             // heartbeat is meant to run "forever"
+    gsl::joining_thread t(heartbeat);             // heartbeat is meant to run "forever"
 
-```
 This heartbeat will (barring error, hardware problems, etc.) run for as long as the program does.
 
 Sometimes, we need to separate the point of creation from the point of ownership:
 
-```cpp
-void heartbeat();
+    void heartbeat();
 
-unique_ptr<gsl::joining_thread> tick_tock {nullptr};
+    unique_ptr<gsl::joining_thread> tick_tock {nullptr};
 
-void use()
-{
-    // heartbeat is meant to run as long as tick_tock lives
-    tick_tock = make_unique<gsl::joining_thread>(heartbeat);
-    // ...
-}
+    void use()
+    {
+        // heartbeat is meant to run as long as tick_tock lives
+        tick_tock = make_unique<gsl::joining_thread>(heartbeat);
+        // ...
+    }
 
-```
 #### Enforcement
 
 Flag `detach()`.

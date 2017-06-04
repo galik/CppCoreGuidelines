@@ -6,31 +6,27 @@ Readability. Limit the scope in which a variable can be used. Don't risk used-be
 
 ##### Example, bad
 
-```cpp
-string s;
-// ... no use of s here ...
-s = "what a waste";
+    string s;
+    // ... no use of s here ...
+    s = "what a waste";
 
-```
 ##### Example, bad
 
-```cpp
-SomeLargeType var;   // ugly CaMeLcAsEvArIaBlE
+    SomeLargeType var;   // ugly CaMeLcAsEvArIaBlE
 
-if (cond)   // some non-trivial condition
-    Set(&var);
-else if (cond2 || !cond3) {
-    var = Set2(3.14);
-}
-else {
-    var = 0;
-    for (auto& e : something)
-        var += e;
-}
+    if (cond)   // some non-trivial condition
+        Set(&var);
+    else if (cond2 || !cond3) {
+        var = Set2(3.14);
+    }
+    else {
+        var = 0;
+        for (auto& e : something)
+            var += e;
+    }
 
-// use var; that this isn't done too early can be enforced statically with only control flow
+    // use var; that this isn't done too early can be enforced statically with only control flow
 
-```
 This would be fine if there was a default initialization for `SomeLargeType` that wasn't too expensive.
 Otherwise, a programmer might very well wonder if every possible path through the maze of conditions has been covered.
 If not, we have a "use before set" bug. This is a maintenance trap.

@@ -7,32 +7,28 @@ It also avoids brittle or inefficient workarounds. Convention: That's the way th
 
 ##### Example
 
-```cpp
-template<typename T>
-    // requires Regular<T>
-class Vector {
-    // ...
-    T* elem;   // points to sz Ts
-    int sz;
-};
+    template<typename T>
+        // requires Regular<T>
+    class Vector {
+        // ...
+        T* elem;   // points to sz Ts
+        int sz;
+    };
 
-Vector<double> v(10);
-v[7] = 9.9;
+    Vector<double> v(10);
+    v[7] = 9.9;
 
-```
 ##### Example, bad
 
-```cpp
-class Container {
-    // ...
-    void* elem;   // points to size elements of some type
-    int sz;
-};
+    class Container {
+        // ...
+        void* elem;   // points to size elements of some type
+        int sz;
+    };
 
-Container c(10, sizeof(double));
-((double*) c.elem)[] = 9.9;
+    Container c(10, sizeof(double));
+    ((double*) c.elem)[] = 9.9;
 
-```
 This doesn't directly express the intent of the programmer and hides the structure of the program from the type system and optimizer.
 
 Hiding the `void*` behind macros simply obscures the problems and introduces new opportunities for confusion.

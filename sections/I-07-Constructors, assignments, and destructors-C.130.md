@@ -6,23 +6,21 @@ Copying a base is usually slicing. If you really need copy semantics, copy deepl
 
 ##### Example
 
-```cpp
-class Base {
-public:
-    virtual owner<Base*> clone() = 0;
-    virtual ~Base() = 0;
+    class Base {
+    public:
+        virtual owner<Base*> clone() = 0;
+        virtual ~Base() = 0;
 
-    Base(const Base&) = delete;
-    Base& operator=(const Base&) = delete;
-};
+        Base(const Base&) = delete;
+        Base& operator=(const Base&) = delete;
+    };
 
-class Derived : public Base {
-public:
-    owner<Derived*> clone() override;
-    virtual ~Derived() override;
-};
+    class Derived : public Base {
+    public:
+        owner<Derived*> clone() override;
+        virtual ~Derived() override;
+    };
 
-```
 Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual).
 
 ##### Enforcement

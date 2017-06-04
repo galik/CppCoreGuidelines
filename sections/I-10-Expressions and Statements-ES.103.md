@@ -7,30 +7,24 @@ Incrementing a value beyond a maximum value can lead to memory corruption and un
 
 ##### Example, bad
 
-```cpp
-int a[10];
-a[10] = 7;   // bad
+    int a[10];
+    a[10] = 7;   // bad
 
-int n = 0;
-while (n++ < 10)
-    a[n - 1] = 9; // bad (twice)
+    int n = 0;
+    while (n++ < 10)
+        a[n - 1] = 9; // bad (twice)
 
-```
 ##### Example, bad
 
-```cpp
-int n = numeric_limits<int>::max();
-int m = n + 1;   // bad
+    int n = numeric_limits<int>::max();
+    int m = n + 1;   // bad
 
-```
 ##### Example, bad
 
-```cpp
-int area(int h, int w) { return h * w; }
+    int area(int h, int w) { return h * w; }
 
-auto a = area(10'000'000, 100'000'000);   // bad
+    auto a = area(10'000'000, 100'000'000);   // bad
 
-```
 ##### Exception
 
 Use unsigned types if you really want modulo arithmetic.

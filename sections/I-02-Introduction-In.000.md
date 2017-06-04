@@ -109,10 +109,8 @@ We do not limit our comment in the **Enforcement** sections to things we know ho
 
 Tools that implement these rules shall respect the following syntax to explicitly suppress a rule:
 
-```cpp
-[[gsl::suppress(tag)]]
+    [[gsl::suppress(tag)]]
 
-```
 where "tag" is the anchor name of the item where the Enforcement rule appears (e.g., for [C.134](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.134.md#Rh-public) it is "Rh-public"), the
 name of a profile group-of-rules ("type", "bounds", or "lifetime"),
 or a specific rule in a profile ([type.4](I-22-Profiles.md#Pro-type-cstylecast), or [bounds.2](#Pro-bounds-arrayindex)).

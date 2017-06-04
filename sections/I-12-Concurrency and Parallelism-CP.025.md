@@ -8,61 +8,55 @@ It is harder to ensure absence of errors in detached threads (and potentially de
 
 ##### Example, bad
 
-```cpp
-void f() { std::cout << "Hello "; }
+    void f() { std::cout << "Hello "; }
 
-struct F {
-    void operator()() { std::cout << "parallel world "; }
-};
+    struct F {
+        void operator()() { std::cout << "parallel world "; }
+    };
 
-int main()
-{
-    std::thread t1{f};      // f() executes in separate thread
-    std::thread t2{F()};    // F()() executes in separate thread
-}  // spot the bugs
+    int main()
+    {
+        std::thread t1{f};      // f() executes in separate thread
+        std::thread t2{F()};    // F()() executes in separate thread
+    }  // spot the bugs
 
-```
 ##### Example
 
-```cpp
-void f() { std::cout << "Hello "; }
+    void f() { std::cout << "Hello "; }
 
-struct F {
-    void operator()() { std::cout << "parallel world "; }
-};
+    struct F {
+        void operator()() { std::cout << "parallel world "; }
+    };
 
-int main()
-{
-    std::thread t1{f};      // f() executes in separate thread
-    std::thread t2{F()};    // F()() executes in separate thread
+    int main()
+    {
+        std::thread t1{f};      // f() executes in separate thread
+        std::thread t2{F()};    // F()() executes in separate thread
 
-    t1.join();
-    t2.join();
-}  // one bad bug left
+        t1.join();
+        t2.join();
+    }  // one bad bug left
 
 
-```
 ##### Example, bad
 
 The code determining whether to `join()` or `detach()` may be complicated and even decided in the thread of functions called from it or functions called by the function that creates a thread:
 
-```cpp
-void tricky(thread* t, int n)
-{
-    // ...
-    if (is_odd(n))
-        t->detach();
-    // ...
-}
+    void tricky(thread* t, int n)
+    {
+        // ...
+        if (is_odd(n))
+            t->detach();
+        // ...
+    }
 
-void use(int n)
-{
-    thread t { tricky, this, n };
-    // ...
-    // ... should I join here? ...
-}
+    void use(int n)
+    {
+        thread t { tricky, this, n };
+        // ...
+        // ... should I join here? ...
+    }
 
-```
 This seriously complicates lifetime analysis, and in not too unlikely cases makes lifetime analysis impossible.
 This implies that we cannot safely refer to local objects in `use()` from the thread or refer to local objects in the thread from `use()`.
 

@@ -6,10 +6,8 @@
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

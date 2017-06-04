@@ -8,42 +8,36 @@ It simply has nothing to do with concurrency.
 
 ##### Example, bad:
 
-```cpp
-int free_slots = max_slots; // current source of memory for objects
+    int free_slots = max_slots; // current source of memory for objects
 
-Pool* use()
-{
-    if (int n = free_slots--) return &pool[n];
-}
+    Pool* use()
+    {
+        if (int n = free_slots--) return &pool[n];
+    }
 
-```
 Here we have a problem:
 This is perfectly good code in a single-threaded program, but have two threads execute this and
 there is a race condition on `free_slots` so that two threads might get the same value and `free_slots`.
 That's (obviously) a bad data race, so people trained in other languages may try to fix it like this:
 
-```cpp
-volatile int free_slots = max_slots; // current source of memory for objects
+    volatile int free_slots = max_slots; // current source of memory for objects
 
-Pool* use()
-{
-    if (int n = free_slots--) return &pool[n];
-}
+    Pool* use()
+    {
+        if (int n = free_slots--) return &pool[n];
+    }
 
-```
 This has no effect on synchronization: The data race is still there!
 
 The C++ mechanism for this is `atomic` types:
 
-```cpp
-atomic<int> free_slots = max_slots; // current source of memory for objects
+    atomic<int> free_slots = max_slots; // current source of memory for objects
 
-Pool* use()
-{
-    if (int n = free_slots--) return &pool[n];
-}
+    Pool* use()
+    {
+        if (int n = free_slots--) return &pool[n];
+    }
 
-```
 Now the `--` operation is atomic,
 rather than a read-increment-write sequence where another thread might get in-between the individual operations.
 

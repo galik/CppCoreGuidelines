@@ -6,22 +6,18 @@ Readability: the complete logic of the loop is visible "up front". The scope of 
 
 ##### Example
 
-```cpp
-for (int i = 0; i < vec.size(); i++) {
-    // do work
-}
+    for (int i = 0; i < vec.size(); i++) {
+        // do work
+    }
 
-```
 ##### Example, bad
 
-```cpp
-int i = 0;
-while (i < vec.size()) {
-    // do work
-    i++;
-}
+    int i = 0;
+    while (i < vec.size()) {
+        // do work
+        i++;
+    }
 
-```
 ##### Enforcement
 
 ???

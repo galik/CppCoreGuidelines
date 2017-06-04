@@ -8,28 +8,24 @@
 
 ##### Example
 
-```cpp
-void use(int n)
-{
-    switch (n) {   // good
-    case 0:   // ...
-    case 7:   // ...
+    void use(int n)
+    {
+        switch (n) {   // good
+        case 0:   // ...
+        case 7:   // ...
+        }
     }
-}
 
-```
 rather than:
 
-```cpp
-void use2(int n)
-{
-    if (n == 0)   // bad: if-then-else chain comparing against a set of constants
-        // ...
-    else if (n == 7)
-        // ...
-}
+    void use2(int n)
+    {
+        if (n == 0)   // bad: if-then-else chain comparing against a set of constants
+            // ...
+        else if (n == 7)
+            // ...
+    }
 
-```
 ##### Enforcement
 
 Flag `if`-`then`-`else` chains that check against constants (only).

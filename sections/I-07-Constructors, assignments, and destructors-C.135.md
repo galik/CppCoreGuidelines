@@ -7,12 +7,10 @@ Especially to break apart monolithic interfaces into "aspects" of behavior suppo
 
 ##### Example
 
-```cpp
-class iostream : public istream, public ostream {   // very simplified
-    // ...
-};
+    class iostream : public istream, public ostream {   // very simplified
+        // ...
+    };
 
-```
 `istream` provides the interface to input operations; `ostream` provides the interface to output operations.
 `iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream. 
 

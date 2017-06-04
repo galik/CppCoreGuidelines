@@ -6,10 +6,8 @@ Context switches are expensive.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

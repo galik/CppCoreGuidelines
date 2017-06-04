@@ -7,32 +7,26 @@ Avoid using the loop variable for other purposes after the loop.
 
 ##### Example
 
-```cpp
-for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
-    // ...
-}
+    for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
+        // ...
+    }
 
-```
 ##### Example, don't
 
-```cpp
-int j;                            // BAD: j is visible outside the loop
-for (j = 0; j < 100; ++j) {
-    // ...
-}
-// j is still visible here and isn't needed
+    int j;                            // BAD: j is visible outside the loop
+    for (j = 0; j < 100; ++j) {
+        // ...
+    }
+    // j is still visible here and isn't needed
 
-```
 **See also**: [Don't use a variable for two unrelated purposes](I-10-Expressions%20and%20Statements-ES.026.md#Res-recycle)
 
 ##### Example
 
-```cpp
-for (string s; cin >> s; ) {
-    cout << s << '\n';
-}
+    for (string s; cin >> s; ) {
+        cout << s << '\n';
+    }
 
-```
 ##### Enforcement
 
 Warn when a variable modified inside the `for`-statement is declared outside the loop and not being used outside the loop.

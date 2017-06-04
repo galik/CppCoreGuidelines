@@ -10,24 +10,20 @@ For resources represented as classes with a complete set of default operations, 
 
 ##### Example
 
-```cpp
-class X {
-    ifstream f;   // may own a file
-    // ... no default operations defined or =deleted ...
-};
+    class X {
+        ifstream f;   // may own a file
+        // ... no default operations defined or =deleted ...
+    };
 
-```
 `X`'s `ifstream` implicitly closes any file it may have open upon destruction of its `X`.
 
 ##### Example, bad
 
-```cpp
-class X2 {     // bad
-    FILE* f;   // may own a file
-    // ... no default operations defined or =deleted ...
-};
+    class X2 {     // bad
+        FILE* f;   // may own a file
+        // ... no default operations defined or =deleted ...
+    };
 
-```
 `X2` may leak a file handle.
 
 ##### Note
@@ -46,12 +42,10 @@ A class can hold pointers and references to objects that it does not own.
 Obviously, such objects should not be `delete`d by the class's destructor.
 For example:
 
-```cpp
-Preprocessor pp { /* ... */ };
-Parser p { pp, /* ... */ };
-Type_checker tc { p, /* ... */ };
+    Preprocessor pp { /* ... */ };
+    Parser p { pp, /* ... */ };
+    Type_checker tc { p, /* ... */ };
 
-```
 Here `p` refers to `pp` but does not own it.
 
 ##### Enforcement

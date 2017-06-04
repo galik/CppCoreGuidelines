@@ -60,10 +60,8 @@ Remember
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Alternative
 
 * [RAII](I-13-Error%20handling-E.006.md#Re-raii)

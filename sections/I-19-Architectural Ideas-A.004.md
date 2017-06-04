@@ -10,10 +10,8 @@
 A library can contain cyclic references in the definition of its components.
 For example:
 
-```cpp
-???
+    ???
 
-```
 However, a library should not depend on another that depends on it.
 
 

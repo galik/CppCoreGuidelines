@@ -8,36 +8,34 @@ Worse, a direct or indirect call to an unimplemented pure virtual function from 
 
 ##### Example, bad
 
-```cpp
-class Base {
-public:
-    virtual void f() = 0;   // not implemented
-    virtual void g();       // implemented with Base version
-    virtual void h();       // implemented with Base version
-};
+    class Base {
+    public:
+        virtual void f() = 0;   // not implemented
+        virtual void g();       // implemented with Base version
+        virtual void h();       // implemented with Base version
+    };
 
-class Derived : public Base {
-public:
-    void g() override;   // provide Derived implementation
-    void h() final;      // provide Derived implementation
+    class Derived : public Base {
+    public:
+        void g() override;   // provide Derived implementation
+        void h() final;      // provide Derived implementation
 
-    Derived()
-    {
-        // BAD: attempt to call an unimplemented virtual function
-        f();
+        Derived()
+        {
+            // BAD: attempt to call an unimplemented virtual function
+            f();
 
-        // BAD: will call Derived::g, not dispatch further virtually
-        g();
+            // BAD: will call Derived::g, not dispatch further virtually
+            g();
 
-        // GOOD: explicitly state intent to call only the visible version
-        Derived::g();
+            // GOOD: explicitly state intent to call only the visible version
+            Derived::g();
 
-        // ok, no qualification needed, h is final
-        h();
-    }
-};
+            // ok, no qualification needed, h is final
+            h();
+        }
+    };
 
-```
 Note that calling a specific explicitly qualified function is not a virtual call even if the function is `virtual`.
 
 **See also** [factory functions](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.050.md#Rc-factory) for how to achieve the effect of a call to a derived class function without risking undefined behavior.

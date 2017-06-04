@@ -10,14 +10,12 @@ the header file is part of.
 
 ##### Example
 
-```cpp
-// file foobar.h:
-#ifndef LIBRARY_FOOBAR_H
-#define LIBRARY_FOOBAR_H
-// ... declarations ...
-#endif // LIBRARY_FOOBAR_H
+    // file foobar.h:
+    #ifndef LIBRARY_FOOBAR_H
+    #define LIBRARY_FOOBAR_H
+    // ... declarations ...
+    #endif // LIBRARY_FOOBAR_H
 
-```
 ##### Enforcement
 
 Flag `.h` files without `#include` guards.

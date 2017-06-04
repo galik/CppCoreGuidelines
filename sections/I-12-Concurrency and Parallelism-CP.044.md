@@ -6,12 +6,10 @@ An unnamed local objects is a temporary that immediately goes out of scope.
 
 ##### Example
 
-```cpp
-unique_lock<mutex>(m1);
-lock_guard<mutex> {m2};
-lock(m1, m2);
+    unique_lock<mutex>(m1);
+    lock_guard<mutex> {m2};
+    lock(m1, m2);
 
-```
 This looks innocent enough, but it isn't.
 
 ##### Enforcement

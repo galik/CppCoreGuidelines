@@ -9,10 +9,8 @@ See also [Simulating RAII](I-13-Error%20handling-E.025.md#Re-no-throw-raii).
 
 ##### Example, bad
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 C-style error handling is based on the global variable `errno`, so it is essentially impossible to avoid this style completely.

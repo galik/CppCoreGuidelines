@@ -6,22 +6,20 @@ Including entities subject to the one-definition rule leads to linkage errors.
 
 ##### Example
 
-```cpp
-// file.h:
-namespace Foo {
-    int x = 7;
-    int xx() { return x+x; }
-}
+    // file.h:
+    namespace Foo {
+        int x = 7;
+        int xx() { return x+x; }
+    }
 
-// file1.cpp:
-#include <file.h>
-// ... more ...
+    // file1.cpp:
+    #include <file.h>
+    // ... more ...
 
- // file2.cpp:
-#include <file.h>
-// ... more ...
+     // file2.cpp:
+    #include <file.h>
+    // ... more ...
 
-```
 Linking `file1.cpp` and `file2.cpp` will give two linker errors.
 
 **Alternative formulation**: A `.h` file must contain only:

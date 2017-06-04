@@ -9,10 +9,8 @@ Macros complicate tool building.
 
 ##### Example, bad
 
-```cpp
-#define Case break; case   /* BAD */
+    #define Case break; case   /* BAD */
 
-```
 This innocuous-looking macro makes a single lower case `c` instead of a `C` into a bad flow-control bug.
 
 ##### Note

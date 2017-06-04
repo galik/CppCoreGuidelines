@@ -7,22 +7,20 @@ Many parts of the C++ semantics assumes its default meaning.
 
 ##### Example
 
-```cpp
-class Ptr { // a somewhat smart pointer
-    Ptr(X* pp) :p(pp) { /* check */ }
-    X* operator->() { /* check */ return p; }
-    X operator[](int i);
-    X operator*();
-private:
-    T* p;
-};
+    class Ptr { // a somewhat smart pointer
+        Ptr(X* pp) :p(pp) { /* check */ }
+        X* operator->() { /* check */ return p; }
+        X operator[](int i);
+        X operator*();
+    private:
+        T* p;
+    };
 
-class X {
-    Ptr operator&() { return Ptr{this}; }
-    // ...
-};
+    class X {
+        Ptr operator&() { return Ptr{this}; }
+        // ...
+    };
 
-```
 ##### Note
 
 If you "mess with" operator `&` be sure that its definition has matching meanings for `->`, `[]`, `*`, and `.` on the result type.

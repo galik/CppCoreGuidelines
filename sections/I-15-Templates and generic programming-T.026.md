@@ -9,22 +9,18 @@ Conversions are taken into account. You don't have to remember the names of all 
 
 You might be tempted to define a concept `Equality` like this:
 
-```cpp
-template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
+    template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
 
-```
 Obviously, it would be better and easier just to use the standard `EqualityComparable`,
 but - just as an example - if you had to define such a concept, prefer:
 
-```cpp
-template<typename T> concept Equality = requires(T a, T b) {
-    bool == { a == b }
-    bool == { a != b }
-    // axiom { !(a == b) == (a != b) }
-    // axiom { a = b; => a == b }  // => means "implies"
-}
+    template<typename T> concept Equality = requires(T a, T b) {
+        bool == { a == b }
+        bool == { a != b }
+        // axiom { !(a == b) == (a != b) }
+        // axiom { a = b; => a == b }  // => means "implies"
+    }
 
-```
 as opposed to defining two meaningless concepts `has_equal` and `has_not_equal` just as helpers in the definition of `Equality`.
 By "meaningless" we mean that we cannot specify the semantics of `has_equal` in isolation.
 

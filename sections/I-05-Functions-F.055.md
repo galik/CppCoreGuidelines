@@ -8,26 +8,24 @@ This is fragile because it cannot generally be enforced to be safe in the langua
 
 ##### Example
 
-```cpp
-int sum(...) {
-    // ...
-    while (/*...*/)
-        result += va_arg(list, int); // BAD, assumes it will be passed ints
-    // ...
-}
+    int sum(...) {
+        // ...
+        while (/*...*/)
+            result += va_arg(list, int); // BAD, assumes it will be passed ints
+        // ...
+    }
 
-sum(3, 2); // ok
-sum(3.14159, 2.71828); // BAD, undefined
+    sum(3, 2); // ok
+    sum(3.14159, 2.71828); // BAD, undefined
 
-template<class ...Args>
-auto sum(Args... args) { // GOOD, and much more flexible
-    return (... + args); // note: C++17 "fold expression"
-}
+    template<class ...Args>
+    auto sum(Args... args) { // GOOD, and much more flexible
+        return (... + args); // note: C++17 "fold expression"
+    }
 
-sum(3, 2); // ok: 5
-sum(3.14159, 2.71828); // ok: ~5.85987
+    sum(3, 2); // ok: 5
+    sum(3.14159, 2.71828); // ok: ~5.85987
 
-```
 ##### Alternatives
 
 * overloading

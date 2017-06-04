@@ -6,25 +6,21 @@ Minimize context dependencies and increase readability.
 
 ##### Example
 
-```cpp
-#include <vector>
-#include <algorithm>
-#include <string>
+    #include <vector>
+    #include <algorithm>
+    #include <string>
 
-// ... my code here ...
+    // ... my code here ...
 
-```
 ##### Example, bad
 
-```cpp
-#include <vector>
+    #include <vector>
 
-// ... my code here ...
+    // ... my code here ...
 
-#include <algorithm>
-#include <string>
+    #include <algorithm>
+    #include <string>
 
-```
 ##### Note
 
 This applies to both `.h` and `.cpp` files.

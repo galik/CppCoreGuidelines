@@ -6,12 +6,10 @@ Readability. To limit the scope in which the variable can be used.
 
 ##### Example
 
-```cpp
-int x = 7;
-// ... no use of x here ...
-++x;
+    int x = 7;
+    // ... no use of x here ...
+    ++x;
 
-```
 ##### Enforcement
 
 Flag declarations that are distant from their first use.

@@ -34,27 +34,23 @@ If performance is your worry, measure.
 
 Assume you wanted to write
 
-```cpp
-void func(zstring arg)
-{
-    Gadget g {arg};
-    // ...
-}
+    void func(zstring arg)
+    {
+        Gadget g {arg};
+        // ...
+    }
 
-```
 If the `gadget` isn't correctly constructed, `func` exits with an exception.
 If we cannot throw an exception, we can simulate this RAII style of resource handling by adding a `valid()` member function to `Gadget`:
 
-```cpp
-error_indicator func(zstring arg)
-{
-    Gadget g {arg};
-    if (!g.valid()) return gadget_construction_error;
-    // ...
-    return 0;   // zero indicates "good"
-}
+    error_indicator func(zstring arg)
+    {
+        Gadget g {arg};
+        if (!g.valid()) return gadget_construction_error;
+        // ...
+        return 0;   // zero indicates "good"
+    }
 
-```
 The problem is of course that the caller now has to remember to test the return value.
 
 **See also**: [Discussion](#Sd-???).

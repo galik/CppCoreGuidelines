@@ -8,38 +8,34 @@ Since C++11, static local variables are now initialized in a thread-safe way. Wh
 
 Example with std::call_once.
 
-```cpp
-void f()
-{
-    static std::once_flag my_once_flag;
-    std::call_once(my_once_flag, []()
+    void f()
     {
-        // do this only once
-    });
-    // ...
-}
+        static std::once_flag my_once_flag;
+        std::call_once(my_once_flag, []()
+        {
+            // do this only once
+        });
+        // ...
+    }
 
-```
 Example with thread-safe static local variables of C++11.
 
-```cpp
-void f()
-{
-    // Assuming the compiler is compliant with C++11
-    static My_class my_object; // Constructor called only once
-    // ...
-}
-
-class My_class
-{
-public:
-    My_class()
+    void f()
     {
-        // do this only once
+        // Assuming the compiler is compliant with C++11
+        static My_class my_object; // Constructor called only once
+        // ...
     }
-};
 
-```
+    class My_class
+    {
+    public:
+        My_class()
+        {
+            // do this only once
+        }
+    };
+
 ##### Enforcement
 
 ??? Is it possible to detect the idiom?

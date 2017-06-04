@@ -13,26 +13,24 @@ just to gain a minor convenience.
 
 ##### Example, bad
 
-```cpp
-class String {   // handle ownership and access to a sequence of characters
-    // ...
-    String(czstring p); // copy from *p to *(this->elem)
-    // ...
-    operator zstring() { return elem; }
-    // ...
-};
-
-void user(zstring p)
-{
-    if (*p == "") {
-        String s {"Trouble ahead!"};
+    class String {   // handle ownership and access to a sequence of characters
         // ...
-        p = s;
-    }
-    // use p
-}
+        String(czstring p); // copy from *p to *(this->elem)
+        // ...
+        operator zstring() { return elem; }
+        // ...
+    };
 
-```
+    void user(zstring p)
+    {
+        if (*p == "") {
+            String s {"Trouble ahead!"};
+            // ...
+            p = s;
+        }
+        // use p
+    }
+
 The string allocated for `s` and assigned to `p` is destroyed before it can be used.
 
 ##### Enforcement

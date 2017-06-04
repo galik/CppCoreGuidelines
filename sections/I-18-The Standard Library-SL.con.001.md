@@ -9,21 +9,17 @@ For a variable-length array, use `std::vector`, which additionally can change it
 
 ##### Example
 
-```cpp
-int v[SIZE];                        // BAD
+    int v[SIZE];                        // BAD
 
-std::array<int, SIZE> w;             // ok
+    std::array<int, SIZE> w;             // ok
 
-```
 ##### Example
 
-```cpp
-int* v = new int[initial_size];     // BAD, owning raw pointer
-delete[] v;                         // BAD, manual delete
+    int* v = new int[initial_size];     // BAD, owning raw pointer
+    delete[] v;                         // BAD, manual delete
 
-std::vector<int> w(initial_size);   // ok
+    std::vector<int> w(initial_size);   // ok
 
-```
 ##### Note
 
 Use `gsl::span` for non-owning references into a container.

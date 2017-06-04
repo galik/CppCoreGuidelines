@@ -6,30 +6,26 @@
 
 ##### Example
 
-```cpp
-template<typename T>
-class Foo {
-public:
-    enum { v1, v2 };
-    // ...
-};
+    template<typename T>
+    class Foo {
+    public:
+        enum { v1, v2 };
+        // ...
+    };
 
-```
 ???
 
-```cpp
-struct Foo_base {
-    enum { v1, v2 };
-    // ...
-};
+    struct Foo_base {
+        enum { v1, v2 };
+        // ...
+    };
 
-template<typename T>
-class Foo : public Foo_base {
-public:
-    // ...
-};
+    template<typename T>
+    class Foo : public Foo_base {
+    public:
+        // ...
+    };
 
-```
 ##### Note
 
 A more general version of this rule would be

@@ -6,11 +6,9 @@ Pure functions are easier to reason about, sometimes easier to optimize (and eve
 
 ##### Example
 
-```cpp
-template<class T>
-auto square(T t) { return t * t; }
+    template<class T>
+    auto square(T t) { return t * t; }
 
-```
 ##### Note
 
 `constexpr` functions are pure.

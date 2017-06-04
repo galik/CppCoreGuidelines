@@ -6,12 +6,10 @@ Convention. Readability. Distinguishing macros.
 
 ##### Example
 
-```cpp
-#define forever for (;;)   /* very BAD */
+    #define forever for (;;)   /* very BAD */
 
-#define FOREVER for (;;)   /* Still evil, but at least visible to humans */
+    #define FOREVER for (;;)   /* Still evil, but at least visible to humans */
 
-```
 ##### Enforcement
 
 Scream when you see a lower case macro.

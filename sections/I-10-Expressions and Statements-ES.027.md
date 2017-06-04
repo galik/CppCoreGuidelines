@@ -7,18 +7,16 @@ They are not confused with non-standard extensions of built-in arrays.
 
 ##### Example, bad
 
-```cpp
-const int n = 7;
-int m = 9;
+    const int n = 7;
+    int m = 9;
 
-void f()
-{
-    int a1[n];
-    int a2[m];   // error: not ISO C++
-    // ...
-}
+    void f()
+    {
+        int a1[n];
+        int a2[m];   // error: not ISO C++
+        // ...
+    }
 
-```
 ##### Note
 
 The definition of `a1` is legal C++ and has always been.
@@ -29,18 +27,16 @@ The definition of `a2` is C but not C++ and is considered a security risk
 
 ##### Example
 
-```cpp
-const int n = 7;
-int m = 9;
+    const int n = 7;
+    int m = 9;
 
-void f()
-{
-    array<int, n> a1;
-    stack_array<int> a2(m);
-    // ...
-}
+    void f()
+    {
+        array<int, n> a1;
+        stack_array<int> a2(m);
+        // ...
+    }
 
-```
 ##### Enforcement
 
 * Flag arrays with non-constant bounds (C-style VLAs)

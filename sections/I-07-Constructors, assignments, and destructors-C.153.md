@@ -8,10 +8,8 @@ give a wrong result (especially as a hierarchy is modified during maintenance).
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 See [C.146](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.146.md#Rh-dynamic_cast) and ???

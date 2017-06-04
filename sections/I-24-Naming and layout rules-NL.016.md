@@ -19,17 +19,15 @@ Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed a
 
 ##### Example
 
-```cpp
-class X {
-public:
-    // interface
-protected:
-    // unchecked function for use by derived class implementations
-private:
-    // implementation details
-};
+    class X {
+    public:
+        // interface
+    protected:
+        // unchecked function for use by derived class implementations
+    private:
+        // implementation details
+    };
 
-```
 ##### Note
 
 The use of macros to declare groups of members often violates any ordering rules.

@@ -8,35 +8,31 @@ Messy, low-level code breeds more such code.
 
 ##### Example
 
-```cpp
-int sz = 100;
-int* p = (int*) malloc(sizeof(int) * sz);
-int count = 0;
-// ...
-for (;;) {
-    // ... read an int into x, exit loop if end of file is reached ...
-    // ... check that x is valid ...
-    if (count == sz)
-        p = (int*) realloc(p, sizeof(int) * sz * 2);
-    p[count++] = x;
+    int sz = 100;
+    int* p = (int*) malloc(sizeof(int) * sz);
+    int count = 0;
     // ...
-}
+    for (;;) {
+        // ... read an int into x, exit loop if end of file is reached ...
+        // ... check that x is valid ...
+        if (count == sz)
+            p = (int*) realloc(p, sizeof(int) * sz * 2);
+        p[count++] = x;
+        // ...
+    }
 
-```
 This is low-level, verbose, and error-prone.
 For example, we "forgot" to test for memory exhaustion.
 Instead, we could use `vector`:
 
-```cpp
-vector<int> v;
-v.reserve(100);
-// ...
-for (int x; cin >> x; ) {
-    // ... check that x is valid ...
-    v.push_back(x);
-}
+    vector<int> v;
+    v.reserve(100);
+    // ...
+    for (int x; cin >> x; ) {
+        // ... check that x is valid ...
+        v.push_back(x);
+    }
 
-```
 ##### Note
 
 The standards library and the GSL are examples of this philosophy.

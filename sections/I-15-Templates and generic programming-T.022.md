@@ -8,18 +8,16 @@ Specifying semantics is a powerful design tool.
 
 ##### Example (using TS concepts)
 
-```cpp
-template<typename T>
-    // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
-    // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
-    concept Number = requires(T a, T b) {
-        {a + b} -> T;   // the result of a + b is convertible to T
-        {a - b} -> T;
-        {a * b} -> T;
-        {a / b} -> T;
-    }
+    template<typename T>
+        // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
+        // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
+        concept Number = requires(T a, T b) {
+            {a + b} -> T;   // the result of a + b is convertible to T
+            {a - b} -> T;
+            {a * b} -> T;
+            {a / b} -> T;
+        }
 
-```
 ##### Note
 
 This is an axiom in the mathematical sense: something that may be assumed without proof.
@@ -43,15 +41,13 @@ Early versions of a new "concept" still under development will often just define
 Finding good semantics can take effort and time.
 An incomplete set of constraints can still be very useful:
 
-```cpp
-// balancer for a generic binary tree
-template<typename Node> concept bool Balancer = requires(Node* p) {
-    add_fixup(p);
-    touch(p);
-    detach(p);
-}
+    // balancer for a generic binary tree
+    template<typename Node> concept bool Balancer = requires(Node* p) {
+        add_fixup(p);
+        touch(p);
+        detach(p);
+    }
 
-```
 So a `Balancer` must supply at least thee operations on a tree `Node`,
 but we are not yet ready to specify detailed semantics because a new kind of balanced tree might require more operations
 and the precise general semantics for all nodes is hard to pin down in the early stages of design.

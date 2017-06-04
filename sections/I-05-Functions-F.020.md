@@ -10,14 +10,12 @@ If you have multiple values to return, [use a tuple](I-05-Functions-F.021.md#Rf-
 
 ##### Example
 
-```cpp
-// OK: return pointers to elements with the value x
-vector<const int*> find_all(const vector<int>&, int x);
+    // OK: return pointers to elements with the value x
+    vector<const int*> find_all(const vector<int>&, int x);
 
-// Bad: place pointers to elements with value x in out
-void find_all(const vector<int>&, vector<const int*>& out, int x);
+    // Bad: place pointers to elements with value x in out
+    void find_all(const vector<int>&, vector<const int*>& out, int x);
 
-```
 ##### Note
 
 A `struct` of many (individually cheap-to-move) elements may be in aggregate expensive to move.
@@ -25,18 +23,16 @@ A `struct` of many (individually cheap-to-move) elements may be in aggregate exp
 It is not recommended to return a `const` value.
 Such older advice is now obsolete; it does not add value, and it interferes with move semantics.
 
-```cpp
-const vector<int> fct();    // bad: that "const" is more trouble than it is worth
+    const vector<int> fct();    // bad: that "const" is more trouble than it is worth
 
-vector<int> g(const vector<int>& vx)
-{
-    // ...
-    f() = vx;   // prevented by the "const"
-    // ...
-    return f(); // expensive copy: move semantics suppressed by the "const"
-}
+    vector<int> g(const vector<int>& vx)
+    {
+        // ...
+        f() = vx;   // prevented by the "const"
+        // ...
+        return f(); // expensive copy: move semantics suppressed by the "const"
+    }
 
-```
 The argument for adding `const` to a return value is that it prevents (very rare) accidental access to a temporary.
 The argument against is prevents (very frequent) use of move semantics.
 
@@ -48,19 +44,17 @@ The argument against is prevents (very frequent) use of move semantics.
 
 ##### Example
 
-```cpp
-struct Package {      // exceptional case: expensive-to-move object
-    char header[16];
-    char load[2024 - 16];
-};
+    struct Package {      // exceptional case: expensive-to-move object
+        char header[16];
+        char load[2024 - 16];
+    };
 
-Package fill();       // Bad: large return value
-void fill(Package&);  // OK
+    Package fill();       // Bad: large return value
+    void fill(Package&);  // OK
 
-int val();            // OK
-void val(int&);       // Bad: Is val reading its argument
+    int val();            // OK
+    void val(int&);       // Bad: Is val reading its argument
 
-```
 ##### Enforcement
 
 * Flag reference to non-`const` parameters that are not read before being written to and are a type that could be cheaply returned; they should be "out" return values.

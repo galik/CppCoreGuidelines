@@ -11,40 +11,38 @@ Time and space that you spend well to achieve a goal (e.g., speed of development
 
 ##### Example, bad
 
-```cpp
-struct X {
-    char ch;
-    int i;
-    string s;
-    char ch2;
+    struct X {
+        char ch;
+        int i;
+        string s;
+        char ch2;
 
-    X& operator=(const X& a);
-    X(const X&);
-};
+        X& operator=(const X& a);
+        X(const X&);
+    };
 
-X waste(const char* p)
-{
-    if (p == nullptr) throw Nullptr_error{};
-    int n = strlen(p);
-    auto buf = new char[n];
-    if (buf == nullptr) throw Allocation_error{};
-    for (int i = 0; i < n; ++i) buf[i] = p[i];
-    // ... manipulate buffer ...
-    X x;
-    x.ch = 'a';
-    x.s = string(n);    // give x.s space for *p
-    for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
-    delete buf;
-    return x;
-}
+    X waste(const char* p)
+    {
+        if (p == nullptr) throw Nullptr_error{};
+        int n = strlen(p);
+        auto buf = new char[n];
+        if (buf == nullptr) throw Allocation_error{};
+        for (int i = 0; i < n; ++i) buf[i] = p[i];
+        // ... manipulate buffer ...
+        X x;
+        x.ch = 'a';
+        x.s = string(n);    // give x.s space for *p
+        for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
+        delete buf;
+        return x;
+    }
 
-void driver()
-{
-    X x = waste("Typical argument");
-    // ...
-}
+    void driver()
+    {
+        X x = waste("Typical argument");
+        // ...
+    }
 
-```
 Yes, this is a caricature, but we have seen every individual mistake in production code, and worse.
 Note that the layout of `X` guarantees that at least 6 bytes (and most likely more) are wasted.
 The spurious definition of copy operations disables move semantics so that the return operation is slow
@@ -54,13 +52,11 @@ There are several more performance bugs and gratuitous complication.
 
 ##### Example, bad
 
-```cpp
-void lower(zstring s)
-{
-    for (int i = 0; i < strlen(s); ++i) s[i] = tolower(s[i]);
-}
+    void lower(zstring s)
+    {
+        for (int i = 0; i < strlen(s); ++i) s[i] = tolower(s[i]);
+    }
 
-```
 Yes, this is an example from production code.
 We leave it to the reader to figure out what's wasted.
 

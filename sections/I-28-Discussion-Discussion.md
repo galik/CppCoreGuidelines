@@ -2,22 +2,20 @@
 
 Member variables are always initialized in the order they are declared in the class definition, so write them in that order in the constructor initialization list. Writing them in a different order just makes the code confusing because it won't run in the order you see, and that can make it hard to see order-dependent bugs.
 
-```cpp
-class Employee {
-    string email, first, last;
-public:
-    Employee(const char* firstName, const char* lastName);
-    // ...
-};
+    class Employee {
+        string email, first, last;
+    public:
+        Employee(const char* firstName, const char* lastName);
+        // ...
+    };
 
-Employee::Employee(const char* firstName, const char* lastName)
-  : first(firstName),
-    last(lastName),
-    // BAD: first and last not yet constructed
-    email(first + "." + last + "@acme.com")
-{}
+    Employee::Employee(const char* firstName, const char* lastName)
+      : first(firstName),
+        last(lastName),
+        // BAD: first and last not yet constructed
+        email(first + "." + last + "@acme.com")
+    {}
 
-```
 In this example, `email` will be constructed before `first` and `last` because it is declared first. That means its constructor will attempt to use `first` and `last` too soon -- not just before they are set to the desired values, but before they are constructed at all.
 
 If the class definition and the constructor body are in separate files, the long-distance influence that the order of member variable declarations has over the constructor's correctness will be even harder to spot.

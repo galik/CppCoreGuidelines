@@ -8,24 +8,22 @@ Eases tool creation.
 
 ##### Example
 
-```cpp
-template<typename C>
-void sort(C& c)
-{
-    std::sort(begin(c), end(c)); // necessary and useful dependency
-}
-
-template<typename Iter>
-Iter algo(Iter first, Iter last) {
-    for (; first != last; ++first) {
-        auto x = sqrt(*first); // potentially surprising dependency: which sqrt()?
-        helper(first, x);      // potentially surprising dependency:
-                               // helper is chosen based on first and x
-        TT var = 7;            // potentially surprising dependency: which TT?
+    template<typename C>
+    void sort(C& c)
+    {
+        std::sort(begin(c), end(c)); // necessary and useful dependency
     }
-}
 
-```
+    template<typename Iter>
+    Iter algo(Iter first, Iter last) {
+        for (; first != last; ++first) {
+            auto x = sqrt(*first); // potentially surprising dependency: which sqrt()?
+            helper(first, x);      // potentially surprising dependency:
+                                   // helper is chosen based on first and x
+            TT var = 7;            // potentially surprising dependency: which TT?
+        }
+    }
+
 ##### Note
 
 Templates typically appear in header files so their context dependencies are more vulnerable to `#include` order dependencies than functions in `.cpp` files.

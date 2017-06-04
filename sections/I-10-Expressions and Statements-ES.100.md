@@ -6,15 +6,13 @@ Avoid wrong results.
 
 ##### Example
 
-```cpp
-int x = -3;
-unsigned int y = 7;
+    int x = -3;
+    unsigned int y = 7;
 
-cout << x - y << '\n';  // unsigned result, possibly 4294967286
-cout << x + y << '\n';  // unsigned result: 4
-cout << x * y << '\n';  // unsigned result, possibly 4294967275
+    cout << x - y << '\n';  // unsigned result, possibly 4294967286
+    cout << x + y << '\n';  // unsigned result: 4
+    cout << x * y << '\n';  // unsigned result, possibly 4294967275
 
-```
 It is harder to spot the problem in more realistic examples.
 
 ##### Note

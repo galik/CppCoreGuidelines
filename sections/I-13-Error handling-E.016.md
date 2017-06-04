@@ -6,18 +6,16 @@ We don't know how to write reliable programs if a destructor, a swap, or a memor
 
 ##### Example, don't
 
-```cpp
-class Connection {
-    // ...
-public:
-    ~Connection()   // Don't: very bad destructor
-    {
-        if (cannot_disconnect()) throw I_give_up{information};
+    class Connection {
         // ...
-    }
-};
+    public:
+        ~Connection()   // Don't: very bad destructor
+        {
+            if (cannot_disconnect()) throw I_give_up{information};
+            // ...
+        }
+    };
 
-```
 ##### Note
 
 Many have tried to write reliable code violating this rule for examples, such as a network connection that "refuses to close".

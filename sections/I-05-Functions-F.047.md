@@ -14,19 +14,17 @@ This was primarily to avoid code of the form `(a = b) = c` -- such code is not c
 
 ##### Example
 
-```cpp
-class Foo
-{
- public:
-    ...
-    Foo& operator=(const Foo& rhs) {
-      // Copy members.
-      ...
-      return *this;
-    }
-};
+    class Foo
+    {
+     public:
+        ...
+        Foo& operator=(const Foo& rhs) {
+          // Copy members.
+          ...
+          return *this;
+        }
+    };
 
-```
 ##### Enforcement
 
 This should be enforced by tooling by checking the return type (and return

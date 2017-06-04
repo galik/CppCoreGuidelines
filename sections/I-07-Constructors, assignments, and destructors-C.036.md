@@ -7,21 +7,19 @@ The standard library requires that all classes it deals with have destructors th
 
 ##### Example
 
-```cpp
-class X {
-public:
-    ~X() noexcept;
-    // ...
-};
+    class X {
+    public:
+        ~X() noexcept;
+        // ...
+    };
 
-X::~X() noexcept
-{
-    // ...
-    if (cannot_release_a_resource) terminate();
-    // ...
-}
+    X::~X() noexcept
+    {
+        // ...
+        if (cannot_release_a_resource) terminate();
+        // ...
+    }
 
-```
 ##### Note
 
 Many have tried to devise a fool-proof scheme for dealing with failure in destructors.

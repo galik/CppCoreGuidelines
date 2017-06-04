@@ -7,10 +7,8 @@ Write your own "advanced TMP support" only if you really have to.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

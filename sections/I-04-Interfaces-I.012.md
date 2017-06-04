@@ -7,16 +7,14 @@ To improve performance by avoiding redundant checks for `nullptr`.
 
 ##### Example
 
-```cpp
-int length(const char* p);            // it is not clear whether length(nullptr) is valid
+    int length(const char* p);            // it is not clear whether length(nullptr) is valid
 
-length(nullptr);                      // OK?
+    length(nullptr);                      // OK?
 
-int length(not_null<const char*> p);  // better: we can assume that p cannot be nullptr
+    int length(not_null<const char*> p);  // better: we can assume that p cannot be nullptr
 
-int length(const char* p);            // we must assume that p can be nullptr
+    int length(const char* p);            // we must assume that p can be nullptr
 
-```
 By stating the intent in source, implementers and tools can provide better diagnostics, such as finding some classes of errors through static analysis, and perform optimizations, such as removing branches and null tests.
 
 ##### Note
@@ -27,12 +25,10 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 The assumption that the pointer to `char` pointed to a C-style string (a zero-terminated string of characters) was still implicit, and a potential source of confusion and errors. Use `czstring` in preference to `const char*`.
 
-```cpp
-// we can assume that p cannot be nullptr
-// we can assume that p points to a zero-terminated array of characters
-int length(not_null<zstring> p);
+    // we can assume that p cannot be nullptr
+    // we can assume that p points to a zero-terminated array of characters
+    int length(not_null<zstring> p);
 
-```
 Note: `length()` is, of course, `std::strlen()` in disguise.
 
 ##### Enforcement

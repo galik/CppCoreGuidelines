@@ -9,20 +9,18 @@ See the [WG21 proposal](http://wg21.link/p0290)) to add `synchronized_value` to 
 
 ##### Example
 
-```cpp
-struct Record {
-    std::mutex m;   // take this mutex before accessing other members
-    // ...
-};
-
-class MyClass {
-    struct DataRecord {
-       // ...
+    struct Record {
+        std::mutex m;   // take this mutex before accessing other members
+        // ...
     };
-    synchronized_value<DataRecord> data; // Protect the data with a mutex
-};
 
-```
+    class MyClass {
+        struct DataRecord {
+           // ...
+        };
+        synchronized_value<DataRecord> data; // Protect the data with a mutex
+    };
+
 ##### Enforcement
 
 ??? Possible?

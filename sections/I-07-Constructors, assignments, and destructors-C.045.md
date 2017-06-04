@@ -6,28 +6,24 @@ Using in-class member initializers lets the compiler generate the function for y
 
 ##### Example, bad
 
-```cpp
-class X1 { // BAD: doesn't use member initializers
-    string s;
-    int i;
-public:
-    X1() :s{"default"}, i{1} { }
-    // ...
-};
+    class X1 { // BAD: doesn't use member initializers
+        string s;
+        int i;
+    public:
+        X1() :s{"default"}, i{1} { }
+        // ...
+    };
 
-```
 ##### Example
 
-```cpp
-class X2 {
-    string s = "default";
-    int i = 1;
-public:
-    // use compiler-generated default constructor
-    // ...
-};
+    class X2 {
+        string s = "default";
+        int i = 1;
+    public:
+        // use compiler-generated default constructor
+        // ...
+    };
 
-```
 ##### Enforcement
 
 (Simple) A default constructor should do more than just initialize member variables with constants.

@@ -21,29 +21,25 @@ It complicates checking and tool support.
 
 ##### Example
 
-```cpp
-void use(int* p, int n, char* s, int* q)
-{
-    p[n - 1] = 666; // Bad: we don't know if p points to n elements;
-                    // assume it does not or use span<int>
-    cout << s;      // Bad: we don't know if that s points to a zero-terminated array of char;
-                    // assume it does not or use zstring
-    delete q;       // Bad: we don't know if *q is allocated on the free store;
-                    // assume it does not or use owner
-}
+    void use(int* p, int n, char* s, int* q)
+    {
+        p[n - 1] = 666; // Bad: we don't know if p points to n elements;
+                        // assume it does not or use span<int>
+        cout << s;      // Bad: we don't know if that s points to a zero-terminated array of char;
+                        // assume it does not or use zstring
+        delete q;       // Bad: we don't know if *q is allocated on the free store;
+                        // assume it does not or use owner
+    }
 
-```
 better
 
-```cpp
-void use2(span<int> p, zstring s, owner<int*> q)
-{
-    p[p.size() - 1] = 666; // OK, a range error can be caught
-    cout << s; // OK
-    delete q;  // OK
-}
+    void use2(span<int> p, zstring s, owner<int*> q)
+    {
+        p[p.size() - 1] = 666; // OK, a range error can be caught
+        cout << s; // OK
+        delete q;  // OK
+    }
 
-```
 ##### Note
 
 `owner<T*>` represents ownership, `zstring` represents a C-style string.

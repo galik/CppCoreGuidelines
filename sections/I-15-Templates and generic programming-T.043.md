@@ -8,18 +8,16 @@ Uniformity: `using` is syntactically similar to `auto`.
 
 ##### Example
 
-```cpp
-typedef int (*PFI)(int);   // OK, but convoluted
+    typedef int (*PFI)(int);   // OK, but convoluted
 
-using PFI2 = int (*)(int);   // OK, preferred
+    using PFI2 = int (*)(int);   // OK, preferred
 
-template<typename T>
-typedef int (*PFT)(T);      // error
+    template<typename T>
+    typedef int (*PFT)(T);      // error
 
-template<typename T>
-using PFT2 = int (*)(T);   // OK
+    template<typename T>
+    using PFT2 = int (*)(T);   // OK
 
-```
 ##### Enforcement
 
 * Flag uses of `typedef`. This will give a lot of "hits" :-(

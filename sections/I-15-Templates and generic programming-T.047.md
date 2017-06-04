@@ -8,26 +8,24 @@
 
 ##### Example
 
-```cpp
-namespace Bad {
-    struct S { int m; };
-    template<typename T1, typename T2>
-    bool operator==(T1, T2) { cout << "Bad\n"; return true; }
-}
-
-namespace T0 {
-    bool operator==(int, Bad::S) { cout << "T0\n"; return true; }  // compare to int
-
-    void test()
-    {
-        Bad::S bad{ 1 };
-        vector<int> v(10);
-        bool b = 1 == bad;
-        bool b2 = v.size() == bad;
+    namespace Bad {
+        struct S { int m; };
+        template<typename T1, typename T2>
+        bool operator==(T1, T2) { cout << "Bad\n"; return true; }
     }
-}
 
-```
+    namespace T0 {
+        bool operator==(int, Bad::S) { cout << "T0\n"; return true; }  // compare to int
+
+        void test()
+        {
+            Bad::S bad{ 1 };
+            vector<int> v(10);
+            bool b = 1 == bad;
+            bool b2 = v.size() == bad;
+        }
+    }
+
 This prints `T0` and `Bad`.
 
 Now the `==` in `Bad` was designed to cause trouble, but would you have spotted the problem in real code?

@@ -6,26 +6,22 @@ Too much space makes the text larger and distracts.
 
 ##### Example, bad
 
-```cpp
-#include < map >
+    #include < map >
 
-int main(int argc, char * argv [ ])
-{
-    // ...
-}
+    int main(int argc, char * argv [ ])
+    {
+        // ...
+    }
 
-```
 ##### Example
 
-```cpp
-#include <map>
+    #include <map>
 
-int main(int argc, char* argv[])
-{
-    // ...
-}
+    int main(int argc, char* argv[])
+    {
+        // ...
+    }
 
-```
 ##### Note
 
 Some IDEs have their own opinions and add distracting space.

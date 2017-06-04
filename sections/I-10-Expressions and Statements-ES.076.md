@@ -9,33 +9,29 @@ Readability, avoidance of errors. There are better control structures for humans
 Breaking out of a nested loop.
 In that case, always jump forwards.
 
-```cpp
-for (int i = 0; i < imax; ++i)
-    for (int j = 0; j < jmax; ++j) {
-        if (a[i][j] > elem_max) goto finished;
-        // ...
-    }
-finished:
-// ...
+    for (int i = 0; i < imax; ++i)
+        for (int j = 0; j < jmax; ++j) {
+            if (a[i][j] > elem_max) goto finished;
+            // ...
+        }
+    finished:
+    // ...
 
-```
 ##### Example, bad
 
 There is a fair amount of use of the C goto-exit idiom:
 
-```cpp
-void f()
-{
-    // ...
-        goto exit;
-    // ...
-        goto exit;
-    // ...
-exit:
-    ... common cleanup code ...
-}
+    void f()
+    {
+        // ...
+            goto exit;
+        // ...
+            goto exit;
+        // ...
+    exit:
+        ... common cleanup code ...
+    }
 
-```
 This is an ad-hoc simulation of destructors.
 Declare your resources with handles with destructors that clean up.
 If for some reason you cannot handle all cleanup with destructors for the variables used,

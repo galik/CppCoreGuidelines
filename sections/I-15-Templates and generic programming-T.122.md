@@ -10,10 +10,8 @@ Template metaprogramming is the only directly supported and half-way principled 
 
 ##### Example
 
-```cpp
-??? big object / small object optimization
+    ??? big object / small object optimization
 
-```
 ##### Enforcement
 
 ???

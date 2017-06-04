@@ -6,15 +6,13 @@ Capping a hierarchy with `final` is rarely needed for logical reasons and can be
 
 ##### Example, bad
 
-```cpp
-class Widget { /* ... */ };
+    class Widget { /* ... */ };
 
-// nobody will ever want to improve My_widget (or so you thought)
-class My_widget final : public Widget { /* ... */ };
+    // nobody will ever want to improve My_widget (or so you thought)
+    class My_widget final : public Widget { /* ... */ };
 
-class My_improved_widget : public My_widget { /* ... */ };  // error: can't do that
+    class My_improved_widget : public My_widget { /* ... */ };  // error: can't do that
 
-```
 ##### Note
 
 Not every class is meant to be a base class.
@@ -49,24 +47,22 @@ That can cause confusion: An overrider does not inherit default arguments.
 
 ##### Example, bad
 
-```cpp
-class Base {
-public:
-    virtual int multiply(int value, int factor = 2) = 0;
-};
+    class Base {
+    public:
+        virtual int multiply(int value, int factor = 2) = 0;
+    };
 
-class Derived : public Base {
-public:
-    int multiply(int value, int factor = 10) override;
-};
+    class Derived : public Base {
+    public:
+        int multiply(int value, int factor = 10) override;
+    };
 
-Derived d;
-Base& b = d;
+    Derived d;
+    Base& b = d;
 
-b.multiply(10);  // these two calls will call the same function but
-d.multiply(10);  // with different arguments and so different results
+    b.multiply(10);  // these two calls will call the same function but
+    d.multiply(10);  // with different arguments and so different results
 
-```
 ##### Enforcement
 
 Flag default arguments on virtual functions if they differ between base and derived declarations.

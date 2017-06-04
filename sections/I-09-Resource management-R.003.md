@@ -7,41 +7,35 @@ We want owning pointers identified so that we can reliably and efficiently delet
 
 ##### Example
 
-```cpp
-void f()
-{
-    int* p1 = new int{7};           // bad: raw owning pointer
-    auto p2 = make_unique<int>(7);  // OK: the int is owned by a unique pointer
-    // ...
-}
+    void f()
+    {
+        int* p1 = new int{7};           // bad: raw owning pointer
+        auto p2 = make_unique<int>(7);  // OK: the int is owned by a unique pointer
+        // ...
+    }
 
-```
 The `unique_ptr` protects against leaks by guaranteeing the deletion of its object (even in the presence of exceptions). The `T*` does not.
 
 ##### Example
 
-```cpp
-template<typename T>
-class X {
-    // ...
-public:
-    T* p;   // bad: it is unclear whether p is owning or not
-    T* q;   // bad: it is unclear whether q is owning or not
-};
+    template<typename T>
+    class X {
+        // ...
+    public:
+        T* p;   // bad: it is unclear whether p is owning or not
+        T* q;   // bad: it is unclear whether q is owning or not
+    };
 
-```
 We can fix that problem by making ownership explicit:
 
-```cpp
-template<typename T>
-class X2 {
-    // ...
-public:
-    owner<T*> p;  // OK: p is owning
-    T* q;         // OK: q is not owning
-};
+    template<typename T>
+    class X2 {
+        // ...
+    public:
+        owner<T*> p;  // OK: p is owning
+        T* q;         // OK: q is not owning
+    };
 
-```
 ##### Exception
 
 A major class of exception is legacy code, especially code that must remain compilable as C or interface with C and C-style C++ through ABIs.
@@ -70,33 +64,29 @@ For example, if an `owner<T*>` is a member of a class, that class better have a 
 
 Returning a (raw) pointer imposes a life-time management uncertainty on the caller; that is, who deletes the pointed-to object?
 
-```cpp
-Gadget* make_gadget(int n)
-{
-    auto p = new Gadget{n};
-    // ...
-    return p;
-}
+    Gadget* make_gadget(int n)
+    {
+        auto p = new Gadget{n};
+        // ...
+        return p;
+    }
 
-void caller(int n)
-{
-    auto p = make_gadget(n);   // remember to delete p
-    // ...
-    delete p;
-}
+    void caller(int n)
+    {
+        auto p = make_gadget(n);   // remember to delete p
+        // ...
+        delete p;
+    }
 
-```
 In addition to suffering from the problem from [leak](#???), this adds a spurious allocation and deallocation operation, and is needlessly verbose. If Gadget is cheap to move out of a function (i.e., is small or has an efficient move operation), just return it "by value" (see ["out" return values](I-05-Functions-F.020.md#Rf-out)):
 
-```cpp
-Gadget make_gadget(int n)
-{
-    Gadget g{n};
-    // ...
-    return g;
-}
+    Gadget make_gadget(int n)
+    {
+        Gadget g{n};
+        // ...
+        return g;
+    }
 
-```
 ##### Note
 
 This rule applies to factory functions.

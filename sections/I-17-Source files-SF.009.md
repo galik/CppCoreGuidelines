@@ -11,17 +11,15 @@ Eliminate cycles; don't just break them with `#include` guards.
 
 ##### Example, bad
 
-```cpp
-// file1.h:
-#include "file2.h"
+    // file1.h:
+    #include "file2.h"
 
-// file2.h:
-#include "file3.h"
+    // file2.h:
+    #include "file3.h"
 
-// file3.h:
-#include "file1.h"
+    // file3.h:
+    #include "file1.h"
 
-```
 ##### Enforcement
 
 Flag all cycles.

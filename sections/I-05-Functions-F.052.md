@@ -18,27 +18,23 @@ Unfortunately, there is no simple way to capture by reference to `const` to get 
 
 Here, a large object (a network message) is passed to an iterative algorithm, and is it not efficient or correct to copy the message (which may not be copyable):
 
-```cpp
-std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
-{
-    socket.send(message);
-});
+    std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
+    {
+        socket.send(message);
+    });
 
-```
 ##### Example
 
 This is a simple three-stage parallel pipeline. Each `stage` object encapsulates a worker thread and a queue, has a `process` function to enqueue work, and in its destructor automatically blocks waiting for the queue to empty before ending the thread.
 
-```cpp
-void send_packets(buffers& bufs)
-{
-    stage encryptor([] (buffer& b){ encrypt(b); });
-    stage compressor([&](buffer& b){ compress(b); encryptor.process(b); });
-    stage decorator([&](buffer& b){ decorate(b); compressor.process(b); });
-    for (auto& b : bufs) { decorator.process(b); }
-}  // automatically blocks waiting for pipeline to finish
+    void send_packets(buffers& bufs)
+    {
+        stage encryptor([] (buffer& b){ encrypt(b); });
+        stage compressor([&](buffer& b){ compress(b); encryptor.process(b); });
+        stage decorator([&](buffer& b){ decorate(b); compressor.process(b); });
+        for (auto& b : bufs) { decorator.process(b); }
+    }  // automatically blocks waiting for pipeline to finish
 
-```
 ##### Enforcement
 
 Flag a lambda that captures by reference, but is used other than locally within the function scope or passed to a function by reference. (Note: This rule is an approximation, but does flag passing by pointer as those are more likely to be stored by the callee, writing to a heap location accessed via a parameter, returning the lambda, etc. The Lifetime rules will also provide general rules that flag escaping pointers and references including via lambdas.)

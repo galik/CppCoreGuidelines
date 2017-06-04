@@ -7,34 +7,32 @@
 
 ##### Example
 
-```cpp
-struct Interface {
-    virtual void f();
-    virtual int g();
-    // ... no data here ...
-};
+    struct Interface {
+        virtual void f();
+        virtual int g();
+        // ... no data here ...
+    };
 
-class Utility {  // with data
-    void utility1();
-    virtual void utility2();    // customization point
-public:
-    int x;
-    int y;
-};
+    class Utility {  // with data
+        void utility1();
+        virtual void utility2();    // customization point
+    public:
+        int x;
+        int y;
+    };
 
-class Derive1 : public Interface, virtual protected Utility {
-    // override Interface functions
-    // Maybe override Utility virtual functions
-    // ...
-};
+    class Derive1 : public Interface, virtual protected Utility {
+        // override Interface functions
+        // Maybe override Utility virtual functions
+        // ...
+    };
 
-class Derive2 : public Interface, virtual protected Utility {
-    // override Interface functions
-    // Maybe override Utility virtual functions
-    // ...
-};
+    class Derive2 : public Interface, virtual protected Utility {
+        // override Interface functions
+        // Maybe override Utility virtual functions
+        // ...
+    };
 
-```
 Factoring out `Utility` makes sense if many derived classes share significant "implementation details."
 
 

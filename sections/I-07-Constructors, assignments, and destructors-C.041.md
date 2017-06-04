@@ -6,27 +6,25 @@ A constructor establishes the invariant for a class. A user of a class should be
 
 ##### Example, bad
 
-```cpp
-class X1 {
-    FILE* f;   // call init() before any other function
-    // ...
-public:
-    X1() {}
-    void init();   // initialize f
-    void read();   // read from f
-    // ...
-};
+    class X1 {
+        FILE* f;   // call init() before any other function
+        // ...
+    public:
+        X1() {}
+        void init();   // initialize f
+        void read();   // read from f
+        // ...
+    };
 
-void f()
-{
-    X1 file;
-    file.read();   // crash or bad read!
-    // ...
-    file.init();   // too late
-    // ...
-}
+    void f()
+    {
+        X1 file;
+        file.read();   // crash or bad read!
+        // ...
+        file.init();   // too late
+        // ...
+    }
 
-```
 Compilers do not read comments.
 
 ##### Exception

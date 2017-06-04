@@ -8,15 +8,13 @@ In that case, and only that case, make the parameter `TP&&` where `TP` is a temp
 
 ##### Example
 
-```cpp
-template <class F, class... Args>
-inline auto invoke(F f, Args&&... args) {
-    return f(forward<Args>(args)...);
-}
+    template <class F, class... Args>
+    inline auto invoke(F f, Args&&... args) {
+        return f(forward<Args>(args)...);
+    }
 
-??? calls ???
+    ??? calls ???
 
-```
 ##### Enforcement
 
 * Flag a function that takes a `TP&&` parameter (where `TP` is a template type parameter name) and does anything with it other than `std::forward`ing it exactly once on every static path.

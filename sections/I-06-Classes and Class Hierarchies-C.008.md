@@ -8,17 +8,15 @@ This is a useful convention.
 
 ##### Example, bad
 
-```cpp
-struct Date {
-    int d, m;
+    struct Date {
+        int d, m;
 
-    Date(int i, Month m);
-    // ... lots of functions ...
-private:
-    int y;  // year
-};
+        Date(int i, Month m);
+        // ... lots of functions ...
+    private:
+        int y;  // year
+    };
 
-```
 There is nothing wrong with this code as far as the C++ language rules are concerned,
 but nearly everything is wrong from a design perspective.
 The private data is hidden far from the public data.

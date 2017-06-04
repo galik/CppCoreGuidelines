@@ -7,30 +7,26 @@ Asymmetric treatment of operands is surprising and a source of errors where conv
 
 ##### Example
 
-```cpp
-struct X {
-    string name;
-    int number;
-};
+    struct X {
+        string name;
+        int number;
+    };
 
-bool operator==(const X& a, const X& b) noexcept {
-    return a.name == b.name && a.number == b.number;
-}
+    bool operator==(const X& a, const X& b) noexcept {
+        return a.name == b.name && a.number == b.number;
+    }
 
-```
 ##### Example, bad
 
-```cpp
-class B {
-    string name;
-    int number;
-    bool operator==(const B& a) const {
-        return name == a.name && number == a.number;
-    }
-    // ...
-};
+    class B {
+        string name;
+        int number;
+        bool operator==(const B& a) const {
+            return name == a.name && number == a.number;
+        }
+        // ...
+    };
 
-```
 `B`'s comparison accepts conversions for its second operand, but not its first.
 
 ##### Note

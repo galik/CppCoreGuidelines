@@ -6,24 +6,20 @@ Readability. Avoidance of "silly mistakes."
 
 ##### Example, bad
 
-```cpp
-int i;
-for (i = 0; i < max; ++i); // bug waiting to happen
-if (i == j)
-    return i;
+    int i;
+    for (i = 0; i < max; ++i); // bug waiting to happen
+    if (i == j)
+        return i;
 
-```
 ##### Note
 
 Always indenting the statement after `if (...)`, `for (...)`, and `while (...)` is usually a good idea:
 
-```cpp
-if (i < 0) error("negative argument");
+    if (i < 0) error("negative argument");
 
-if (i < 0)
-    error("negative argument");
+    if (i < 0)
+        error("negative argument");
 
-```
 ##### Enforcement
 
 Use a tool.

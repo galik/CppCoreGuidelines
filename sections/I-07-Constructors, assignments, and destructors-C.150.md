@@ -7,25 +7,23 @@ It also ensures exception safety in complex expressions.
 
 ##### Example
 
-```cpp
-unique_ptr<Foo> p {new<Foo>{7}};   // OK: but repetitive
+    unique_ptr<Foo> p {new<Foo>{7}};   // OK: but repetitive
 
-auto q = make_unique<Foo>(7);      // Better: no repetition of Foo
+    auto q = make_unique<Foo>(7);      // Better: no repetition of Foo
 
-// Not exception-safe: the compiler may interleave the computations of arguments as follows:
-//
-// 1. allocate memory for Foo,
-// 2. construct Foo,
-// 3. call bar,
-// 4. construct unique_ptr<Foo>.
-//
-// If bar throws, Foo will not be destroyed, and the memory allocated for it will leak.
-f(unique_ptr<Foo>(new Foo()), bar());
+    // Not exception-safe: the compiler may interleave the computations of arguments as follows:
+    //
+    // 1. allocate memory for Foo,
+    // 2. construct Foo,
+    // 3. call bar,
+    // 4. construct unique_ptr<Foo>.
+    //
+    // If bar throws, Foo will not be destroyed, and the memory allocated for it will leak.
+    f(unique_ptr<Foo>(new Foo()), bar());
 
-// Exception-safe: calls to functions are never interleaved.
-f(make_unique<Foo>(), bar());
+    // Exception-safe: calls to functions are never interleaved.
+    f(make_unique<Foo>(), bar());
 
-```
 ##### Enforcement
 
 * Flag the repetitive usage of template specialization list `<Foo>`

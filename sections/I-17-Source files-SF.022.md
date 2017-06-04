@@ -9,10 +9,8 @@ Consider putting every definition in an implementation source file in an unnamed
 
 An API class and its members can't live in an unnamed namespace; but any "helper" class or function that is defined in an implementation source file should be at an unnamed namespace scope.
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 * ???

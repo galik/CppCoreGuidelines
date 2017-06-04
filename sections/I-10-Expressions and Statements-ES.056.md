@@ -16,56 +16,50 @@ Explicit `move` is needed to explicitly move an object to another scope, notably
 
 ##### Example, bad
 
-```cpp
-void sink(X&& x);   // sink takes ownership of x
+    void sink(X&& x);   // sink takes ownership of x
 
-void user()
-{
-    X x;
-    // error: cannot bind an lvalue to a rvalue reference
-    sink(x);
-    // OK: sink takes the contents of x, x must now be assumed to be empty
-    sink(std::move(x));
+    void user()
+    {
+        X x;
+        // error: cannot bind an lvalue to a rvalue reference
+        sink(x);
+        // OK: sink takes the contents of x, x must now be assumed to be empty
+        sink(std::move(x));
 
-    // ...
+        // ...
 
-    // probably a mistake
-    use(x);
-}
+        // probably a mistake
+        use(x);
+    }
 
-```
 Usually, a `std::move()` is used as an argument to a `&&` parameter.
 And after you do that, assume the object has been moved from (see [C.64](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.064.md#Rc-move-semantic)) and don't read its state again until you first set it to a new value.
 
-```cpp
-void f() {
-    string s1 = "supercalifragilisticexpialidocious";
+    void f() {
+        string s1 = "supercalifragilisticexpialidocious";
 
-    string s2 = s1;             // ok, takes a copy
-    assert(s1 == "supercalifragilisticexpialidocious");  // ok
+        string s2 = s1;             // ok, takes a copy
+        assert(s1 == "supercalifragilisticexpialidocious");  // ok
 
-    // bad, if you want to keep using s1's value
-    string s3 = move(s1);
+        // bad, if you want to keep using s1's value
+        string s3 = move(s1);
 
-    // bad, assert will likely fail, s1 likely changed
-    assert(s1 == "supercalifragilisticexpialidocious");
-}
+        // bad, assert will likely fail, s1 likely changed
+        assert(s1 == "supercalifragilisticexpialidocious");
+    }
 
-```
 ##### Example
 
-```cpp
-void sink(unique_ptr<widget> p);  // pass ownership of p to sink()
+    void sink(unique_ptr<widget> p);  // pass ownership of p to sink()
 
-void f() {
-    auto w = make_unique<widget>();
-    // ...
-    sink(std::move(w));               // ok, give to sink()
-    // ...
-    sink(w);    // Error: unique_ptr is carefully designed so that you cannot copy it
-}
+    void f() {
+        auto w = make_unique<widget>();
+        // ...
+        sink(std::move(w));               // ok, give to sink()
+        // ...
+        sink(w);    // Error: unique_ptr is carefully designed so that you cannot copy it
+    }
 
-```
 ##### Notes
 
 `std::move()` is a cast to `&&` in disguise; it doesn't itself move anything, but marks a named object as a candidate that can be moved from.
@@ -77,44 +71,38 @@ In general, don't complicate your code without reason (??)
 
 ##### Example, bad
 
-```cpp
-vector<int> make_vector() {
-    vector<int> result;
-    // ... load result with data
-    return std::move(result);       // bad; just write "return result;"
-}
+    vector<int> make_vector() {
+        vector<int> result;
+        // ... load result with data
+        return std::move(result);       // bad; just write "return result;"
+    }
 
-```
 Never write `return move(local_variable);`, because the language already knows the variable is a move candidate.
 Writing `move` in this code won't help, and can actually be detrimental because on some compilers it interferes with RVO (the return value optimization) by creating an additional reference alias to the local variable.
 
 
 ##### Example, bad
 
-```cpp
-vector<int> v = std::move(make_vector());   // bad; the std::move is entirely redundant
+    vector<int> v = std::move(make_vector());   // bad; the std::move is entirely redundant
 
-```
 Never write `move` on a returned value such as `x = move(f());` where `f` returns by value.
 The language already knows that a returned value is a temporary object that can be moved from.
 
 ##### Example
 
-```cpp
-void mover(X&& x) {
-    call_something(std::move(x));         // ok
-    call_something(std::forward<X>(x));   // bad, don't std::forward an rvalue reference
-    call_something(x);                    // suspicious, why not std::move?
-}
+    void mover(X&& x) {
+        call_something(std::move(x));         // ok
+        call_something(std::forward<X>(x));   // bad, don't std::forward an rvalue reference
+        call_something(x);                    // suspicious, why not std::move?
+    }
 
-template<class T>
-void forwarder(T&& t) {
-    call_something(std::move(t));         // bad, don't std::move a forwarding reference
-    call_something(std::forward<T>(t));   // ok
-    call_something(t);                    // suspicious, why not std::forward?
-}
+    template<class T>
+    void forwarder(T&& t) {
+        call_something(std::move(t));         // bad, don't std::move a forwarding reference
+        call_something(std::forward<T>(t));   // ok
+        call_something(t);                    // suspicious, why not std::forward?
+    }
 
-```
 ##### Enforcement
 
 * Flag use of `std::move(x)` where `x` is an rvalue or the language will already treat it as an rvalue, including `return std::move(local_variable);` and `std::move(f())` on a function that returns by value.

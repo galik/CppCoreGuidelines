@@ -7,10 +7,8 @@ Subtle concurrency errors can have dramatically bad effects, including memory co
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 Thread safety is challenging, often getting the better of experienced programmers: tooling is an important strategy to mitigate those risks.

@@ -31,42 +31,40 @@ The importance of keeping the two kinds of inheritance increases
 
 ##### Example, bad
 
-```cpp
-class Shape {   // BAD, mixed interface and implementation
-public:
-    Shape();
-    Shape(Point ce = {0, 0}, Color co = none): cent{ce}, col {co} { /* ... */}
+    class Shape {   // BAD, mixed interface and implementation
+    public:
+        Shape();
+        Shape(Point ce = {0, 0}, Color co = none): cent{ce}, col {co} { /* ... */}
 
-    Point center() const { return cent; }
-    Color color() const { return col; }
+        Point center() const { return cent; }
+        Color color() const { return col; }
 
-    virtual void rotate(int) = 0;
-    virtual void move(Point p) { cent = p; redraw(); }
+        virtual void rotate(int) = 0;
+        virtual void move(Point p) { cent = p; redraw(); }
 
-    virtual void redraw();
+        virtual void redraw();
 
-    // ...
-public:
-    Point cent;
-    Color col;
-};
+        // ...
+    public:
+        Point cent;
+        Color col;
+    };
 
-class Circle : public Shape {
-public:
-    Circle(Point c, int r) :Shape{c}, rad{r} { /* ... */ }
+    class Circle : public Shape {
+    public:
+        Circle(Point c, int r) :Shape{c}, rad{r} { /* ... */ }
 
-    // ...
-private:
-    int rad;
-};
+        // ...
+    private:
+        int rad;
+    };
 
-class Triangle : public Shape {
-public:
-    Triangle(Point p1, Point p2, Point p3); // calculate center
-    // ...
-};
+    class Triangle : public Shape {
+    public:
+        Triangle(Point p1, Point p2, Point p3); // calculate center
+        // ...
+    };
 
-```
 Problems:
 
 * As the hierarchy grows and more data is added to `Shape`, the constructors gets harder to write and maintain.
@@ -83,39 +81,35 @@ the more benefits we gain - and the less stable the hierarchy is.
 
 This Shape hierarchy can be rewritten using interface inheritance:
 
-```cpp
-class Shape {  // pure interface
-public:
-    virtual Point center() const = 0;
-    virtual Color color() const = 0;
+    class Shape {  // pure interface
+    public:
+        virtual Point center() const = 0;
+        virtual Color color() const = 0;
 
-    virtual void rotate(int) = 0;
-    virtual void move(Point p) = 0;
+        virtual void rotate(int) = 0;
+        virtual void move(Point p) = 0;
 
-    virtual void redraw() = 0;
+        virtual void redraw() = 0;
 
-    // ...
-};
+        // ...
+    };
 
-```
 Note that a pure interface rarely have constructors: there is nothing to construct.
 
-```cpp
-class Circle : public Shape {
-public:
-    Circle(Point c, int r, Color c) :cent{c}, rad{r}, col{c} { /* ... */ }
+    class Circle : public Shape {
+    public:
+        Circle(Point c, int r, Color c) :cent{c}, rad{r}, col{c} { /* ... */ }
 
-    Point center() const override { return cent; }
-    Color color() const override { return col; }
+        Point center() const override { return cent; }
+        Color color() const override { return col; }
 
-    // ...
-private:
-    Point cent;
-    int rad;
-    Color col;
-};
+        // ...
+    private:
+        Point cent;
+        int rad;
+        Color col;
+    };
 
-```
 The interface is now less brittle, but there is more work in implementing the member functions.
 For example, `center` has to be implemented by every class derived from `Shape`.
 
@@ -127,74 +121,66 @@ There are many ways of implementing the idea of dual hierarchies; here, we use a
 
 First we devise a hierarchy of interface classes:
 
-```cpp
-class Shape {   // pure interface
-public:
-    virtual Point center() const = 0;
-    virtual Color color() const = 0;
+    class Shape {   // pure interface
+    public:
+        virtual Point center() const = 0;
+        virtual Color color() const = 0;
 
-    virtual void rotate(int) = 0;
-    virtual void move(Point p) = 0;
+        virtual void rotate(int) = 0;
+        virtual void move(Point p) = 0;
 
-    virtual void redraw() = 0;
+        virtual void redraw() = 0;
 
-    // ...
-};
+        // ...
+    };
 
-class Circle : public Shape {   // pure interface
-public:
-    int radius() = 0;
-    // ...
-};
+    class Circle : public Shape {   // pure interface
+    public:
+        int radius() = 0;
+        // ...
+    };
 
-```
 To make this interface useful, we must provide its implementation classes (here, named equivalently, but in the `Impl` namespace):
 
-```cpp
-class Impl::Shape : public Shape { // implementation
-public:
-    // constructors, destructor
-    // ...
-    virtual Point center() const { /* ... */ }
-    virtual Color color() const { /* ... */ }
+    class Impl::Shape : public Shape { // implementation
+    public:
+        // constructors, destructor
+        // ...
+        virtual Point center() const { /* ... */ }
+        virtual Color color() const { /* ... */ }
 
-    virtual void rotate(int) { /* ... */ }
-    virtual void move(Point p) { /* ... */ }
+        virtual void rotate(int) { /* ... */ }
+        virtual void move(Point p) { /* ... */ }
 
-    virtual void redraw() { /* ... */ }
+        virtual void redraw() { /* ... */ }
 
-    // ...
-};
+        // ...
+    };
 
-```
 Now `Shape` is a poor example of a class with an implementation,
 but bear with us because this is just a simple example of a technique aimed at more complex hierarchies.
 
-```cpp
-class Impl::Circle : public Circle, public Impl::Shape {   // implementation
-public:
-    // constructors, destructor
+    class Impl::Circle : public Circle, public Impl::Shape {   // implementation
+    public:
+        // constructors, destructor
 
-    int radius() { /* ... */ }
-    // ...
-};
+        int radius() { /* ... */ }
+        // ...
+    };
 
-```
 And we could extend the hierarchies by adding a Smiley class (:-)):
 
-```cpp
-class Smiley : public Circle { // pure interface
-public:
-    // ...
-};
+    class Smiley : public Circle { // pure interface
+    public:
+        // ...
+    };
 
-class Impl::Smiley : Public Smiley, public Impl::Circle {   // implementation
-public:
-    // constructors, destructor
-    // ...
-}
+    class Impl::Smiley : Public Smiley, public Impl::Circle {   // implementation
+    public:
+        // constructors, destructor
+        // ...
+    }
 
-```
 There are now two hierarchies:
 
 * interface: Smiley -> Circle -> Shape
@@ -202,13 +188,11 @@ There are now two hierarchies:
 
 Since each implementation derived from its interface as well as its implementation base class we get a lattice (DAG):
 
-```cpp
-Smiley     ->         Circle     ->  Shape
-  ^                     ^               ^
-  |                     |               |
-Impl::Smiley -> Impl::Circle -> Impl::Shape
+    Smiley     ->         Circle     ->  Shape
+      ^                     ^               ^
+      |                     |               |
+    Impl::Smiley -> Impl::Circle -> Impl::Shape
 
-```
 As mentioned, this is just one way to construct a dual hierarchy.
 
 Another (related) technique for separating interface and implementation is [PIMPL](#???).

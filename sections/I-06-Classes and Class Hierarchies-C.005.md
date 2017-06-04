@@ -7,19 +7,17 @@ Placing them in the same namespace as the class makes their relationship to the 
 
 ##### Example
 
-```cpp
-namespace Chrono { // here we keep time-related services
+    namespace Chrono { // here we keep time-related services
 
-    class Time { /* ... */ };
-    class Date { /* ... */ };
+        class Time { /* ... */ };
+        class Date { /* ... */ };
 
-    // helper functions:
-    bool operator==(Date, Date);
-    Date next_weekday(Date);
-    // ...
-}
+        // helper functions:
+        bool operator==(Date, Date);
+        Date next_weekday(Date);
+        // ...
+    }
 
-```
 ##### Note
 
 This is especially important for [overloaded operators](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.168.md#Ro-namespace).

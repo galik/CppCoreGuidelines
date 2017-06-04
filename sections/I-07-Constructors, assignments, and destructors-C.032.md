@@ -6,10 +6,8 @@ There is a lot of code that is non-specific about ownership.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 If the `T*` or `T&` is owning, mark it `owning`. If the `T*` is not owning, consider marking it `ptr`.

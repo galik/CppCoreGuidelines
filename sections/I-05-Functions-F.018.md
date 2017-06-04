@@ -6,14 +6,12 @@ It's efficient and eliminates bugs at the call site: `X&&` binds to rvalues, whi
 
 ##### Example
 
-```cpp
-void sink(vector<int>&& v) {   // sink takes ownership of whatever the argument owned
-    // usually there might be const accesses of v here
-    store_somewhere(std::move(v));
-    // usually no more use of v here; it is moved-from
-}
+    void sink(vector<int>&& v) {   // sink takes ownership of whatever the argument owned
+        // usually there might be const accesses of v here
+        store_somewhere(std::move(v));
+        // usually no more use of v here; it is moved-from
+    }
 
-```
 Note that the `std::move(v)` makes it possible for `store_somewhere()` to leave `v` in a moved-from state.
 [That could be dangerous](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.064.md#Rc-move-semantic).
 
@@ -24,13 +22,11 @@ Unique owner types that are move-only and cheap-to-move, such as `unique_ptr`, c
 
 For example:
 
-```cpp
-template <class T>
-void sink(std::unique_ptr<T> p) {
-    // use p ... possibly std::move(p) onward somewhere else
-}   // p gets destroyed
+    template <class T>
+    void sink(std::unique_ptr<T> p) {
+        // use p ... possibly std::move(p) onward somewhere else
+    }   // p gets destroyed
 
-```
 ##### Enforcement
 
 * Flag all `X&&` parameters (where `X` is not a template type parameter name) where the function body uses them without `std::move`.

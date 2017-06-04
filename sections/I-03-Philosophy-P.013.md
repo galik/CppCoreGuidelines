@@ -12,10 +12,8 @@ So, if a suitable library exists for your application domain, use it.
 
 ##### Example
 
-```cpp
-std::sort(begin(v), end(v), std::greater<>());
+    std::sort(begin(v), end(v), std::greater<>());
 
-```
 Unless you are an expert in sorting algorithms and have plenty of time,
 this is more likely to be correct and to run faster than anything you write for a specific application.
 You need a reason not to use the standard library (or whatever foundational libraries your application uses) rather than a reason to use it.

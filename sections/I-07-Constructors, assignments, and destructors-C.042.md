@@ -6,66 +6,62 @@ Leaving behind an invalid object is asking for trouble.
 
 ##### Example
 
-```cpp
-class X2 {
-    FILE* f;   // call init() before any other function
-    // ...
-public:
-    X2(const string& name)
-        :f{fopen(name.c_str(), "r")}
+    class X2 {
+        FILE* f;   // call init() before any other function
+        // ...
+    public:
+        X2(const string& name)
+            :f{fopen(name.c_str(), "r")}
+        {
+            if (f == nullptr) throw runtime_error{"could not open" + name};
+            // ...
+        }
+
+        void read();      // read from f
+        // ...
+    };
+
+    void f()
     {
-        if (f == nullptr) throw runtime_error{"could not open" + name};
+        X2 file {"Zeno"}; // throws if file isn't open
+        file.read();      // fine
         // ...
     }
 
-    void read();      // read from f
-    // ...
-};
-
-void f()
-{
-    X2 file {"Zeno"}; // throws if file isn't open
-    file.read();      // fine
-    // ...
-}
-
-```
 ##### Example, bad
 
-```cpp
-class X3 {     // bad: the constructor leaves a non-valid object behind
-    FILE* f;   // call init() before any other function
-    bool valid;
-    // ...
-public:
-    X3(const string& name)
-        :f{fopen(name.c_str(), "r")}, valid{false}
+    class X3 {     // bad: the constructor leaves a non-valid object behind
+        FILE* f;   // call init() before any other function
+        bool valid;
+        // ...
+    public:
+        X3(const string& name)
+            :f{fopen(name.c_str(), "r")}, valid{false}
+        {
+            if (f) valid = true;
+            // ...
+        }
+
+        bool is_valid() { return valid; }
+        void read();   // read from f
+        // ...
+    };
+
+    void f()
     {
-        if (f) valid = true;
+        X3 file {"Heraclides"};
+        file.read();   // crash or bad read!
+        // ...
+        if (file.is_valid()) {
+            file.read();
+            // ...
+        }
+        else {
+            // ... handle error ...
+        }
         // ...
     }
 
-    bool is_valid() { return valid; }
-    void read();   // read from f
-    // ...
-};
-
-void f()
-{
-    X3 file {"Heraclides"};
-    file.read();   // crash or bad read!
-    // ...
-    if (file.is_valid()) {
-        file.read();
-        // ...
-    }
-    else {
-        // ... handle error ...
-    }
-    // ...
-}
-
-```
 ##### Note
 
 For a variable definition (e.g., on the stack or as a member of another object) there is no explicit function call from which an error code could be returned.

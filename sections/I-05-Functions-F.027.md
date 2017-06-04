@@ -6,18 +6,16 @@ Using `std::shared_ptr` is the standard way to represent shared ownership. That 
 
 ##### Example
 
-```cpp
-shared_ptr<const Image> im { read_image(somewhere) };
+    shared_ptr<const Image> im { read_image(somewhere) };
 
-std::thread t0 {shade, args0, top_left, im};
-std::thread t1 {shade, args1, top_right, im};
-std::thread t2 {shade, args2, bottom_left, im};
-std::thread t3 {shade, args3, bottom_right, im};
+    std::thread t0 {shade, args0, top_left, im};
+    std::thread t1 {shade, args1, top_right, im};
+    std::thread t2 {shade, args2, bottom_left, im};
+    std::thread t3 {shade, args3, bottom_right, im};
 
-// detach threads
-// last thread to finish deletes the image
+    // detach threads
+    // last thread to finish deletes the image
 
-```
 ##### Note
 
 Prefer a `unique_ptr` over a `shared_ptr` if there is never more than one owner at a time.

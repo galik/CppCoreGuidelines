@@ -6,15 +6,13 @@
 
 ##### Example, bad
 
-```cpp
-void swap(My_vector& x, My_vector& y)
-{
-    auto tmp = x;   // copy elements
-    x = y;
-    y = tmp;
-}
+    void swap(My_vector& x, My_vector& y)
+    {
+        auto tmp = x;   // copy elements
+        x = y;
+        y = tmp;
+    }
 
-```
 This is not just slow, but if a memory allocation occurs for the elements in `tmp`, this `swap` may throw and would make STL algorithms fail if used with them.
 
 ##### Enforcement

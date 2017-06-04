@@ -6,25 +6,23 @@ Templating a class hierarchy that has many functions, especially many virtual fu
 
 ##### Example, bad
 
-```cpp
-template<typename T>
-struct Container {         // an interface
-    virtual T* get(int i);
-    virtual T* first();
-    virtual T* next();
-    virtual void sort();
-};
+    template<typename T>
+    struct Container {         // an interface
+        virtual T* get(int i);
+        virtual T* first();
+        virtual T* next();
+        virtual void sort();
+    };
 
-template<typename T>
-class Vector : public Container<T> {
-public:
-    // ...
-};
+    template<typename T>
+    class Vector : public Container<T> {
+    public:
+        // ...
+    };
 
-vector<int> vi;
-vector<string> vs;
+    vector<int> vi;
+    vector<string> vs;
 
-```
 It is probably a dumb idea to define a `sort` as a member function of a container, but it is not unheard of and it makes a good example of what not to do.
 
 Given this, the compiler cannot know if `vector<int>::sort()` is called, so it must generate code for it.

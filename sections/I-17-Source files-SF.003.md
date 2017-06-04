@@ -6,15 +6,13 @@ Maintainability. Readability.
 
 ##### Example, bad
 
-```cpp
-// bar.cpp:
-void bar() { cout << "bar\n"; }
+    // bar.cpp:
+    void bar() { cout << "bar\n"; }
 
-// foo.cpp:
-extern void bar();
-void foo() { bar(); }
+    // foo.cpp:
+    extern void bar();
+    void foo() { bar(); }
 
-```
 A maintainer of `bar` cannot find all declarations of `bar` if its type needs changing.
 The user of `bar` cannot know if the interface used is complete and correct. At best, error messages come (late) from the linker.
 

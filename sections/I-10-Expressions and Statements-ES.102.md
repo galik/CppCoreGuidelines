@@ -10,26 +10,24 @@ Because most arithmetic is assumed to be signed;
 Unsigned arithmetic can yield surprising results if you are not expecting it.
 This is even more true for mixed signed and unsigned arithmetic.
 
-```cpp
-template<typename T, typename T2>
-T subtract(T x, T2 y)
-{
-    return x-y;
-}
+    template<typename T, typename T2>
+    T subtract(T x, T2 y)
+    {
+        return x-y;
+    }
 
-void test()
-{
-    int s = 5;
-    unsigned int us = 5;
-    cout << subtract(s, 7) << '\n';     // -2
-    cout << subtract(us, 7u) << '\n';   // 4294967294
-    cout << subtract(s, 7u) << '\n';    // -2
-    cout << subtract(us, 7) << '\n';    // 4294967294
-    cout << subtract(s, us+2) << '\n';  // -2
-    cout << subtract(us, s+2) << '\n';  // 4294967294
-}
+    void test()
+    {
+        int s = 5;
+        unsigned int us = 5;
+        cout << subtract(s, 7) << '\n';     // -2
+        cout << subtract(us, 7u) << '\n';   // 4294967294
+        cout << subtract(s, 7u) << '\n';    // -2
+        cout << subtract(us, 7) << '\n';    // 4294967294
+        cout << subtract(s, us+2) << '\n';  // -2
+        cout << subtract(us, s+2) << '\n';  // 4294967294
+    }
 
-```
 Here we have been very explicit about what's happening,
 but if you had seen `us-(s+2)` or `s+=2; ... us-s`, would you reliably have suspected that the result would print as `4294967294`?
 
@@ -45,19 +43,17 @@ The standard library uses unsigned types for subscripts.
 The build-in array uses signed types for subscripts.
 This makes surprises (and bugs) inevitable.
 
-```cpp
-int a[10];
-for (int i=0; i < 10; ++i) a[i]=i;
-vector<int> v(10);
-// compares signed to unsigned; some compilers warn
-for (int i=0; v.size() < 10; ++i) v[i]=i;
+    int a[10];
+    for (int i=0; i < 10; ++i) a[i]=i;
+    vector<int> v(10);
+    // compares signed to unsigned; some compilers warn
+    for (int i=0; v.size() < 10; ++i) v[i]=i;
 
-int a2[-2];         // error: negative size
+    int a2[-2];         // error: negative size
 
-// OK, but the number of ints (4294967294) is so large that we should get an exception
-vector<int> v2(-2);
+    // OK, but the number of ints (4294967294) is so large that we should get an exception
+    vector<int> v2(-2);
 
-```
 ##### Enforcement
 
 * Flag mixed signed and unsigned arithmetic

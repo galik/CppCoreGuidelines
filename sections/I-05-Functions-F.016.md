@@ -9,16 +9,14 @@ When copying is cheap, nothing beats the simplicity and safety of copying, and f
 
 ##### Example
 
-```cpp
-void f1(const string& s);  // OK: pass by reference to const; always cheap
+    void f1(const string& s);  // OK: pass by reference to const; always cheap
 
-void f2(string s);         // bad: potentially expensive
+    void f2(string s);         // bad: potentially expensive
 
-void f3(int x);            // OK: Unbeatable
+    void f3(int x);            // OK: Unbeatable
 
-void f4(const int& x);     // bad: overhead on access in f4()
+    void f4(const int& x);     // bad: overhead on access in f4()
 
-```
 For advanced uses (only), where you really need to optimize for rvalues passed to "input-only" parameters:
 
 * If the function is going to unconditionally move from the argument, take it by `&&`. See [F.18](I-05-Functions-F.018.md#Rf-consume).
@@ -28,15 +26,13 @@ For advanced uses (only), where you really need to optimize for rvalues passed t
 
 ##### Example
 
-```cpp
-int multiply(int, int); // just input ints, pass by value
+    int multiply(int, int); // just input ints, pass by value
 
-// suffix is input-only but not as cheap as an int, pass by const&
-string& concatenate(string&, const string& suffix);
+    // suffix is input-only but not as cheap as an int, pass by const&
+    string& concatenate(string&, const string& suffix);
 
-void sink(unique_ptr<widget>);  // input only, and consumes the widget
+    void sink(unique_ptr<widget>);  // input only, and consumes the widget
 
-```
 Avoid "esoteric techniques" such as:
 
 * Passing arguments as `T&&` "for efficiency".
@@ -47,19 +43,17 @@ Avoid "esoteric techniques" such as:
 
 Assuming that `Matrix` has move operations (possibly by keeping its elements in a `std::vector`):
 
-```cpp
-Matrix operator+(const Matrix& a, const Matrix& b)
-{
-    Matrix res;
-    // ... fill res with the sum ...
-    return res;
-}
+    Matrix operator+(const Matrix& a, const Matrix& b)
+    {
+        Matrix res;
+        // ... fill res with the sum ...
+        return res;
+    }
 
-Matrix x = m1 + m2;  // move constructor
+    Matrix x = m1 + m2;  // move constructor
 
-y = m3 + m3;         // move assignment
+    y = m3 + m3;         // move assignment
 
-```
 ##### Notes
 
 The return value optimization doesn't handle the assignment case, but the move assignment does.

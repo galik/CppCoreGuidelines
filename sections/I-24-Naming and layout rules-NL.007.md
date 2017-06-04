@@ -4,18 +4,16 @@
 
 ##### Example
 
-```cpp
-double sqrt(double x);   // return the square root of x; x must be non-negative
+    double sqrt(double x);   // return the square root of x; x must be non-negative
 
-int length(const char* p);  // return the number of characters in a zero-terminated C-style string
+    int length(const char* p);  // return the number of characters in a zero-terminated C-style string
 
-int length_of_string(const char zero_terminated_array_of_char[])    // bad: verbose
+    int length_of_string(const char zero_terminated_array_of_char[])    // bad: verbose
 
-int g;      // bad: global variable with a cryptic name
+    int g;      // bad: global variable with a cryptic name
 
-int open;   // bad: global variable with a short, popular name
+    int open;   // bad: global variable with a short, popular name
 
-```
 The use of `p` for pointer and `x` for a floating-point variable is conventional and non-confusing in a restricted scope.
 
 ##### Enforcement

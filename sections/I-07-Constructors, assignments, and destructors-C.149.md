@@ -6,16 +6,14 @@ Avoid resource leaks.
 
 ##### Example
 
-```cpp
-void use(int i)
-{
-    auto p = new int {7};           // bad: initialize local pointers with new
-    auto q = make_unique<int>(9);   // ok: guarantee the release of the memory allocated for 9
-    if (0 < i) return;              // maybe return and leak
-    delete p;                       // too late
-}
+    void use(int i)
+    {
+        auto p = new int {7};           // bad: initialize local pointers with new
+        auto q = make_unique<int>(9);   // ok: guarantee the release of the memory allocated for 9
+        if (0 < i) return;              // maybe return and leak
+        delete p;                       // too late
+    }
 
-```
 ##### Enforcement
 
 * Flag initialization of a naked pointer with the result of a `new`

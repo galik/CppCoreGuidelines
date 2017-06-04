@@ -7,14 +7,12 @@ This is a major source of errors.
 
 ##### Example
 
-```cpp
-int printf(const char* ...);    // bad: return negative number if output fails
+    int printf(const char* ...);    // bad: return negative number if output fails
 
-template <class F, class ...Args>
-// good: throw system_error if unable to start the new thread
-explicit thread(F&& f, Args&&... args);
+    template <class F, class ...Args>
+    // good: throw system_error if unable to start the new thread
+    explicit thread(F&& f, Args&&... args);
 
-```
 ##### Note
 
 What is an error?
@@ -33,27 +31,23 @@ Many traditional interface functions (e.g., UNIX signal handlers) use error code
 
 If you can't use exceptions (e.g. because your code is full of old-style raw-pointer use or because there are hard-real-time constraints), consider using a style that returns a pair of values:
 
-```cpp
-int val;
-int error_code;
-tie(val, error_code) = do_something();
-if (error_code == 0) {
-    // ... handle the error or exit ...
-}
-// ... use val ...
+    int val;
+    int error_code;
+    tie(val, error_code) = do_something();
+    if (error_code == 0) {
+        // ... handle the error or exit ...
+    }
+    // ... use val ...
 
-```
 This style unfortunately leads to uninitialized variables.
 A facility [structured bindings](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0144r1.pdf) to deal with that will become available in C++17.
 
-```cpp
-auto [val, error_code] = do_something();
-if (error_code == 0) {
-    // ... handle the error or exit ...
-}
-// ... use val ...
+    auto [val, error_code] = do_something();
+    if (error_code == 0) {
+        // ... handle the error or exit ...
+    }
+    // ... use val ...
 
-```
 ##### Note
 
 We don't consider "performance" a valid reason not to use exceptions.

@@ -8,18 +8,16 @@ Generic and OO techniques are complementary.
 
 Static helps dynamic: Use static polymorphism to implement dynamically polymorphic interfaces.
 
-```cpp
-class Command {
-    // pure virtual functions
-};
+    class Command {
+        // pure virtual functions
+    };
 
-// implementations
-template</*...*/>
-class ConcreteCommand : public Command {
-    // implement virtuals
-};
+    // implementations
+    template</*...*/>
+    class ConcreteCommand : public Command {
+        // implement virtuals
+    };
 
-```
 ##### Example
 
 Dynamic helps static: Offer a generic, comfortable, statically bound interface, but internally dispatch dynamically, so you offer a uniform object layout.

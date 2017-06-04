@@ -7,12 +7,10 @@ The use in expressions argument doesn't hold for references.
 
 ##### Example
 
-```cpp
-T& operator[](size_t);   // OK
-T &operator[](size_t);   // just strange
-T & operator[](size_t);   // undecided
+    T& operator[](size_t);   // OK
+    T &operator[](size_t);   // just strange
+    T & operator[](size_t);   // undecided
 
-```
 ##### Enforcement
 
 Impossible in the face of history.

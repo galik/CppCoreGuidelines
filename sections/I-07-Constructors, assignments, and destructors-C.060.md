@@ -6,27 +6,25 @@ It is simple and efficient. If you want to optimize for rvalues, provide an over
 
 ##### Example
 
-```cpp
-class Foo {
-public:
-    Foo& operator=(const Foo& x)
-    {
-        // GOOD: no need to check for self-assignment (other than performance)
-        auto tmp = x;
-        std::swap(*this, tmp);
-        return *this;
-    }
-    // ...
-};
+    class Foo {
+    public:
+        Foo& operator=(const Foo& x)
+        {
+            // GOOD: no need to check for self-assignment (other than performance)
+            auto tmp = x;
+            std::swap(*this, tmp);
+            return *this;
+        }
+        // ...
+    };
 
-Foo a;
-Foo b;
-Foo f();
+    Foo a;
+    Foo b;
+    Foo f();
 
-a = b;    // assign lvalue: copy
-a = f();  // assign rvalue: potentially move
+    a = b;    // assign lvalue: copy
+    a = f();  // assign rvalue: potentially move
 
-```
 ##### Note
 
 The `swap` implementation technique offers the [strong guarantee](???).
@@ -35,31 +33,29 @@ The `swap` implementation technique offers the [strong guarantee](???).
 
 But what if you can get significantly better performance by not making a temporary copy? Consider a simple `Vector` intended for a domain where assignment of large, equal-sized `Vector`s is common. In this case, the copy of elements implied by the `swap` implementation technique could cause an order of magnitude increase in cost:
 
-```cpp
-template<typename T>
-class Vector {
-public:
-    Vector& operator=(const Vector&);
-    // ...
-private:
-    T* elem;
-    int sz;
-};
+    template<typename T>
+    class Vector {
+    public:
+        Vector& operator=(const Vector&);
+        // ...
+    private:
+        T* elem;
+        int sz;
+    };
 
-Vector& Vector::operator=(const Vector& a)
-{
-    if (a.sz > sz) {
-        // ... use the swap technique, it can't be bettered ...
-        return *this
+    Vector& Vector::operator=(const Vector& a)
+    {
+        if (a.sz > sz) {
+            // ... use the swap technique, it can't be bettered ...
+            return *this
+        }
+        // ... copy sz elements from *a.elem to elem ...
+        if (a.sz < sz) {
+            // ... destroy the surplus elements in *this* and adjust size ...
+        }
+        return *this;
     }
-    // ... copy sz elements from *a.elem to elem ...
-    if (a.sz < sz) {
-        // ... destroy the surplus elements in *this* and adjust size ...
-    }
-    return *this;
-}
 
-```
 By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.062.md#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.

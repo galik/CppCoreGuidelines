@@ -6,22 +6,18 @@
 
 ##### Example
 
-```cpp
-// write a complex number:
-complex<double> z{ 3, 4 };
-cout << z << '\n';
+    // write a complex number:
+    complex<double> z{ 3, 4 };
+    cout << z << '\n';
 
-```
 `complex` is a user defined type and its I/O is defined without modifying the `iostream` library.
 
 ##### Example
 
-```cpp
-// read a file of complex numbers:
-for (complex<double> z; cin >> z; )
-    v.push_back(z);
+    // read a file of complex numbers:
+    for (complex<double> z; cin >> z; )
+        v.push_back(z);
 
-```
 ##### Exception
 
 ??? performance ???

@@ -6,19 +6,17 @@
 
 ##### Example
 
-```cpp
-void f()
-{
-    int x = 7;
-    const int y = 9;
+    void f()
+    {
+        int x = 7;
+        const int y = 9;
 
-    for (;;) {
+        for (;;) {
+            // ...
+        }
         // ...
     }
-    // ...
-}
 
-```
 As `x` is not `const`, we must assume that it is modified somewhere in the loop.
 
 ##### Enforcement

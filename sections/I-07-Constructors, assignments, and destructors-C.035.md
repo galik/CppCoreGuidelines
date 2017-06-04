@@ -13,24 +13,22 @@ See [this in the Discussion section](I-28-Discussion-Discussion.md#Sd-dtor).
 
 ##### Example, bad
 
-```cpp
-struct Base {  // BAD: no virtual destructor
-    virtual void f();
-};
+    struct Base {  // BAD: no virtual destructor
+        virtual void f();
+    };
 
-struct D : Base {
-    string s {"a resource needing cleanup"};
-    ~D() { /* ... do some cleanup ... */ }
-    // ...
-};
+    struct D : Base {
+        string s {"a resource needing cleanup"};
+        ~D() { /* ... do some cleanup ... */ }
+        // ...
+    };
 
-void use()
-{
-    unique_ptr<Base> p = make_unique<D>();
-    // ...
-} // p's destruction calls ~Base(), not ~D(), which leaks D::s and possibly more
+    void use()
+    {
+        unique_ptr<Base> p = make_unique<D>();
+        // ...
+    } // p's destruction calls ~Base(), not ~D(), which leaks D::s and possibly more
 
-```
 ##### Note
 
 A virtual function defines an interface to derived classes that can be used without looking at the derived classes.
@@ -40,19 +38,17 @@ If the interface allows destroying, it should be safe to do so.
 
 A destructor must be nonprivate or it will prevent using the type :
 
-```cpp
-class X {
-    ~X();   // private destructor
-    // ...
-};
+    class X {
+        ~X();   // private destructor
+        // ...
+    };
 
-void use()
-{
-    X a;                        // error: cannot destroy
-    auto p = make_unique<X>();  // error: cannot destroy
-}
+    void use()
+    {
+        X a;                        // error: cannot destroy
+        auto p = make_unique<X>();  // error: cannot destroy
+    }
 
-```
 ##### Exception
 
 We can imagine one case where you could want a protected virtual destructor: When an object of a derived type (and only of such a type) should be allowed to destroy *another* object (not itself) through a pointer to base. We haven't seen such a case in practice, though.

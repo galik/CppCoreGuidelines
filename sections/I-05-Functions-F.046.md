@@ -7,15 +7,13 @@ Declaring `main` (the one global `main` of a program) `void` limits portability.
 
 ##### Example
 
-```cpp
-    void main() { /* ... */ };  // bad, not C++
+        void main() { /* ... */ };  // bad, not C++
 
-    int main()
-    {
-        std::cout << "This is the way to do it\n";
-    }
+        int main()
+        {
+            std::cout << "This is the way to do it\n";
+        }
 
-```
 ##### Note
 
 We mention this only because of the persistence of this error in the community.

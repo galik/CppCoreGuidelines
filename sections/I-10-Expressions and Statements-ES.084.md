@@ -8,14 +8,12 @@ To avoid unpleasant surprises.
 
 ##### Example, bad
 
-```cpp
-void f()
-{
-    lock<mutex>{mx};   // Bad
-    // ...
-}
+    void f()
+    {
+        lock<mutex>{mx};   // Bad
+        // ...
+    }
 
-```
 This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
 This is not an uncommon mistake.
 In particular, this particular example can lead to hard-to find race conditions.
@@ -23,13 +21,9 @@ There are exceedingly clever used of this "idiom", but they are far rarer than t
 
 ##### Note
 
-```cpp
-Unnamed function arguments are fine.
+    Unnamed function arguments are fine.
 
-```
 ##### Enforcement
 
-```cpp
-Flag statements that are just a temporary
+    Flag statements that are just a temporary
 
-```

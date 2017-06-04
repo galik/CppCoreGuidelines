@@ -6,26 +6,24 @@ The semantics of the special functions are closely related, so if one needs to b
 
 ##### Example, bad
 
-```cpp
-struct M2 {   // bad: incomplete set of default operations
-public:
-    // ...
-    // ... no copy or move operations ...
-    ~M2() { delete[] rep; }
-private:
-    pair<int, int>* rep;  // zero-terminated set of pairs
-};
+    struct M2 {   // bad: incomplete set of default operations
+    public:
+        // ...
+        // ... no copy or move operations ...
+        ~M2() { delete[] rep; }
+    private:
+        pair<int, int>* rep;  // zero-terminated set of pairs
+    };
 
-void use()
-{
-    M2 x;
-    M2 y;
-    // ...
-    x = y;   // the default assignment
-    // ...
-}
+    void use()
+    {
+        M2 x;
+        M2 y;
+        // ...
+        x = y;   // the default assignment
+        // ...
+    }
 
-```
 Given that "special attention" was needed for the destructor (here, to deallocate), the likelihood that copy and move assignment (both will implicitly destroy an object) are correct is low (here, we would get double deletion).
 
 ##### Note

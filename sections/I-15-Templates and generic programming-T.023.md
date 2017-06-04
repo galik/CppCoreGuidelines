@@ -6,14 +6,12 @@ Otherwise they cannot be distinguished automatically by the compiler.
 
 ##### Example (using TS concepts)
 
-```cpp
-template<typename I>
-concept bool Input_iter = requires(I iter) { ++iter; };
+    template<typename I>
+    concept bool Input_iter = requires(I iter) { ++iter; };
 
-template<typename I>
-concept bool Fwd_iter = Input_iter<I> && requires(I iter) { iter++; }
+    template<typename I>
+    concept bool Fwd_iter = Input_iter<I> && requires(I iter) { iter++; }
 
-```
 The compiler can determine refinement based on the sets of required operations (here, suffix `++`).
 This decreases the burden on implementers of these types since
 they do not need any special declarations to "hook into the concept".

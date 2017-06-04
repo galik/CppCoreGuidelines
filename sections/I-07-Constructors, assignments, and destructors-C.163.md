@@ -8,18 +8,14 @@ Having the same name for logically different functions is confusing and leads to
 
 Consider:
 
-```cpp
-void open_gate(Gate& g);   // remove obstacle from garage exit lane
-void fopen(const char* name, const char* mode);   // open file
+    void open_gate(Gate& g);   // remove obstacle from garage exit lane
+    void fopen(const char* name, const char* mode);   // open file
 
-```
 The two operations are fundamentally different (and unrelated) so it is good that their names differ. Conversely:
 
-```cpp
-void open(Gate& g);   // remove obstacle from garage exit lane
-void open(const char* name, const char* mode ="r");   // open file
+    void open(Gate& g);   // remove obstacle from garage exit lane
+    void open(const char* name, const char* mode ="r");   // open file
 
-```
 The two operations are still fundamentally different (and unrelated) but the names have been reduced to their (common) minimum, opening opportunities for confusion.
 Fortunately, the type system will catch many such mistakes.
 

@@ -6,10 +6,8 @@ Casting to a reference expresses that you intend to end up with a valid object, 
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

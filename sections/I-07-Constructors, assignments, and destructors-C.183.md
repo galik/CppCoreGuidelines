@@ -8,34 +8,28 @@ Type punning using a `union` is a source of errors.
 
 ##### Example, bad
 
-```cpp
-union Pun {
-    int x;
-    unsigned char c[sizeof(int)];
-};
+    union Pun {
+        int x;
+        unsigned char c[sizeof(int)];
+    };
 
-```
 The idea of `Pun` is to be able to look at the character representation of an `int`.
 
-```cpp
-void bad(Pun& u)
-{
-    u.x = 'x';
-    cout << u.c[0] << '\n';     // undefined behavior
-}
+    void bad(Pun& u)
+    {
+        u.x = 'x';
+        cout << u.c[0] << '\n';     // undefined behavior
+    }
 
-```
 If you wanted to see the bytes of an `int`, use a (named) cast:
 
-```cpp
-void if_you_must_pun(int& x)
-{
-    auto p = reinterpret_cast<unsigned char*>(&x);
-    cout << p[0] << '\n';     // OK; better
-    // ...
-}
+    void if_you_must_pun(int& x)
+    {
+        auto p = reinterpret_cast<unsigned char*>(&x);
+        cout << p[0] << '\n';     // OK; better
+        // ...
+    }
 
-```
 Accessing the result of an `reinterpret_cast` to a different type from the objects declared type is defined behavior (even though `reinterpret_cast` is discouraged),
 but at least we can see that something tricky is going on.
 

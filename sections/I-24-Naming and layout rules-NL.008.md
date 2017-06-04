@@ -41,11 +41,9 @@ Some conventions capitalize the first letter, some don't.
 
 Try to be consistent in your use of acronyms and lengths of identifiers:
 
-```cpp
-int mtbf {12};
-int mean_time_between_failures {12}; // make up your mind
+    int mtbf {12};
+    int mean_time_between_failures {12}; // make up your mind
 
-```
 ##### Enforcement
 
 Would be possible except for the use of libraries with varying conventions.

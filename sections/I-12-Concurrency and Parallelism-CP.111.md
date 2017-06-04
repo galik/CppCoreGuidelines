@@ -10,49 +10,43 @@ The uses of the double-checked locking pattern that are not in violation of [CP.
 
 The use of volatile does not make the first check thread-safe, see also [CP.200: Use `volatile` only to talk to non-C++ memory](I-12-Concurrency%20and%20Parallelism-CP.200.md#Rconc-volatile2)
 
-```cpp
-mutex action_mutex;
-volatile bool action_needed;
+    mutex action_mutex;
+    volatile bool action_needed;
 
-if (action_needed) {
-    std::lock_guard<std::mutex> lock(action_mutex);
     if (action_needed) {
-        take_action();
-        action_needed = false;
+        std::lock_guard<std::mutex> lock(action_mutex);
+        if (action_needed) {
+            take_action();
+            action_needed = false;
+        }
     }
-}
 
-```
 ##### Example, good
 
-```cpp
-mutex action_mutex;
-atomic<bool> action_needed;
+    mutex action_mutex;
+    atomic<bool> action_needed;
 
-if (action_needed) {
-    std::lock_guard<std::mutex> lock(action_mutex);
     if (action_needed) {
-        take_action();
-        action_needed = false;
+        std::lock_guard<std::mutex> lock(action_mutex);
+        if (action_needed) {
+            take_action();
+            action_needed = false;
+        }
     }
-}
 
-```
 Fine-tuned memory order may be beneficial where acquire load is more efficient than sequentially-consistent load
 
-```cpp
-mutex action_mutex;
-atomic<bool> action_needed;
+    mutex action_mutex;
+    atomic<bool> action_needed;
 
-if (action_needed.load(memory_order_acquire)) {
-    lock_guard<std::mutex> lock(action_mutex);
-    if (action_needed.load(memory_order_relaxed)) {
-        take_action();
-        action_needed.store(false, memory_order_release);
+    if (action_needed.load(memory_order_acquire)) {
+        lock_guard<std::mutex> lock(action_mutex);
+        if (action_needed.load(memory_order_relaxed)) {
+            take_action();
+            action_needed.store(false, memory_order_release);
+        }
     }
-}
 
-```
 ##### Enforcement
 
 ??? Is it possible to detect the idiom?

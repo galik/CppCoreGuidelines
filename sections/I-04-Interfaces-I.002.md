@@ -6,22 +6,20 @@ Non-`const` global variables hide dependencies and make the dependencies subject
 
 ##### Example
 
-```cpp
-struct Data {
-    // ... lots of stuff ...
-} data;            // non-const data
+    struct Data {
+        // ... lots of stuff ...
+    } data;            // non-const data
 
-void compute()     // don't
-{
-    // ... use data ...
-}
+    void compute()     // don't
+    {
+        // ... use data ...
+    }
 
-void output()     // don't
-{
-    // ... use data ...
-}
+    void output()     // don't
+    {
+        // ... use data ...
+    }
 
-```
 Who else might modify `data`?
 
 ##### Note

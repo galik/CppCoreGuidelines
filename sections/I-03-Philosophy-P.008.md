@@ -7,29 +7,25 @@ This is particularly important for long-running programs, but is an essential pi
 
 ##### Example, bad
 
-```cpp
-void f(char* name)
-{
-    FILE* input = fopen(name, "r");
-    // ...
-    if (something) return;   // bad: if something == true, a file handle is leaked
-    // ...
-    fclose(input);
-}
+    void f(char* name)
+    {
+        FILE* input = fopen(name, "r");
+        // ...
+        if (something) return;   // bad: if something == true, a file handle is leaked
+        // ...
+        fclose(input);
+    }
 
-```
 Prefer [RAII](I-09-Resource%20management-R.001.md#Rr-raii):
 
-```cpp
-void f(char* name)
-{
-    ifstream input {name};
-    // ...
-    if (something) return;   // OK: no leak
-    // ...
-}
+    void f(char* name)
+    {
+        ifstream input {name};
+        // ...
+        if (something) return;   // OK: no leak
+        // ...
+    }
 
-```
 **See also**: [The resource management section](I-09-Resource%20management.md#S-resource)
 
 ##### Note

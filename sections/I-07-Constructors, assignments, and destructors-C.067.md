@@ -6,43 +6,39 @@ To prevent slicing, because the normal copy operations will copy only the base p
 
 ##### Example, bad
 
-```cpp
-class B { // BAD: base class doesn't suppress copying
-    int data;
-    // ... nothing about copy operations, so uses default ...
-};
+    class B { // BAD: base class doesn't suppress copying
+        int data;
+        // ... nothing about copy operations, so uses default ...
+    };
 
-class D : public B {
-    string more_data; // add a data member
-    // ...
-};
+    class D : public B {
+        string more_data; // add a data member
+        // ...
+    };
 
-auto d = make_unique<D>();
+    auto d = make_unique<D>();
 
-// oops, slices the object; gets only d.data but drops d.more_data
-auto b = make_unique<B>(d);
+    // oops, slices the object; gets only d.data but drops d.more_data
+    auto b = make_unique<B>(d);
 
-```
 ##### Example
 
-```cpp
-class B { // GOOD: base class suppresses copying
-    B(const B&) = delete;
-    B& operator=(const B&) = delete;
-    virtual unique_ptr<B> clone() { return /* B object */; }
-    // ...
-};
+    class B { // GOOD: base class suppresses copying
+        B(const B&) = delete;
+        B& operator=(const B&) = delete;
+        virtual unique_ptr<B> clone() { return /* B object */; }
+        // ...
+    };
 
-class D : public B {
-    string more_data; // add a data member
-    unique_ptr<B> clone() override { return /* D object */; }
-    // ...
-};
+    class D : public B {
+        string more_data; // add a data member
+        unique_ptr<B> clone() override { return /* D object */; }
+        // ...
+    };
 
-auto d = make_unique<D>();
-auto b = d.clone(); // ok, deep clone
+    auto d = make_unique<D>();
+    auto b = d.clone(); // ok, deep clone
 
-```
 ##### Note
 
 It's good to return a smart pointer, but unlike with raw pointers the return type cannot be covariant (for example, `D::clone` can't return a `unique_ptr<D>`. Don't let this tempt you into returning an owning raw pointer; this is a minor drawback compared to the major robustness benefit delivered by the owning smart pointer.

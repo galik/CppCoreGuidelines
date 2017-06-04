@@ -10,28 +10,24 @@ For passthrough functions that pass in parameters (by ordinary reference or by p
 
 If `F` returns by value, this function returns a reference to a temporary.
 
-```cpp
-template<class F>
-auto&& wrapper(F f)
-{
-    log_call(typeid(f)); // or whatever instrumentation
-    return f();
-}
+    template<class F>
+    auto&& wrapper(F f)
+    {
+        log_call(typeid(f)); // or whatever instrumentation
+        return f();
+    }
 
-```
 ##### Example, good
 
 Better:
 
-```cpp
-template<class F>
-auto wrapper(F f)
-{
-    log_call(typeid(f)); // or whatever instrumentation
-    return f();
-}
+    template<class F>
+    auto wrapper(F f)
+    {
+        log_call(typeid(f)); // or whatever instrumentation
+        return f();
+    }
 
-```
 ##### Exception
 
 `std::move` and `std::forward` do return `&&`, but they are just casts -- used by convention only in expression contexts where a reference to a temporary object is passed along within the same expression before the temporary is destroyed. We don't know of any other good examples of returning `&&`.

@@ -6,10 +6,8 @@
 
 ##### Example
 
-```cpp
-??? beware of move-only and reference arguments
+    ??? beware of move-only and reference arguments
 
-```
 ##### Enforcement
 
 ???

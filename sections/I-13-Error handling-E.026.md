@@ -18,27 +18,23 @@ In such cases, "crashing" is simply leaving error handling to the next level of 
 
 ##### Example
 
-```cpp
-void f(int n)
-{
-    // ...
-    p = static_cast<X*>(malloc(n, X));
-    if (p == nullptr) abort();     // abort if memory is exhausted
-    // ...
-}
+    void f(int n)
+    {
+        // ...
+        p = static_cast<X*>(malloc(n, X));
+        if (p == nullptr) abort();     // abort if memory is exhausted
+        // ...
+    }
 
-```
 Most programs cannot handle memory exhaustion gracefully anyway. This is roughly equivalent to
 
-```cpp
-void f(int n)
-{
-    // ...
-    p = new X[n];    // throw if memory is exhausted (by default, terminate)
-    // ...
-}
+    void f(int n)
+    {
+        // ...
+        p = new X[n];    // throw if memory is exhausted (by default, terminate)
+        // ...
+    }
 
-```
 Typically, it is a good idea to log the reason for the "crash" before exiting.
 
 ##### Enforcement

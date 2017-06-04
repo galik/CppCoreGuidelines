@@ -9,18 +9,14 @@ Distinguishing these alternatives prevents misunderstandings and bugs.
 
 ##### Example
 
-```cpp
-void f1(const char* s); // s is probably a string
+    void f1(const char* s); // s is probably a string
 
-```
 All we know is that it is supposed to be the nullptr or point to at least one character
 
-```cpp
-void f1(zstring s);     // s is a C-style string or the nullptr
-void f1(czstring s);    // s is a C-style string that is not the nullptr
-void f1(std::byte* s);  // s is a pointer to a byte (C++17)
+    void f1(zstring s);     // s is a C-style string or the nullptr
+    void f1(czstring s);    // s is a C-style string that is not the nullptr
+    void f1(std::byte* s);  // s is a pointer to a byte (C++17)
 
-```
 ##### Note
 
 Don't convert a C-style string to `string` unless there is a reason to.

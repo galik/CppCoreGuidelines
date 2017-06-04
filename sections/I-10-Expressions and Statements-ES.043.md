@@ -14,10 +14,8 @@ However, remember that your code may be compiled with a pre-C++17 compiler (e.g.
 
 ##### Example
 
-```cpp
-v[i] = ++i;   //  the result is undefined
+    v[i] = ++i;   //  the result is undefined
 
-```
 A good rule of thumb is that you should not read a value twice in an expression where you write to it.
 
 ##### Enforcement

@@ -8,15 +8,13 @@ Make the interface precisely specified and compile-time checkable in the (not so
 
 Use the ISO Concepts TS style of requirements specification. For example:
 
-```cpp
-template<typename Iter, typename Val>
-// requires InputIterator<Iter> && EqualityComparable<ValueType<Iter>>, Val>
-Iter find(Iter first, Iter last, Val v)
-{
-    // ...
-}
+    template<typename Iter, typename Val>
+    // requires InputIterator<Iter> && EqualityComparable<ValueType<Iter>>, Val>
+    Iter find(Iter first, Iter last, Val v)
+    {
+        // ...
+    }
 
-```
 ##### Note
 
 Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.

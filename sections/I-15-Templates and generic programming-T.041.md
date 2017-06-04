@@ -8,28 +8,24 @@ Keep interfaces simple and stable.
 
 Consider, a `sort` instrumented with (oversimplified) simple debug support:
 
-```cpp
-void sort(Sortable& s)  // sort sequence s
-{
-    if (debug) cerr << "enter sort( " << s <<  ")\n";
-    // ...
-    if (debug) cerr << "exit sort( " << s <<  ")\n";
-}
+    void sort(Sortable& s)  // sort sequence s
+    {
+        if (debug) cerr << "enter sort( " << s <<  ")\n";
+        // ...
+        if (debug) cerr << "exit sort( " << s <<  ")\n";
+    }
 
-```
 Should this be rewritten to:
 
-```cpp
-template<Sortable S>
-    requires Streamable<S>
-void sort(S& s)  // sort sequence s
-{
-    if (debug) cerr << "enter sort( " << s <<  ")\n";
-    // ...
-    if (debug) cerr << "exit sort( " << s <<  ")\n";
-}
+    template<Sortable S>
+        requires Streamable<S>
+    void sort(S& s)  // sort sequence s
+    {
+        if (debug) cerr << "enter sort( " << s <<  ")\n";
+        // ...
+        if (debug) cerr << "exit sort( " << s <<  ")\n";
+    }
 
-```
 After all, there is nothing in `Sortable` that requires `iostream` support.
 On the other hand, there is nothing in the fundamental idea of sorting that says anything about debugging.
 

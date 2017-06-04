@@ -10,42 +10,40 @@ In the context of C++, this style is often called "Stroustrup".
 
 ##### Example
 
-```cpp
-struct Cable {
-    int x;
-    // ...
-};
-
-double foo(int x)
-{
-    if (0 < x) {
+    struct Cable {
+        int x;
         // ...
+    };
+
+    double foo(int x)
+    {
+        if (0 < x) {
+            // ...
+        }
+
+        switch (x) {
+            case 0:
+                // ...
+                break;
+            case amazing:
+                // ...
+                break;
+            default:
+                // ...
+                break;
+        }
+
+        if (0 < x)
+            ++x;
+
+        if (x < 0)
+            something();
+        else
+            something_else();
+
+        return some_value;
     }
 
-    switch (x) {
-        case 0:
-            // ...
-            break;
-        case amazing:
-            // ...
-            break;
-        default:
-            // ...
-            break;
-    }
-
-    if (0 < x)
-        ++x;
-
-    if (x < 0)
-        something();
-    else
-        something_else();
-
-    return some_value;
-}
-
-```
 Note the space between `if` and `(`
 
 ##### Note

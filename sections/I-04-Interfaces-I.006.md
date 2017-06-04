@@ -6,15 +6,13 @@ To make it clear that the condition is a precondition and to enable tool use.
 
 ##### Example
 
-```cpp
-int area(int height, int width)
-{
-    Expects(height > 0 && width > 0);            // good
-    if (height <= 0 || width <= 0) my_error();   // obscure
-    // ...
-}
+    int area(int height, int width)
+    {
+        Expects(height > 0 && width > 0);            // good
+        if (height <= 0 || width <= 0) my_error();   // obscure
+        // ...
+    }
 
-```
 ##### Note
 
 Preconditions can be stated in many ways, including comments, `if`-statements, and `assert()`.

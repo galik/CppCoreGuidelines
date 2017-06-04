@@ -8,53 +8,49 @@ Do *not* use inheritance when simply having a data member will do. Usually this 
 
 ##### Example
 
-```cpp
-class DrawableUIElement {
-public:
-    virtual void render() const = 0;
+    class DrawableUIElement {
+    public:
+        virtual void render() const = 0;
+        // ...
+    };
+
+    class AbstractButton : public DrawableUIElement {
+    public:
+        virtual void onClick() = 0;
+        // ...
+    };
+
+    class PushButton : public AbstractButton {
+        virtual void render() const override;
+        virtual void onClick() override;
+        // ...
+    };
+
+    class Checkbox : public AbstractButton {
     // ...
-};
+    };
 
-class AbstractButton : public DrawableUIElement {
-public:
-    virtual void onClick() = 0;
-    // ...
-};
-
-class PushButton : public AbstractButton {
-    virtual void render() const override;
-    virtual void onClick() override;
-    // ...
-};
-
-class Checkbox : public AbstractButton {
-// ...
-};
-
-```
 ##### Example, bad
 
 Do *not* represent non-hierarchical domain concepts as class hierarchies.
 
-```cpp
-template<typename T>
-class Container {
-public:
-    // list operations:
-    virtual T& get() = 0;
-    virtual void put(T&) = 0;
-    virtual void insert(Position) = 0;
-    // ...
-    // vector operations:
-    virtual T& operator[](int) = 0;
-    virtual void sort() = 0;
-    // ...
-    // tree operations:
-    virtual void balance() = 0;
-    // ...
-};
+    template<typename T>
+    class Container {
+    public:
+        // list operations:
+        virtual T& get() = 0;
+        virtual void put(T&) = 0;
+        virtual void insert(Position) = 0;
+        // ...
+        // vector operations:
+        virtual T& operator[](int) = 0;
+        virtual void sort() = 0;
+        // ...
+        // tree operations:
+        virtual void balance() = 0;
+        // ...
+    };
 
-```
 Here most overriding classes cannot implement most of the functions required in the interface well.
 Thus the base class becomes an implementation burden.
 Furthermore, the user of `Container` cannot rely on the member functions actually performing a meaningful operations reasonably efficiently;

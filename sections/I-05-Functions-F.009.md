@@ -7,10 +7,8 @@ Suppression of unused parameter warnings.
 
 ##### Example
 
-```cpp
-X* find(map<Blob>& m, const string& s, Hint);   // once upon a time, a hint was used
+    X* find(map<Blob>& m, const string& s, Hint);   // once upon a time, a hint was used
 
-```
 ##### Note
 
 Allowing parameters to be unnamed was introduced in the early 1980 to address this problem.

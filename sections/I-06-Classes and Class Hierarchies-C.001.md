@@ -7,11 +7,9 @@ If data is related (for fundamental reasons), that fact should be reflected in c
 
 ##### Example
 
-```cpp
-void draw(int x, int y, int x2, int y2);  // BAD: unnecessary implicit relationships
-void draw(Point from, Point to);          // better
+    void draw(int x, int y, int x2, int y2);  // BAD: unnecessary implicit relationships
+    void draw(Point from, Point to);          // better
 
-```
 ##### Note
 
 A simple class without virtual functions implies no space or time overhead.

@@ -7,19 +7,17 @@ This gives a more precise statement of design intent, better readability, more e
 
 ##### Example; bad
 
-```cpp
-class Point {
-    int x, y;
-public:
-    int getx() { return x; }    // BAD, should be const as it doesn't modify the object's state
-    // ...
-};
+    class Point {
+        int x, y;
+    public:
+        int getx() { return x; }    // BAD, should be const as it doesn't modify the object's state
+        // ...
+    };
 
-void f(const Point& pt) {
-    int x = pt.getx();          // ERROR, doesn't compile because getx was not marked const
-}
+    void f(const Point& pt) {
+        int x = pt.getx();          // ERROR, doesn't compile because getx was not marked const
+    }
 
-```
 ##### Note
 
 It is not inherently bad to pass a pointer or reference to non-const,
@@ -40,11 +38,9 @@ You can
 
 Example:
 
-```cpp
-void f(int* p);   // old code: f() does not modify `*p`
-void f(const int* p) { f(const_cast<int*>(p); } // wrapper
+    void f(int* p);   // old code: f() does not modify `*p`
+    void f(const int* p) { f(const_cast<int*>(p); } // wrapper
 
-```
 Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be be modified,
 e.g. because it is in a library that you cannot modify.
 
@@ -54,23 +50,21 @@ A `const` member function can modify the value of an object that is `mutable` or
 A common use is to maintain a cache rather than repeatedly do a complicated computation.
 For example, here is a `Date` that caches (mnemonizes) its string representation to simplify repeated uses:
 
-```cpp
-class Date {
-public:
-    // ...
-    const string& string_ref() const
-    {
-        if (string_val == "") compute_string_rep();
-        return string_val;
-    }
-    // ...
-private:
-    void compute_string_rep() const;    // compute string representation and place it in string_val
-    mutable string string_val;
-    // ...
-};
+    class Date {
+    public:
+        // ...
+        const string& string_ref() const
+        {
+            if (string_val == "") compute_string_rep();
+            return string_val;
+        }
+        // ...
+    private:
+        void compute_string_rep() const;    // compute string representation and place it in string_val
+        mutable string string_val;
+        // ...
+    };
 
-```
 Another way of saying this is that `const`ness is not transitive.
 It is possible for a `const` member function to change the value of `mutable` members and the value of objects accessed
 through non-`const` pointers.

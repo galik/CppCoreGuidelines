@@ -6,15 +6,13 @@ That way you can't change the value by mistake. That way may offer the compiler 
 
 ##### Example
 
-```cpp
-void f(int n)
-{
-    const int bufmax = 2 * n + 2;  // good: we can't change bufmax by accident
-    int xmax = n;                  // suspicious: is xmax intended to change?
-    // ...
-}
+    void f(int n)
+    {
+        const int bufmax = 2 * n + 2;  // good: we can't change bufmax by accident
+        int xmax = n;                  // suspicious: is xmax intended to change?
+        // ...
+    }
 
-```
 ##### Enforcement
 
 Look to see if a variable is actually mutated, and flag it if

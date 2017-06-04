@@ -8,25 +8,19 @@ It is available as part of all C++ Implementations.
 
 ##### Example
 
-```cpp
-auto sum = accumulate(begin(a), end(a), 0.0);   // good
+    auto sum = accumulate(begin(a), end(a), 0.0);   // good
 
-```
 a range version of `accumulate` would be even better:
 
-```cpp
-auto sum = accumulate(v, 0.0); // better
+    auto sum = accumulate(v, 0.0); // better
 
-```
 but don't hand-code a well-known algorithm:
 
-```cpp
-int max = v.size();   // bad: verbose, purpose unstated
-double sum = 0.0;
-for (int i = 0; i < max; ++i)
-    sum = sum + v[i];
+    int max = v.size();   // bad: verbose, purpose unstated
+    double sum = 0.0;
+    for (int i = 0; i < max; ++i)
+        sum = sum + v[i];
 
-```
 ##### Exception
 
 Large parts of the standard library rely on dynamic allocation (free store). These parts, notably the containers but not the algorithms, are unsuitable for some hard-real time and embedded applications. In such cases, consider providing/using similar facilities, e.g.,  a standard-library-style container implemented using a pool allocator.

@@ -7,10 +7,8 @@ Additions to `std` may clash with future versions of the standard.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 Possible, but messy and likely to cause problems with platforms.

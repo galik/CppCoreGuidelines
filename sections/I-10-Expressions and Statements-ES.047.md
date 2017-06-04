@@ -11,13 +11,11 @@ or `0`.
 
 Consider:
 
-```cpp
-void f(int);
-void f(char*);
-f(0);         // call f(int)
-f(nullptr);   // call f(char*)
+    void f(int);
+    void f(char*);
+    f(0);         // call f(int)
+    f(nullptr);   // call f(char*)
 
-```
 ##### Enforcement
 
 Flag uses of `0` and `NULL` for pointers. The transformation may be helped by simple program transformation.

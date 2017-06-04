@@ -10,22 +10,20 @@ However, thanks to the magic of cut-and-paste, code fragments can turn up in une
 
 ##### Example
 
-```cpp
-double cached_computation(double x)
-{
-    static double cached_x = 0.0;
-    static double cached_result = COMPUTATION_OF_ZERO;
-    double result;
+    double cached_computation(double x)
+    {
+        static double cached_x = 0.0;
+        static double cached_result = COMPUTATION_OF_ZERO;
+        double result;
 
-    if (cached_x == x)
-        return cached_result;
-    result = computation(x);
-    cached_x = x;
-    cached_result = result;
-    return result;
-}
+        if (cached_x == x)
+            return cached_result;
+        result = computation(x);
+        cached_x = x;
+        cached_result = result;
+        return result;
+    }
 
-```
 Although `cached_computation` works perfectly in a single-threaded environment, in a multi-threaded environment the two `static` variables result in data races and thus undefined behavior.
 
 There are several ways that this example could be made safe for a multi-threaded environment:

@@ -6,16 +6,14 @@ Less coupling than with member functions, fewer functions that can cause trouble
 
 ##### Example
 
-```cpp
-class Date {
-    // ... relatively small interface ...
-};
+    class Date {
+        // ... relatively small interface ...
+    };
 
-// helper functions:
-Date next_weekday(Date);
-bool operator==(Date, Date);
+    // helper functions:
+    Date next_weekday(Date);
+    bool operator==(Date, Date);
 
-```
 The "helper functions" have no need for direct access to the representation of a `Date`.
 
 ##### Note
@@ -37,22 +35,18 @@ The language requires operators `=`, `()`, `[]`, and `->` to be members.
 
 An overload set may have some members that do not directly access `private` data:
 
-```cpp
-class Foobar {
-    void foo(int x)    { /* manipulate private data */ }
-    void foo(double x) { foo(std::round(x)); }
-    // ...
-private:
-    // ...
-};
+    class Foobar {
+        void foo(int x)    { /* manipulate private data */ }
+        void foo(double x) { foo(std::round(x)); }
+        // ...
+    private:
+        // ...
+    };
 
-```
 Similarly, a set of functions may be designed to be used in a chain:
 
-```cpp
-x.scale(0.5).rotate(45).set_color(Color::red);
+    x.scale(0.5).rotate(45).set_color(Color::red);
 
-```
 Typically, some but not all of such functions directly access `private` data.
 
 ##### Enforcement

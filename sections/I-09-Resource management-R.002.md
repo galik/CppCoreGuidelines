@@ -7,27 +7,23 @@ Such containers and views hold sufficient information to do range checking.
 
 ##### Example, bad
 
-```cpp
-void f(int* p, int n)   // n is the number of elements in p[]
-{
-    // ...
-    p[2] = 7;   // bad: subscript raw pointer
-    // ...
-}
+    void f(int* p, int n)   // n is the number of elements in p[]
+    {
+        // ...
+        p[2] = 7;   // bad: subscript raw pointer
+        // ...
+    }
 
-```
 The compiler does not read comments, and without reading other code you do not know whether `p` really points to `n` elements.
 Use a `span` instead.
 
 ##### Example
 
-```cpp
-void g(int* p, int fmt)   // print *p using format #fmt
-{
-    // ... uses *p and p[0] only ...
-}
+    void g(int* p, int fmt)   // print *p using format #fmt
+    {
+        // ... uses *p and p[0] only ...
+    }
 
-```
 ##### Exception
 
 C-style strings are passed as single pointers to a zero-terminated sequence of characters.

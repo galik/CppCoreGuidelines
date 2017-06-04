@@ -6,14 +6,12 @@ This makes the function's ??? explicit.
 
 ##### Example, good
 
-```cpp
-void share(shared_ptr<widget>);            // share -- "will" retain refcount
+    void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
-void reseat(shared_ptr<widget>&);          // "might" reseat ptr
+    void reseat(shared_ptr<widget>&);          // "might" reseat ptr
 
-void may_share(const shared_ptr<widget>&); // "might" retain refcount
+    void may_share(const shared_ptr<widget>&); // "might" retain refcount
 
-```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a `Shared_ptr<T>` parameter by lvalue reference and does not either assign to it or call `reset()` on it on at least one code path. Suggest taking a `T*` or `T&` instead.

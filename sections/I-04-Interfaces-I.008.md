@@ -6,16 +6,14 @@ To make it clear that the condition is a postcondition and to enable tool use.
 
 ##### Example
 
-```cpp
-void f()
-{
-    char buffer[MAX];
-    // ...
-    memset(buffer, 0, MAX);
-    Ensures(buffer[0] == 0);
-}
+    void f()
+    {
+        char buffer[MAX];
+        // ...
+        memset(buffer, 0, MAX);
+        Ensures(buffer[0] == 0);
+    }
 
-```
 ##### Note
 
 Postconditions can be stated in many ways, including comments, `if`-statements, and `assert()`.

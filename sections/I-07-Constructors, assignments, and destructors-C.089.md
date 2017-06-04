@@ -7,29 +7,27 @@ It's a standard-library requirement.
 
 ##### Example, bad
 
-```cpp
-template<>
-struct hash<My_type> {  // thoroughly bad hash specialization
-    using result_type = size_t;
-    using argument_type = My_type;
+    template<>
+    struct hash<My_type> {  // thoroughly bad hash specialization
+        using result_type = size_t;
+        using argument_type = My_type;
 
-    size_t operator() (const My_type & x) const
+        size_t operator() (const My_type & x) const
+        {
+            size_t xs = x.s.size();
+            if (xs < 4) throw Bad_My_type{};    // "Nobody expects the Spanish inquisition!"
+            return hash<size_t>()(x.s.size()) ^ trim(x.s);
+        }
+    };
+
+    int main()
     {
-        size_t xs = x.s.size();
-        if (xs < 4) throw Bad_My_type{};    // "Nobody expects the Spanish inquisition!"
-        return hash<size_t>()(x.s.size()) ^ trim(x.s);
+        unordered_map<My_type, int> m;
+        My_type mt{ "asdfg" };
+        m[mt] = 7;
+        cout << m[My_type{ "asdfg" }] << '\n';
     }
-};
 
-int main()
-{
-    unordered_map<My_type, int> m;
-    My_type mt{ "asdfg" };
-    m[mt] = 7;
-    cout << m[My_type{ "asdfg" }] << '\n';
-}
-
-```
 If you have to define a `hash` specialization, try simply to let it combine standard-library `hash` specializations with `^` (xor).
 That tends to work better than "cleverness" for non-specialists.
 

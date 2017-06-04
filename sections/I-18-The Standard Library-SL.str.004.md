@@ -6,20 +6,18 @@ The variety of uses of `char*` in current code is a major source of errors.
 
 ##### Example, bad
 
-```cpp
-char arr[] = {'a', 'b', 'c'};
+    char arr[] = {'a', 'b', 'c'};
 
-void print(const char* p)
-{
-    cout << p << '\n';
-}
+    void print(const char* p)
+    {
+        cout << p << '\n';
+    }
 
-void use()
-{
-    print(arr);   // run-time error; potentially very bad
-}
+    void use()
+    {
+        print(arr);   // run-time error; potentially very bad
+    }
 
-```
 The array `arr` is not a C-style string because it is not zero-terminated.
 
 ##### Alternative

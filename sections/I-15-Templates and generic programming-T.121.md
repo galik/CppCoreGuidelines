@@ -7,26 +7,22 @@ Use cases that require concepts (e.g. overloading based on concepts) are among t
 
 ##### Example
 
-```cpp
-template<typename Iter>
-    /*requires*/ enable_if<random_access_iterator<Iter>, void>
-advance(Iter p, int n) { p += n; }
+    template<typename Iter>
+        /*requires*/ enable_if<random_access_iterator<Iter>, void>
+    advance(Iter p, int n) { p += n; }
 
-template<typename Iter>
-    /*requires*/ enable_if<forward_iterator<Iter>, void>
-advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
+    template<typename Iter>
+        /*requires*/ enable_if<forward_iterator<Iter>, void>
+    advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
 
-```
 ##### Note
 
 Such code is much simpler using concepts:
 
-```cpp
-void advance(RandomAccessIterator p, int n) { p += n; }
+    void advance(RandomAccessIterator p, int n) { p += n; }
 
-void advance(ForwardIterator p, int n) { assert(n >= 0); while (n--) ++p;}
+    void advance(ForwardIterator p, int n) { assert(n >= 0); while (n--) ++p;}
 
-```
 ##### Enforcement
 
 ???

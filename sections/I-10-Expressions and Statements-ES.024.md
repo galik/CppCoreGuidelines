@@ -8,20 +8,18 @@ increases readability, and it has zero or near zero runtime cost.
 
 ##### Example
 
-```cpp
-void use(bool leak)
-{
-    auto p1 = make_unique<int>(7);   // OK
-    int* p2 = new int{7};            // bad: might leak
-    // ... no assignment to p2 ...
-    if (leak) return;
-    // ... no assignment to p2 ...
-    vector<int> v(7);
-    v.at(7) = 0;                    // exception thrown
-    // ...
-}
+    void use(bool leak)
+    {
+        auto p1 = make_unique<int>(7);   // OK
+        int* p2 = new int{7};            // bad: might leak
+        // ... no assignment to p2 ...
+        if (leak) return;
+        // ... no assignment to p2 ...
+        vector<int> v(7);
+        v.at(7) = 0;                    // exception thrown
+        // ...
+    }
 
-```
 If `leak == true` the object pointed to by `p2` is leaked and the object pointed to by `p1` is not.
 The same is the case when `at()` throws.
 

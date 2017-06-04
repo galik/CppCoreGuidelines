@@ -8,13 +8,11 @@ We easily confuse similarly spelled and slightly misspelled words.
 
 ##### Example
 
-```cpp
-int oO01lL = 6; // bad
+    int oO01lL = 6; // bad
 
-int splunk = 7;
-int splonk = 8; // bad: splunk and splonk are easily confused
+    int splunk = 7;
+    int splonk = 8; // bad: splunk and splonk are easily confused
 
-```
 ##### Enforcement
 
 ???

@@ -8,27 +8,23 @@ If there is any doubt whether the caller or the callee owns an object, leaks or 
 
 Consider:
 
-```cpp
-X* compute(args)    // don't
-{
-    X* res = new X{};
-    // ...
-    return res;
-}
+    X* compute(args)    // don't
+    {
+        X* res = new X{};
+        // ...
+        return res;
+    }
 
-```
 Who deletes the returned `X`? The problem would be harder to spot if compute returned a reference.
 Consider returning the result by value (use move semantics if the result is large):
 
-```cpp
-vector<double> compute(args)  // good
-{
-    vector<double> res(10000);
-    // ...
-    return res;
-}
+    vector<double> compute(args)  // good
+    {
+        vector<double> res(10000);
+        // ...
+        return res;
+    }
 
-```
 **Alternative**: [Pass ownership](I-09-Resource%20management-R.030.md#Rr-smartptrparam) using a "smart pointer", such as `unique_ptr` (for exclusive ownership) and `shared_ptr` (for shared ownership).
 However, that is less elegant and often less efficient than returning the object itself,
 so use smart pointers only if reference semantics are needed.
@@ -36,15 +32,13 @@ so use smart pointers only if reference semantics are needed.
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
 In that case, mark owning pointers using `owner` from the [guideline support library](I-23-Guideline%20support%20library.md#S-gsl):
 
-```cpp
-owner<X*> compute(args)    // It is now clear that ownership is transferred
-{
-    owner<X*> res = new X{};
-    // ...
-    return res;
-}
+    owner<X*> compute(args)    // It is now clear that ownership is transferred
+    {
+        owner<X*> res = new X{};
+        // ...
+        return res;
+    }
 
-```
 This tells analysis tools that `res` is an owner.
 That is, its value must be `delete`d or transferred to another owner, as is done here by the `return`.
 

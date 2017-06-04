@@ -8,36 +8,32 @@ To avoid the crashes and data corruption that can result from the use of such a 
 
 After the return from a function its local objects no longer exist:
 
-```cpp
-int* f()
-{
-    int fx = 9;
-    return &fx;  // BAD
-}
+    int* f()
+    {
+        int fx = 9;
+        return &fx;  // BAD
+    }
 
-void g(int* p)   // looks innocent enough
-{
-    int gx;
-    cout << "*p == " << *p << '\n';
-    *p = 999;
-    cout << "gx == " << gx << '\n';
-}
+    void g(int* p)   // looks innocent enough
+    {
+        int gx;
+        cout << "*p == " << *p << '\n';
+        *p = 999;
+        cout << "gx == " << gx << '\n';
+    }
 
-void h()
-{
-    int* p = f();
-    int z = *p;  // read from abandoned stack frame (bad)
-    g(p);        // pass pointer to abandoned stack frame to function (bad)
-}
+    void h()
+    {
+        int* p = f();
+        int z = *p;  // read from abandoned stack frame (bad)
+        g(p);        // pass pointer to abandoned stack frame to function (bad)
+    }
 
-```
 Here on one popular implementation I got the output:
 
-```cpp
-*p == 999
-gx == 999
+    *p == 999
+    gx == 999
 
-```
 I expected that because the call of `g()` reuses the stack space abandoned by the call of `f()` so `*p` refers to the space now occupied by `gx`.
 
 * Imagine what would happen if `fx` and `gx` were of different types.
@@ -51,15 +47,13 @@ Fortunately, most (all?) modern compilers catch and warn against this simple cas
 
 This applies to references as well:
 
-```cpp
-int& f()
-{
-    int x = 7;
-    // ...
-    return x;  // Bad: returns reference to object that is about to be destroyed
-}
+    int& f()
+    {
+        int x = 7;
+        // ...
+        return x;  // Bad: returns reference to object that is about to be destroyed
+    }
 
-```
 ##### Note
 
 This applies only to non-`static` local variables.
@@ -69,28 +63,26 @@ All `static` variables are (as their name indicates) statically allocated, so th
 
 Not all examples of leaking a pointer to a local variable are that obvious:
 
-```cpp
-int* glob;       // global variables are bad in so many ways
+    int* glob;       // global variables are bad in so many ways
 
-template<class T>
-void steal(T x)
-{
-    glob = x();  // BAD
-}
+    template<class T>
+    void steal(T x)
+    {
+        glob = x();  // BAD
+    }
 
-void f()
-{
-    int i = 99;
-    steal([&] { return &i; });
-}
+    void f()
+    {
+        int i = 99;
+        steal([&] { return &i; });
+    }
 
-int main()
-{
-    f();
-    cout << *glob << '\n';
-}
+    int main()
+    {
+        f();
+        cout << *glob << '\n';
+    }
 
-```
 Here I managed to read the location abandoned by the call of `f`.
 The pointer stored in `glob` could be used much later and cause trouble in unpredictable ways.
 

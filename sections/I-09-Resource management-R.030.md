@@ -8,42 +8,38 @@ A function that does not manipulate lifetime should take raw pointers or referen
 
 ##### Example, bad
 
-```cpp
-// callee
-void f(shared_ptr<widget>& w)
-{
-    // ...
-    use(*w); // only use of w -- the lifetime is not used at all
-    // ...
-};
+    // callee
+    void f(shared_ptr<widget>& w)
+    {
+        // ...
+        use(*w); // only use of w -- the lifetime is not used at all
+        // ...
+    };
 
-// caller
-shared_ptr<widget> my_widget = /* ... */;
-f(my_widget);
+    // caller
+    shared_ptr<widget> my_widget = /* ... */;
+    f(my_widget);
 
-widget stack_widget;
-f(stack_widget); // error
+    widget stack_widget;
+    f(stack_widget); // error
 
-```
 ##### Example, good
 
-```cpp
-// callee
-void f(widget& w)
-{
-    // ...
-    use(w);
-    // ...
-};
+    // callee
+    void f(widget& w)
+    {
+        // ...
+        use(w);
+        // ...
+    };
 
-// caller
-shared_ptr<widget> my_widget = /* ... */;
-f(*my_widget);
+    // caller
+    shared_ptr<widget> my_widget = /* ... */;
+    f(*my_widget);
 
-widget stack_widget;
-f(stack_widget); // ok -- now this works
+    widget stack_widget;
+    f(stack_widget); // ok -- now this works
 
-```
 ##### Enforcement
 
 * (Simple) Warn if a function takes a parameter of a smart pointer type (that overloads `operator->` or `operator*`) that is copyable but the function only calls any of: `operator*`, `operator->` or `get()`.

@@ -9,39 +9,35 @@ This simplifies maintenance.
 
 ##### Example
 
-```cpp
-template<typename T, typename U>
-struct pair {
-    T a;
-    U b;
-    // ...
-};
+    template<typename T, typename U>
+    struct pair {
+        T a;
+        U b;
+        // ...
+    };
 
-```
 Whatever we do in the `//`-part, an arbitrary user of a `pair` can arbitrarily and independently change its `a` and `b`.
 In a large code base, we cannot easily find which code does what to the members of `pair`.
 This may be exactly what we want, but if we want to enforce a relation among members, we need to make them `private`
 and enforce that relation (invariant) through constructors and member functions.
 For example:
 
-```cpp
-struct Distance {
-public:
-    // ...
-    double meters() const { return magnitude*unit; }
-    void set_unit(double u)
-    {
-            // ... check that u is a factor of 10 ...
-            // ... change magnitude appropriately ...
-            unit = u;
-    }
-    // ...
-private:
-    double magnitude;
-    double unit;    // 1 is meters, 1000 is kilometers, 0.0001 is millimeters, etc.
-};
+    struct Distance {
+    public:
+        // ...
+        double meters() const { return magnitude*unit; }
+        void set_unit(double u)
+        {
+                // ... check that u is a factor of 10 ...
+                // ... change magnitude appropriately ...
+                unit = u;
+        }
+        // ...
+    private:
+        double magnitude;
+        double unit;    // 1 is meters, 1000 is kilometers, 0.0001 is millimeters, etc.
+    };
 
-```
 ##### Note
 
 If the set of direct users of a set of variables cannot be easily determined, the type or usage of that set cannot be (easily) changed/improved.
@@ -53,35 +49,33 @@ A class can provide two interfaces to its users.
 One for derived classes (`protected`) and one for general users (`public`).
 For example, a derived class might be allowed to skip a run-time check because it has already guaranteed correctness:
 
-```cpp
-class Foo {
-public:
-    int bar(int x) { check(x); return do_bar(); }
-    // ...
-protected:
-    int do_bar(int x); // do some operation on the data
-    // ...
-private:
-    // ... data ...
-};
+    class Foo {
+    public:
+        int bar(int x) { check(x); return do_bar(); }
+        // ...
+    protected:
+        int do_bar(int x); // do some operation on the data
+        // ...
+    private:
+        // ... data ...
+    };
 
-class Dir : public Foo {
-    //...
-    int mem(int x, int y)
-    {
-        /* ... do something ... */
-        return do_bar(x+y); // OK: derived class can bypass check
+    class Dir : public Foo {
+        //...
+        int mem(int x, int y)
+        {
+            /* ... do something ... */
+            return do_bar(x+y); // OK: derived class can bypass check
+        }
     }
-}
 
-void user(Foo& x)
-{
-    int r1 = x.bar(1);      // OK, will check
-    int r2 = x.do_bar(2);   // error: would bypass check
-    // ...
-}
+    void user(Foo& x)
+    {
+        int r1 = x.bar(1);      // OK, will check
+        int r2 = x.do_bar(2);   // error: would bypass check
+        // ...
+    }
 
-```
 ##### Note
 
 [`protected` data is a bad idea](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.133.md#Rh-protected).

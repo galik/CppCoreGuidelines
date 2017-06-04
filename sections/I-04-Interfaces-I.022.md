@@ -6,20 +6,18 @@ Complex initialization can lead to undefined order of execution.
 
 ##### Example
 
-```cpp
-// file1.c
+    // file1.c
 
-extern const X x;
+    extern const X x;
 
-const Y y = f(x);   // read x; write y
+    const Y y = f(x);   // read x; write y
 
-// file2.c
+    // file2.c
 
-extern const Y y;
+    extern const Y y;
 
-const X x = g(y);   // read y; write x
+    const X x = g(y);   // read y; write x
 
-```
 Since `x` and `y` are in different translation units the order of calls to `f()` and `g()` is undefined;
 one will access an uninitialized `const`.
 This shows that the order-of-initialization problem for global (namespace scope) objects is not limited to global *variables*.

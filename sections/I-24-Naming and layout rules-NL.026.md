@@ -7,14 +7,12 @@ Consistency in large code bases.
 
 ##### Example
 
-```cpp
-const int x = 7;    // OK
-int const y = 9;    // bad
+    const int x = 7;    // OK
+    int const y = 9;    // bad
 
-const int *const p = nullptr;   // OK, constant pointer to constant int
-int const *const p = nullptr;   // bad, constant pointer to constant int
+    const int *const p = nullptr;   // OK, constant pointer to constant int
+    int const *const p = nullptr;   // bad, constant pointer to constant int
 
-```
 ##### Note
 
 We are well aware that you could claim the "bad" examples more logical than the ones marked "OK",

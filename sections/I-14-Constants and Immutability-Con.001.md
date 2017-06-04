@@ -7,22 +7,18 @@ Prevents accidental or hard-to-notice change of value.
 
 ##### Example
 
-```cpp
-for (const int i : c) cout << i << '\n';    // just reading: const
+    for (const int i : c) cout << i << '\n';    // just reading: const
 
-for (int i : c) cout << i << '\n';          // BAD: just reading
+    for (int i : c) cout << i << '\n';          // BAD: just reading
 
-```
 ##### Exception
 
 Function arguments are rarely mutated, but also rarely declared const.
 To avoid confusion and lots of false positives, don't enforce this rule for function arguments.
 
-```cpp
-void f(const char* const p); // pedantic
-void g(const int i);        // pedantic
+    void f(const char* const p); // pedantic
+    void g(const int i);        // pedantic
 
-```
 Note that function parameter is a local variable so changes to it are local.
 
 ##### Enforcement

@@ -7,19 +7,17 @@ Sometimes having `nullptr` as an alternative to indicated "no object" is useful,
 
 ##### Example
 
-```cpp
-string zstring_to_string(zstring p) // zstring is a char*; that is a C-style string
-{
-    if (p == nullptr) return string{};    // p might be nullptr; remember to check
-    return string{p};
-}
+    string zstring_to_string(zstring p) // zstring is a char*; that is a C-style string
+    {
+        if (p == nullptr) return string{};    // p might be nullptr; remember to check
+        return string{p};
+    }
 
-void print(const vector<int>& r)
-{
-    // r refers to a vector<int>; no check needed
-}
+    void print(const vector<int>& r)
+    {
+        // r refers to a vector<int>; no check needed
+    }
 
-```
 ##### Note
 
 It is possible, but not valid C++ to construct a reference that is essentially a `nullptr` (e.g., `T* p = nullptr; T& r = (T&)*p;`).

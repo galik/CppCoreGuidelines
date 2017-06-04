@@ -13,17 +13,15 @@ It is closely related to the notion of Regular type from [EoP](http://elementsof
 
 ##### Example
 
-```cpp
-class Date { // BAD: no default constructor
-public:
-    Date(int dd, int mm, int yyyy);
-    // ...
-};
+    class Date { // BAD: no default constructor
+    public:
+        Date(int dd, int mm, int yyyy);
+        // ...
+    };
 
-vector<Date> vd1(1000);   // default Date needed here
-vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
+    vector<Date> vd1(1000);   // default Date needed here
+    vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
 
-```
 The default constructor is only auto-generated if there is no user-declared constructor, hence it's impossible to initialize the vector `vd1` in the example above.
 The absence of a default value can cause surprises for users and complicate its use, so if one can be reasonably defined, it should be.
 
@@ -32,96 +30,82 @@ There is no "natural" default date (the big bang is too far back in time to be u
 `{0, 0, 0}` is not a valid date in most calendar systems, so choosing that would be introducing something like floating-point's `NaN`.
 However, most realistic `Date` classes have a "first date" (e.g. January 1, 1970 is popular), so making that the default is usually trivial.
 
-```cpp
-class Date {
-public:
-    Date(int dd, int mm, int yyyy);
-    Date() = default; // [See also](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.045.md#Rc-default)
-    // ...
-private:
-    int dd = 1;
-    int mm = 1;
-    int yyyy = 1970;
-    // ...
-};
+    class Date {
+    public:
+        Date(int dd, int mm, int yyyy);
+        Date() = default; // [See also](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.045.md#Rc-default)
+        // ...
+    private:
+        int dd = 1;
+        int mm = 1;
+        int yyyy = 1970;
+        // ...
+    };
 
-vector<Date> vd1(1000);
+    vector<Date> vd1(1000);
 
-```
 ##### Note
 
 A class with members that all have default constructors implicitly gets a default constructor:
 
-```cpp
-struct X {
-    string s;
-    vector<int> v;
-};
+    struct X {
+        string s;
+        vector<int> v;
+    };
 
-X x; // means X{{}, {}}; that is the empty string and the empty vector
+    X x; // means X{{}, {}}; that is the empty string and the empty vector
 
-```
 Beware that built-in types are not properly default constructed:
 
-```cpp
-struct X {
-    string s;
-    int i;
-};
+    struct X {
+        string s;
+        int i;
+    };
 
-void f()
-{
-    X x;    // x.s is initialized to the empty string; x.i is uninitialized
+    void f()
+    {
+        X x;    // x.s is initialized to the empty string; x.i is uninitialized
 
-    cout << x.s << ' ' << x.i << '\n';
-    ++x.i;
-}
+        cout << x.s << ' ' << x.i << '\n';
+        ++x.i;
+    }
 
-```
 Statically allocated objects of built-in types are by default initialized to `0`, but local built-in variables are not.
 Beware that your compiler may default initialize local built-in variables, whereas an optimized build will not.
 Thus, code like the example above may appear to work, but it relies on undefined behavior.
 Assuming that you want initialization, an explicit default initialization can help:
 
-```cpp
-struct X {
-    string s;
-    int i {};   // default initialize (to 0)
-};
+    struct X {
+        string s;
+        int i {};   // default initialize (to 0)
+    };
 
-```
 ##### Example
 
 There are classes that simply don't have a reasonable default.
 
 A class designed to be useful only as a base does not need a default constructor because it cannot be constructed by itself:
 
-```cpp
-struct Shape {  // pure interface: all members are pure virtual functions
-        void draw() = 0;
-        void rotate(int) = 0;
-        // ...
-};
+    struct Shape {  // pure interface: all members are pure virtual functions
+            void draw() = 0;
+            void rotate(int) = 0;
+            // ...
+    };
 
-```
 A class that must acquire a resource during construction:
 
-```cpp
-lock_guard g {mx};  // guard the mutex mx
-lock_guard g2;      // error: guarding nothing
+    lock_guard g {mx};  // guard the mutex mx
+    lock_guard g2;      // error: guarding nothing
 
-```
 ##### Note
 
 A class that has a "special state" that must be handled separately from other states by member functions or users causes extra work
 (and most likely more errors). For example
 
-```cpp
-ofstream out {"Foobar"};
-// ...
-out << log(time, transaction);
+    ofstream out {"Foobar"};
+    // ...
+    out << log(time, transaction);
 
-```
 If `Foobar` couldn't be opened for writing and `out` wasn't set to throw exceptions upon errors, the output operations become no-ops.
 The implementation must take care of that case, and users must remember to test for success.
 

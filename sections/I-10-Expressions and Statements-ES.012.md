@@ -7,25 +7,23 @@ Can cause maintenance problems.
 
 ##### Example, bad
 
-```cpp
-int d = 0;
-// ...
-if (cond) {
+    int d = 0;
     // ...
-    d = 9;
-    // ...
-}
-else {
-    // ...
-    int d = 7;
-    // ...
-    d = value_to_be_returned;
-    // ...
-}
+    if (cond) {
+        // ...
+        d = 9;
+        // ...
+    }
+    else {
+        // ...
+        int d = 7;
+        // ...
+        d = value_to_be_returned;
+        // ...
+    }
 
-return d;
+    return d;
 
-```
 If this is a large `if`-statement, it is easy to overlook that a new `d` has been introduced in the inner scope.
 This is a known source of bugs.
 Sometimes such reuse of a name in an inner scope is called "shadowing".
@@ -38,55 +36,49 @@ Shadowing is primarily a problem when functions are too large and too complex.
 
 Shadowing of function arguments in the outermost block is disallowed by the language:
 
-```cpp
-void f(int x)
-{
-    int x = 4;  // error: reuse of function argument name
+    void f(int x)
+    {
+        int x = 4;  // error: reuse of function argument name
 
-    if (x) {
-        int x = 7;  // allowed, but bad
-        // ...
+        if (x) {
+            int x = 7;  // allowed, but bad
+            // ...
+        }
     }
-}
 
-```
 ##### Example, bad
 
 Reuse of a member name as a local variable can also be a problem:
 
-```cpp
-struct S {
-    int m;
-    void f(int x);
-};
+    struct S {
+        int m;
+        void f(int x);
+    };
 
-void S::f(int x)
-{
-    m = 7;    // assign to member
-    if (x) {
-        int m = 9;
-        // ...
-        m = 99; // assign to member
-        // ...
+    void S::f(int x)
+    {
+        m = 7;    // assign to member
+        if (x) {
+            int m = 9;
+            // ...
+            m = 99; // assign to member
+            // ...
+        }
     }
-}
 
-```
 ##### Exception
 
 We often reuse function names from a base class in a derived class:
 
-```cpp
-struct B {
-    void f(int);
-};
+    struct B {
+        void f(int);
+    };
 
-struct D : B {
-    void f(double);
-    using B::f;
-};
+    struct D : B {
+        void f(double);
+        using B::f;
+    };
 
-```
 This is error-prone.
 For example, had we forgotten the using declaration, a call `d.f(1)` would not have found the `int` version of `f`.
 

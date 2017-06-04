@@ -8,11 +8,9 @@ If you first make an object and then give it to a `shared_ptr` constructor, you 
 
 Consider:
 
-```cpp
-shared_ptr<X> p1 { new X{2} }; // bad
-auto p = make_shared<X>(2);    // good
+    shared_ptr<X> p1 { new X{2} }; // bad
+    auto p = make_shared<X>(2);    // good
 
-```
 The `make_shared()` version mentions `X` only once, so it is usually shorter (as well as faster) than the version with the explicit `new`.
 
 ##### Enforcement

@@ -22,26 +22,22 @@ Your IDE (if you use one) may have strong opinions about suffices.
 
 ##### Example
 
-```cpp
-// foo.h:
-extern int a;   // a declaration
-extern void foo();
+    // foo.h:
+    extern int a;   // a declaration
+    extern void foo();
 
-// foo.cpp:
-int a;   // a definition
-void foo() { ++a; }
+    // foo.cpp:
+    int a;   // a definition
+    void foo() { ++a; }
 
-```
 `foo.h` provides the interface to `foo.cpp`. Global variables are best avoided.
 
 ##### Example, bad
 
-```cpp
-// foo.h:
-int a;   // a definition
-void foo() { ++a; }
+    // foo.h:
+    int a;   // a definition
+    void foo() { ++a; }
 
-```
 `#include <foo.h>` twice in a program and you get a linker error for two one-definition-rule violations.
 
 ##### Enforcement

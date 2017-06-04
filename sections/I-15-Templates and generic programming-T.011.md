@@ -11,22 +11,18 @@ Unless you are creating a new generic library, most of the concepts you need wil
 
 ##### Example (using TS concepts)
 
-```cpp
-template<typename T>
-    // don't define this: Sortable is in the GSL
-concept Ordered_container = Sequence<T> && Random_access<Iterator<T>> && Ordered<Value_type<T>>;
+    template<typename T>
+        // don't define this: Sortable is in the GSL
+    concept Ordered_container = Sequence<T> && Random_access<Iterator<T>> && Ordered<Value_type<T>>;
 
-void sort(Ordered_container& s);
+    void sort(Ordered_container& s);
 
-```
 This `Ordered_container` is quite plausible, but it is very similar to the `Sortable` concept in the GSL (and the Range TS).
 Is it better? Is it right? Does it accurately reflect the standard's requirements for `sort`?
 It is better and simpler just to use `Sortable`:
 
-```cpp
-void sort(Sortable& s);   // better
+    void sort(Sortable& s);   // better
 
-```
 ##### Note
 
 The set of "standard" concepts is evolving as we approach an ISO standard including concepts.

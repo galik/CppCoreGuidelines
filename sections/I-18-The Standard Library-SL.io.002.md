@@ -7,10 +7,8 @@ If input isn't validated, every function must be written to cope with bad data (
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

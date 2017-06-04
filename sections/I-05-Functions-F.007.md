@@ -8,35 +8,31 @@ Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost
 
 ##### Example
 
-```cpp
-// accepts any int*
-void f(int*);
+    // accepts any int*
+    void f(int*);
 
-// can only accept ints for which you want to transfer ownership
-void g(unique_ptr<int>);
+    // can only accept ints for which you want to transfer ownership
+    void g(unique_ptr<int>);
 
-// can only accept ints for which you are willing to share ownership
-void g(shared_ptr<int>);
+    // can only accept ints for which you are willing to share ownership
+    void g(shared_ptr<int>);
 
-// doesn't change ownership, but requires a particular ownership of the caller
-void h(const unique_ptr<int>&);
+    // doesn't change ownership, but requires a particular ownership of the caller
+    void h(const unique_ptr<int>&);
 
-// accepts any int
-void h(int&);
+    // accepts any int
+    void h(int&);
 
-```
 ##### Example, bad
 
-```cpp
-// callee
-void f(shared_ptr<widget>& w)
-{
-    // ...
-    use(*w); // only use of w -- the lifetime is not used at all
-    // ...
-};
+    // callee
+    void f(shared_ptr<widget>& w)
+    {
+        // ...
+        use(*w); // only use of w -- the lifetime is not used at all
+        // ...
+    };
 
-```
 See further in [R.30](I-09-Resource%20management-R.030.md#Rr-smartptrparam).
 
 ##### Note

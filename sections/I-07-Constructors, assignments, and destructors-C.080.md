@@ -6,38 +6,34 @@ The compiler is more likely to get the default semantics right and you cannot im
 
 ##### Example
 
-```cpp
-class Tracer {
-    string message;
-public:
-    Tracer(const string& m) : message{m} { cerr << "entering " << message << '\n'; }
-    ~Tracer() { cerr << "exiting " << message << '\n'; }
+    class Tracer {
+        string message;
+    public:
+        Tracer(const string& m) : message{m} { cerr << "entering " << message << '\n'; }
+        ~Tracer() { cerr << "exiting " << message << '\n'; }
 
-    Tracer(const Tracer&) = default;
-    Tracer& operator=(const Tracer&) = default;
-    Tracer(Tracer&&) = default;
-    Tracer& operator=(Tracer&&) = default;
-};
+        Tracer(const Tracer&) = default;
+        Tracer& operator=(const Tracer&) = default;
+        Tracer(Tracer&&) = default;
+        Tracer& operator=(Tracer&&) = default;
+    };
 
-```
 Because we defined the destructor, we must define the copy and move operations. The `= default` is the best and simplest way of doing that.
 
 ##### Example, bad
 
-```cpp
-class Tracer2 {
-    string message;
-public:
-    Tracer2(const string& m) : message{m} { cerr << "entering " << message << '\n'; }
-    ~Tracer2() { cerr << "exiting " << message << '\n'; }
+    class Tracer2 {
+        string message;
+    public:
+        Tracer2(const string& m) : message{m} { cerr << "entering " << message << '\n'; }
+        ~Tracer2() { cerr << "exiting " << message << '\n'; }
 
-    Tracer2(const Tracer2& a) : message{a.message} {}
-    Tracer2& operator=(const Tracer2& a) { message = a.message; return *this; }
-    Tracer2(Tracer2&& a) :message{a.message} {}
-    Tracer2& operator=(Tracer2&& a) { message = a.message; return *this; }
-};
+        Tracer2(const Tracer2& a) : message{a.message} {}
+        Tracer2& operator=(const Tracer2& a) { message = a.message; return *this; }
+        Tracer2(Tracer2&& a) :message{a.message} {}
+        Tracer2& operator=(Tracer2&& a) { message = a.message; return *this; }
+    };
 
-```
 Writing out the bodies of the copy and move operations is verbose, tedious, and error-prone. A compiler does it better.
 
 ##### Enforcement

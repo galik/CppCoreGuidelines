@@ -7,12 +7,10 @@ If the operations are virtual the use of inheritance is necessary, if not using 
 
 ##### Example
 
-```cpp
-  class iostream : public istream, public ostream {   // very simplified
-    // ...
-};
+      class iostream : public istream, public ostream {   // very simplified
+        // ...
+    };
 
-```
 `istream` provides the interface to input operations (and some data); `ostream` provides the interface to output operations (and some data).
 `iostream` provides the union of the `istream` and `ostream` interfaces and the synchronization needed to allow both on a single stream. 
 

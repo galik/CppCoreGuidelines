@@ -6,10 +6,8 @@ Type erasure incurs an extra level of indirection by hiding type information beh
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 **Exceptions**: Type erasure is sometimes appropriate, such as for `std::function`.
 
 ##### Enforcement

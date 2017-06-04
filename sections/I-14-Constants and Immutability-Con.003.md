@@ -7,11 +7,9 @@
 
 ##### Example
 
-```cpp
-void f(char* p);        // does f modify *p? (assume it does)
-void g(const char* p);  // g does not modify *p
+    void f(char* p);        // does f modify *p? (assume it does)
+    void g(const char* p);  // g does not modify *p
 
-```
 ##### Note
 
 It is not inherently bad to pass a pointer or reference to non-const,

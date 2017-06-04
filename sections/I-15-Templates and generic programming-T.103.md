@@ -6,10 +6,8 @@ There are more precise ways of specifying a homogeneous sequence, such as an `in
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

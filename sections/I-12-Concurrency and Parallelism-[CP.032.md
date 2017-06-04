@@ -8,10 +8,8 @@ safe way to ensure proper deletion.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 * A static object (e.g. a global) can be shared because it is not owned in the sense that some thread is responsible for it's deletion.

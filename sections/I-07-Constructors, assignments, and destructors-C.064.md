@@ -7,37 +7,35 @@ After `y = std::move(x)` the value of `y` should be the value `x` had and `x` sh
 
 ##### Example
 
-```cpp
-template<typename T>
-class X {   // OK: value semantics
-public:
-    X();
-    X(X&& a);          // move X
-    void modify();     // change the value of X
-    // ...
-    ~X() { delete[] p; }
-private:
-    T* p;
-    int sz;
-};
+    template<typename T>
+    class X {   // OK: value semantics
+    public:
+        X();
+        X(X&& a);          // move X
+        void modify();     // change the value of X
+        // ...
+        ~X() { delete[] p; }
+    private:
+        T* p;
+        int sz;
+    };
 
 
-X::X(X&& a)
-    :p{a.p}, sz{a.sz}  // steal representation
-{
-    a.p = nullptr;     // set to "empty"
-    a.sz = 0;
-}
+    X::X(X&& a)
+        :p{a.p}, sz{a.sz}  // steal representation
+    {
+        a.p = nullptr;     // set to "empty"
+        a.sz = 0;
+    }
 
-void use()
-{
-    X x{};
-    // ...
-    X y = std::move(x);
-    x = X{};   // OK
-} // OK: x can be destroyed
+    void use()
+    {
+        X x{};
+        // ...
+        X y = std::move(x);
+        x = X{};   // OK
+    } // OK: x can be destroyed
 
-```
 ##### Note
 
 Ideally, that moved-from should be the default value of the type.

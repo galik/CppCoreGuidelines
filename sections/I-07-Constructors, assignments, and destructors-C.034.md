@@ -9,43 +9,37 @@ Also, copying may lead to slicing.
 
 ##### Example, bad
 
-```cpp
-class Handle {  // Very suspect
-    Shape& s;   // use reference rather than pointer to prevent rebinding
-                // BAD: vague about ownership of *p
-    // ...
-public:
-    Handle(Shape& ss) : s{ss} { /* ... */ }
-    // ...
-};
+    class Handle {  // Very suspect
+        Shape& s;   // use reference rather than pointer to prevent rebinding
+                    // BAD: vague about ownership of *p
+        // ...
+    public:
+        Handle(Shape& ss) : s{ss} { /* ... */ }
+        // ...
+    };
 
-```
 The problem of whether `Handle` is responsible for the destruction of its `Shape` is the same as for [the pointer case](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.032.md#Rc-dtor-ptr):
 If the `Handle` owns the object referred to by `s` it must have a destructor.
 
 ##### Example
 
-```cpp
-class Handle {        // OK
-    owner<Shape&> s;  // use reference rather than pointer to prevent rebinding
-    // ...
-public:
-    Handle(Shape& ss) : s{ss} { /* ... */ }
-    ~Handle() { delete &s; }
-    // ...
-};
+    class Handle {        // OK
+        owner<Shape&> s;  // use reference rather than pointer to prevent rebinding
+        // ...
+    public:
+        Handle(Shape& ss) : s{ss} { /* ... */ }
+        ~Handle() { delete &s; }
+        // ...
+    };
 
-```
 Independently of whether `Handle` owns its `Shape`, we must consider the default copy operations suspect:
 
-```cpp
-// the Handle had better own the Circle or we have a leak
-Handle x {*new Circle{p1, 17}};
+    // the Handle had better own the Circle or we have a leak
+    Handle x {*new Circle{p1, 17}};
 
-Handle y {*new Triangle{p1, p2, p3}};
-x = y;     // the default assignment will try *x.s = *y.s
+    Handle y {*new Triangle{p1, p2, p3}};
+    x = y;     // the default assignment will try *x.s = *y.s
 
-```
 That `x = y` is highly suspect.
 Assigning a `Triangle` to a `Circle`?
 Unless `Shape` has its [copy assignment `=deleted`](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.067.md#Rc-copy-virtual), only the `Shape` part of `Triangle` is copied into the `Circle`.

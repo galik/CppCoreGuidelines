@@ -7,20 +7,18 @@ This technique is a pre-exception technique for RAII-like resource and error han
 
 ##### Example, bad
 
-```cpp
-void do_something(int n)
-{
-    if (n < 100) goto exit;
-    // ...
-    int* p = (int*) malloc(n);
-    // ...
-    if (some_ error) goto_exit;
-    // ...
-exit:
-    free(p);
-}
+    void do_something(int n)
+    {
+        if (n < 100) goto exit;
+        // ...
+        int* p = (int*) malloc(n);
+        // ...
+        if (some_ error) goto_exit;
+        // ...
+    exit:
+        free(p);
+    }
 
-```
 and spot the bug.
 
 ##### Alternative

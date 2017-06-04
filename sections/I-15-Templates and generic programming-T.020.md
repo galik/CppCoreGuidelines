@@ -8,25 +8,23 @@ and should be used only as building blocks for meaningful concepts, rather than 
 
 ##### Example, bad (using TS concepts)
 
-```cpp
-template<typename T>
-concept Addable = has_plus<T>;    // bad; insufficient
+    template<typename T>
+    concept Addable = has_plus<T>;    // bad; insufficient
 
-template<Addable N> auto algo(const N& a, const N& b) // use two numbers
-{
-    // ...
-    return a + b;
-}
+    template<Addable N> auto algo(const N& a, const N& b) // use two numbers
+    {
+        // ...
+        return a + b;
+    }
 
-int x = 7;
-int y = 9;
-auto z = plus(x, y);   // z = 16
+    int x = 7;
+    int y = 9;
+    auto z = plus(x, y);   // z = 16
 
-string xx = "7";
-string yy = "9";
-auto zz = plus(xx, yy);   // zz = "79"
+    string xx = "7";
+    string yy = "9";
+    auto zz = plus(xx, yy);   // zz = "79"
 
-```
 Maybe the concatenation was expected. More likely, it was an accident. Defining minus equivalently would give dramatically different sets of accepted types.
 This `Addable` violates the mathematical rule that addition is supposed to be commutative: `a+b == b+a`.
 
@@ -36,29 +34,27 @@ The ability to specify a meaningful semantics is a defining characteristic of a 
 
 ##### Example (using TS concepts)
 
-```cpp
-template<typename T>
-// The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
-concept Number = has_plus<T>
-                 && has_minus<T>
-                 && has_multiply<T>
-                 && has_divide<T>;
+    template<typename T>
+    // The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
+    concept Number = has_plus<T>
+                     && has_minus<T>
+                     && has_multiply<T>
+                     && has_divide<T>;
 
-template<Number N> auto algo(const N& a, const N& b) // use two numbers
-{
-    // ...
-    return a + b;
-}
+    template<Number N> auto algo(const N& a, const N& b) // use two numbers
+    {
+        // ...
+        return a + b;
+    }
 
-int x = 7;
-int y = 9;
-auto z = plus(x, y);   // z = 18
+    int x = 7;
+    int y = 9;
+    auto z = plus(x, y);   // z = 18
 
-string xx = "7";
-string yy = "9";
-auto zz = plus(xx, yy);   // error: string is not a Number
+    string xx = "7";
+    string yy = "9";
+    auto zz = plus(xx, yy);   // error: string is not a Number
 
-```
 ##### Note
 
 Concepts with multiple operations have far lower chance of accidentally matching a type than a single-operation concept.

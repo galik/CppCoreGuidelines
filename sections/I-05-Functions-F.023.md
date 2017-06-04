@@ -12,20 +12,16 @@ Additionally, when debugging, `owner<T*>` and `not_null<T>` can be instrumented 
 
 Consider:
 
-```cpp
-int length(Record* p);
+    int length(Record* p);
 
-```
 When I call `length(p)` should I test for `p == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
 
-```cpp
-// it is the caller's job to make sure p != nullptr
-int length(not_null<Record*> p);
+    // it is the caller's job to make sure p != nullptr
+    int length(not_null<Record*> p);
 
-// the implementor of length() must assume that p == nullptr is possible
-int length(Record* p);
+    // the implementor of length() must assume that p == nullptr is possible
+    int length(Record* p);
 
-```
 ##### Note
 
 A `not_null<T*>` is assumed not to be the `nullptr`; a `T*` may be the `nullptr`; both can be represented in memory as a `T*` (so no run-time overhead is implied).

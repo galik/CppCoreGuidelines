@@ -6,20 +6,18 @@ To make error handling systematic, robust, and non-repetitive.
 
 ##### Example
 
-```cpp
-struct Foo {
-    vector<Thing> v;
-    File_handle f;
-    string s;
-};
+    struct Foo {
+        vector<Thing> v;
+        File_handle f;
+        string s;
+    };
 
-void use()
-{
-    Foo bar {{Thing{1}, Thing{2}, Thing{monkey}}, {"my_file", "r"}, "Here we go!"};
-    // ...
-}
+    void use()
+    {
+        Foo bar {{Thing{1}, Thing{2}, Thing{monkey}}, {"my_file", "r"}, "Here we go!"};
+        // ...
+    }
 
-```
 Here, `vector` and `string`s constructors may not be able to allocate sufficient memory for their elements, `vector`s constructor may not be able copy the `Thing`s in its initializer list, and `File_handle` may not be able to open the required file.
 In each case, they throw an exception for `use()`'s caller to handle.
 If `use()` could handle the failure to construct `bar` it can take control using `try`/`catch`.
@@ -28,15 +26,13 @@ Note that there is no return value that could contain an error code.
 
 The `File_handle` constructor might be defined like this:
 
-```cpp
-File_handle::File_handle(const string& name, const string& mode)
-    :f{fopen(name.c_str(), mode.c_str())}
-{
-    if (!f)
-        throw runtime_error{"File_handle: could not open " + name + " as " + mode};
-}
+    File_handle::File_handle(const string& name, const string& mode)
+        :f{fopen(name.c_str(), mode.c_str())}
+    {
+        if (!f)
+            throw runtime_error{"File_handle: could not open " + name + " as " + mode};
+    }
 
-```
 ##### Note
 
 It is often said that exceptions are meant to signal exceptional events and failures.

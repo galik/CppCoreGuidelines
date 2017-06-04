@@ -7,33 +7,31 @@ If a `thread` is detached, we can safely pass pointers to static and free store 
 
 ##### Example
 
-```cpp
-void f(int* p)
-{
-    // ...
-    *p = 99;
-    // ...
-}
+    void f(int* p)
+    {
+        // ...
+        *p = 99;
+        // ...
+    }
 
-int glob = 33;
+    int glob = 33;
 
-void some_fct(int* p)
-{
-    int x = 77;
-    std::thread t0(f, &x);           // bad
-    std::thread t1(f, p);            // bad
-    std::thread t2(f, &glob);        // OK
-    auto q = make_unique<int>(99);
-    std::thread t3(f, q.get());      // bad
-    // ...
-    t0.detach();
-    t1.detach();
-    t2.detach();
-    t3.detach();
-    // ...
-}
+    void some_fct(int* p)
+    {
+        int x = 77;
+        std::thread t0(f, &x);           // bad
+        std::thread t1(f, p);            // bad
+        std::thread t2(f, &glob);        // OK
+        auto q = make_unique<int>(99);
+        std::thread t3(f, q.get());      // bad
+        // ...
+        t0.detach();
+        t1.detach();
+        t2.detach();
+        t3.detach();
+        // ...
+    }
 
-```
 By "OK" we mean that the object will be in scope ("live") for as long as a `thread` can use the pointers to it.
 By "bad" we mean that a `thread` may use a pointer after the pointed-to object is destroyed.
 The fact that `thread`s run concurrently doesn't affect the lifetime or ownership issues here;

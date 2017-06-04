@@ -6,24 +6,20 @@ If you intend for a class to match a concept, verifying that early saves users p
 
 ##### Example
 
-```cpp
-class X {
-    X() = delete;
-    X(const X&) = default;
-    X(X&&) = default;
-    X& operator=(const X&) = default;
-    // ...
-};
+    class X {
+        X() = delete;
+        X(const X&) = default;
+        X(X&&) = default;
+        X& operator=(const X&) = default;
+        // ...
+    };
 
-```
 Somewhere, possibly in an implementation file, let the compiler check the desired properties of `X`:
 
-```cpp
-static_assert(Default_constructible<X>);    // error: X has no default constructor
-static_assert(Copyable<X>);                 // error: we forgot to define X's move constructor
+    static_assert(Default_constructible<X>);    // error: X has no default constructor
+    static_assert(Copyable<X>);                 // error: we forgot to define X's move constructor
 
 
-```
 ##### Enforcement
 
 Not feasible.

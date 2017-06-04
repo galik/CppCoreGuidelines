@@ -8,21 +8,19 @@ Avoid accidentally becoming dependent on implementation details and logically se
 
 ##### Example
 
-```cpp
-#include <iostream>
-using namespace std;
+    #include <iostream>
+    using namespace std;
 
-void use()                  // bad
-{
-    string s;
-    cin >> s;               // fine
-    getline(cin, s);        // error: getline() not defined
-    if (s == "surprise") {  // error == not defined
-        // ...
+    void use()                  // bad
+    {
+        string s;
+        cin >> s;               // fine
+        getline(cin, s);        // error: getline() not defined
+        if (s == "surprise") {  // error == not defined
+            // ...
+        }
     }
-}
 
-```
 <iostream> exposes the definition of `std::string` ("why?" makes for a fun trivia question),
 but it is not required to do so by transitively including the entire `<string>` header,
 resulting in the popular beginner question "why doesn't `getline(cin,s);` work?"
@@ -30,44 +28,38 @@ or even an occasional "`string`s cannot be compared with `==`).
 
 The solution is to explicitly `#include<string>`:
 
-```cpp
-#include <iostream>
-#include <string>
-using namespace std;
+    #include <iostream>
+    #include <string>
+    using namespace std;
 
-void use()
-{
-    string s;
-    cin >> s;               // fine
-    getline(cin, s);        // fine
-    if (s == "surprise") {  // fine
-        // ...
+    void use()
+    {
+        string s;
+        cin >> s;               // fine
+        getline(cin, s);        // fine
+        if (s == "surprise") {  // fine
+            // ...
+        }
     }
-}
 
-```
 ##### Note
 
 Some headers exist exactly to collect a set of consistent declarations from a variety of headers.
 For example:
 
-```cpp
-// basic_std_lib.h:
+    // basic_std_lib.h:
 
-#include <vector>
-#include <string>
-#include <map>
-#include <iostream>
-#include <random>
-#include <vector>
+    #include <vector>
+    #include <string>
+    #include <map>
+    #include <iostream>
+    #include <random>
+    #include <vector>
 
-```
 a user can now get that set of declarations with a single `#include`"
 
-```cpp
-#include "basic_std_lib.h"
+    #include "basic_std_lib.h"
 
-```
 This rule against implicit inclusion is not meant to prevent such deliberate aggregation.
 
 ##### Enforcement

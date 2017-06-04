@@ -6,25 +6,23 @@ Readability. Minimize resource retention.
 
 ##### Example
 
-```cpp
-void use()
-{
-    for (string s; cin >> s;)
-        v.push_back(s);
+    void use()
+    {
+        for (string s; cin >> s;)
+            v.push_back(s);
 
-    for (int i = 0; i < 20; ++i) {   // good: i is local to for-loop
-        // ...
+        for (int i = 0; i < 20; ++i) {   // good: i is local to for-loop
+            // ...
+        }
+
+        if (auto pc = dynamic_cast<Circle*>(ps)) {   // good: pc is local to if-statement
+            // ... deal with Circle ...
+        }
+        else {
+            // ... handle error ...
+        }
     }
 
-    if (auto pc = dynamic_cast<Circle*>(ps)) {   // good: pc is local to if-statement
-        // ... deal with Circle ...
-    }
-    else {
-        // ... handle error ...
-    }
-}
-
-```
 ##### Enforcement
 
 * Flag loop variables declared before the loop and not used after the loop
@@ -34,16 +32,14 @@ void use()
 
 Note: C++17 also adds `if` and `switch` initializer statements. These require C++17 support.
 
-```cpp
-map<int, string> mymap;
+    map<int, string> mymap;
 
-if (auto result = mymap.insert(value); result.second) {
-    // insert succeeded, and result is valid for this block
-    use(result.first);  // ok
-    // ...
-} // result is destroyed here
+    if (auto result = mymap.insert(value); result.second) {
+        // insert succeeded, and result is valid for this block
+        use(result.first);  // ok
+        // ...
+    } // result is destroyed here
 
-```
 ##### C++17 enforcement (if using a C++17 compiler)
 
 * Flag selection/loop variables declared before the body and not used after the body

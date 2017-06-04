@@ -6,10 +6,8 @@ Improved readability.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

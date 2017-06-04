@@ -8,14 +8,12 @@ And in general, implementations must deal with dynamic linking.
 
 ##### Example, don't
 
-```cpp
-class Shape {
-    // ...
-    template<class T>
-    virtual bool intersect(T* p);   // error: template cannot be virtual
-};
+    class Shape {
+        // ...
+        template<class T>
+        virtual bool intersect(T* p);   // error: template cannot be virtual
+    };
 
-```
 ##### Note
 
 We need a rule because people keep asking about this

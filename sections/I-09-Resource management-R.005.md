@@ -10,25 +10,21 @@ The members of a scoped object are themselves scoped and the scoped object's con
 
 The following example is inefficient (because it has unnecessary allocation and deallocation), vulnerable to exception throws and returns in the `...` part (leading to leaks), and verbose:
 
-```cpp
-void f(int n)
-{
-    auto p = new Gadget{n};
-    // ...
-    delete p;
-}
+    void f(int n)
+    {
+        auto p = new Gadget{n};
+        // ...
+        delete p;
+    }
 
-```
 Instead, use a local variable:
 
-```cpp
-void f(int n)
-{
-    Gadget g{n};
-    // ...
-}
+    void f(int n)
+    {
+        Gadget g{n};
+        // ...
+    }
 
-```
 ##### Enforcement
 
 * (Moderate) Warn if an object is allocated and then deallocated on all paths within a function. Suggest it should be a local `auto` stack object instead.

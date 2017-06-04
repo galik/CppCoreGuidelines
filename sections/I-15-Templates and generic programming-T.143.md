@@ -8,54 +8,50 @@ Generality. Reusability. Don't gratuitously commit to details; use the most gene
 
 Use `!=` instead of `<` to compare iterators; `!=` works for more objects because it doesn't rely on ordering.
 
-```cpp
-for (auto i = first; i < last; ++i) {   // less generic
-    // ...
-}
+    for (auto i = first; i < last; ++i) {   // less generic
+        // ...
+    }
 
-for (auto i = first; i != last; ++i) {   // good; more generic
-    // ...
-}
+    for (auto i = first; i != last; ++i) {   // good; more generic
+        // ...
+    }
 
-```
 Of course, range-`for` is better still where it does what you want.
 
 ##### Example
 
 Use the least-derived class that has the functionality you need.
 
-```cpp
-class Base {
-public:
-    Bar f();
-    Bar g();
-};
+    class Base {
+    public:
+        Bar f();
+        Bar g();
+    };
 
-class Derived1 : public Base {
-public:
-    Bar h();
-};
+    class Derived1 : public Base {
+    public:
+        Bar h();
+    };
 
-class Derived2 : public Base {
-public:
-    Bar j();
-};
+    class Derived2 : public Base {
+    public:
+        Bar j();
+    };
 
-// bad, unless there is a specific reason for limiting to Derived1 objects only
-void my_func(Derived1& param)
-{
-    use(param.f());
-    use(param.g());
-}
+    // bad, unless there is a specific reason for limiting to Derived1 objects only
+    void my_func(Derived1& param)
+    {
+        use(param.f());
+        use(param.g());
+    }
 
-// good, uses only Base interface so only commit to that
-void my_func(Base& param)
-{
-    use(param.f());
-    use(param.g());
-}
+    // good, uses only Base interface so only commit to that
+    void my_func(Base& param)
+    {
+        use(param.f());
+        use(param.g());
+    }
 
-```
 ##### Enforcement
 
 * Flag comparison of iterators using `<` instead of `!=`.

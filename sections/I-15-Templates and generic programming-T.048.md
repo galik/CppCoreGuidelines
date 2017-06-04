@@ -7,10 +7,8 @@ Because that's the best we can do without direct concept support.
 
 ##### Example
 
-```cpp
-enable_if<???>
+    enable_if<???>
 
-```
 ##### Note
 
 Beware of [complementary constraints](# T.25).

@@ -8,24 +8,22 @@
 
 ##### Example
 
-```cpp
-class X {
-        // ...
-public:
-    explicit X(int);
-    X(const X&);            // copy
-    X operator=(const X&);
-    X(X&&);                 // move
-    X& operator=(X&&);
-    ~X();
-    // ... no more constructors ...
-};
+    class X {
+            // ...
+    public:
+        explicit X(int);
+        X(const X&);            // copy
+        X operator=(const X&);
+        X(X&&);                 // move
+        X& operator=(X&&);
+        ~X();
+        // ... no more constructors ...
+    };
 
-X x {1};    // fine
-X y = x;      // fine
-std::vector<X> v(10); // error: no default constructor
+    X x {1};    // fine
+    X y = x;      // fine
+    std::vector<X> v(10); // error: no default constructor
 
-```
 ##### Note
 
 Semiregular requires default constructible.

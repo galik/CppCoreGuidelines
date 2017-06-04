@@ -7,10 +7,8 @@ be able to destroy a cyclic structure.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
  ??? (HS: A lot of people say "to break cycles", while I think "temporary shared ownership" is more to the point.)

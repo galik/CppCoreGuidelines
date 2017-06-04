@@ -26,50 +26,44 @@ Such loops can be much faster than individually checked element accesses.
 
 ##### Example, bad
 
-```cpp
-void f()
-{
-    array<int, 10> a, b;
-    memset(a.data(), 0, 10);         // BAD, and contains a length error (length = 10 * sizeof(int))
-    memcmp(a.data(), b.data(), 10);  // BAD, and contains a length error (length = 10 * sizeof(int))
-}
+    void f()
+    {
+        array<int, 10> a, b;
+        memset(a.data(), 0, 10);         // BAD, and contains a length error (length = 10 * sizeof(int))
+        memcmp(a.data(), b.data(), 10);  // BAD, and contains a length error (length = 10 * sizeof(int))
+    }
 
-```
 Also, `std::array<>::fill()` or `std::fill()` or even an empty initializer are better candidate than `memset()`.
 
 ##### Example, good
 
-```cpp
-void f()
-{
-    array<int, 10> a, b, c{};       // c is initialized to zero
-    a.fill(0);
-    fill(b.begin(), b.end(), 0);    // std::fill()
-    fill(b, 0);                     // std::fill() + Ranges TS
+    void f()
+    {
+        array<int, 10> a, b, c{};       // c is initialized to zero
+        a.fill(0);
+        fill(b.begin(), b.end(), 0);    // std::fill()
+        fill(b, 0);                     // std::fill() + Ranges TS
 
-    if ( a == b ) {
-      // ...
+        if ( a == b ) {
+          // ...
+        }
     }
-}
 
-```
 ##### Example
 
 If code is using an unmodified standard library, then there are still workarounds that enable use of `std::array` and `std::vector` in a bounds-safe manner. Code can call the `.at()` member function on each class, which will result in an `std::out_of_range` exception being thrown. Alternatively, code can call the `at()` free function, which will result in fail-fast (or a customized action) on a bounds violation.
 
-```cpp
-void f(std::vector<int>& v, std::array<int, 12> a, int i)
-{
-    v[0] = a[0];        // BAD
-    v.at(0) = a[0];     // OK (alternative 1)
-    at(v, 0) = a[0];    // OK (alternative 2)
+    void f(std::vector<int>& v, std::array<int, 12> a, int i)
+    {
+        v[0] = a[0];        // BAD
+        v.at(0) = a[0];     // OK (alternative 1)
+        at(v, 0) = a[0];    // OK (alternative 2)
 
-    v.at(0) = a[i];     // BAD
-    v.at(0) = a.at(i);  // OK (alternative 1)
-    v.at(0) = at(a, i); // OK (alternative 2)
-}
+        v.at(0) = a[i];     // BAD
+        v.at(0) = a.at(i);  // OK (alternative 1)
+        v.at(0) = at(a, i); // OK (alternative 2)
+    }
 
-```
 ##### Enforcement
 
 * Issue a diagnostic for any call to a standard library function that is not bounds-checked.

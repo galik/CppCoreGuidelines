@@ -7,27 +7,25 @@ If a `thread` joins, we can safely pass pointers to objects in the scope of the 
 
 ##### Example
 
-```cpp
-void f(int* p)
-{
-    // ...
-    *p = 99;
-    // ...
-}
-int glob = 33;
+    void f(int* p)
+    {
+        // ...
+        *p = 99;
+        // ...
+    }
+    int glob = 33;
 
-void some_fct(int* p)
-{
-    int x = 77;
-    joining_thread t0(f, &x);           // OK
-    joining_thread t1(f, p);            // OK
-    joining_thread t2(f, &glob);        // OK
-    auto q = make_unique<int>(99);
-    joining_thread t3(f, q.get());      // OK
-    // ...
-}
+    void some_fct(int* p)
+    {
+        int x = 77;
+        joining_thread t0(f, &x);           // OK
+        joining_thread t1(f, p);            // OK
+        joining_thread t2(f, &glob);        // OK
+        auto q = make_unique<int>(99);
+        joining_thread t3(f, q.get());      // OK
+        // ...
+    }
 
-```
 A `gsl::joining_thread` is a `std::thread` with a destructor that joins and that cannot be `detached()`.
 By "OK" we mean that the object will be in scope ("live") for as long as a `thread` can use the pointer to it.
 The fact that `thread`s run concurrently doesn't affect the lifetime or ownership issues here;

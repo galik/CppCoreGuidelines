@@ -7,21 +7,19 @@ Not all member functions can be called.
 
 ##### Example
 
-```cpp
-class Vector {  // very simplified vector of doubles
-    // if elem != nullptr then elem points to sz doubles
-public:
-    Vector() : elem{nullptr}, sz{0}{}
-    Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
-    ~Vector() { delete elem; }
-    double& operator[](int s) { return elem[s]; }
-    // ...
-private:
-    owner<double*> elem;
-    int sz;
-};
+    class Vector {  // very simplified vector of doubles
+        // if elem != nullptr then elem points to sz doubles
+    public:
+        Vector() : elem{nullptr}, sz{0}{}
+        Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
+        ~Vector() { delete elem; }
+        double& operator[](int s) { return elem[s]; }
+        // ...
+    private:
+        owner<double*> elem;
+        int sz;
+    };
 
-```
 The class invariant - here stated as a comment - is established by the constructors.
 `new` throws if it cannot allocate the required memory.
 The operators, notably the subscript operator, relies on the invariant.

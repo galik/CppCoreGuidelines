@@ -7,40 +7,32 @@ You don't need to write error handlers for errors caught at compile time.
 
 ##### Example
 
-```cpp
-// Int is an alias used for integers
-int bits = 0;         // don't: avoidable code
-for (Int i = 1; i; i <<= 1)
-    ++bits;
-if (bits < 32)
-    cerr << "Int too small\n"
+    // Int is an alias used for integers
+    int bits = 0;         // don't: avoidable code
+    for (Int i = 1; i; i <<= 1)
+        ++bits;
+    if (bits < 32)
+        cerr << "Int too small\n"
 
-```
 This example is easily simplified
 
-```cpp
-// Int is an alias used for integers
-static_assert(sizeof(Int) >= 4);    // do: compile-time check
+    // Int is an alias used for integers
+    static_assert(sizeof(Int) >= 4);    // do: compile-time check
 
-```
 ##### Example
 
-```cpp
-void read(int* p, int n);   // read max n integers into *p
+    void read(int* p, int n);   // read max n integers into *p
 
-int a[100];
-read(a, 1000);    // bad
+    int a[100];
+    read(a, 1000);    // bad
 
-```
 better
 
-```cpp
-void read(span<int> r); // read into the range of integers r
+    void read(span<int> r); // read into the range of integers r
 
-int a[100];
-read(a);        // better: let the compiler figure out the number of elements
+    int a[100];
+    read(a);        // better: let the compiler figure out the number of elements
 
-```
 **Alternative formulation**: Don't postpone to run time what can be done well at compile time.
 
 ##### Enforcement

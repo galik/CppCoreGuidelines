@@ -6,16 +6,14 @@ Exception specifications make error handling brittle, impose a run-time cost, an
 
 ##### Example
 
-```cpp
-int use(int arg)
-    throw(X, Y)
-{
-    // ...
-    auto x = f(arg);
-    // ...
-}
+    int use(int arg)
+        throw(X, Y)
+    {
+        // ...
+        auto x = f(arg);
+        // ...
+    }
 
-```
 if `f()` throws an exception different from `X` and `Y` the unexpected handler is invoked, which by default terminates.
 That's OK, but say that we have checked that this cannot happen and `f` is changed to throw a new exception `Z`,
 we now have a crash on our hands unless we change `use()` (and re-test everything).

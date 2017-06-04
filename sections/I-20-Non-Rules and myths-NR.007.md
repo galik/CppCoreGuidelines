@@ -8,10 +8,8 @@
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Alternative
 
 * [Make member data `public` or (preferably) `private`](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.133.md#Rh-protected)

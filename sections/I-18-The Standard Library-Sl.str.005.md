@@ -7,10 +7,8 @@ and disables valuable optimizations.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 C++17
@@ -18,7 +16,5 @@ C++17
 ##### Enforcement
 
 ???
-```cpp
+    
 
-
-```

@@ -8,70 +8,56 @@ Having many arguments opens opportunities for confusion. Passing lots of argumen
 
 The two most common reasons why functions have too many parameters are:
 
-```cpp
-1. *Missing an abstraction.* There is an abstraction missing, so that a compound value is being
-passed as individual elements instead of as a single object that enforces an invariant.
-This not only expands the parameter list, but it leads to errors because the component values
-are no longer protected by an enforced invariant.
+    1. *Missing an abstraction.* There is an abstraction missing, so that a compound value is being
+    passed as individual elements instead of as a single object that enforces an invariant.
+    This not only expands the parameter list, but it leads to errors because the component values
+    are no longer protected by an enforced invariant.
 
-2. *Violating "one function, one responsibility."* The function is trying to do more than one
-job and should probably be refactored.
+    2. *Violating "one function, one responsibility."* The function is trying to do more than one
+    job and should probably be refactored.
 
-```
 ##### Example
 
 The standard-library `merge()` is at the limit of what we can comfortably handle:
 
-```cpp
-template<class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, InputIterator2 last2,
-                     OutputIterator result, Compare comp);
+    template<class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+    OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                         InputIterator2 first2, InputIterator2 last2,
+                         OutputIterator result, Compare comp);
 
-```
 Note that this is because of problem 1 above -- missing abstraction. Instead of passing a range (abstraction), STL passed iterator pairs (unencapsulated component values).
 
 Here, we have four template arguments and six function arguments.
 To simplify the most frequent and simplest uses, the comparison argument can be defaulted to `<`:
 
-```cpp
-template<class InputIterator1, class InputIterator2, class OutputIterator>
-OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, InputIterator2 last2,
-                     OutputIterator result);
+    template<class InputIterator1, class InputIterator2, class OutputIterator>
+    OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                         InputIterator2 first2, InputIterator2 last2,
+                         OutputIterator result);
 
-```
 This doesn't reduce the total complexity, but it reduces the surface complexity presented to many users.
 To really reduce the number of arguments, we need to bundle the arguments into higher-level abstractions:
 
-```cpp
-template<class InputRange1, class InputRange2, class OutputIterator>
-OutputIterator merge(InputRange1 r1, InputRange2 r2, OutputIterator result);
+    template<class InputRange1, class InputRange2, class OutputIterator>
+    OutputIterator merge(InputRange1 r1, InputRange2 r2, OutputIterator result);
 
-```
 Grouping arguments into "bundles" is a general technique to reduce the number of arguments and to increase the opportunities for checking.
 
 Alternatively, we could use concepts (as defined by the ISO TS) to define the notion of three types that must be usable for merging:
 
-```cpp
-Mergeable{In1 In2, Out}
-OutputIterator merge(In1 r1, In2 r2, Out result);
+    Mergeable{In1 In2, Out}
+    OutputIterator merge(In1 r1, In2 r2, Out result);
 
-```
 ##### Example
 
 The safety Profiles recommend replacing
 
-```cpp
-void f(int* some_ints, int some_ints_length);  // BAD: C style, unsafe
+    void f(int* some_ints, int some_ints_length);  // BAD: C style, unsafe
 
-```
 with
 
-```cpp
-void f(gsl::span<int> some_ints);              // GOOD: safe, bounds-checked
+    void f(gsl::span<int> some_ints);              // GOOD: safe, bounds-checked
 
-```
 Here, using an abstraction has safety and robustness benefits, and naturally also reduces the number of parameters.
 
 ##### Note

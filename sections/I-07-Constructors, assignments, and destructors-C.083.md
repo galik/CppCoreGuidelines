@@ -6,30 +6,26 @@ A `swap` can be handy for implementing a number of idioms, from smoothly moving 
 
 ##### Example, good
 
-```cpp
-class Foo {
-    // ...
-public:
-    void swap(Foo& rhs) noexcept
-    {
-        m1.swap(rhs.m1);
-        std::swap(m2, rhs.m2);
-    }
-private:
-    Bar m1;
-    int m2;
-};
+    class Foo {
+        // ...
+    public:
+        void swap(Foo& rhs) noexcept
+        {
+            m1.swap(rhs.m1);
+            std::swap(m2, rhs.m2);
+        }
+    private:
+        Bar m1;
+        int m2;
+    };
 
-```
 Providing a nonmember `swap` function in the same namespace as your type for callers' convenience.
 
-```cpp
-void swap(Foo& a, Foo& b)
-{
-    a.swap(b);
-}
+    void swap(Foo& a, Foo& b)
+    {
+        a.swap(b);
+    }
 
-```
 ##### Enforcement
 
 * (Simple) A class without virtual functions should have a `swap` member function declared.

@@ -7,13 +7,11 @@ It also gives an opportunity to eliminate a separate allocation for the referenc
 
 ##### Example
 
-```cpp
-// OK: but repetitive; and separate allocations for the Foo and shared_ptr's use count
-shared_ptr<Foo> p {new<Foo>{7}};
+    // OK: but repetitive; and separate allocations for the Foo and shared_ptr's use count
+    shared_ptr<Foo> p {new<Foo>{7}};
 
-auto q = make_shared<Foo>(7);   // Better: no repetition of Foo; one object
+    auto q = make_shared<Foo>(7);   // Better: no repetition of Foo; one object
 
-```
 ##### Enforcement
 
 * Flag the repetitive usage of template specialization list`<Foo>`

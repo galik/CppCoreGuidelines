@@ -6,34 +6,26 @@ Unless the intent of some code is stated (e.g., in names or comments), it is imp
 
 ##### Example
 
-```cpp
-int i = 0;
-while (i < v.size()) {
-    // ... do something with v[i] ...
-}
+    int i = 0;
+    while (i < v.size()) {
+        // ... do something with v[i] ...
+    }
 
-```
 The intent of "just" looping over the elements of `v` is not expressed here. The implementation detail of an index is exposed (so that it might be misused), and `i` outlives the scope of the loop, which may or may not be intended. The reader cannot know from just this section of code.
 
 Better:
 
-```cpp
-for (const auto& x : v) { /* do something with the value of x */ }
+    for (const auto& x : v) { /* do something with the value of x */ }
 
-```
 Now, there is no explicit mention of the iteration mechanism, and the loop operates on a reference to `const` elements so that accidental modification cannot happen. If modification is desired, say so:
 
-```cpp
-for (auto& x : v) { /* modify x */ }
+    for (auto& x : v) { /* modify x */ }
 
-```
 Sometimes better still, use a named algorithm:
 
-```cpp
-for_each(v, [](int x) { /* do something with the value of x */ });
-for_each(par, v, [](int x) { /* do something with the value of x */ });
+    for_each(v, [](int x) { /* do something with the value of x */ });
+    for_each(par, v, [](int x) { /* do something with the value of x */ });
 
-```
 The last variant makes it clear that we are not interested in the order in which the elements of `v` are handled.
 
 A programmer should be familiar with
@@ -54,11 +46,9 @@ Some language constructs express intent better than others.
 
 If two `int`s are meant to be the coordinates of a 2D point, say so:
 
-```cpp
-draw_line(int, int, int, int);  // obscure
-draw_line(Point, Point);        // clearer
+    draw_line(int, int, int, int);  // obscure
+    draw_line(Point, Point);        // clearer
 
-```
 ##### Enforcement
 
 Look for common patterns for which there are better alternatives

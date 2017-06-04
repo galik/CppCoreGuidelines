@@ -8,39 +8,35 @@ Generality. Re-use. Efficiency. Encourages consistent definition of user types.
 
 Conceptually, the following requirements are wrong because what we want of `T` is more than just the very low-level concepts of "can be incremented" or "can be added":
 
-```cpp
-template<typename T>
-    // requires Incrementable<T>
-T sum1(vector<T>& v, T s)
-{
-    for (auto x : v) s += x;
-    return s;
-}
+    template<typename T>
+        // requires Incrementable<T>
+    T sum1(vector<T>& v, T s)
+    {
+        for (auto x : v) s += x;
+        return s;
+    }
 
-template<typename T>
-    // requires Simple_number<T>
-T sum2(vector<T>& v, T s)
-{
-    for (auto x : v) s = s + x;
-    return s;
-}
+    template<typename T>
+        // requires Simple_number<T>
+    T sum2(vector<T>& v, T s)
+    {
+        for (auto x : v) s = s + x;
+        return s;
+    }
 
-```
 Assuming that `Incrementable` does not support `+` and `Simple_number` does not support `+=`, we have overconstrained implementers of `sum1` and `sum2`.
 And, in this case, missed an opportunity for a generalization.
 
 ##### Example
 
-```cpp
-template<typename T>
-    // requires Arithmetic<T>
-T sum(vector<T>& v, T s)
-{
-    for (auto x : v) s += x;
-    return s;
-}
+    template<typename T>
+        // requires Arithmetic<T>
+    T sum(vector<T>& v, T s)
+    {
+        for (auto x : v) s += x;
+        return s;
+    }
 
-```
 Assuming that `Arithmetic` requires both `+` and `+=`, we have constrained the user of `sum` to provide a complete arithmetic type.
 That is not a minimal requirement, but it gives the implementer of algorithms much needed freedom and ensures that any `Arithmetic` type
 can be used for a wide variety of algorithms.

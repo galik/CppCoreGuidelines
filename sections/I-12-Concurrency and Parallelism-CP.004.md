@@ -8,10 +8,8 @@ Application concepts are easier to reason about.
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Note
 
 With the exception of `async()`, the standard-library facilities are low-level, machine-oriented, threads-and-lock level.

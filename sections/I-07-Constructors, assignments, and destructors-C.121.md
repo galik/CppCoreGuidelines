@@ -7,36 +7,32 @@ Interfaces should normally be composed entirely of public pure virtual functions
 
 ##### Example
 
-```cpp
-class My_interface {
-public:
-    // ...only pure virtual functions here ...
-    virtual ~My_interface() {}   // or =default
-};
+    class My_interface {
+    public:
+        // ...only pure virtual functions here ...
+        virtual ~My_interface() {}   // or =default
+    };
 
-```
 ##### Example, bad
 
-```cpp
-class Goof {
-public:
-    // ...only pure virtual functions here ...
-    // no virtual destructor
-};
+    class Goof {
+    public:
+        // ...only pure virtual functions here ...
+        // no virtual destructor
+    };
 
-class Derived : public Goof {
-    string s;
-    // ...
-};
+    class Derived : public Goof {
+        string s;
+        // ...
+    };
 
-void use()
-{
-    unique_ptr<Goof> p {new Derived{"here we go"}};
-    f(p.get()); // use Derived through the Goof interface
-    g(p.get()); // use Derived through the Goof interface
-} // leak
+    void use()
+    {
+        unique_ptr<Goof> p {new Derived{"here we go"}};
+        f(p.get()); // use Derived through the Goof interface
+        g(p.get()); // use Derived through the Goof interface
+    } // leak
 
-```
 The `Derived` is `delete`d through its `Goof` interface, so its `string` is leaked.
 Give `Goof` a virtual destructor and all is well.
 

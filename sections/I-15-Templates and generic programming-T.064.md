@@ -7,12 +7,10 @@ Specialization offers a powerful mechanism for providing alternative implementat
 
 ##### Example
 
-```cpp
-??? string specialization (==)
+    ??? string specialization (==)
 
-??? representation specialization ?
+    ??? representation specialization ?
 
-```
 ##### Note
 
 ???

@@ -7,14 +7,12 @@ Synchronizing `iostreams` with `printf-style` I/O can be costly.
 
 ##### Example
 
-```cpp
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    // ... use iostreams ...
-}
+    int main()
+    {
+        ios_base::sync_with_stdio(false);
+        // ... use iostreams ...
+    }
 
-```
 ##### Enforcement
 
 ???

@@ -10,29 +10,27 @@ Use `virtual` only when declaring a new virtual function. Use `override` only wh
 
 ##### Example, bad
 
-```cpp
-struct B {
-    void f1(int);
-    virtual void f2(int) const;
-    virtual void f3(int);
-    // ...
-};
+    struct B {
+        void f1(int);
+        virtual void f2(int) const;
+        virtual void f3(int);
+        // ...
+    };
 
-struct D : B {
-    void f1(int);        // bad (hope for a warning): D::f1() hides B::f1()
-    void f2(int) const;  // bad (but conventional and valid): no explicit override
-    void f3(double);     // bad (hope for a warning): D::f3() hides B::f3()
-    // ...
-};
+    struct D : B {
+        void f1(int);        // bad (hope for a warning): D::f1() hides B::f1()
+        void f2(int) const;  // bad (but conventional and valid): no explicit override
+        void f3(double);     // bad (hope for a warning): D::f3() hides B::f3()
+        // ...
+    };
 
-struct Better : B {
-    void f1(int) override;        // error (caught): D::f1() hides B::f1()
-    void f2(int) const override;
-    void f3(double) override;     // error (caught): D::f3() hides B::f3()
-    // ...
-};
+    struct Better : B {
+        void f1(int) override;        // error (caught): D::f1() hides B::f1()
+        void f2(int) const override;
+        void f3(double) override;     // error (caught): D::f3() hides B::f3()
+        // ...
+    };
 
-```
 ##### Enforcement
 
 * Compare names in base and derived classes and flag uses of the same name that does not override.

@@ -6,11 +6,9 @@ Unsigned types support bit manipulation without surprises from sign bits.
 
 ##### Example
 
-```cpp
-unsigned char x = 0b1010'1010;
-unsigned char y = ~x;   // y == 0b0101'0101;
+    unsigned char x = 0b1010'1010;
+    unsigned char y = ~x;   // y == 0b0101'0101;
 
-```
 ##### Note
 
 Unsigned types can also be useful for modulo arithmetic.

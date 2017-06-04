@@ -8,20 +8,16 @@ Having different names for logically equivalent operations on different argument
 
 Consider:
 
-```cpp
-void print(int a);
-void print(int a, int base);
-void print(const string&);
+    void print(int a);
+    void print(int a, int base);
+    void print(const string&);
 
-```
 These three functions all print their arguments (appropriately). Conversely:
 
-```cpp
-void print_int(int a);
-void print_based(int a, int base);
-void print_string(const string&);
+    void print_int(int a);
+    void print_based(int a, int base);
+    void print_string(const string&);
 
-```
 These three functions all print their arguments (appropriately). Adding to the name just introduced verbosity and inhibits generic code.
 
 ##### Enforcement

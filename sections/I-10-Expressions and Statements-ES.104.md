@@ -6,15 +6,13 @@ Decrementing a value beyond a minimum value can lead to memory corruption and un
 
 ##### Example, bad
 
-```cpp
-int a[10];
-a[-2] = 7;   // bad
+    int a[10];
+    a[-2] = 7;   // bad
 
-int n = 101;
-while (n--)
-    a[n - 1] = 9;   // bad (twice)
+    int n = 101;
+    while (n--)
+        a[n - 1] = 9;   // bad (twice)
 
-```
 ##### Exception
 
 Use unsigned types if you really want modulo arithmetic.

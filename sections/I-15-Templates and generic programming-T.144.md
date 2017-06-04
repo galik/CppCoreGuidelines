@@ -6,10 +6,8 @@ You can't partially specialize a function template per language rules. You can f
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 **Exceptions**: If you do have a valid reason to specialize a function template, just write a single function template that delegates to a class template, then specialize the class template (including the ability to write partial specializations).
 
 ##### Enforcement

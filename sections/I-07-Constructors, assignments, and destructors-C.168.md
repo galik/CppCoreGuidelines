@@ -8,46 +8,40 @@ Avoiding inconsistent definition in different namespaces
 
 ##### Example
 
-```cpp
-struct S { };
-bool operator==(S, S);   // OK: in the same namespace as S, and even next to S
-S s;
+    struct S { };
+    bool operator==(S, S);   // OK: in the same namespace as S, and even next to S
+    S s;
 
-bool x = (s == s);
+    bool x = (s == s);
 
-```
 This is what a default `==` would do, if we had such defaults.
 
 ##### Example
 
-```cpp
-namespace N {
-    struct S { };
-    bool operator==(S, S);   // OK: in the same namespace as S, and even next to S
-}
+    namespace N {
+        struct S { };
+        bool operator==(S, S);   // OK: in the same namespace as S, and even next to S
+    }
 
-N::S s;
+    N::S s;
 
-bool x = (s == s);  // finds N::operator==() by ADL
+    bool x = (s == s);  // finds N::operator==() by ADL
 
-```
 ##### Example, bad
 
-```cpp
-struct S { };
-S s;
+    struct S { };
+    S s;
 
-namespace N {
-    S::operator!(S a) { return true; }
-    S not_s = !s;
-}
+    namespace N {
+        S::operator!(S a) { return true; }
+        S not_s = !s;
+    }
 
-namespace M {
-    S::operator!(S a) { return false; }
-    S not_s = !s;
-}
+    namespace M {
+        S::operator!(S a) { return false; }
+        S not_s = !s;
+    }
 
-```
 Here, the meaning of `!s` differs in `N` and `M`.
 This can be most confusing.
 Remove the definition of `namespace M` and the confusion is replaced by an opportunity to make the mistake.
@@ -57,10 +51,8 @@ Remove the definition of `namespace M` and the confusion is replaced by an oppor
 If a binary operator is defined for two types that are defined in different namespaces, you cannot follow this rule.
 For example:
 
-```cpp
-Vec::Vector operator*(const Vec::Vector&, const Mat::Matrix&);
+    Vec::Vector operator*(const Vec::Vector&, const Mat::Matrix&);
 
-```
 This may be something best avoided.
 
 ##### See also

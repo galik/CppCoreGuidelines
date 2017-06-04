@@ -6,15 +6,13 @@ Otherwise you get mismatched operations and chaos.
 
 ##### Example
 
-```cpp
-class X {
-    // ...
-    void* operator new(size_t s);
-    void operator delete(void*);
-    // ...
-};
+    class X {
+        // ...
+        void* operator new(size_t s);
+        void operator delete(void*);
+        // ...
+    };
 
-```
 ##### Note
 
 If you want memory that cannot be deallocated, `=delete` the deallocation operation.

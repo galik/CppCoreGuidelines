@@ -6,32 +6,30 @@ Complicated expressions are error-prone.
 
 ##### Example
 
-```cpp
-// bad: assignment hidden in subexpression
-while ((c = getc()) != -1)
+    // bad: assignment hidden in subexpression
+    while ((c = getc()) != -1)
 
-// bad: two non-local variables assigned in a sub-expressions
-while ((cin >> c1, cin >> c2), c1 == c2)
+    // bad: two non-local variables assigned in a sub-expressions
+    while ((cin >> c1, cin >> c2), c1 == c2)
 
-// better, but possibly still too complicated
-for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
+    // better, but possibly still too complicated
+    for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
 
-// OK: if i and j are not aliased
-int x = ++i + ++j;
+    // OK: if i and j are not aliased
+    int x = ++i + ++j;
 
-// OK: if i != j and i != k
-v[i] = v[j] + v[k];
+    // OK: if i != j and i != k
+    v[i] = v[j] + v[k];
 
-// bad: multiple assignments "hidden" in subexpressions
-x = a + (b = f()) + (c = g()) * 7;
+    // bad: multiple assignments "hidden" in subexpressions
+    x = a + (b = f()) + (c = g()) * 7;
 
-// bad: relies on commonly misunderstood precedence rules
-x = a & b + c * d && e ^ f == 7;
+    // bad: relies on commonly misunderstood precedence rules
+    x = a & b + c * d && e ^ f == 7;
 
-// bad: undefined behavior
-x = x++ + x++ + ++x;
+    // bad: undefined behavior
+    x = x++ + x++ + ++x;
 
-```
 Some of these expressions are unconditionally bad (e.g., they rely on undefined behavior). Others are simply so complicated and/or unusual that even good programmers could misunderstand them or overlook a problem when in a hurry.
 
 ##### Note
@@ -46,19 +44,17 @@ A programmer should know and use the basic rules for expressions.
 
 ##### Example
 
-```cpp
-x = k * y + z;             // OK
+    x = k * y + z;             // OK
 
-auto t1 = k * y;           // bad: unnecessarily verbose
-x = t1 + z;
+    auto t1 = k * y;           // bad: unnecessarily verbose
+    x = t1 + z;
 
-if (0 <= x && x < max)   // OK
+    if (0 <= x && x < max)   // OK
 
-auto t1 = 0 <= x;        // bad: unnecessarily verbose
-auto t2 = x < max;
-if (t1 && t2)            // ...
+    auto t1 = 0 <= x;        // bad: unnecessarily verbose
+    auto t2 = x < max;
+    if (t1 && t2)            // ...
 
-```
 ##### Enforcement
 
 Tricky. How complicated must an expression be to be considered complicated? Writing computations as statements with one operation each is also confusing. Things to consider:

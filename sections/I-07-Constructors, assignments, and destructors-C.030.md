@@ -8,29 +8,27 @@ Only define a non-default destructor if a class needs to execute code that is no
 
 ##### Example
 
-```cpp
-template<typename A>
-struct final_action {   // slightly simplified
-    A act;
-    final_action(A a) :act{a} {}
-    ~final_action() { act(); }
-};
+    template<typename A>
+    struct final_action {   // slightly simplified
+        A act;
+        final_action(A a) :act{a} {}
+        ~final_action() { act(); }
+    };
 
-template<typename A>
-final_action<A> finally(A act)   // deduce action type
-{
-    return final_action<A>{act};
-}
+    template<typename A>
+    final_action<A> finally(A act)   // deduce action type
+    {
+        return final_action<A>{act};
+    }
 
-void test()
-{
-    auto act = finally([]{ cout << "Exit test\n"; });  // establish exit action
-    // ...
-    if (something) return;   // act done here
-    // ...
-} // act done here
+    void test()
+    {
+        auto act = finally([]{ cout << "Exit test\n"; });  // establish exit action
+        // ...
+        if (something) return;   // act done here
+        // ...
+    } // act done here
 
-```
 The whole purpose of `final_action` is to get a piece of code (usually a lambda) executed upon destruction.
 
 ##### Note
@@ -42,18 +40,16 @@ There are two general categories of classes that need a user-defined destructor:
 
 ##### Example, bad
 
-```cpp
-class Foo {   // bad; use the default destructor
-public:
-    // ...
-    ~Foo() { s = ""; i = 0; vi.clear(); }  // clean up
-private:
-    string s;
-    int i;
-    vector<int> vi;
-};
+    class Foo {   // bad; use the default destructor
+    public:
+        // ...
+        ~Foo() { s = ""; i = 0; vi.clear(); }  // clean up
+    private:
+        string s;
+        int i;
+        vector<int> vi;
+    };
 
-```
 The default destructor does it better, more efficiently, and can't get it wrong.
 
 ##### Note

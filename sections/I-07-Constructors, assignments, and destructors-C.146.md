@@ -6,57 +6,53 @@
 
 ##### Example
 
-```cpp
-struct B {   // an interface
-    virtual void f();
-    virtual void g();
-};
+    struct B {   // an interface
+        virtual void f();
+        virtual void g();
+    };
 
-struct D : B {   // a wider interface
-    void f() override;
-    virtual void h();
-};
+    struct D : B {   // a wider interface
+        void f() override;
+        virtual void h();
+    };
 
-void user(B* pb)
-{
-    if (D* pd = dynamic_cast<D*>(pb)) {
-        // ... use D's interface ...
+    void user(B* pb)
+    {
+        if (D* pd = dynamic_cast<D*>(pb)) {
+            // ... use D's interface ...
+        }
+        else {
+            // ... make do with B's interface ...
+        }
     }
-    else {
-        // ... make do with B's interface ...
-    }
-}
 
-```
 Use of the other casts can violate type safety and cause the program to access a variable that is actually of type `X` to be accessed as if it were of an unrelated type `Z`:
 
-```cpp
-void user2(B* pb)   // bad
-{
-    D* pd = static_cast<D*>(pb);    // I know that pb really points to a D; trust me
-    // ... use D's interface ...
-}
-
-void user3(B* pb)    // unsafe
-{
-    if (some_condition) {
-        D* pd = static_cast<D*>(pb);   // I know that pb really points to a D; trust me
+    void user2(B* pb)   // bad
+    {
+        D* pd = static_cast<D*>(pb);    // I know that pb really points to a D; trust me
         // ... use D's interface ...
     }
-    else {
-        // ... make do with B's interface ...
+
+    void user3(B* pb)    // unsafe
+    {
+        if (some_condition) {
+            D* pd = static_cast<D*>(pb);   // I know that pb really points to a D; trust me
+            // ... use D's interface ...
+        }
+        else {
+            // ... make do with B's interface ...
+        }
     }
-}
 
-void f()
-{
-    B b;
-    user(&b);   // OK
-    user2(&b);  // bad error
-    user3(&b);  // OK *if* the programmer got the some_condition check right
-}
+    void f()
+    {
+        B b;
+        user(&b);   // OK
+        user2(&b);  // bad error
+        user3(&b);  // OK *if* the programmer got the some_condition check right
+    }
 
-```
 ##### Note
 
 Like other casts, `dynamic_cast` is overused.
@@ -75,37 +71,35 @@ the former (`dynamic_cast`) is far harder to implement correctly in general.
 
 Consider:
 
-```cpp
-struct B {
-    const char* name {"B"};
-    // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
-    virtual const char* id() const { return name; }
-    // ...
-};
+    struct B {
+        const char* name {"B"};
+        // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+        virtual const char* id() const { return name; }
+        // ...
+    };
 
-struct D : B {
-    const char* name {"D"};
-    const char* id() const override { return name; }
-    // ...
-};
+    struct D : B {
+        const char* name {"D"};
+        const char* id() const override { return name; }
+        // ...
+    };
 
-void use()
-{
-    B* pb1 = new B;
-    B* pb2 = new D;
+    void use()
+    {
+        B* pb1 = new B;
+        B* pb2 = new D;
 
-    cout << pb1->id(); // "B"
-    cout << pb2->id(); // "D"
+        cout << pb1->id(); // "B"
+        cout << pb2->id(); // "D"
 
 
-    if (pb1->id() == "D") {         // looks innocent
-        D* pd = static_cast<D*>(pb1);
+        if (pb1->id() == "D") {         // looks innocent
+            D* pd = static_cast<D*>(pb1);
+            // ...
+        }
         // ...
     }
-    // ...
-}
 
-```
 The result of `pb2->id() == "D"` is actually implementation defined.
 We added it to warn of the dangers of home-brew RTTI.
 This code may work as expected for years, just to fail on a new machine, new compiler, or a new linker that does not unify character literals.
@@ -130,13 +124,11 @@ In very rare cases, if you have measured that the `dynamic_cast` overhead is mat
 
 Consider:
 
-```cpp
-template<typename B>
-class Dx : B {
-    // ...
-};
+    template<typename B>
+    class Dx : B {
+        // ...
+    };
 
-```
 ##### Enforcement
 
 * Flag all uses of `static_cast` for downcasts, including C-style casts that perform a `static_cast`.

@@ -6,18 +6,16 @@ It's error-prone and requires expert level knowledge of language features, machi
 
 ##### Example, bad
 
-```cpp
-extern atomic<Link*> head;        // the shared head of a linked list
+    extern atomic<Link*> head;        // the shared head of a linked list
 
-Link* nh = new Link(data, nullptr);    // make a link ready for insertion
-Link* h = head.load();                 // read the shared head of the list
+    Link* nh = new Link(data, nullptr);    // make a link ready for insertion
+    Link* h = head.load();                 // read the shared head of the list
 
-do {
-    if (h->data <= data) break;        // if so, insert elsewhere
-    nh->next = h;                      // next element is the previous head
-} while (!head.compare_exchange_weak(h, nh));    // write nh to head or to h
+    do {
+        if (h->data <= data) break;        // if so, insert elsewhere
+        nh->next = h;                      // next element is the previous head
+    } while (!head.compare_exchange_weak(h, nh));    // write nh to head or to h
 
-```
 Spot the bug.
 It would be really hard to find through testing.
 Read up on the ABA problem.

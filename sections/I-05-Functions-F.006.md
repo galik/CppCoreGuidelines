@@ -17,16 +17,14 @@ The C++ standard library does that implicitly for all functions in the C standar
 
 You can use `noexcept` even on functions that can throw:
 
-```cpp
-vector<string> collect(istream& is) noexcept
-{
-    vector<string> res;
-    for (string s; is >> s;)
-        res.push_back(s);
-    return res;
-}
+    vector<string> collect(istream& is) noexcept
+    {
+        vector<string> res;
+        for (string s; is >> s;)
+            res.push_back(s);
+        return res;
+    }
 
-```
 If `collect()` runs out of memory, the program crashes.
 Unless the program is crafted to survive memory exhaustion, that may be just the right thing to do;
 `terminate()` may generate suitable error log information (but after memory runs out it is hard to do anything clever).

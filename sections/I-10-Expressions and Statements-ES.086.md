@@ -6,26 +6,24 @@ The loop control up front should enable correct reasoning about what is happenin
 
 ##### Example
 
-```cpp
-for (int i = 0; i < 10; ++i) {
-    // no updates to i -- ok
-}
+    for (int i = 0; i < 10; ++i) {
+        // no updates to i -- ok
+    }
 
-for (int i = 0; i < 10; ++i) {
-    //
-    if (/* something */) ++i; // BAD
-    //
-}
+    for (int i = 0; i < 10; ++i) {
+        //
+        if (/* something */) ++i; // BAD
+        //
+    }
 
-bool skip = false;
-for (int i = 0; i < 10; ++i) {
-    if (skip) { skip = false; continue; }
-    //
-    if (/* something */) skip = true;  // Better: using two variable for two concepts.
-    //
-}
+    bool skip = false;
+    for (int i = 0; i < 10; ++i) {
+        if (skip) { skip = false; continue; }
+        //
+        if (/* something */) skip = true;  // Better: using two variable for two concepts.
+        //
+    }
 
-```
 ##### Enforcement
 
 Flag variables that are potentially updated (have a non-const use) in both the loop control iteration-expression and the loop body.

@@ -17,28 +17,24 @@ If all data members can vary independently of each other, no invariant is possib
 
 ##### Example
 
-```cpp
-struct Pair {  // the members can vary independently
-    string name;
-    int volume;
-};
+    struct Pair {  // the members can vary independently
+        string name;
+        int volume;
+    };
 
-```
 but:
 
-```cpp
-class Date {
-public:
-    // validate that {yy, mm, dd} is a valid date and initialize
-    Date(int yy, Month mm, char dd);
-    // ...
-private:
-    int y;
-    Month m;
-    char d;    // day
-};
+    class Date {
+    public:
+        // validate that {yy, mm, dd} is a valid date and initialize
+        Date(int yy, Month mm, char dd);
+        // ...
+    private:
+        int y;
+        Month m;
+        char d;    // day
+    };
 
-```
 ##### Note
 
 If a class has any `private` data, a user cannot completely initialize an object without the use of a constructor.

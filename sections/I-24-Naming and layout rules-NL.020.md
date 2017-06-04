@@ -7,11 +7,9 @@ It is really easy to overlook a statement when there is more on a line.
 
 ##### Example
 
-```cpp
-int x = 7; char* p = 29;    // don't
-int x = 7; f(x);  ++x;      // don't
+    int x = 7; char* p = 29;    // don't
+    int x = 7; f(x);  ++x;      // don't
 
-```
 ##### Enforcement
 
 Easy.

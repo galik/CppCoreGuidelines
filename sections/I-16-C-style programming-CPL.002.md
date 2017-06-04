@@ -6,13 +6,11 @@ That subset can be compiled with both C and C++ compilers, and when compiled as 
 
 ##### Example
 
-```cpp
-int* p1 = malloc(10 * sizeof(int));                      // not C++
-int* p2 = static_cast<int*>(malloc(10 * sizeof(int)));   // not C, C-style C++
-int* p3 = new int[10];                                   // not C
-int* p4 = (int*) malloc(10 * sizeof(int));               // both C and C++
+    int* p1 = malloc(10 * sizeof(int));                      // not C++
+    int* p2 = static_cast<int*>(malloc(10 * sizeof(int)));   // not C, C-style C++
+    int* p3 = new int[10];                                   // not C
+    int* p4 = (int*) malloc(10 * sizeof(int));               // both C and C++
 
-```
 ##### Enforcement
 
 * Flag if using a build mode that compiles code as C.

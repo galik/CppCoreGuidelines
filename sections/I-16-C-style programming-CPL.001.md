@@ -7,13 +7,11 @@ It provides better support for high-level programming and often generates faster
 
 ##### Example
 
-```cpp
-char ch = 7;
-void* pv = &ch;
-int* pi = pv;   // not C++
-*pi = 999;      // overwrite sizeof(int) bytes near &ch
+    char ch = 7;
+    void* pv = &ch;
+    int* pi = pv;   // not C++
+    *pi = 999;      // overwrite sizeof(int) bytes near &ch
 
-```
 The rules for implicit casting to and from `void*` in C are subtle and unenforced.
 In particular, this example violates a rule against converting to a type with stricter alignment.
 

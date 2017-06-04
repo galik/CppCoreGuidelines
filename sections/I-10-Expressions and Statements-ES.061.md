@@ -6,15 +6,13 @@ That's what the language requires and mistakes can lead to resource release erro
 
 ##### Example, bad
 
-```cpp
-void f(int n)
-{
-    auto p = new X[n];   // n default constructed Xs
-    // ...
-    delete p;   // error: just delete the object p, rather than delete the array p[]
-}
+    void f(int n)
+    {
+        auto p = new X[n];   // n default constructed Xs
+        // ...
+        delete p;   // error: just delete the object p, rather than delete the array p[]
+    }
 
-```
 ##### Note
 
 This example not only violates the [no naked `new` rule](I-10-Expressions%20and%20Statements-ES.060.md#Res-new) as in the previous example, it has many more problems.

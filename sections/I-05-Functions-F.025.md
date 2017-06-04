@@ -9,20 +9,16 @@ We must distinguish C-style strings from a pointer to a single character or an o
 
 Consider:
 
-```cpp
-int length(const char* p);
+    int length(const char* p);
 
-```
 When I call `length(s)` should I test for `s == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
 
-```cpp
-// the implementor of length() must assume that p == nullptr is possible
-int length(zstring p);
+    // the implementor of length() must assume that p == nullptr is possible
+    int length(zstring p);
 
-// it is the caller's job to make sure p != nullptr
-int length(not_null<zstring> p);
+    // it is the caller's job to make sure p != nullptr
+    int length(not_null<zstring> p);
 
-```
 ##### Note
 
 `zstring` do not represent ownership.

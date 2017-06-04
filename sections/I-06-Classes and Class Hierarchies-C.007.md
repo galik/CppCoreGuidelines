@@ -6,17 +6,13 @@ Mixing a type definition and the definition of another entity in the same declar
 
 ##### Example; bad
 
-```cpp
-struct Data { /*...*/ } data{ /*...*/ };
+    struct Data { /*...*/ } data{ /*...*/ };
 
-```
 ##### Example; good
 
-```cpp
-struct Data { /*...*/ };
-Data data{ /*...*/ };
+    struct Data { /*...*/ };
+    Data data{ /*...*/ };
 
-```
 ##### Enforcement
 
 * Flag if the `}` of a class or enumeration definition is not followed by a `;`. The `;` is missing.

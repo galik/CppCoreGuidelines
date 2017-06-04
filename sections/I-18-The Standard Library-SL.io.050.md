@@ -8,11 +8,9 @@ This slowdown can be significant compared to `printf`-style output.
 
 ##### Example
 
-```cpp
-cout << "Hello, World!" << endl;    // two output operations and a flush
-cout << "Hello, World!\n";          // one output operation and no flush
+    cout << "Hello, World!" << endl;    // two output operations and a flush
+    cout << "Hello, World!\n";          // one output operation and no flush
 
-```
 ##### Note
 
 For `cin`/`cout` (and equivalent) interaction, there is no reason to flush; that's done automatically.

@@ -11,19 +11,17 @@ Often a `constexpr` function implies less compile-time overhead than alternative
 
 ##### Example
 
-```cpp
-template<typename T>
-    // requires Number<T>
-constexpr T pow(T v, int n)   // power/exponential
-{
-    T res = 1;
-    while (n--) res *= v;
-    return res;
-}
+    template<typename T>
+        // requires Number<T>
+    constexpr T pow(T v, int n)   // power/exponential
+    {
+        T res = 1;
+        while (n--) res *= v;
+        return res;
+    }
 
-constexpr auto f7 = pow(pi, 7);
+    constexpr auto f7 = pow(pi, 7);
 
-```
 ##### Enforcement
 
 * Flag template metaprograms yielding a value. These should be replaced with `constexpr` functions.

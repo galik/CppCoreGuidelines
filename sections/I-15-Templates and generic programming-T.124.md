@@ -6,10 +6,8 @@ Facilities defined in the standard, such as `conditional`, `enable_if`, and `tup
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Enforcement
 
 ???

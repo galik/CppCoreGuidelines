@@ -8,17 +8,15 @@
 
 The (in)famous factorial:
 
-```cpp
-constexpr int fac(int n)
-{
-    constexpr int max_exp = 17;      // constexpr enables max_exp to be used in Expects
-    Expects(0 <= n && n < max_exp);  // prevent silliness and overflow
-    int x = 1;
-    for (int i = 2; i <= n; ++i) x *= i;
-    return x;
-}
+    constexpr int fac(int n)
+    {
+        constexpr int max_exp = 17;      // constexpr enables max_exp to be used in Expects
+        Expects(0 <= n && n < max_exp);  // prevent silliness and overflow
+        int x = 1;
+        for (int i = 2; i <= n; ++i) x *= i;
+        return x;
+    }
 
-```
 This is C++14.
 For C++11, use a recursive formulation of `fac()`.
 
@@ -27,31 +25,27 @@ For C++11, use a recursive formulation of `fac()`.
 `constexpr` does not guarantee compile-time evaluation;
 it just guarantees that the function can be evaluated at compile time for constant expression arguments if the programmer requires it or the compiler decides to do so to optimize.
 
-```cpp
-constexpr int min(int x, int y) { return x < y ? x : y; }
+    constexpr int min(int x, int y) { return x < y ? x : y; }
 
-void test(int v)
-{
-    int m1 = min(-1, 2);            // probably compile-time evaluation
-    constexpr int m2 = min(-1, 2);  // compile-time evaluation
-    int m3 = min(-1, v);            // run-time evaluation
-    constexpr int m4 = min(-1, v);  // error: cannot evaluate at compile-time
-}
+    void test(int v)
+    {
+        int m1 = min(-1, 2);            // probably compile-time evaluation
+        constexpr int m2 = min(-1, 2);  // compile-time evaluation
+        int m3 = min(-1, v);            // run-time evaluation
+        constexpr int m4 = min(-1, v);  // error: cannot evaluate at compile-time
+    }
 
-```
 ##### Note
 
 `constexpr` functions are pure: they can have no side effects.
 
-```cpp
-int dcount = 0;
-constexpr int double(int v)
-{
-    ++dcount;   // error: attempted side effect from constexpr function
-    return v + v;
-}
+    int dcount = 0;
+    constexpr int double(int v)
+    {
+        ++dcount;   // error: attempted side effect from constexpr function
+        return v + v;
+    }
 
-```
 This is usually a very good thing.
 
 When given a non-constant argument, a `constexpr` function can throw.

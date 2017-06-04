@@ -9,27 +9,23 @@ Specifying concepts for template arguments is a powerful design tool.
 
 ##### Example
 
-```cpp
-template<typename Iter, typename Val>
-//    requires Input_iterator<Iter>
-//             && Equality_comparable<Value_type<Iter>, Val>
-Iter find(Iter b, Iter e, Val v)
-{
-    // ...
-}
+    template<typename Iter, typename Val>
+    //    requires Input_iterator<Iter>
+    //             && Equality_comparable<Value_type<Iter>, Val>
+    Iter find(Iter b, Iter e, Val v)
+    {
+        // ...
+    }
 
-```
 or equivalently and more succinctly:
 
-```cpp
-template<Input_iterator Iter, typename Val>
-//    requires Equality_comparable<Value_type<Iter>, Val>
-Iter find(Iter b, Iter e, Val v)
-{
-    // ...
-}
+    template<Input_iterator Iter, typename Val>
+    //    requires Equality_comparable<Value_type<Iter>, Val>
+    Iter find(Iter b, Iter e, Val v)
+    {
+        // ...
+    }
 
-```
 ##### Note
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
@@ -38,16 +34,14 @@ Currently (July 2016), concepts are supported only in GCC 6.1.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
 If you use GCC 6.1, you can uncomment them:
 
-```cpp
-template<typename Iter, typename Val>
-    requires Input_iterator<Iter>
-           && Equality_comparable<Value_type<Iter>, Val>
-Iter find(Iter b, Iter e, Val v)
-{
-    // ...
-}
+    template<typename Iter, typename Val>
+        requires Input_iterator<Iter>
+               && Equality_comparable<Value_type<Iter>, Val>
+    Iter find(Iter b, Iter e, Val v)
+    {
+        // ...
+    }
 
-```
 ##### Note
 
 Plain `typename` (or `auto`) is the least constraining concept.

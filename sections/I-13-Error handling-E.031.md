@@ -6,20 +6,18 @@
 
 ##### Example
 
-```cpp
-void f()
-{
-    // ...
-    try {
-            // ...
+    void f()
+    {
+        // ...
+        try {
+                // ...
+        }
+        catch (Base& b) { /* ... */ }
+        catch (Derived& d) { /* ... */ }
+        catch (...) { /* ... */ }
+        catch (std::exception& e){ /* ... */ }
     }
-    catch (Base& b) { /* ... */ }
-    catch (Derived& d) { /* ... */ }
-    catch (...) { /* ... */ }
-    catch (std::exception& e){ /* ... */ }
-}
 
-```
 If `Derived`is derived from `Base` the `Derived`-handler will never be invoked.
 The "catch everything" handler ensured that the `std::exception`-handler will never be invoked.
 

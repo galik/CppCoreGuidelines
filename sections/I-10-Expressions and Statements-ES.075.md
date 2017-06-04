@@ -7,14 +7,12 @@ The termination condition is at the end (where it can be overlooked) and the con
 
 ##### Example
 
-```cpp
-int x;
-do {
-    cin >> x;
-    // ...
-} while (x < 0);
+    int x;
+    do {
+        cin >> x;
+        // ...
+    } while (x < 0);
 
-```
 ##### Note
 
 Yes, there are genuine examples where a `do`-statement is a clear statement of a solution, but also many bugs.

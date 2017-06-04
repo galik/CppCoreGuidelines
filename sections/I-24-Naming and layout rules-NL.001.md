@@ -8,10 +8,8 @@ Comments are not updated as consistently as code.
 
 ##### Example, bad
 
-```cpp
-auto x = m * v1 + vv;   // multiply m with v1 and add the result to vv
+    auto x = m * v1 + vv;   // multiply m with v1 and add the result to vv
 
-```
 ##### Enforcement
 
 Build an AI program that interprets colloquial English text and see if what is said could be better expressed in C++.

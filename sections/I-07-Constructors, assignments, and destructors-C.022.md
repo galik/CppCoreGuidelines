@@ -7,19 +7,17 @@ Users will be surprised if copy/move construction and copy/move assignment do lo
 
 ##### Example, bad
 
-```cpp
-class Silly {   // BAD: Inconsistent copy operations
-    class Impl {
+    class Silly {   // BAD: Inconsistent copy operations
+        class Impl {
+            // ...
+        };
+        shared_ptr<Impl> p;
+    public:
+        Silly(const Silly& a) : p{a.p} { *p = *a.p; }   // deep copy
+        Silly& operator=(const Silly& a) { p = a.p; }   // shallow copy
         // ...
     };
-    shared_ptr<Impl> p;
-public:
-    Silly(const Silly& a) : p{a.p} { *p = *a.p; }   // deep copy
-    Silly& operator=(const Silly& a) { p = a.p; }   // shallow copy
-    // ...
-};
 
-```
 These operations disagree about copy semantics. This will lead to confusion and bugs.
 
 ##### Enforcement

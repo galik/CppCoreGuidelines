@@ -6,17 +6,15 @@ Performance is very sensitive to cache performance and cache algorithms favor si
 
 ##### Example
 
-```cpp
-int matrix[rows][cols];
+    int matrix[rows][cols];
 
-// bad
-for (int c = 0; c < cols; ++c)
-    for (int r = 0; r < rows; ++r)
-        sum += matrix[r][c];
-
-// good
-for (int r = 0; r < rows; ++r)
+    // bad
     for (int c = 0; c < cols; ++c)
-        sum += matrix[r][c];
+        for (int r = 0; r < rows; ++r)
+            sum += matrix[r][c];
 
-```
+    // good
+    for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c)
+            sum += matrix[r][c];
+

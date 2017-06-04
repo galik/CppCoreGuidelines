@@ -6,10 +6,8 @@ An abstract class typically does not have any data for a constructor to initiali
 
 ##### Example
 
-```cpp
-???
+    ???
 
-```
 ##### Exception
 
 * A base class constructor that does work, such as registering an object somewhere, may need a constructor.

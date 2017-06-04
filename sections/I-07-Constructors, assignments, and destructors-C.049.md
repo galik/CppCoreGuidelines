@@ -6,30 +6,26 @@ An initialization explicitly states that initialization, rather than assignment,
 
 ##### Example, good
 
-```cpp
-class A {   // Good
-    string s1;
-public:
-    A() : s1{"Hello, "} { }    // GOOD: directly construct
-    // ...
-};
+    class A {   // Good
+        string s1;
+    public:
+        A() : s1{"Hello, "} { }    // GOOD: directly construct
+        // ...
+    };
 
-```
 ##### Example, bad
 
-```cpp
-class B {   // BAD
-    string s1;
-public:
-    B() { s1 = "Hello, "; }   // BAD: default constructor followed by assignment
-    // ...
-};
+    class B {   // BAD
+        string s1;
+    public:
+        B() { s1 = "Hello, "; }   // BAD: default constructor followed by assignment
+        // ...
+    };
 
-class C {   // UGLY, aka very bad
-    int* p;
-public:
-    C() { cout << *p; p = new int{10}; }   // accidental use before initialized
-    // ...
-};
+    class C {   // UGLY, aka very bad
+        int* p;
+    public:
+        C() { cout << *p; p = new int{10}; }   // accidental use before initialized
+        // ...
+    };
 
-```

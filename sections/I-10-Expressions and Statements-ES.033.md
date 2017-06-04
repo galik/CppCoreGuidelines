@@ -6,12 +6,10 @@ Macros do not obey scope rules.
 
 ##### Example
 
-```cpp
-#define MYCHAR        /* BAD, will eventually clash with someone else's MYCHAR*/
+    #define MYCHAR        /* BAD, will eventually clash with someone else's MYCHAR*/
 
-#define ZCORP_CHAR    /* Still evil, but less likely to clash */
+    #define ZCORP_CHAR    /* Still evil, but less likely to clash */
 
-```
 ##### Note
 
 Avoid macros if you can: [ES.30](I-10-Expressions%20and%20Statements-ES.030.md#Res-macros), [ES.31](I-10-Expressions%20and%20Statements-ES.031.md#Res-macros2), and [ES.32](I-10-Expressions%20and%20Statements-ES.032.md#Res-ALL_CAPS).

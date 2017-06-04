@@ -6,24 +6,22 @@ A class with a virtual function is usually (and in general) used via a pointer t
 
 ##### Example, bad
 
-```cpp
-struct B {
-    virtual int f() = 0;
-    // ... no user-written destructor, defaults to public nonvirtual ...
-};
+    struct B {
+        virtual int f() = 0;
+        // ... no user-written destructor, defaults to public nonvirtual ...
+    };
 
-// bad: derived from a class without a virtual destructor
-struct D : B {
-    string s {"default"};
-};
+    // bad: derived from a class without a virtual destructor
+    struct D : B {
+        string s {"default"};
+    };
 
-void use()
-{
-    unique_ptr<B> p = make_unique<D>();
-    // ...
-} // undefined behavior. May call B::~B only and leak the string
+    void use()
+    {
+        unique_ptr<B> p = make_unique<D>();
+        // ...
+    } // undefined behavior. May call B::~B only and leak the string
 
-```
 ##### Note
 
 There are people who don't follow this rule because they plan to use a class only through a `shared_ptr`: `std::shared_ptr<B> p = std::make_shared<D>(args);` Here, the shared pointer will take care of deletion, so no leak will occur from an inappropriate `delete` of the base. People who do this consistently can get a false positive, but the rule is important -- what if one was allocated using `make_unique`? It's not safe unless the author of `B` ensures that it can never be misused, such as by making all constructors private and providing a factory function to enforce the allocation with `make_shared`.

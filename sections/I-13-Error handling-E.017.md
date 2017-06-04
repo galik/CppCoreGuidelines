@@ -8,19 +8,17 @@ Let cleanup actions on the unwinding path be handled by [RAII](I-13-Error%20hand
 
 ##### Example, don't
 
-```cpp
-void f()   // bad
-{
-    try {
-        // ...
+    void f()   // bad
+    {
+        try {
+            // ...
+        }
+        catch (...) {
+            // no action
+            throw;   // propagate exception
+        }
     }
-    catch (...) {
-        // no action
-        throw;   // propagate exception
-    }
-}
 
-```
 ##### Enforcement
 
 * Flag nested try-blocks.

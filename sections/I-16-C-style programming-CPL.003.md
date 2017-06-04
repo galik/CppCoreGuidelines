@@ -13,31 +13,27 @@ Whenever possible encapsulate the low-level interface in an interface that follo
 
 You can call C from C++:
 
-```cpp
-// in C:
-double sqrt(double);
+    // in C:
+    double sqrt(double);
 
-// in C++:
-extern "C" double sqrt(double);
+    // in C++:
+    extern "C" double sqrt(double);
 
-sqrt(2);
+    sqrt(2);
 
-```
 ##### Example
 
 You can call C++ from C:
 
-```cpp
-// in C:
-X call_f(struct Y*, int);
+    // in C:
+    X call_f(struct Y*, int);
 
-// in C++:
-extern "C" X call_f(Y* p, int i)
-{
-    return p->f(i);   // possibly a virtual function call
-}
+    // in C++:
+    extern "C" X call_f(Y* p, int i)
+    {
+        return p->f(i);   // possibly a virtual function call
+    }
 
-```
 ##### Enforcement
 
 None needed

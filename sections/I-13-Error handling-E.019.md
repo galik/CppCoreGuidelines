@@ -6,15 +6,13 @@
 
 ##### Example
 
-```cpp
-void f(int n)
-{
-    void* p = malloc(1, n);
-    auto _ = finally([p] { free(p); });
-    // ...
-}
+    void f(int n)
+    {
+        void* p = malloc(1, n);
+        auto _ = finally([p] { free(p); });
+        // ...
+    }
 
-```
 ##### Note
 
 `finally` is not as messy as `try`/`catch`, but it is still ad-hoc.

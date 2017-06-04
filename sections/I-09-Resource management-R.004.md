@@ -7,15 +7,13 @@ We want owners identified so that we can reliably and efficiently delete the obj
 
 ##### Example
 
-```cpp
-void f()
-{
-    int& r = *new int{7};  // bad: raw owning reference
-    // ...
-    delete &r;             // bad: violated the rule against deleting raw pointers
-}
+    void f()
+    {
+        int& r = *new int{7};  // bad: raw owning reference
+        // ...
+        delete &r;             // bad: violated the rule against deleting raw pointers
+    }
 
-```
 **See also**: [The raw pointer rule](I-09-Resource%20management-R.003.md#Rr-ptr)
 
 ##### Enforcement

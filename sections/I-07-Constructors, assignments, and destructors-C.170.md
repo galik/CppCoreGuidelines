@@ -6,17 +6,15 @@ You cannot overload by defining two different lambdas with the same name.
 
 ##### Example
 
-```cpp
-void f(int);
-void f(double);
-auto f = [](char);   // error: cannot overload variable and function
+    void f(int);
+    void f(double);
+    auto f = [](char);   // error: cannot overload variable and function
 
-auto g = [](int) { /* ... */ };
-auto g = [](double) { /* ... */ };   // error: cannot overload variables
+    auto g = [](int) { /* ... */ };
+    auto g = [](double) { /* ... */ };   // error: cannot overload variables
 
-auto h = [](auto) { /* ... */ };   // OK
+    auto h = [](auto) { /* ... */ };   // OK
 
-```
 ##### Enforcement
 
 The compiler catches the attempt to overload a lambda.

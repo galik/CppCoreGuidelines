@@ -6,24 +6,22 @@ If `x = x` changes the value of `x`, people will be surprised and bad errors may
 
 ##### Example
 
-```cpp
-class Foo {
-    string s;
-    int i;
-public:
-    Foo& operator=(Foo&& a);
-    // ...
-};
+    class Foo {
+        string s;
+        int i;
+    public:
+        Foo& operator=(Foo&& a);
+        // ...
+    };
 
-Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
-{
-    if (this == &a) return *this;  // this line is redundant
-    s = std::move(a.s);
-    i = a.i;
-    return *this;
-}
+    Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
+    {
+        if (this == &a) return *this;  // this line is redundant
+        s = std::move(a.s);
+        i = a.i;
+        return *this;
+    }
 
-```
 The one-in-a-million argument against `if (this == &a) return *this;` tests from the discussion of [self-assignment](I-07-Constructors%2C%20assignments%2C%20and%20destructors-C.062.md#Rc-copy-self) is even more relevant for self-move.
 
 ##### Note
@@ -38,14 +36,12 @@ The ISO standard guarantees only a "valid but unspecified" state for the standar
 
 Here is a way to move a pointer without a test (imagine it as code in the implementation a move assignment):
 
-```cpp
-// move from other.ptr to this->ptr
-T* temp = other.ptr;
-other.ptr = nullptr;
-delete ptr;
-ptr = temp;
+    // move from other.ptr to this->ptr
+    T* temp = other.ptr;
+    other.ptr = nullptr;
+    delete ptr;
+    ptr = temp;
 
-```
 ##### Enforcement
 
 * (Moderate) In the case of self-assignment, a move assignment operator should not leave the object holding pointer members that have been `delete`d or set to `nullptr`.

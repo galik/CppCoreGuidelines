@@ -8,67 +8,57 @@ RAII ("Resource Acquisition Is Initialization") is the simplest, most systematic
 
 ##### Example
 
-```cpp
-void f1(int i)   // Bad: possibly leak
-{
-    int* p = new int[12];
-    // ...
-    if (i < 17) throw Bad {"in f()", i};
-    // ...
-}
+    void f1(int i)   // Bad: possibly leak
+    {
+        int* p = new int[12];
+        // ...
+        if (i < 17) throw Bad {"in f()", i};
+        // ...
+    }
 
-```
 We could carefully release the resource before the throw:
 
-```cpp
-void f2(int i)   // Clumsy and error-prone: explicit release
-{
-    int* p = new int[12];
-    // ...
-    if (i < 17) {
-        delete[] p;
-        throw Bad {"in f()", i};
+    void f2(int i)   // Clumsy and error-prone: explicit release
+    {
+        int* p = new int[12];
+        // ...
+        if (i < 17) {
+            delete[] p;
+            throw Bad {"in f()", i};
+        }
+        // ...
     }
-    // ...
-}
 
-```
 This is verbose. In larger code with multiple possible `throw`s explicit releases become repetitive and error-prone.
 
-```cpp
-void f3(int i)   // OK: resource management done by a handle (but see below)
-{
-    auto p = make_unique<int[]>(12);
-    // ...
-    if (i < 17) throw Bad {"in f()", i};
-    // ...
-}
+    void f3(int i)   // OK: resource management done by a handle (but see below)
+    {
+        auto p = make_unique<int[]>(12);
+        // ...
+        if (i < 17) throw Bad {"in f()", i};
+        // ...
+    }
 
-```
 Note that this works even when the `throw` is implicit because it happened in a called function:
 
-```cpp
-void f4(int i)   // OK: resource management done by a handle (but see below)
-{
-    auto p = make_unique<int[]>(12);
-    // ...
-    helper(i);   // may throw
-    // ...
-}
+    void f4(int i)   // OK: resource management done by a handle (but see below)
+    {
+        auto p = make_unique<int[]>(12);
+        // ...
+        helper(i);   // may throw
+        // ...
+    }
 
-```
 Unless you really need pointer semantics, use a local resource object:
 
-```cpp
-void f5(int i)   // OK: resource management done by local object
-{
-    vector<int> v(12);
-    // ...
-    helper(i);   // may throw
-    // ...
-}
+    void f5(int i)   // OK: resource management done by local object
+    {
+        vector<int> v(12);
+        // ...
+        helper(i);   // may throw
+        // ...
+    }
 
-```
 That's even simpler and safer, and often more efficient.
 
 ##### Note
@@ -96,23 +86,21 @@ When exceptions cannot be used, simulate RAII.
 That is, systematically check that objects are valid after construction and still release all resources in the destructor.
 One strategy is to add a `valid()` operation to every resource handle:
 
-```cpp
-void f()
-{
-    vector<string> vs(100);   // not std::vector: valid() added
-    if (!vs.valid()) {
-        // handle error or exit
-    }
+    void f()
+    {
+        vector<string> vs(100);   // not std::vector: valid() added
+        if (!vs.valid()) {
+            // handle error or exit
+        }
 
-    ifstream fs("foo");   // not std::ifstream: valid() added
-    if (!fs.valid()) {
-        // handle error or exit
-    }
+        ifstream fs("foo");   // not std::ifstream: valid() added
+        if (!fs.valid()) {
+            // handle error or exit
+        }
 
-    // ...
-} // destructors clean up as usual
+        // ...
+    } // destructors clean up as usual
 
-```
 Obviously, this increases the size of the code, doesn't allow for implicit propagation of "exceptions" (`valid()` checks), and `valid()` checks can be forgotten.
 Prefer to use exceptions.
 

@@ -8,17 +8,15 @@ Readability. Direct expression of an idea.
 
 To say "`T` is `Sortable`":
 
-```cpp
-template<typename T>       // Correct but verbose: "The parameter is
-//    requires Sortable<T>   // of type T which is the name of a type
-void sort(T&);             // that is Sortable"
+    template<typename T>       // Correct but verbose: "The parameter is
+    //    requires Sortable<T>   // of type T which is the name of a type
+    void sort(T&);             // that is Sortable"
 
-template<Sortable T>       // Better (assuming support for concepts): "The parameter is of type T
-void sort(T&);             // which is Sortable"
+    template<Sortable T>       // Better (assuming support for concepts): "The parameter is of type T
+    void sort(T&);             // which is Sortable"
 
-void sort(Sortable&);      // Best (assuming support for concepts): "The parameter is Sortable"
+    void sort(Sortable&);      // Best (assuming support for concepts): "The parameter is Sortable"
 
-```
 The shorter versions better match the way we speak. Note that many templates don't need to use the `template` keyword.
 
 ##### Note

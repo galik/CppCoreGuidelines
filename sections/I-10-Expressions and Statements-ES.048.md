@@ -6,32 +6,24 @@ Casts are a well-known source of errors. Make some optimizations unreliable.
 
 ##### Example, bad
 
-```cpp
-double d = 2;
-auto p = (long*)&d;
-auto q = (long long*)&d;
-cout << d << ' ' << *p << ' ' << *q << '\n';
+    double d = 2;
+    auto p = (long*)&d;
+    auto q = (long long*)&d;
+    cout << d << ' ' << *p << ' ' << *q << '\n';
 
-```
 What would you think this fragment prints? The result is at best implementation defined. I got
 
-```cpp
-2 0 4611686018427387904
+    2 0 4611686018427387904
 
-```
 Adding 
 
-```cpp
-*q = 666;
-cout << d << ' ' << *p << ' ' << *q << '\n';
+    *q = 666;
+    cout << d << ' ' << *p << ' ' << *q << '\n';
 
-```
 I got 
 
-```cpp
-3.29048e-321 666 666
+    3.29048e-321 666 666
 
-```
 Surprised? I'm just glad I didn't crash the program.
 
 ##### Note
