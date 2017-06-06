@@ -25,9 +25,12 @@ echo "SECTIONS: $SECTIONS"
 
 make -C ${SOURCE}
 
-git rm --ignore-unmatch "${SECTIONS}/*.md"
-${SOURCE}/extract-sections -c -d -s -i "$1" "${SECTIONS}"
+git rm -q --ignore-unmatch "${SECTIONS}/*.md"
+mkdir -p "${SECTIONS}"
+${SOURCE}/extract-sections -c -d "D-" -s "S-" -i "I-" "$1" "${SECTIONS}"
 git add "${SECTIONS}/*.md"
 git commit -m "update-sections.sh" "${SECTIONS}/*.md"
+
+
 
 #echo rm -f ${SECIONS}/*.md && make && ./extract-sections ../CppCoreGuidelines.md ../sections -c -d -s -i
