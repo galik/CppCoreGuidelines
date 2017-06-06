@@ -3173,14 +3173,14 @@ wrong results, or memory corruption.
 
 This rule is an obvious and well-known language rule, but can be hard to follow.
 It takes good coding style, library support, and static analysis to eliminate violations without major overhead.
-This is a major part of the discussion of [C++'s resource- and type-safety model](#Stroustrup15).
+This is a major part of the discussion of [C++'s resource- and type-safety model](27-Bibliography.md#Stroustrup15).
 
 See also
 
 * Use [RAII](06-R-Resource%20management.md#Rr-raii) to avoid lifetime problems.
 * Use [unique_ptr](03-F-Functions.md#Rf-unique_ptr) to avoid lifetime problems.
 * Use [shared_ptr](03-F-Functions.md#Rf-shared_ptr) to avoid lifetime problems.
-* Use [references](03-F-Functions.md#Rf-ptr-ref) when `nulllptr` isn't a possibility.
+* Use [references](03-F-Functions.md#Rf-ptr-ref) when `nullptr` isn't a possibility.
 * Use [not_null](#Rf-not_null) to catch unexpected `nullptr` early.
 * Use the [bounds profile](19-Pro-Profiles.md#SS-bounds) to avoid range errors.
 
@@ -3238,7 +3238,7 @@ There are many approaches to dealing with this potential problem:
 ```cpp
 void f1(int* p) // deal with nullptr
 {
-    if (p==nullptr) {
+    if (p == nullptr) {
         // deal with nullptr (allocate, return, throw, make p point to something, whatever
     }
     int x = *p;
@@ -3251,20 +3251,21 @@ There are two potential problems with testing for `nullptr`:
 * the test can be redundant and/or relatively expensive
 * it is not obvious if the test is to protect against a violation or part of the required logic.
 
+
 ```cpp
 void f2(int* p) // state that p is not supposed to be nullptr
 {
-    Assert(p!=nullptr);     
+    assert(p != nullptr);
     int x = *p;
 }
 
 ```
-This would carry a cost only when the assertion checking was ensbled and would give a compiler/analyser useful information.
+This would carry a cost only when the assertion checking was enabled and would give a compiler/analyzer useful information.
 This would work even better if/when C++ gets direct support for contracts:
 
 ```cpp
 void f3(int* p) // state that p is not supposed to be nullptr
-    [[expects: p!=nullptr]]
+    [[expects: p != nullptr]]
 {
     int x = *p;
 }
@@ -3279,7 +3280,7 @@ void f(not_null<int*> p)
 }
 
 ```
-There remedies take care of `nullptr` only.
+These remedies take care of `nullptr` only.
 Remember that there are other ways of getting an invalid pointer.
 
 ##### Example
@@ -3304,18 +3305,18 @@ void g()        // old code: uses naked new
 void f()
 {
     vector<int> v(10);
-    int* p = v(5);
-    v.pushback(99); // could rellocate v's elements
+    int* p = &v[5];
+    v.push_back(99); // could reallocate v's elements
     int x = *p; // BAD: dereferences potentially invalid pointer
 }
 
 ```
 ##### Enforcement
 
-This rule is part ot the [lifetime profile](#Pro.lifetime)
+This rule is part of the [lifetime profile](#Pro.lifetime)
 
 * Flag a dereference of a pointer that points to an object that has gone out of scope
-* Flag a dereference of a pointer that may have beed invalidated by assigning a `nullptr`
+* Flag a dereference of a pointer that may have been invalidated by assigning a `nullptr`
 * Flag a dereference of a pointer that may have been invalidated by a `delete`
 * Flag a dereference to a pointer to a container element that may have been invalidated by dereference
 

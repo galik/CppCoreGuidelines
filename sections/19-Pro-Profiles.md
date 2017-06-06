@@ -134,7 +134,7 @@ and "mysterious values."
 
 Accessing through a pointer that doesn't point to anything is a major source of errors,
 and very hard to avoid in many traditional C or C++ styles of programming.
-For example, a pointer my be uninitialized, the `nullptr`, point beyond the range of an array, or to a deleted object.
+For example, a pointer may be uninitialized, the `nullptr`, point beyond the range of an array, or to a deleted object.
 
 See /docs folder for the initial design. The detailed formal rules are in progress (as of May 2017).
 
@@ -145,13 +145,13 @@ Lifetime safety profile summary:
 
 ##### Impact
 
-Once completely enforced through a combilnation of style rules, static analysis, and library support, this profile
+Once completely enforced through a combination of style rules, static analysis, and library support, this profile
 
 * eliminates one of the major sources of nasty errors in C++
 * eliminates a major source of potential security violations
 * improves performance by eliminating redundant "paranoia" checks
 * increases confidence in correctness of code
-* avoids undefined behavior by enforcinga key C++ language rule
+* avoids undefined behavior by enforcing a key C++ language rule
 
 
 
