@@ -31,10 +31,10 @@
 #define con_err(m) do{std::cerr << m << '\n';}while(0)
 
 #ifdef NDEBUG
-#define DEBUG_ONLY(code) do{}while(0)
+#define DEBUG_ONLY_SECTION(code) do{}while(0)
 #define throw_exception(e, m) do{std::ostringstream o;o<<m;throw e(o.str());}while(0)
 #else
-#define DEBUG_ONLY(code) do{code}while(0)
+#define DEBUG_ONLY_SECTION(code) do{code}while(0)
 #define throw_exception(e, m) do{ \
 	std::ostringstream o; \
 	o << __FILE__ << ":" << __LINE__ << ":error: " << m; \
@@ -58,19 +58,21 @@ constexpr char path_separator()
 //
 using pos_type = decltype(std::sregex_iterator()->position());
 
-enum class output_type{document, sections, items};
+enum class output_type {document, sections, items};
 
 struct program_config
 {
+
 	std::string output_dir;
 	std::string pathname;
 	bool use_syntax_colors = false;
 	bool list_only = false;
 	bool verbose = false;
-	std::set<output_type> outputs;
+	std::map<output_type, std::string> outputs; // type -> prefix
 
 	enum { success = EXIT_SUCCESS, failure = EXIT_FAILURE, ready = 2};
 	int exit_status = ready;
+
 	explicit operator bool() const { return exit_status == ready; }
 };
 
@@ -291,7 +293,18 @@ document_link_map build_link_map(std::string const& doc, document_part_map parts
 	return links;
 }
 
-document_part_map extract_document_sections(std::string const& doc)
+/**
+ * Build a `document_part_map` of the document sections. The
+ * Markdown document is scanned and the location of each section
+ * anchor is recorded in a `std::map` where the section anchor target
+ * is the key.
+ *
+ * @param doc The Markdown document to scan.
+ *
+ * @return A `document_part_map` containing the locations of each section in
+ * the document along with their assigned file name and section `id`.
+ */
+document_part_map locate_document_sections(std::string const& doc)
 {
 	document_part_map parts;
 
@@ -320,7 +333,20 @@ document_part_map extract_document_sections(std::string const& doc)
 	return parts;
 }
 
-document_part_map extract_document_items(std::string const& doc,
+/**
+ * Build a `document_part_map` of the document items. The
+ * Markdown document is scanned one section at a time and the location
+ * of each item anchor is recorded in a `std::map` where the item anchor target
+ * is the key.
+ *
+ * @param doc The Markdown document to scan.
+ * @param sections The map of all the sections enabling the document items to
+ * be grouped according to section.
+ *
+ * @return A `document_part_map` containing the locations of each item in
+ * the document along with their assigned file name and item `id`.
+ */
+document_part_map locate_document_items(std::string const& doc,
 	document_part_map const& sections)
 {
 	document_part_map items;
@@ -374,10 +400,24 @@ document_part_map extract_document_items(std::string const& doc,
 	return items;
 }
 
+/**
+ * Print instructions to use the program.
+ *
+ * @param prog The name of the program as invoked on the command line.
+ * @param error_code Whether to keep going, to exit normally or
+ * to exit with an error code.
+ *
+ * @return The error_code provided asa parameter to the function.
+ */
 int usage(std::string const& prog, int error_code)
 {
 	con_out("");
 	con_out("Usage: " << prog << " [OPTIONS] <input.md> [<out-dir>]");
+	con_out("");
+	con_out("Parse the CppCoreGuidelines.md file and output one or more of: ");
+	con_out("  The processed document as a whole.");
+	con_out("  The processed document broken down into sections.");
+	con_out("  The processed document broken down into individual items.");
 	con_out("");
 	con_out("                If no output directory <out-dir> is specified");
 	con_out("                  the output goes to the current directory.");
@@ -395,6 +435,14 @@ int usage(std::string const& prog, int error_code)
 	return error_code;
 }
 
+/**
+ * Parse the command line options and build a `program_config` structure.
+ *
+ * @param argv Pased from `int main()`.
+ *
+ * @return The program's configuration file configured accirding to the
+ * command line options..
+ */
 program_config parse_commandline(char const* const* argv)
 {
 	program_config cfg;
@@ -403,14 +451,26 @@ program_config parse_commandline(char const* const* argv)
 	{
 		if(!std::strcmp(*arg, "-h") || !std::strcmp(*arg, "--help"))
 			cfg.exit_status = usage(program_name(argv[0]), EXIT_SUCCESS);
+		else if(!std::strcmp(*arg, "-d") || !std::strcmp(*arg, "--document"))
+		{
+			if(!*++arg)
+				throw_runtime_error(*(arg - 1) << " requires an parameter");
+			cfg.outputs[output_type::document] = *arg;
+		}
+		else if(!std::strcmp(*arg, "-s") || !std::strcmp(*arg, "--sections"))
+		{
+			if(!*++arg)
+				throw_runtime_error(*(arg - 1) << " requires an parameter");
+			cfg.outputs[output_type::sections] = *arg;
+		}
+		else if(!std::strcmp(*arg, "-i") || !std::strcmp(*arg, "--items"))
+		{
+			if(!*++arg)
+				throw_runtime_error(*(arg - 1) << " requires an parameter");
+			cfg.outputs[output_type::items] = *arg;
+		}
 		else if(!std::strcmp(*arg, "-c") || !std::strcmp(*arg, "--color"))
 			cfg.use_syntax_colors = true;
-		else if(!std::strcmp(*arg, "-d") || !std::strcmp(*arg, "--document"))
-			cfg.outputs.insert(output_type::document);
-		else if(!std::strcmp(*arg, "-s") || !std::strcmp(*arg, "--sections"))
-			cfg.outputs.insert(output_type::sections);
-		else if(!std::strcmp(*arg, "-i") || !std::strcmp(*arg, "--items"))
-			cfg.outputs.insert(output_type::items);
 		else if(!std::strcmp(*arg, "-l") || !std::strcmp(*arg, "--list"))
 			cfg.list_only = true;
 		else if(!std::strcmp(*arg, "-v") || !std::strcmp(*arg, "--verbose"))
@@ -428,7 +488,6 @@ program_config parse_commandline(char const* const* argv)
 
 int main(int, char* argv[])
 {
-	bug_fun();
 	try
 	{
 		program_config cfg = parse_commandline(argv);
@@ -437,7 +496,7 @@ int main(int, char* argv[])
 			return cfg.exit_status;
 
 		if(cfg.outputs.empty())
-			cfg.outputs.insert(output_type::document);
+			cfg.outputs[output_type::document];
 
 		if(cfg.pathname.empty())
 			throw_runtime_error("Pathname for CppCoreGuidelines.md required");
@@ -456,7 +515,11 @@ int main(int, char* argv[])
 
 		if(cfg.outputs.count(output_type::document))
 		{
-			auto new_pathname = cfg.output_dir + path_separator() + "D-" + program_name(cfg.pathname);
+			auto new_pathname
+				= cfg.output_dir
+				+ path_separator()
+				+ cfg.outputs[output_type::sections]
+				+ program_name(cfg.pathname);
 
 			// TODO: Use <filesystem> to makes this more reliable
 			if(new_pathname == cfg.pathname)
@@ -472,7 +535,7 @@ int main(int, char* argv[])
 		|| cfg.outputs.count(output_type::items))
 		{
 			// section information is needed by BOTH section & item output
-			auto sections = extract_document_sections(doc);
+			auto sections = locate_document_sections(doc);
 
 			if(cfg.outputs.count(output_type::sections))
 			{
@@ -487,9 +550,14 @@ int main(int, char* argv[])
 					auto text = doc.substr(section.second.beg, section.second.end - section.second.beg);
 
 					for(auto const& link: links)
-						replace_all(text, "](#" + link.first + ")", "](S-" + urlencode(link.second) + ".md#" + link.first + ")");
+						replace_all(text, "](#" + link.first + ")", "](" + cfg.outputs[output_type::sections] + urlencode(link.second) + ".md#" + link.first + ")");
 
-					auto filepath = cfg.output_dir + path_separator() + "S-" + section.second.filename + ".md";
+					auto filepath
+						= cfg.output_dir
+						+ path_separator()
+						+ cfg.outputs[output_type::sections]
+						+ section.second.filename
+						+ ".md";
 
 					if(!(std::ofstream(filepath) << text))
 						throw_errno(section.second.filename);
@@ -500,34 +568,8 @@ int main(int, char* argv[])
 			{
 				con_out("Outputting individual items:");
 
-				auto items = extract_document_items(doc, sections);
+				auto items = locate_document_items(doc, sections);
 				auto links = build_link_map(doc, items);
-
-				DEBUG_ONLY
-				(
-					std::vector<std::string> item_targets;
-					std::vector<std::string> link_targets;
-
-					for(auto const& item: items)
-						item_targets.push_back(item.second.filename + "\n");
-
-					for(auto const& link: links)
-						link_targets.push_back(link.second + "\n");
-
-					std::sort(std::begin(item_targets), std::end(item_targets));
-					std::sort(std::begin(link_targets), std::end(link_targets));
-					{
-						std::ofstream ofs("item_targets.txt");
-						std::copy(std::begin(item_targets), std::end(item_targets), std::ostream_iterator<std::string>(ofs));
-					}
-					{
-						std::ofstream ofs("link_targets.txt");
-						std::copy(std::begin(link_targets), std::end(link_targets), std::ostream_iterator<std::string>(ofs));
-					}
-					bug_var(item_targets.size());
-					bug_var(link_targets.size());
-					bug_var((item_targets == link_targets));
-				);
 
 				for(auto const& item: items)
 				{
@@ -537,9 +579,14 @@ int main(int, char* argv[])
 					auto text = doc.substr(item.second.beg, item.second.end - item.second.beg);
 
 					for(auto const& link: links)
-						replace_all(text, "](#" + link.first + ")", "](I-" + urlencode(link.second) + ".md#" + link.first + ")");
+						replace_all(text, "](#" + link.first + ")", "](" + cfg.outputs[output_type::items] + urlencode(link.second) + ".md#" + link.first + ")");
 
-					auto filepath = cfg.output_dir + path_separator() + "I-" + item.second.filename + ".md";
+					auto filepath
+						= cfg.output_dir
+						+ path_separator()
+						+ cfg.outputs[output_type::items]
+						+ item.second.filename
+						+ ".md";
 
 					if(!(std::ofstream(filepath) << text))
 						throw_errno(filepath);
