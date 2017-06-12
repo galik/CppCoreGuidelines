@@ -3229,7 +3229,7 @@ Impl::Smiley -> Impl::Circle -> Impl::Shape
 ```
 As mentioned, this is just one way to construct a dual hierarchy.
 
-Another (related) technique for separating interface and implementation is [PIMPL](#???).
+Another (related) technique for separating interface and implementation is [Pimpl](02-I-Interfaces.md#Ri-pimpl).
 
 ##### Note
 

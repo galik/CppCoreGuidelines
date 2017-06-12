@@ -1842,7 +1842,7 @@ The `Link` and `List` classes do nothing but type manipulation.
 
 Instead of using a separate "base" type, another common technique is to specialize for `void` or `void*` and have the general template for `T` be just the safely-encapsulated casts to and from the core `void` implementation.
 
-**Alternative**: Use a [PIMPL](#???) implementation.
+**Alternative**: Use a [Pimpl](02-I-Interfaces.md#Ri-pimpl) implementation.
 
 ##### Enforcement
 

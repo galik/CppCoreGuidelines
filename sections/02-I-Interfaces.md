@@ -27,6 +27,7 @@ Interface rule summary:
 * [I.24: Avoid adjacent unrelated parameters of the same type](02-I-Interfaces.md#Ri-unrelated)
 * [I.25: Prefer abstract classes as interfaces to class hierarchies](02-I-Interfaces.md#Ri-abstract)
 * [I.26: If you want a cross-compiler ABI, use a C-style subset](02-I-Interfaces.md#Ri-abi)
+* [I.27: For stable library ABI, consider the Pimpl idiom](02-I-Interfaces.md#Ri-pimpl)
 * [I.30: Encapsulate rule violations](02-I-Interfaces.md#Ri-encapsulate)
 
 See also
@@ -50,13 +51,13 @@ Correctness. Assumptions not stated in an interface are easily overlooked and ha
 Controlling the behavior of a function through a global (namespace scope) variable (a call mode) is implicit and potentially confusing. For example:
 
 ```cpp
-int rnd(double d)
+int round(double d)
 {
-    return (rnd_up) ? ceil(d) : d;    // don't: "invisible" dependency
+    return (round_up) ? ceil(d) : d;    // don't: "invisible" dependency
 }
 
 ```
-It will not be obvious to a caller that the meaning of two calls of `rnd(7.2)` might give different results.
+It will not be obvious to a caller that the meaning of two calls of `round(7.2)` might give different results.
 
 ##### Exception
 
@@ -1061,6 +1062,57 @@ Common ABIs are emerging on some platforms freeing you from the more draconian r
 ##### Note
 
 If you use a single compiler, you can use full C++ in interfaces. That may require recompilation after an upgrade to a new compiler version.
+
+##### Enforcement
+
+(Not enforceable) It is difficult to reliably identify where an interface forms part of an ABI.
+
+### <a name="Ri-pimpl"></a>I.27: For stable library ABI, consider the Pimpl idiom
+
+##### Reason
+
+Because private data members participate in class layout and private member functions participate in overload resolution, changes to those
+implementation details require recompilation of all users of a class that uses them. A non-polymorphic interface class holding a pointer to
+implementation (Pimpl) can isolate the users of a class from changes in its implementation at the cost of an indirection.
+
+##### Example
+
+interface (widget.h)
+
+```cpp
+class widget {
+    class impl;
+    std::unique_ptr<impl> pimpl;
+public:
+    void draw(); // public API that will be forwarded to the implementation
+    widget(int); // defined in the implementation file
+    ~widget();   // defined in the implementation file, where impl is a complete type
+    widget(widget&&) = default;
+    widget(const widget&) = delete;
+    widget& operator=(widget&&); // defined in the implementation file
+    widget& operator=(const widget&) = delete;
+};
+
+
+```
+implementation (widget.cpp)
+
+```cpp
+class widget::impl {
+    int n; // private data
+public:
+    void draw(const widget& w) { /* ... */ }
+    impl(int n) : n(n) {}
+};
+void widget::draw() { pimpl->draw(*this); }
+widget::widget(int n) : pimpl{std::make_unique<impl>(n)} {}
+widget::~widget() = default;
+widget& widget::operator=(widget&&) = default;
+
+```
+##### Notes
+
+See [GOTW #100](https://herbsutter.com/gotw/_100/) and [cppreference](http://en.cppreference.com/w/cpp/language/pimpl) for the trade-offs and additional implementation details associated with this idiom.
 
 ##### Enforcement
 

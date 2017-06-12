@@ -300,7 +300,7 @@ vector<string> read_until(string_view terminator)   // C++17
 }
 
 ```
-The `gsl::string_span` is a current alternative offering most of the benefits of `string_span` for simple examples:
+The `gsl::string_span` is a current alternative offering most of the benefits of `std::string_view` for simple examples:
 
 ```cpp
 vector<string> read_until(string_span terminator)

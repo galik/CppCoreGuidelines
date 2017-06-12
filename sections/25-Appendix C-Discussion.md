@@ -35,7 +35,7 @@ If the class definition and the constructor body are in separate files, the long
 
 [\[Cline99\]](27-Bibliography.md#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](27-Bibliography.md#Koenig97) §4, [\[Lakos96\]](27-Bibliography.md#Lakos96) §10.3.5, [\[Meyers97\]](27-Bibliography.md#Meyers97) §13, [\[Murray93\]](27-Bibliography.md#Murray93) §2.1.3, [\[Sutter00\]](27-Bibliography.md#Sutter00) §47
 
-### <a name="TBD"></a>Use of `=`, `{}`, and `()` as initializers
+### <a name="Sd-init"></a>Discussion: Use of `=`, `{}`, and `()` as initializers
 
 ???
 
@@ -388,7 +388,7 @@ Resource management rule summary:
 * [If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations](25-Appendix%20C-Discussion.md#Cr-handle)
 * [If a class is a container, give it an initializer-list constructor](25-Appendix%20C-Discussion.md#Cr-list)
 
-### <a name="Cr-safety"></a>Provide strong resource safety; that is, never leak anything that you think of as a resource
+### <a name="Cr-safety"></a>Discussion: Provide strong resource safety; that is, never leak anything that you think of as a resource
 
 ##### Reason
 
@@ -420,7 +420,7 @@ This class is a resource handle. It manages the lifetime of the `T`s. To do so, 
 
 The basic technique for preventing leaks is to have every resource owned by a resource handle with a suitable destructor. A checker can find "naked `new`s". Given a list of C-style allocation functions (e.g., `fopen()`), a checker can also find uses that are not managed by a resource handle. In general, "naked pointers" can be viewed with suspicion, flagged, and/or analyzed. A complete list of resources cannot be generated without human input (the definition of "a resource" is necessarily too general), but a tool can be "parameterized" with a resource list.
 
-### <a name="Cr-never"></a>Never throw while holding a resource not owned by a handle
+### <a name="Cr-never"></a>Discussion: Never throw while holding a resource not owned by a handle
 
 ##### Reason
 
@@ -471,7 +471,7 @@ A checker probably must rely on a human-provided list of resources.
 For starters, we know about the standard-library containers, `string`, and smart pointers.
 The use of `span` and `string_span` should help a lot (they are not resource handles).
 
-### <a name="Cr-raw"></a>A "raw" pointer or reference is never a resource handle
+### <a name="Cr-raw"></a>Discussion: A "raw" pointer or reference is never a resource handle
 
 ##### Reason
 
@@ -481,7 +481,7 @@ To be able to distinguish owners from views.
 
 This is independent of how you "spell" pointer: `T*`, `T&`, `Ptr<T>` and `Range<T>` are not owners.
 
-### <a name="Cr-outlive"></a>Never let a pointer outlive the object it points to
+### <a name="Cr-outlive"></a>Discussion: Never let a pointer outlive the object it points to
 
 ##### Reason
 
@@ -514,7 +514,7 @@ The `string`s of `v` are destroyed upon exit from `bad()` and so is `v` itself. 
 
 Most compilers already warn about simple cases and has the information to do more. Consider any pointer returned from a function suspect. Use containers, resource handles, and views (e.g., `span` known not to be resource handles) to lower the number of cases to be examined. For starters, consider every class with a destructor as resource handle.
 
-### <a name="Cr-templates"></a>Use templates to express containers (and other resource handles)
+### <a name="Cr-templates"></a>Discussion: Use templates to express containers (and other resource handles)
 
 ##### Reason
 
@@ -530,7 +530,7 @@ template<typename T> class Vector {
 };
 
 ```
-### <a name="Cr-value-return"></a>Return containers by value (relying on move or copy elision for efficiency)
+### <a name="Cr-value-return"></a>Discussion: Return containers by value (relying on move or copy elision for efficiency)
 
 ##### Reason
 
@@ -555,7 +555,7 @@ See the Exceptions in [F.20](03-F-Functions.md#Rf-out).
 
 Check for pointers and references returned from functions and see if they are assigned to resource handles (e.g., to a `unique_ptr`).
 
-### <a name="Cr-handle"></a>If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations
+### <a name="Cr-handle"></a>Discussion: If a class is a resource handle, it needs a constructor, a destructor, and copy and/or move operations
 
 ##### Reason
 
@@ -584,7 +584,7 @@ Now `Named` has a default constructor, a destructor, and efficient copy and move
 
 In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04-C-Classes%20and%20Class%20Hierarchies.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
 
-### <a name="Cr-list"></a>If a class is a container, give it an initializer-list constructor
+### <a name="Cr-list"></a>Discussion: If a class is a container, give it an initializer-list constructor
 
 ##### Reason
 

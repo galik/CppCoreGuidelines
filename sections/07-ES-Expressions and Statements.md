@@ -2503,7 +2503,8 @@ Surprised? I'm just glad I didn't crash the program.
 
 ##### Note
 
-Programmer who write casts typically assumes that they know what they are doing.
+Programmers who write casts typically assume that they know what they are doing, 
+or that writing a cast makes the program "easier to read".
 In fact, they often disable the general rules for using values.
 Overload resolution and template instantiation usually pick the right function if there is a right function to pick.
 If there is not, maybe there ought to be, rather than applying a local fix (cast).
@@ -2520,18 +2521,19 @@ If you feel the need for a lot of casts, there may be a fundamental design probl
 
 ##### Alternatives
 
-Casts are widely (mis) used. Modern C++ has constructs that eliminate the need for casts in many contexts, such as
+Casts are widely (mis) used. Modern C++ has rules and constructs that eliminate the need for casts in many contexts, such as
 
 * Use templates
 * Use `std::variant`
-
+* Rely on the well defined, safe, implicit conversions between pointer types
 
 ##### Enforcement
 
 * Force the elimination of C-style casts
-* Warn against named casts
-* Warn if there are many functional style casts (there is an obvious problem in quantifying 'many').
-* The [type profile](19-Pro-Profiles.md#Pro-type-reinterpretcast) bans `reinterpret_cast`.
+* Warn if there are many functional style casts (there is an obvious problem in quantifying 'many')
+* The [type profile](#Pro-type-reinterpretcast) bans `reinterpret_cast`.
+* Warn against [identity casts](#Pro-type-identitycast) between pointer types, where the source and target types are the same (#Pro-type-identitycast)
+* Warn if a pointer cast could be [implicit](#Pro-type-implicitpointercast)
 
 ### <a name="Res-casts-named"></a>ES.49: If you must use a cast, use a named cast
 
@@ -2598,7 +2600,8 @@ auto p = reinterpret_cast<Device_register>(0x800);  // inherently dangerous
 ##### Enforcement
 
 * Flag C-style and functional casts.
-* The [type profile](19-Pro-Profiles.md#Pro-type-reinterpretcast) bans `reinterpret_cast`.
+* The [type profile](#Pro-type-reinterpretcast) bans `reinterpret_cast`.
+* The [type profile](#Pro-type-arithmeticcast) warns when using `static_cast` between arithmetic types.
 
 ### <a name="Res-casts-const"></a>ES.50: Don't cast away `const`
 

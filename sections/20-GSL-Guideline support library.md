@@ -144,9 +144,9 @@ Most of the concepts below are defined in [the Ranges TS](http://www.open-std.or
 * `Relation`
 * ...
 
-### <a name="SS-gsl-smartptrconcepts"></a>Smart pointer concepts
+### <a name="SS-gsl-smartptrconcepts"></a>GSL.ptr: Smart pointer concepts
 
-Described in [Lifetimes paper](https://github.com/isocpp/CppCoreGuidelines/blob/master/docs/Lifetimes%20I%20and%20II%20-%20v0.9.1.pdf).
+See [Lifetimes paper](https://github.com/isocpp/CppCoreGuidelines/blob/master/docs/Lifetimes%20I%20and%20II%20-%20v0.9.1.pdf).
 
 
 

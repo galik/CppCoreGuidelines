@@ -126,7 +126,7 @@ through non-`const` pointers.
 It is the job of the class to ensure such mutation is done only when it makes sense according to the semantics (invariants)
 it offers to its users.
 
-See also [PIMPL](#???).
+See also [Pimpl](02-I-Interfaces.md#Ri-pimpl).
 
 ##### Enforcement
 
