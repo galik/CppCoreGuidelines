@@ -1,11 +1,11 @@
 #======================================================
 # /contrib/Makefile
 #-------------------------------------------------------
-# Assums every source file is a whole program and
+# Assumes every source file is a whole program and
 # compiles each one to an executable of the same name.
 #
 
-# Chance to add your personal flags
+# Edit Makefile.local to add your personal flags
 -include Makefile.local
 
 CXXFLAGS += \
