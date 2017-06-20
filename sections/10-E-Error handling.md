@@ -221,7 +221,7 @@ void f1(int i)   // Bad: possibly leak
 {
     int* p = new int[12];
     // ...
-    if (i < 17) throw Bad {"in f()", i};
+    if (i < 17) throw Bad{"in f()", i};
     // ...
 }
 
@@ -235,7 +235,7 @@ void f2(int i)   // Clumsy and error-prone: explicit release
     // ...
     if (i < 17) {
         delete[] p;
-        throw Bad {"in f()", i};
+        throw Bad{"in f()", i};
     }
     // ...
 }
@@ -248,7 +248,7 @@ void f3(int i)   // OK: resource management done by a handle (but see below)
 {
     auto p = make_unique<int[]>(12);
     // ...
-    if (i < 17) throw Bad {"in f()", i};
+    if (i < 17) throw Bad{"in f()", i};
     // ...
 }
 
@@ -530,11 +530,13 @@ To prevent slicing.
 
 ```cpp
 void f()
-try {
-    // ...
-}
-catch (exception e) {   // don't: may slice
-    // ...
+{
+    try {
+        // ...
+    }
+    catch (exception e) {   // don't: may slice
+        // ...
+    }
 }
 
 ```
@@ -1050,7 +1052,7 @@ The policy of letting exceptions propagate until they reach a function that pote
 ##### Note
 
 No. This would not be any better had exception specifications been statically enforced.
-For example, see [Stroustrup94](27-Bibliography.md#Stroustrup94).
+For example, see [Stroustrup94](28-Bibliography.md#Stroustrup94).
 
 ##### Note
 

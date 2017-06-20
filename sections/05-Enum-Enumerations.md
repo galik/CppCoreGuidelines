@@ -150,7 +150,7 @@ enum Day { mon, tue, wed, thu, fri, sat, sun };
 
 Day& operator++(Day& d)
 {
-    return d = (d==Day::sun) ? Day::mon : static_cast<Day>(static_cast<int>(d)+1);
+    return d = (d == Day::sun) ? Day::mon : static_cast<Day>(static_cast<int>(d)+1);
 }
 
 Day today = Day::sat;
@@ -162,11 +162,11 @@ The use of a `static_cast` is not pretty, but
 ```cpp
 Day& operator++(Day& d)
 {
-    return d = (d== Day::sun) ? Day::mon : Day{++d};    // error
+    return d = (d == Day::sun) ? Day::mon : Day{++d};    // error
 }
 
 ```
-is an infinite recursion, and writing it without a cast, using a `switch` on all cases is longwinded.
+is an infinite recursion, and writing it without a cast, using a `switch` on all cases is long-winded.
 
 
 ##### Enforcement

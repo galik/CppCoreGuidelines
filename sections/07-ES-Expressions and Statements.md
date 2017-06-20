@@ -1661,7 +1661,7 @@ void f()
         goto exit;
     // ...
 exit:
-    ... common cleanup code ...
+    // ... common cleanup code ...
 }
 
 ```
@@ -2158,7 +2158,7 @@ void f1(span<int, 10> a, int pos) // A1: Change parameter type to use span
 
 void f2(array<int, 10> arr, int pos) // A2: Add local span and use that
 {
-    span<int> a = {arr, pos}
+    span<int> a = {arr, pos};
     a[pos / 2] = 1; // OK
     a[pos - 1] = 2; // OK
 }
@@ -3143,7 +3143,7 @@ This mistake need not be repeated in new code.
 We can define a type to represent the number of elements:
 
 ```cpp
-struct Count { int n };
+struct Count { int n; };
 
 template<typename T>
 class Vector {
@@ -3176,7 +3176,7 @@ wrong results, or memory corruption.
 
 This rule is an obvious and well-known language rule, but can be hard to follow.
 It takes good coding style, library support, and static analysis to eliminate violations without major overhead.
-This is a major part of the discussion of [C++'s resource- and type-safety model](27-Bibliography.md#Stroustrup15).
+This is a major part of the discussion of [C++'s resource- and type-safety model](28-Bibliography.md#Stroustrup15).
 
 See also
 
@@ -3611,7 +3611,7 @@ struct Positive {
     operator int() { return val; }
 };
 
-int f(Positive arg) {return arg };
+int f(Positive arg) { return arg; }
 
 int r1 = f(2);
 int r2 = f(-2);  // throws

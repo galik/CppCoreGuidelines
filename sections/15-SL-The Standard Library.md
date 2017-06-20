@@ -327,7 +327,7 @@ char* cat(const char* s1, const char* s2)   // beware!
     p[l1] = '.';
     strcpy(p + l1 + 1, s2, l2);
     p[l1 + l2 + 1] = 0;
-    return res;
+    return p;
 }
 
 ```

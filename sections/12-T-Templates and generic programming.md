@@ -632,13 +632,13 @@ Minimal operator+(const Minimal&, const Minimal&);
 
 void f(const Minimal& x, const Minimal& y)
 {
-    if (!(x == y) { /* ... */ }     // OK
+    if (!(x == y)) { /* ... */ }    // OK
     if (x != y) { /* ... */ }       // surprise! error
 
     while (!(x < y)) { /* ... */ }  // OK
     while (x >= y) { /* ... */ }    // surprise! error
 
-    x = x + y;        // OK
+    x = x + y;          // OK
     x += y;             // surprise! error
 }
 
@@ -664,14 +664,14 @@ Minimal operator+(const Convenient&, const Convenient&);
 
 void f(const Convenient& x, const Convenient& y)
 {
-    if (!(x == y) { /* ... */ }     // OK
+    if (!(x == y)) { /* ... */ }    // OK
     if (x != y) { /* ... */ }       // OK
 
     while (!(x < y)) { /* ... */ }  // OK
     while (x >= y) { /* ... */ }    // OK
 
     x = x + y;     // OK
-    x += y;      // OK
+    x += y;        // OK
 }
 
 ```

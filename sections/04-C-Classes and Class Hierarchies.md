@@ -357,7 +357,7 @@ For example, a derived class might be allowed to skip a run-time check because i
 ```cpp
 class Foo {
 public:
-    int bar(int x) { check(x); return do_bar(); }
+    int bar(int x) { check(x); return do_bar(x); }
     // ...
 protected:
     int do_bar(int x); // do some operation on the data
@@ -373,7 +373,7 @@ class Dir : public Foo {
         /* ... do something ... */
         return do_bar(x + y); // OK: derived class can bypass check
     }
-}
+};
 
 void user(Foo& x)
 {
@@ -3469,7 +3469,7 @@ If the operations are virtual the use of inheritance is necessary, if not using 
 ##### Example
 
 ```cpp
-  class iostream : public istream, public ostream {   // very simplified
+class iostream : public istream, public ostream {   // very simplified
     // ...
 };
 
@@ -3988,16 +3988,18 @@ It also gives an opportunity to eliminate a separate allocation for the referenc
 ##### Example
 
 ```cpp
-// OK: but repetitive; and separate allocations for the Foo and shared_ptr's use count
-shared_ptr<Foo> p {new<Foo>{7}};
+void test() {
+    // OK: but repetitive; and separate allocations for the Bar and shared_ptr's use count
+    shared_ptr<Bar> p {new<Bar>{7}};
 
-auto q = make_shared<Foo>(7);   // Better: no repetition of Foo; one object
+    auto q = make_shared<Bar>(7);   // Better: no repetition of Bar; one object
+}
 
 ```
 ##### Enforcement
 
-* Flag the repetitive usage of template specialization list`<Foo>`
-* Flag variables declared to be `shared_ptr<Foo>`
+* Flag the repetitive usage of template specialization list`<Bar>`
+* Flag variables declared to be `shared_ptr<Bar>`
 
 ### <a name="Rh-array"></a>C.152: Never assign a pointer to an array of derived class objects to a pointer to its base
 

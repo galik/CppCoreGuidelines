@@ -226,7 +226,7 @@ void process_readings(istream& socket1)
     socket1 >> surface_readings;
     if (!socket1) throw Bad_input{};
 
-    auto h1 = async([&] { if (!validate(surface_readings) throw Invalid_data{}; });
+    auto h1 = async([&] { if (!validate(surface_readings)) throw Invalid_data{}; });
     auto h2 = async([&] { return temperature_gradiants(surface_readings); });
     auto h3 = async([&] { return altitude_map(surface_readings); });
     // ...
@@ -832,7 +832,7 @@ message passing or shared memory.
 ???
 
 
-### <a name="Rconc-shared"></a>[CP.32: To share ownership between unrelated `thread`s use `shared_ptr`
+### <a name="Rconc-shared"></a>CP.32: To share ownership between unrelated `thread`s use `shared_ptr`
 
 ##### Reason
 

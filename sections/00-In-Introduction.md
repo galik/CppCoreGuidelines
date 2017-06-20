@@ -33,7 +33,7 @@ Remember:
 
 Take the time to understand the implications of a guideline rule on your program.
 
-These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](27-Bibliography.md#Stroustrup05)).
+These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](28-Bibliography.md#Stroustrup05)).
 They do not simply define a subset of C++ to be used (for reliability, safety, performance, or whatever).
 Instead, they strongly recommend the use of a few simple "extensions" ([library components](20-GSL-Guideline%20support%20library.md#S-gsl))
 that make the use of the most error-prone features of C++ redundant, so that they can be banned (in our set of rules).
@@ -209,8 +209,9 @@ Supporting sections:
 * [Appendix A: Libraries](23-Appendix%20A-Libraries.md#S-libraries)
 * [Appendix B: Modernizing code](24-Appendix%20B-Modernizing%20code.md#S-modernizing)
 * [Appendix C: Discussion](25-Appendix%20C-Discussion.md#S-discussion)
-* [Glossary](25-Appendix%20C-Discussion.md#S-glossary)
-* [To-do: Unclassified proto-rules](26-To-do-Unclassified%20proto-rules.md#S-unclassified)
+* [Appendix D: Tools support](26-Appendix%20D-Supporting%20tools.md#S-tools)
+* [Glossary](26-Appendix%20D-Supporting%20tools.md#S-glossary)
+* [To-do: Unclassified proto-rules](27-To-do-Unclassified%20proto-rules.md#S-unclassified)
 
 These sections are not orthogonal.
 

@@ -391,7 +391,7 @@ Member functions defined in-class are `inline` by default.
 
 ##### Exception
 
-Template functions (incl. template member functions) must be in headers and therefore inline.
+Template functions (incl. template member functions) are normally defined in headers and therefore inline.
 
 ##### Enforcement
 

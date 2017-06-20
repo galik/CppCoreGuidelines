@@ -76,18 +76,18 @@ Reference sections:
 
 ## <a name="SS-books"></a>RF.books: Books with coding guidelines
 
-* [Meyers96](27-Bibliography.md#Meyers96) Scott Meyers: *More Effective C++*. Addison-Wesley 1996.
-* [Meyers97](27-Bibliography.md#Meyers97) Scott Meyers: *Effective C++, Second Edition*. Addison-Wesley 1997.
+* [Meyers96](28-Bibliography.md#Meyers96) Scott Meyers: *More Effective C++*. Addison-Wesley 1996.
+* [Meyers97](28-Bibliography.md#Meyers97) Scott Meyers: *Effective C++, Second Edition*. Addison-Wesley 1997.
 * [Meyers01](#Meyers01) Scott Meyers: *Effective STL*. Addison-Wesley 2001.
 * [Meyers05](#Meyers05) Scott Meyers: *Effective C++, Third Edition*. Addison-Wesley 2005.
-* [Meyers15](27-Bibliography.md#Meyers15) Scott Meyers: *Effective Modern C++*. O'Reilly 2015.
-* [SuttAlex05](27-Bibliography.md#SuttAlex05) Sutter and Alexandrescu: *C++ Coding Standards*. Addison-Wesley 2005. More a set of meta-rules than a set of rules. Pre-C++11.
-* [Stroustrup05](27-Bibliography.md#Stroustrup05) Bjarne Stroustrup: [A rationale for semantically enhanced library languages](http://www.stroustrup.com/SELLrationale.pdf).
+* [Meyers15](28-Bibliography.md#Meyers15) Scott Meyers: *Effective Modern C++*. O'Reilly 2015.
+* [SuttAlex05](28-Bibliography.md#SuttAlex05) Sutter and Alexandrescu: *C++ Coding Standards*. Addison-Wesley 2005. More a set of meta-rules than a set of rules. Pre-C++11.
+* [Stroustrup05](28-Bibliography.md#Stroustrup05) Bjarne Stroustrup: [A rationale for semantically enhanced library languages](http://www.stroustrup.com/SELLrationale.pdf).
   LCSD05. October 2005.
-* [Stroustrup14](27-Bibliography.md#Stroustrup05) Stroustrup: [A Tour of C++](http://www.stroustrup.com/Tour.html).
+* [Stroustrup14](28-Bibliography.md#Stroustrup05) Stroustrup: [A Tour of C++](http://www.stroustrup.com/Tour.html).
   Addison Wesley 2014.
   Each chapter ends with an advice section consisting of a set of recommendations.
-* [Stroustrup13](27-Bibliography.md#Stroustrup13) Stroustrup: [The C++ Programming Language (4th Edition)](http://www.stroustrup.com/4th.html).
+* [Stroustrup13](28-Bibliography.md#Stroustrup13) Stroustrup: [The C++ Programming Language (4th Edition)](http://www.stroustrup.com/4th.html).
   Addison Wesley 2013.
   Each chapter ends with an advice section consisting of a set of recommendations.
 * Stroustrup: [Style Guide](http://www.stroustrup.com/Programming/PPP-style.pdf)
@@ -121,10 +121,10 @@ A textbook for beginners and relative novices.
 * Bjarne Stroustrup: [The Essence of C++: With Examples in C++84, C++98, C++11, and C++14](http://channel9.msdn.com/Events/GoingNative/2013/Opening-Keynote-Bjarne-Stroustrup). 2013
 * All the talks from [CppCon '14](https://isocpp.org/blog/2014/11/cppcon-videos-c9)
 * Bjarne Stroustrup: [The essence of C++](https://www.youtube.com/watch?v=86xWVb4XIyE) at the University of Edinburgh. 2014.
-* Bjarne Stroustrup: [The Evolution of C++ Past, Present and Future](https://www.youtube.com/watch?v=_wzc7a3McOs). Cppcon 2016 keynote.
-* Bjarne Stroustrup: [Make Simple Tasks Simple!](https://www.youtube.com/watch?v=nesCaocNjtQ). Cppcon 2014 keynote.
-* Bjarne Stroustrup: [Writing Good C++14](https://www.youtube.com/watch?v=1OEu9C51K2A). Cppcon 2015 keynote about the Core Guidelines.
-* Herb Sutter: [Writing Good C++14... By Default](https://www.youtube.com/watch?v=hEx5DNLWGgA). Cppcon 2015 keynote about the Core Guidelines.
+* Bjarne Stroustrup: [The Evolution of C++ Past, Present and Future](https://www.youtube.com/watch?v=_wzc7a3McOs). CppCon 2016 keynote.
+* Bjarne Stroustrup: [Make Simple Tasks Simple!](https://www.youtube.com/watch?v=nesCaocNjtQ). CppCon 2014 keynote.
+* Bjarne Stroustrup: [Writing Good C++14](https://www.youtube.com/watch?v=1OEu9C51K2A). CppCon 2015 keynote about the Core Guidelines.
+* Herb Sutter: [Writing Good C++14... By Default](https://www.youtube.com/watch?v=hEx5DNLWGgA). CppCon 2015 keynote about the Core Guidelines.
 * CppCon 15
 * ??? C++ Next
 * ??? Meting C++
@@ -145,17 +145,17 @@ A textbook for beginners and relative novices.
 This section contains materials that has been useful for presenting the core guidelines and the ideas behind them:
 
 * [Our documents directory](https://github.com/isocpp/CppCoreGuidelines/tree/master/docs)
-* Stroustrup, Sutter, and Dos Reis: [A brief introduction to C++’s model for type- and resource-safety](http://www.stroustrup.com/resource-model.pdf). A paper with lots of examples.
-* Segey Subkov: [a Core Guidelines talk](https://www.youtube.com/watch?v=DyLwdl_6vmU)
+* Stroustrup, Sutter, and Dos Reis: [A brief introduction to C++'s model for type- and resource-safety](http://www.stroustrup.com/resource-model.pdf). A paper with lots of examples.
+* Sergey Zubkov: [a Core Guidelines talk](https://www.youtube.com/watch?v=DyLwdl_6vmU)
 and here are the [slides](http://2017.cppconf.ru/talks/sergey-zubkov). In Russian. 2017.
-* Neil MacIntosh: [The Guideline Support Library: One Year Later](https://www.youtube.com/watch?v=_GhNnCuaEjo). Cppcon 2016.
-* Bjarne Stroustrup: [Writing Good C++14](https://www.youtube.com/watch?v=1OEu9C51K2A). Cppcon 2015 keynote.
-* Herb Sutter: [Writing Good C++14... By Default](https://www.youtube.com/watch?v=hEx5DNLWGgA). Cppcon 2015 keynote.
+* Neil MacIntosh: [The Guideline Support Library: One Year Later](https://www.youtube.com/watch?v=_GhNnCuaEjo). CppCon 2016.
+* Bjarne Stroustrup: [Writing Good C++14](https://www.youtube.com/watch?v=1OEu9C51K2A). CppCon 2015 keynote.
+* Herb Sutter: [Writing Good C++14... By Default](https://www.youtube.com/watch?v=hEx5DNLWGgA). CppCon 2015 keynote.
 * Peter Sommerlad: [C++ Core Guidelines - Modernize your C++ Code Base](https://www.youtube.com/watch?v=fQ926v4ZzAM). ACCU 2017.
 * Bjarne Stroustrup: [No Littering!](https://www.youtube.com/watch?v=01zI9kV4h8c). Bay Area ACCU 2016.
-It gives some idea of the ambition level for the Core uidelines.
+It gives some idea of the ambition level for the Core Guidelines.
 
-Note that slides for Cppcon presentations are available (links with the posted videos videos).
+Note that slides for CppCon presentations are available (links with the posted videos).
 
 Contributions to this list would be most welcome.
 
