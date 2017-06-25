@@ -52,7 +52,7 @@ Reference sections:
 * [JSF++: JOINT STRIKE FIGHTER AIR VEHICLE C++ CODING STANDARDS](http://www.stroustrup.com/JSF-AV-rules.pdf).
   Document Number 2RDU00001 Rev C. December 2005.
   For flight control software.
-  For hard real time.
+  For hard-real-time.
   This means that it is necessarily very restrictive ("if the program fails somebody dies").
   For example, no free store allocation or deallocation may occur after the plane takes off (no memory overflow and no fragmentation allowed).
   No exception may be used (because there was no available tool for guaranteeing that an exception would be handled within a fixed short time).

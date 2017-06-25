@@ -164,7 +164,7 @@ However, we can briefly outline why we consider exceptions the best alternative 
 and in the context of these guidelines.
 Simple arguments for and against are often inconclusive.
 There are specialized applications where exceptions indeed can be inappropriate
-(e.g., hard-real time systems without support for reliable estimates of the cost of handling an exception).
+(e.g., hard-real-time systems without support for reliable estimates of the cost of handling an exception).
 
 Consider the major objections to exceptions in turn
 

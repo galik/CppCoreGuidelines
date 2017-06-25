@@ -130,7 +130,7 @@ Getting good performance measurements can be hard and require specialized tools.
 
 ##### Note
 
-A few simple microbenchmarks using Unix `time` or the standard library `<chrono>` can help dispel the most obvious myths.
+A few simple microbenchmarks using Unix `time` or the standard-library `<chrono>` can help dispel the most obvious myths.
 If you can't measure your complete system accurately, at least try to measure a few of your key operations and algorithms.
 A profiler can help tell you which parts of your system are performance critical.
 Often, you will be surprised.
@@ -156,7 +156,7 @@ When did you even want to sort memory?
 Really, we sort sequences of elements, typically stored in containers.
 A call to `qsort` throws away much useful information (e.g., the element type), forces the user to repeat information
 already known (e.g., the element size), and forces the user to write extra code (e.g., a function to compare `double`s).
-This implies added work for the programmer, is error prone, and deprives the compiler of information needed for optimization.
+This implies added work for the programmer, is error-prone, and deprives the compiler of information needed for optimization.
 
 ```cpp
 double data[100];
@@ -232,7 +232,7 @@ Use libraries with good interfaces.
 If no library is available build one yourself and imitate the interface style from a good library.
 The [standard library](15-SL-The%20Standard%20Library.md#S-stdlib) is a good first place to look for inspiration.
 * Isolation:
-Isolate your code from messy and/or old style code by providing an interface of your choosing to it.
+Isolate your code from messy and/or old-style code by providing an interface of your choosing to it.
 This is sometimes called "providing a wrapper" for the useful/necessary but messy code.
 Don't let bad designs "bleed into" your code.
 
@@ -324,7 +324,7 @@ Maybe looking for `void*` function arguments will find examples of interfaces th
 
 ##### Reason
 
-Type violations, weak types (e.g. `void*`s), and low level code (e.g., manipulation of sequences as individual bytes) make the job of the optimizer much harder. Simple code often optimizes better than hand-crafted complex code.
+Type violations, weak types (e.g. `void*`s), and low-level code (e.g., manipulation of sequences as individual bytes) make the job of the optimizer much harder. Simple code often optimizes better than hand-crafted complex code.
 
 ???
 

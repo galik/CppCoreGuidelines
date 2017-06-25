@@ -450,14 +450,14 @@ That implies more memory overhead, more allocations and deallocations, and more 
 
 ##### Note
 
-Concrete types can be stack allocated and be members of other classes.
+Concrete types can be stack-allocated and be members of other classes.
 
 ##### Note
 
 The use of indirection is fundamental for run-time polymorphic interfaces.
 The allocation/deallocation overhead is not (that's just the most common case).
 We can use a base class as the interface of a scoped object of a derived class.
-This is done where dynamic allocation is prohibited (e.g. hard real-time) and to provide a stable interface to some kinds of plug-ins.
+This is done where dynamic allocation is prohibited (e.g. hard-real-time) and to provide a stable interface to some kinds of plug-ins.
 
 ##### Enforcement
 
@@ -1827,7 +1827,7 @@ public:
 
 ##### Reason
 
-If you need those constructors for a derived class, re-implementing them is tedious and error prone.
+If you need those constructors for a derived class, re-implementing them is tedious and error-prone.
 
 ##### Example
 
@@ -1929,7 +1929,7 @@ Vector& Vector::operator=(const Vector& a)
 }
 
 ```
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self assignment](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self-assignment](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
 See [copy constructor vs. `clone()`](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-virtual).
@@ -2010,7 +2010,7 @@ if (x != y) throw Bad{};  // assume pointer semantics
 ```
 ##### Note
 
-Prefer copy semantics unless you are building a "smart pointer". Value semantics is the simplest to reason about and what the standard library facilities expect.
+Prefer copy semantics unless you are building a "smart pointer". Value semantics is the simplest to reason about and what the standard-library facilities expect.
 
 ##### Enforcement
 
@@ -2197,7 +2197,7 @@ There is no know general way of avoiding a `if (this == &a) return *this;` test 
 
 ##### Note
 
-The ISO standard guarantees only a "valid but unspecified" state for the standard library containers. Apparently this has not been a problem in about 10 years of experimental and production use. Please contact the editors if you find a counter example. The rule here is more caution and insists on complete safety.
+The ISO standard guarantees only a "valid but unspecified" state for the standard-library containers. Apparently this has not been a problem in about 10 years of experimental and production use. Please contact the editors if you find a counter example. The rule here is more caution and insists on complete safety.
 
 ##### Example
 
@@ -3586,7 +3586,7 @@ public:
 ```
 ##### Note
 
-This issue affects both virtual and non-virtual member functions
+This issue affects both virtual and nonvirtual member functions
 
 For variadic bases, C++17 introduced a variadic form of the using-declaration,
 
@@ -3884,7 +3884,7 @@ Casting to a reference expresses that you intend to end up with a valid object, 
 
 ##### Reason
 
-The `dynamic_cast` conversion allows to test whether a pointer is pointing at a polymorphic object that has a given class in its hierarchy. Since failure to find the class merely returns a null value, it can be tested during run-time. This allows writing code that can choose alternative paths depending on the results.
+The `dynamic_cast` conversion allows to test whether a pointer is pointing at a polymorphic object that has a given class in its hierarchy. Since failure to find the class merely returns a null value, it can be tested during run time. This allows writing code that can choose alternative paths depending on the results.
 
 Contrast with [C.147](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-ptr-cast), where failure is an error, and should not be used for conditional execution.
 
@@ -3934,7 +3934,7 @@ Avoid resource leaks.
 void use(int i)
 {
     auto p = new int {7};           // bad: initialize local pointers with new
-    auto q = make_unique<int>(9);   // ok: guarantee the release of the memory allocated for 9
+    auto q = make_unique<int>(9);   // ok: guarantee the release of the memory-allocated for 9
     if (0 < i) return;              // maybe return and leak
     delete p;                       // too late
 }
@@ -3966,7 +3966,7 @@ auto q = make_unique<Foo>(7);      // Better: no repetition of Foo
 // 3. call bar,
 // 4. construct unique_ptr<Foo>.
 //
-// If bar throws, Foo will not be destroyed, and the memory allocated for it will leak.
+// If bar throws, Foo will not be destroyed, and the memory-allocated for it will leak.
 f(unique_ptr<Foo>(new Foo()), bar());
 
 // Exception-safe: calls to functions are never interleaved.
@@ -4093,7 +4093,7 @@ X operator+(X a, X b) { return a.v - b.v; }   // bad: makes + subtract
 ```
 ##### Note
 
-Non-member operators should be either friends or defined in [the same namespace as their operands](04-C-Classes%20and%20Class%20Hierarchies.md#Ro-namespace).
+Nonmember operators should be either friends or defined in [the same namespace as their operands](04-C-Classes%20and%20Class%20Hierarchies.md#Ro-namespace).
 [Binary operators should treat their operands equivalently](04-C-Classes%20and%20Class%20Hierarchies.md#Ro-symmetric).
 
 ##### Enforcement
@@ -4105,7 +4105,7 @@ Possibly impossible.
 ##### Reason
 
 If you use member functions, you need two.
-Unless you use a non-member function for (say) `==`, `a == b` and `b == a` will be subtly different.
+Unless you use a nonmember function for (say) `==`, `a == b` and `b == a` will be subtly different.
 
 ##### Example
 
@@ -4229,7 +4229,7 @@ To find function objects and functions defined in a separate namespace to "custo
 
 ##### Example
 
-Consider `swap`. It is a general (standard library) function with a definition that will work for just about any type.
+Consider `swap`. It is a general (standard-library) function with a definition that will work for just about any type.
 However, it is desirable to define specific `swap()`s for specific types.
 For example, the general `swap()` will copy the elements of two `vector`s being swapped, whereas a good specific implementation will not copy elements at all.
 

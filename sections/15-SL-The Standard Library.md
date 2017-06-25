@@ -224,7 +224,7 @@ void f(std::vector<int>& v, std::array<int, 12> a, int i)
 ```
 ##### Enforcement
 
-* Issue a diagnostic for any call to a standard library function that is not bounds-checked.
+* Issue a diagnostic for any call to a standard-library function that is not bounds-checked.
 ??? insert link to a list of banned functions
 
 This rule is part of the [bounds profile](19-Pro-Profiles.md#SS-bounds).
@@ -367,7 +367,7 @@ void user(zstring p, const string& s, string_span ss)
 ```
 ##### Note
 
-`std::string_view` (C++17) is read only.
+`std::string_view` (C++17) is read-only.
 
 ##### Enforcement
 
@@ -379,7 +379,7 @@ void user(zstring p, const string& s, string_span ss)
 
 Readability.
 Statement of intent.
-A plain `char*` can be a pointer to a single character, a pointer to an array of characters, a pointer to a C-style (zero terminated) string, or even to a small integer.
+A plain `char*` can be a pointer to a single character, a pointer to an array of characters, a pointer to a C-style (zero-terminated) string, or even to a small integer.
 Distinguishing these alternatives prevents misunderstandings and bugs.
 
 ##### Example
@@ -616,7 +616,7 @@ complex<double> z{ 3, 4 };
 cout << z << '\n';
 
 ```
-`complex` is a user defined type and its I/O is defined without modifying the `iostream` library.
+`complex` is a user-defined type and its I/O is defined without modifying the `iostream` library.
 
 ##### Example
 

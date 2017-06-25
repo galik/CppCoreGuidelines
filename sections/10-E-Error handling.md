@@ -115,7 +115,7 @@ Don't use a `throw` as simply an alternative way of returning a value from a fun
 
 ##### Exception
 
-Some systems, such as hard-real time systems require a guarantee that an action is taken in a (typically short) constant maximum time known before execution starts. Such systems can use exceptions only if there is tool support for accurately predicting the maximum time to recover from a `throw`.
+Some systems, such as hard-real-time systems require a guarantee that an action is taken in a (typically short) constant maximum time known before execution starts. Such systems can use exceptions only if there is tool support for accurately predicting the maximum time to recover from a `throw`.
 
 **See also**: [RAII](10-E-Error%20handling.md#Re-raii)
 
@@ -366,7 +366,7 @@ By declaring `compute` to be `noexcept`, we give the compiler and human readers 
 
 ##### Note
 
-Many standard library functions are `noexcept` including all the standard library functions "inherited" from the C standard library.
+Many standard-library functions are `noexcept` including all the standard-library functions "inherited" from the C standard library.
 
 ##### Example
 
@@ -589,7 +589,7 @@ Every example we have seen of this is error-prone, specialized, and often buggy.
 
 ##### Note
 
-The standard library assumes that destructors, deallocation functions (e.g., `operator delete`), and `swap` do not throw. If they do, basic standard library invariants are broken.
+The standard library assumes that destructors, deallocation functions (e.g., `operator delete`), and `swap` do not throw. If they do, basic standard-library invariants are broken.
 
 ##### Note
 
@@ -729,7 +729,7 @@ When used for exceptional circumstances in code that is not littered with pointe
 exception handling is almost always affordable (in time and space) and almost always leads to better code.
 This, of course, assumes a good implementation of the exception handling mechanisms, which is not available on all systems.
 There are also cases where the problems above do not apply, but exceptions cannot be used for other reasons.
-Some hard real-time systems are an example: An operation has to be completed within a fixed time with an error or a correct answer.
+Some hard-real-time systems are an example: An operation has to be completed within a fixed time with an error or a correct answer.
 In the absence of appropriate time estimation tools, this is hard to guarantee for exceptions.
 Such systems (e.g. flight control software) typically also ban the use of dynamic (heap) memory.
 
@@ -979,7 +979,7 @@ exit:
 ```
 The larger the function, the more tempting this technique becomes.
 `finally` can [ease the pain a bit](10-E-Error%20handling.md#Re-finally).
-Also, the larger the program becomes the harder it is to apply an error-indicator-based error handling strategy systematically.
+Also, the larger the program becomes the harder it is to apply an error-indicator-based error-handling strategy systematically.
 
 We [prefer exception-based error handling](10-E-Error%20handling.md#Re-throw) and recommend [keeping functions short](03-F-Functions.md#Rf-single).
 

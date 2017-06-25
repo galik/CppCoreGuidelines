@@ -116,7 +116,7 @@ Generic programming is programming using types and algorithms parameterized by t
 
 ##### Reason
 
-Generality. Re-use. Efficiency. Encourages consistent definition of user types.
+Generality. Reuse. Efficiency. Encourages consistent definition of user types.
 
 ##### Example, bad
 
@@ -189,7 +189,7 @@ If you use GCC 6.1, you can uncomment them.
 
 ##### Reason
 
-Generality. Minimizing the amount of source code. Interoperability. Re-use.
+Generality. Minimizing the amount of source code. Interoperability. Reuse.
 
 ##### Example
 
@@ -721,7 +721,7 @@ Once language support is available, the `//` in front of the axiom can be remove
 
 ##### Note
 
-The GSL concepts have well defined semantics; see the Palo Alto TR and the Ranges TS.
+The GSL concepts have well-defined semantics; see the Palo Alto TR and the Ranges TS.
 
 ##### Exception (using TS concepts)
 
@@ -1234,7 +1234,7 @@ This prints `T0` and `Bad`.
 Now the `==` in `Bad` was designed to cause trouble, but would you have spotted the problem in real code?
 The problem is that `v.size()` returns an `unsigned` integer so that a conversion is needed to call the local `==`;
 the `==` in `Bad` requires no conversions.
-Realistic types, such as the standard library iterators can be made to exhibit similar anti-social tendencies.
+Realistic types, such as the standard-library iterators can be made to exhibit similar anti-social tendencies.
 
 ##### Note
 

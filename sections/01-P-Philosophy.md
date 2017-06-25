@@ -308,7 +308,7 @@ Leaving hard-to-detect errors in a program is asking for crashes and bad results
 
 ##### Note
 
-Ideally, we catch all errors (that are not errors in the programmer's logic) at either compile-time or run-time. It is impossible to catch all errors at compile time and often not affordable to catch all remaining errors at run-time. However, we should endeavor to write programs that in principle can be checked, given sufficient resources (analysis programs, run-time checks, machine resources, time).
+Ideally, we catch all errors (that are not errors in the programmer's logic) at either compile time or run time. It is impossible to catch all errors at compile time and often not affordable to catch all remaining errors at run time. However, we should endeavor to write programs that in principle can be checked, given sufficient resources (analysis programs, run-time checks, machine resources, time).
 
 ##### Example, bad
 
@@ -427,7 +427,7 @@ Avoid errors leading to (possibly unrecognized) wrong results.
 ##### Example
 
 ```cpp
-void increment1(int* p, int n)    // bad: error prone
+void increment1(int* p, int n)    // bad: error-prone
 {
     for (int i = 0; i < n; ++i) ++p[i];
 }

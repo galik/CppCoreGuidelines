@@ -119,7 +119,7 @@ The shortest code is not always the best for performance or maintainability.
 Loop bodies, including lambdas used as loop bodies, rarely need to be named.
 However, large loop bodies (e.g., dozens of lines or dozens of pages) can be a problem.
 The rule [Keep functions short](03-F-Functions.md#Rf-single) implies "Keep loop bodies short."
-Similarly, lambdas used as callback arguments are sometimes non-trivial, yet unlikely to be re-usable.
+Similarly, lambdas used as callback arguments are sometimes non-trivial, yet unlikely to be reusable.
 
 ##### Enforcement
 
@@ -319,7 +319,7 @@ void test(int v)
     int m1 = min(-1, 2);            // probably compile-time evaluation
     constexpr int m2 = min(-1, 2);  // compile-time evaluation
     int m3 = min(-1, v);            // run-time evaluation
-    constexpr int m4 = min(-1, v);  // error: cannot evaluate at compile-time
+    constexpr int m4 = min(-1, v);  // error: cannot evaluate at compile time
 }
 
 ```
@@ -339,7 +339,7 @@ constexpr int double(int v)
 This is usually a very good thing.
 
 When given a non-constant argument, a `constexpr` function can throw.
-If you consider exiting by throwing a side-effect, a `constexpr` function isn't completely pure;
+If you consider exiting by throwing a side effect, a `constexpr` function isn't completely pure;
 if not, this is not an issue.
 ??? A question for the committee: can a constructor for an exception thrown by a `constexpr` function modify state?
 "No" would be a nice answer that matches most practice.
@@ -351,7 +351,7 @@ Most computation is best done at run time.
 
 ##### Note
 
-Any API that may eventually depend on high-level runtime configuration or
+Any API that may eventually depend on high-level run-time configuration or
 business logic should not be made `constexpr`. Such customization can not be
 evaluated by the compiler, and any `constexpr` functions that depended upon
 that API would have to be refactored or drop `constexpr`.
@@ -535,7 +535,7 @@ auto square(T t) { return t * t; }
 `constexpr` functions are pure.
 
 When given a non-constant argument, a `constexpr` function can throw.
-If you consider exiting by throwing a side-effect, a `constexpr` function isn't completely pure;
+If you consider exiting by throwing a side effect, a `constexpr` function isn't completely pure;
 if not, this is not an issue.
 ??? A question for the committee: can a constructor for an exception thrown by a `constexpr` function modify state?
 "No" would be a nice answer that matches most practice.
@@ -782,7 +782,7 @@ If you have multiple values to return, [use a tuple](03-F-Functions.md#Rf-out-mu
 // OK: return pointers to elements with the value x
 vector<const int*> find_all(const vector<int>&, int x);
 
-// Bad: place pointers to elements with value x in out
+// Bad: place pointers to elements with value x in-out
 void find_all(const vector<int>&, vector<const int*>& out, int x);
 
 ```
@@ -1075,9 +1075,9 @@ auto p = find({vec.begin(), vec.end()}, X{});  // find X{} in vec
 ##### Note
 
 Ranges are extremely common in C++ code. Typically, they are implicit and their correct use is very hard to ensure.
-In particular, given a pair of arguments `(p, n)` designating an array \[`p`:`p + n`),
+In particular, given a pair of arguments `(p, n)` designating an array `[p:p+n)`,
 it is in general impossible to know if there really are `n` elements to access following `*p`.
-`span<T>` and `span_p<T>` are simple helper classes designating a \[`p`:`q`) range and a range starting with `p` and ending with the first element for which a predicate is true, respectively.
+`span<T>` and `span_p<T>` are simple helper classes designating a `[p:q)` range and a range starting with `p` and ending with the first element for which a predicate is true, respectively.
 
 ##### Example
 
@@ -1173,7 +1173,7 @@ You need to pass a pointer rather than an object if what you are transferring is
 
 ##### Enforcement
 
-(Simple) Warn if a function returns a locally-allocated raw pointer. Suggest using either `unique_ptr` or `shared_ptr` instead.
+(Simple) Warn if a function returns a locally allocated raw pointer. Suggest using either `unique_ptr` or `shared_ptr` instead.
 
 ### <a name="Rf-shared_ptr"></a>F.27: Use a `shared_ptr<T>` to share ownership
 
@@ -1506,8 +1506,8 @@ We mention this only because of the persistence of this error in the community.
 ##### Reason
 
 The convention for operator overloads (especially on value types) is for
-`operator=(const T&)` to perform the assignment and then return (non-const)
-`*this`.  This ensures consistency with standard library types and follows the
+`operator=(const T&)` to perform the assignment and then return (non-`const`)
+`*this`.  This ensures consistency with standard-library types and follows the
 principle of "do as the ints do."
 
 ##### Note

@@ -118,7 +118,7 @@ for (int i = 0; i < max; ++i)
 ```
 ##### Exception
 
-Large parts of the standard library rely on dynamic allocation (free store). These parts, notably the containers but not the algorithms, are unsuitable for some hard-real time and embedded applications. In such cases, consider providing/using similar facilities, e.g.,  a standard-library-style container implemented using a pool allocator.
+Large parts of the standard library rely on dynamic allocation (free store). These parts, notably the containers but not the algorithms, are unsuitable for some hard-real-time and embedded applications. In such cases, consider providing/using similar facilities, e.g.,  a standard-library-style container implemented using a pool allocator.
 
 ##### Enforcement
 
@@ -510,7 +510,7 @@ Flag variable and constant declarations with multiple declarators (e.g., `int* p
 
 ##### Reason
 
-* Simple repetition is tedious and error prone.
+* Simple repetition is tedious and error-prone.
 * When you use `auto`, the name of the declared entity is in a fixed position in the declaration, increasing readability.
 * In a template function declaration the return type can be a member type.
 
@@ -1068,7 +1068,7 @@ Tricky.
 
 Using `std::unique_ptr` is the simplest way to avoid leaks. It is reliable, it
 makes the type system do much of the work to validate ownership safety, it
-increases readability, and it has zero or near zero runtime cost.
+increases readability, and it has zero or near zero run-time cost.
 
 ##### Example
 
@@ -1463,7 +1463,7 @@ for (auto& x : v)    // OK
 for (int i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
     cout << v[i] + v[i - 1] << '\n';
 
-for (int i = 0; i < v.size(); ++i) // possible side-effect: can't be a range-for
+for (int i = 0; i < v.size(); ++i) // possible side effect: can't be a range-for
     cout << f(v, &v[i]) << '\n';
 
 for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
@@ -1500,7 +1500,7 @@ for (const string& s : vs) // ...
 ```
 ##### Enforcement
 
-Look at loops, if a traditional loop just looks at each element of a sequence, and there are no side-effects on what it does with the elements, rewrite the loop to a ranged-`for` loop.
+Look at loops, if a traditional loop just looks at each element of a sequence, and there are no side effects on what it does with the elements, rewrite the loop to a ranged-`for` loop.
 
 ### <a name="Res-for-while"></a>ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable
 
@@ -1949,7 +1949,7 @@ for (int i = 0; i < 10; ++i) {
 ```
 ##### Enforcement
 
-Flag variables that are potentially updated (have a non-const use) in both the loop control iteration-expression and the loop body.
+Flag variables that are potentially updated (have a non-`const` use) in both the loop control iteration-expression and the loop body.
 
 ## ES.expr: Expressions
 
@@ -2525,7 +2525,7 @@ Casts are widely (mis) used. Modern C++ has rules and constructs that eliminate 
 
 * Use templates
 * Use `std::variant`
-* Rely on the well defined, safe, implicit conversions between pointer types
+* Rely on the well-defined, safe, implicit conversions between pointer types
 
 ##### Enforcement
 
@@ -2785,7 +2785,7 @@ private:
 That solution is the most flexible, but requires explicit construction and destruction of `*cache`
 (most likely in the constructor and destructor of `X`).
 
-In any variant, we must guard against data races on the `cache` in multithreaded code, possibly using a `std::mutex`.
+In any variant, we must guard against data races on the `cache` in multi-threaded code, possibly using a `std::mutex`.
 
 ##### Enforcement
 

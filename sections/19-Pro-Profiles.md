@@ -121,7 +121,7 @@ Bounds safety profile summary:
 [Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
 * <a href="Pro-bounds-decay"></a>Bounds.3: No array-to-pointer decay:
 [Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
-* <a href="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard library functions and types that are not bounds-checked:
+* <a href="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard-library functions and types that are not bounds-checked:
 [Use the standard library in a type-safe manner](15-SL-The%20Standard%20Library.md#Rsl-bounds).
 
 ##### Impact

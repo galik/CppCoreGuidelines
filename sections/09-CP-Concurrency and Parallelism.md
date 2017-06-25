@@ -64,7 +64,7 @@ See also:
 ##### Reason
 
 It is hard to be certain that concurrency isn't used now or will be sometime in the future.
-Code gets re-used.
+Code gets reused.
 Libraries using threads may be used from some other part of the program.
 Note that this applies most urgently to library code and least urgently to stand-alone applications.
 However, thanks to the magic of cut-and-paste, code fragments can turn up in unexpected places.
@@ -1130,7 +1130,7 @@ Parallelism rule summary:
 
 ## <a name="SScp-mess"></a>CP.mess: Message passing
 
-The standard-library facilities are quite low level, focused on the needs of close-to the hardware critical programming using `thread`s, `mutex`es, `atomic` types, etc.
+The standard-library facilities are quite low-level, focused on the needs of close-to the hardware critical programming using `thread`s, `mutex`es, `atomic` types, etc.
 Most people shouldn't work at this level: it's error-prone and development is slow.
 If possible, use a higher level facility: messaging libraries, parallel algorithms, and vectorization.
 This section looks at passing messages so that a programmer doesn't have to do explicit synchronization.
@@ -1212,7 +1212,7 @@ Synchronization using `mutex`es and `condition_variable`s can be relatively expe
 Furthermore, it can lead to deadlock.
 For performance and to eliminate the possibility of deadlock, we sometimes have to use the tricky low-level "lock-free" facilities
 that rely on briefly gaining exclusive ("atomic") access to memory.
-Lock free programming is also used to implement higher-level concurrency mechanisms, such as `thread`s and `mutex`es.
+Lock-free programming is also used to implement higher-level concurrency mechanisms, such as `thread`s and `mutex`es.
 
 Lock-free programming rule summary:
 
@@ -1221,7 +1221,7 @@ Lock-free programming rule summary:
 * [CP.102: Carefully study the literature](09-CP-Concurrency%20and%20Parallelism.md#Rconc-literature)
 * how/when to use atomics
 * avoid starvation
-* use a lock free data structure rather than hand-crafting specific lock-free access
+* use a lock-free data structure rather than hand-crafting specific lock-free access
 * [CP.110: Do not write your own double-checked locking for initialization](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double)
 * [CP.111: Use a conventional pattern if you really need double-checked locking](09-CP-Concurrency%20and%20Parallelism.md#Rconc-double-pattern)
 * how/when to compare and swap

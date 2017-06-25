@@ -45,7 +45,7 @@ Note that function parameter is a local variable so changes to it are local.
 
 ##### Enforcement
 
-* Flag non-const variables that are not modified (except for parameters to avoid many false positives)
+* Flag non-`const` variables that are not modified (except for parameters to avoid many false positives)
 
 ### <a name="Rconst-fct"></a>Con.2: By default, make member functions `const`
 
@@ -71,7 +71,7 @@ void f(const Point& pt) {
 ```
 ##### Note
 
-It is not inherently bad to pass a pointer or reference to non-const,
+It is not inherently bad to pass a pointer or reference to non-`const`,
 but that should be done only when the called function is supposed to modify the object.
 A reader of code must assume that a function that takes a "plain" `T*` or `T&` will modify the object referred to.
 If it doesn't now, it might do so later without forcing recompilation.
@@ -148,7 +148,7 @@ void g(const char* p);  // g does not modify *p
 ```
 ##### Note
 
-It is not inherently bad to pass a pointer or reference to non-const,
+It is not inherently bad to pass a pointer or reference to non-`const`,
 but that should be done only when the called function is supposed to modify the object.
 
 ##### Note

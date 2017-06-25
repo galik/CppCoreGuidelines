@@ -233,7 +233,7 @@ For example, if an `owner<T*>` is a member of a class, that class better have a 
 
 ##### Example, bad
 
-Returning a (raw) pointer imposes a life-time management uncertainty on the caller; that is, who deletes the pointed-to object?
+Returning a (raw) pointer imposes a lifetime management uncertainty on the caller; that is, who deletes the pointed-to object?
 
 ```cpp
 Gadget* make_gadget(int n)
@@ -403,7 +403,7 @@ In some implementations that `delete` and that `free()` might work, or maybe the
 ##### Exception
 
 There are applications and sections of code where exceptions are not acceptable.
-Some of the best such examples are in life-critical hard real-time code.
+Some of the best such examples are in life-critical hard-real-time code.
 Beware that many bans on exception use are based on superstition (bad)
 or by concerns for older code bases with unsystematic resource management (unfortunately, but sometimes necessary).
 In such cases, consider the `nothrow` versions of `new`.

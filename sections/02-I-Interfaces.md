@@ -191,7 +191,7 @@ X& myX()
 Now someone must `delete` that object in some suitably thread-safe way.
 That's error-prone, so we don't use that technique unless
 
-* `myX` is in multithreaded code,
+* `myX` is in multi-threaded code,
 * that `X` object needs to be destroyed (e.g., because it releases a resource), and
 * `X`'s destructor's code needs to be synchronized.
 
@@ -768,7 +768,7 @@ Note: `length()` is, of course, `std::strlen()` in disguise.
 Consider:
 
 ```cpp
-void copy_n(const T* p, T* q, int n); // copy from [p:p + n) to [q:q + n)
+void copy_n(const T* p, T* q, int n); // copy from [p:p+n) to [q:q+n)
 
 ```
 What if there are fewer than `n` elements in the array pointed to by `q`? Then, we overwrite some probably unrelated memory.
@@ -794,7 +794,7 @@ Circle arr[10];
 draw(arr, 10);
 
 ```
-Passing `10` as the `n` argument may be a mistake: the most common convention is to assume \[`0`:`n`) but that is nowhere stated. Worse is that the call of `draw()` compiled at all: there was an implicit conversion from array to pointer (array decay) and then another implicit conversion from `Circle` to `Shape`. There is no way that `draw()` can safely iterate through that array: it has no way of knowing the size of the elements.
+Passing `10` as the `n` argument may be a mistake: the most common convention is to assume `[0:n)` but that is nowhere stated. Worse is that the call of `draw()` compiled at all: there was an implicit conversion from array to pointer (array decay) and then another implicit conversion from `Circle` to `Shape`. There is no way that `draw()` can safely iterate through that array: it has no way of knowing the size of the elements.
 
 **Alternative**: Use a support class that ensures that the number of elements is correct and prevents dangerous implicit conversions. For example:
 
@@ -912,7 +912,7 @@ Grouping arguments into "bundles" is a general technique to reduce the number of
 Alternatively, we could use concepts (as defined by the ISO TS) to define the notion of three types that must be usable for merging:
 
 ```cpp
-Mergeable{In1 In2, Out}
+Mergeable{In1, In2, Out}
 OutputIterator merge(In1 r1, In2 r2, Out result);
 
 ```
