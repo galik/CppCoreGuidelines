@@ -10352,7 +10352,7 @@ The C++17 rules are somewhat less surprising:
 
 So use `={...}` if you really want an `initializer_list<T>`
 
-    auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
+    auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
 
 ##### Note
 
@@ -20308,7 +20308,7 @@ Use separate lines for each statement, the branches of an `if`, and the body of 
 
 ##### Note
 
-The `{` for a `class` and a `struct` in *not* on a separate line, but the `{` for a function is.
+The `{` for a `class` and a `struct` is *not* on a separate line, but the `{` for a function is.
 
 ##### Note
 
