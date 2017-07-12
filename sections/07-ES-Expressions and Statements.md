@@ -1031,7 +1031,7 @@ auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
 So use `={...}` if you really want an `initializer_list<T>`
 
 ```cpp
-auto fib10 = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
+auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
 
 ```
 ##### Note
