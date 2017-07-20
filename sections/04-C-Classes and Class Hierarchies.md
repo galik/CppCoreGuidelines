@@ -297,7 +297,7 @@ Prefer to place the interface first in a class [see](21-NL-Naming%20and%20layout
 
 ##### Enforcement
 
-Flag classes declared with `struct` if there is a `private` or `public` member.
+Flag classes declared with `struct` if there is a `private` or `protected` member.
 
 ### <a name="Rc-private"></a>C.9: Minimize exposure of members
 
@@ -1871,7 +1871,7 @@ Types can be defined to move for logical as well as performance reasons.
 
 ##### Reason
 
-It is simple and efficient. If you want to optimize for rvalues, provide an overload that takes a `&&` (see [F.24](#Rf-pass-ref-ref)).
+It is simple and efficient. If you want to optimize for rvalues, provide an overload that takes a `&&` (see [F.18](03-F-Functions.md#Rf-consume)).
 
 ##### Example
 
@@ -2238,7 +2238,7 @@ public:
 };
 
 ```
-These copy operations do not throw.
+These operations do not throw.
 
 ##### Example, bad
 

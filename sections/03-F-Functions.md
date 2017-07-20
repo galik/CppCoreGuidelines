@@ -630,7 +630,7 @@ void sink(unique_ptr<widget>);  // input only, and consumes the widget
 Avoid "esoteric techniques" such as:
 
 * Passing arguments as `T&&` "for efficiency".
-  Most rumors about performance advantages from passing by `&&` are false or brittle (but see [F.25](#Rf-pass-ref-move).)
+  Most rumors about performance advantages from passing by `&&` are false or brittle (but see [F.18](03-F-Functions.md#Rf-consume) and [F.19](03-F-Functions.md#Rf-forward)).
 * Returning `const T&` from assignments and similar operations (see [F.47](03-F-Functions.md#Rf-assignment-op).)
 
 ##### Example
@@ -679,7 +679,7 @@ void update(Record& r);  // assume that update writes to r
 ```
 ##### Note
 
-A `T&` argument can pass information into a function as well as well as out of it.
+A `T&` argument can pass information into a function as well as out of it.
 Thus `T&` could be an in-out-parameter. That can in itself be a problem and a source of errors:
 
 ```cpp
@@ -1436,7 +1436,7 @@ Flag functions where no `return` expression could yield `nullptr`
 
 ##### Reason
 
-It's asking to return a reference to a destroyed temporary object. A `&&` is a magnet for temporary objects. This is fine when the reference to the temporary is being passed "downward" to a callee, because the temporary is guaranteed to outlive the function call. (See [F.24](#Rf-pass-ref-ref) and [F.25](#Rf-pass-ref-move).) However, it's not fine when passing such a reference "upward" to a larger caller scope. See also ???.
+It's asking to return a reference to a destroyed temporary object. A `&&` is a magnet for temporary objects. This is fine when the reference to the temporary is being passed "downward" to a callee, because the temporary is guaranteed to outlive the function call (see [F.18](03-F-Functions.md#Rf-consume) and [F.19](03-F-Functions.md#Rf-forward)). However, it's not fine when passing such a reference "upward" to a larger caller scope. See also ???.
 
 For passthrough functions that pass in parameters (by ordinary reference or by perfect forwarding) and want to return values, use simple `auto` return type deduction (not `auto&&`).
 
