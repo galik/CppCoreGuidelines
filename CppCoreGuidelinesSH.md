@@ -704,13 +704,15 @@ if (bits < 32)
     cerr << "Int too small\n"
 
 ```
-This example is easily simplified
+This example fails to achieve what it is trying to achieve (because overflow is undefined) and should be replaced with a simple `static_assert`:
 
 ```cpp
 // Int is an alias used for integers
 static_assert(sizeof(Int) >= 4);    // do: compile-time check
 
 ```
+Or better still just use the type system and replace `Int` with `int32_t`.
+
 ##### Example
 
 ```cpp
@@ -1855,7 +1857,7 @@ If you can't use exceptions (e.g. because your code is full of old-style raw-poi
 int val;
 int error_code;
 tie(val, error_code) = do_something();
-if (error_code == 0) {
+if (error_code) {
     // ... handle the error or exit ...
 }
 // ... use val ...
@@ -1866,7 +1868,7 @@ A facility [structured bindings](http://www.open-std.org/jtc1/sc22/wg21/docs/pap
 
 ```cpp
 auto [val, error_code] = do_something();
-if (error_code == 0) {
+if (error_code) {
     // ... handle the error or exit ...
 }
 // ... use val ...
@@ -6104,7 +6106,7 @@ a = f();  // assign rvalue: potentially move
 ```
 ##### Note
 
-The `swap` implementation technique offers the [strong guarantee](???).
+The `swap` implementation technique offers the [strong guarantee](#Abrahams01).
 
 ##### Example
 
@@ -6135,7 +6137,7 @@ Vector& Vector::operator=(const Vector& a)
 }
 
 ```
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self-assignment](#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](#Abrahams01) rather than the strong guarantee offered by the `swap` technique. Beware of [self-assignment](#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
 See [copy constructor vs. `clone()`](#Rc-copy-virtual).
@@ -7208,6 +7210,10 @@ struct D : B {
     // ...
 };
 
+```
+##### Example, good
+
+```cpp
 struct Better : B {
     void f1(int) override;        // error (caught): D::f1() hides B::f1()
     void f2(int) const override;
@@ -11583,7 +11589,35 @@ void use()
 
 ```
 **Alternative**: Overloading. Templates. Variadic templates.
+```cpp
+#include <iostream>
 
+void error(int severity)
+{
+    std::cerr << std::endl;
+    std::exit(severity);
+}
+
+template <typename T, typename... Ts>
+constexpr void error(int severity, T head, Ts... tail)
+{
+    std::cerr << head;
+    error(severity, tail...);
+}
+
+void use()
+{
+    error(7); // No crash!
+    error(5, "this", "is", "not", "an", "error"); // No crash!
+
+    std::string an = "an";
+    error(7, "this", "is", "not", an, "error"); // No crash!
+
+    error(5, "oh", "no", nullptr); // Compile error! No need for nullptr.
+}
+
+
+```
 ##### Note
 
 This is basically the way `printf` is implemented.
@@ -14488,17 +14522,13 @@ Graph<Temp_node> temperature_gradiants(const vector<Reading>&);
 Image altitude_map(const vector<Reading>&);
 // ...
 
-void process_readings(istream& socket1)
+void process_readings(const vector<Reading>& surface_readings)
 {
-    vector<Reading> surface_readings;
-    socket1 >> surface_readings;
-    if (!socket1) throw Bad_input{};
-
     auto h1 = async([&] { if (!validate(surface_readings)) throw Invalid_data{}; });
     auto h2 = async([&] { return temperature_gradiants(surface_readings); });
     auto h3 = async([&] { return altitude_map(surface_readings); });
     // ...
-    auto v1 = h1.get();
+    h1.get();
     auto v2 = h2.get();
     auto v3 = h3.get();
     // ...
@@ -14506,6 +14536,7 @@ void process_readings(istream& socket1)
 
 ```
 Without those `const`s, we would have to review every asynchronously invoked function for potential data races on `surface_readings`.
+Making `surface_readings` be `const` (with respect to this function) allow reasoning using only the function body.
 
 ##### Note
 
@@ -20349,7 +20380,7 @@ All we know is that it is supposed to be the nullptr or point to at least one ch
 
 ```cpp
 void f1(zstring s);     // s is a C-style string or the nullptr
-void f1(czstring s);    // s is a C-style string that is not the nullptr
+void f1(czstring s);    // s is a C-style string constant or the nullptr
 void f1(std::byte* s);  // s is a pointer to a byte (C++17)
 
 ```
@@ -23104,6 +23135,8 @@ Alternatively, we will decide that no change is needed and delete the entry.
 
 # Bibliography
 
+* <a name="Abrahams01"></a>
+  \[Abrahams01]:  D. Abrahams. [Exception-Safety in Generic Components](http://www.boost.org/community/exception_safety.html).
 * <a name="Alexandrescu01"></a>
   \[Alexandrescu01]:  A. Alexandrescu. Modern C++ Design (Addison-Wesley, 2001).
 * <a name="Cplusplus03"></a>

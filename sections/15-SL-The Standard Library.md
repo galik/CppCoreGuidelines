@@ -392,7 +392,7 @@ All we know is that it is supposed to be the nullptr or point to at least one ch
 
 ```cpp
 void f1(zstring s);     // s is a C-style string or the nullptr
-void f1(czstring s);    // s is a C-style string that is not the nullptr
+void f1(czstring s);    // s is a C-style string constant or the nullptr
 void f1(std::byte* s);  // s is a pointer to a byte (C++17)
 
 ```

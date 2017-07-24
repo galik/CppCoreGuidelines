@@ -1898,7 +1898,7 @@ a = f();  // assign rvalue: potentially move
 ```
 ##### Note
 
-The `swap` implementation technique offers the [strong guarantee](???).
+The `swap` implementation technique offers the [strong guarantee](28-Bibliography.md#Abrahams01).
 
 ##### Example
 
@@ -1929,7 +1929,7 @@ Vector& Vector::operator=(const Vector& a)
 }
 
 ```
-By writing directly to the target elements, we will get only [the basic guarantee](#???) rather than the strong guarantee offered by the `swap` technique. Beware of [self-assignment](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-self).
+By writing directly to the target elements, we will get only [the basic guarantee](28-Bibliography.md#Abrahams01) rather than the strong guarantee offered by the `swap` technique. Beware of [self-assignment](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-self).
 
 **Alternatives**: If you think you need a `virtual` assignment operator, and understand why that's deeply problematic, don't call it `operator=`. Make it a named function like `virtual void assign(const Foo&)`.
 See [copy constructor vs. `clone()`](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-copy-virtual).
@@ -3002,6 +3002,10 @@ struct D : B {
     // ...
 };
 
+```
+##### Example, good
+
+```cpp
 struct Better : B {
     void f1(int) override;        // error (caught): D::f1() hides B::f1()
     void f2(int) const override;
