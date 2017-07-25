@@ -13571,12 +13571,12 @@ This is asking for deadlock:
 Instead, use `lock()`:
 
     // thread 1
-    lock(lck1, lck2);
+    lock(m1, m2);
     lock_guard<mutex> lck1(m1, adopt_lock);
     lock_guard<mutex> lck2(m2, adopt_lock);
 
     // thread 2
-    lock(lck2, lck1);
+    lock(m2, m1);
     lock_guard<mutex> lck2(m2, adopt_lock);
     lock_guard<mutex> lck1(m1, adopt_lock);
 
@@ -19322,7 +19322,7 @@ Many, possibly most, problems with exceptions stem from historical needs to inte
 
 The fundamental arguments for the use of exceptions are
 
-* They clearly separates error return from ordinary return
+* They clearly differentiate between erroneous return and ordinary return
 * They cannot be forgotten or ignored
 * They can be used systematically
 
