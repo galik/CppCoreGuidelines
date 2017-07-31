@@ -6179,7 +6179,7 @@ bool operator==(const X& a, const X& b)
 X::X(const X& a)
     :p{new T[a.sz]}, sz{a.sz}
 {
-    copy(a.p, a.p + sz, a.p);
+    copy(a.p, a.p + sz, p);
 }
 
 X x;
@@ -21997,15 +21997,15 @@ double foo(int x)
     }
 
     switch (x) {
-        case 0:
-            // ...
-            break;
-        case amazing:
-            // ...
-            break;
-        default:
-            // ...
-            break;
+    case 0:
+        // ...
+        break;
+    case amazing:
+        // ...
+        break;
+    default:
+        // ...
+        break;
     }
 
     if (0 < x)
