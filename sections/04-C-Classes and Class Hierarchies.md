@@ -1971,7 +1971,7 @@ bool operator==(const X& a, const X& b)
 X::X(const X& a)
     :p{new T[a.sz]}, sz{a.sz}
 {
-    copy(a.p, a.p + sz, a.p);
+    copy(a.p, a.p + sz, p);
 }
 
 X x;

@@ -460,15 +460,15 @@ double foo(int x)
     }
 
     switch (x) {
-        case 0:
-            // ...
-            break;
-        case amazing:
-            // ...
-            break;
-        default:
-            // ...
-            break;
+    case 0:
+        // ...
+        break;
+    case amazing:
+        // ...
+        break;
+    default:
+        // ...
+        break;
     }
 
     if (0 < x)
