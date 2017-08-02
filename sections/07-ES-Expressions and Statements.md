@@ -1750,8 +1750,7 @@ If you really need to break out a loop, a `break` is typically better than alter
 ##### Example
 
 ```cpp
-switch (eventType)
-{
+switch (eventType) {
 case Information:
     update_status_bar();
     break;
@@ -1766,8 +1765,7 @@ case Error:
 It is easy to overlook the fallthrough. Be explicit:
 
 ```cpp
-switch (eventType)
-{
+switch (eventType) {
 case Information:
     update_status_bar();
     break;
@@ -1783,8 +1781,7 @@ case Error:
 In C++17, use a `[[fallthrough]]` annotation:
 
 ```cpp
-switch (eventType)
-{
+switch (eventType) {
 case Information:
     update_status_bar();
     break;
@@ -1915,7 +1912,7 @@ void f()
 This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
 This is not an uncommon mistake.
 In particular, this particular example can lead to hard-to find race conditions.
-There are exceedingly clever used of this "idiom", but they are far rarer than the mistakes.
+There are exceedingly clever uses of this "idiom", but they are far rarer than the mistakes.
 
 ##### Note
 

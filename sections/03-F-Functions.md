@@ -226,10 +226,10 @@ double simple_func(double val, int flag1, int flag2)
         intermediate = func2(intermediate);
     }
     switch (flag2 / 10) {
-        case 1: if (flag1 == -1) return finalize(intermediate, 1.171);
-                break;
-        case 2: return finalize(intermediate, 13.1);
-        default: break;
+    case 1: if (flag1 == -1) return finalize(intermediate, 1.171);
+            break;
+    case 2: return finalize(intermediate, 13.1);
+    default: break;
     }
     return finalize(intermediate, 0.);
 }
