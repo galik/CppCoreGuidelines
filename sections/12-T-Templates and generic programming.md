@@ -1180,8 +1180,8 @@ public:
     explicit X(int);
     X(const X&);            // copy
     X operator=(const X&);
-    X(X&&);                 // move
-    X& operator=(X&&);
+    X(X&&) noexcept;                 // move
+    X& operator=(X&&) noexcept;
     ~X();
     // ... no more constructors ...
 };

@@ -6328,7 +6328,7 @@ template<typename T>
 class X {   // OK: value semantics
 public:
     X();
-    X(X&& a);          // move X
+    X(X&& a) noexcept;  // move X
     void modify();     // change the value of X
     // ...
     ~X() { delete[] p; }
@@ -6388,7 +6388,7 @@ public:
     // ...
 };
 
-Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
+Foo& Foo::operator=(Foo&& a) noexcept  // OK, but there is a cost
 {
     if (this == &a) return *this;  // this line is redundant
     s = std::move(a.s);
@@ -18262,8 +18262,8 @@ public:
     explicit X(int);
     X(const X&);            // copy
     X operator=(const X&);
-    X(X&&);                 // move
-    X& operator=(X&&);
+    X(X&&) noexcept;                 // move
+    X& operator=(X&&) noexcept;
     ~X();
     // ... no more constructors ...
 };
@@ -22614,7 +22614,7 @@ public:
 
     // BAD: failed to also define a copy assignment operator
 
-    X(x&&) { /* stuff */ }
+    X(x&&) noexcept { /* stuff */ }
 
     // BAD: failed to also define a move assignment operator
 };

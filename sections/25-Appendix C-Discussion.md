@@ -309,7 +309,7 @@ public:
 
     // BAD: failed to also define a copy assignment operator
 
-    X(x&&) { /* stuff */ }
+    X(x&&) noexcept { /* stuff */ }
 
     // BAD: failed to also define a move assignment operator
 };

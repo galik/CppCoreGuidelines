@@ -2120,7 +2120,7 @@ template<typename T>
 class X {   // OK: value semantics
 public:
     X();
-    X(X&& a);          // move X
+    X(X&& a) noexcept;  // move X
     void modify();     // change the value of X
     // ...
     ~X() { delete[] p; }
@@ -2180,7 +2180,7 @@ public:
     // ...
 };
 
-Foo& Foo::operator=(Foo&& a)       // OK, but there is a cost
+Foo& Foo::operator=(Foo&& a) noexcept  // OK, but there is a cost
 {
     if (this == &a) return *this;  // this line is redundant
     s = std::move(a.s);
