@@ -7418,7 +7418,7 @@ public:
     // ...
 };
 
-class Impl::Smiley : Public Smiley, public Impl::Circle {   // implementation
+class Impl::Smiley : public Smiley, public Impl::Circle {   // implementation
 public:
     // constructors, destructor
     // ...
