@@ -63,16 +63,16 @@ public:
 class B {
 protected:
     B() { /* ... */ }
-    virtual void PostInitialize()    // called right after construction
+    virtual void post_initialize()    // called right after construction
         { /* ... */ f(); /* ... */ }   // GOOD: virtual dispatch is safe
 public:
     virtual void f() = 0;
 
     template<class T>
-    static shared_ptr<T> Create()    // interface for creating objects
+    static shared_ptr<T> create()    // interface for creating objects
     {
         auto p = make_shared<T>();
-        p->PostInitialize();
+        p->post_initialize();
         return p;
     }
 };

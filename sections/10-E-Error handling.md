@@ -186,8 +186,8 @@ class Vector {  // very simplified vector of doubles
     // if elem != nullptr then elem points to sz doubles
 public:
     Vector() : elem{nullptr}, sz{0}{}
-    Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
-    ~Vector() { delete elem; }
+    Vector(int s) : elem{new double[s]}, sz{s} { /* initialize elements */ }
+    ~Vector() { delete [] elem; }
     double& operator[](int s) { return elem[s]; }
     // ...
 private:
