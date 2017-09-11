@@ -10687,7 +10687,7 @@ Requires messy cast-and-macro-laden code to get working right.
 
     void error(int severity)
     {
-        std::cerr << std::endl;
+        std::cerr << '\n';
         std::exit(severity);
     }
 
@@ -12661,10 +12661,10 @@ Using `unsigned` doesn't actually eliminate the possibility of negative values.
 
 ##### Example
 
-    unsigned int u1 = -2;   // OK: the value of u1 is 4294967294
+    unsigned int u1 = -2;   // Valid: the value of u1 is 4294967294
     int i1 = -2;
-    unsigned int u2 = i1;   // OK: the value of u2 is 4294967294
-    int i2 = u2;            // OK: the value of i2 is -2
+    unsigned int u2 = i1;   // Valid: the value of u2 is 4294967294
+    int i2 = u2;            // Valid: the value of i2 is -2
 
 These problems with such (perfectly legal) constructs are hard to spot in real code and are the source of many real-world errors.
 Consider:
@@ -14699,8 +14699,8 @@ Not all member functions can be called.
         // if elem != nullptr then elem points to sz doubles
     public:
         Vector() : elem{nullptr}, sz{0}{}
-        Vector(int s) : elem{new double}, sz{s} { /* initialize elements */ }
-        ~Vector() { delete elem; }
+        Vector(int s) : elem{new double[s]}, sz{s} { /* initialize elements */ }
+        ~Vector() { delete [] elem; }
         double& operator[](int s) { return elem[s]; }
         // ...
     private:
@@ -20665,16 +20665,16 @@ Here is an example of the last option:
     class B {
     protected:
         B() { /* ... */ }
-        virtual void PostInitialize()    // called right after construction
+        virtual void post_initialize()    // called right after construction
             { /* ... */ f(); /* ... */ }   // GOOD: virtual dispatch is safe
     public:
         virtual void f() = 0;
 
         template<class T>
-        static shared_ptr<T> Create()    // interface for creating objects
+        static shared_ptr<T> create()    // interface for creating objects
         {
             auto p = make_shared<T>();
-            p->PostInitialize();
+            p->post_initialize();
             return p;
         }
     };
