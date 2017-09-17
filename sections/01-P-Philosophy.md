@@ -176,6 +176,7 @@ Now, there is no explicit mention of the iteration mechanism, and the loop opera
 for (auto& x : v) { /* modify x */ }
 
 ```
+For more details about for-statements, see [ES.71](07-ES-Expressions%20and%20Statements.md#Res-for-range).
 Sometimes better still, use a named algorithm:
 
 ```cpp

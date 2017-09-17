@@ -574,6 +574,8 @@ void f()
     X* p1 { new X };              // see also ???
     unique_ptr<T> p2 { new X };   // unique ownership; see also ???
     shared_ptr<T> p3 { new X };   // shared ownership; see also ???
+    auto p4 = make_unique<X>();   // unique_ownership, preferable to the explicit use "new"
+    auto p5 = make_shared<X>();   // shared ownership, preferable to the explicit use "new"
 }
 
 ```
