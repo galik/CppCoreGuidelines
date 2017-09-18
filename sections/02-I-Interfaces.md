@@ -19,7 +19,7 @@ Interface rule summary:
 * [I.8: Prefer `Ensures()` for expressing postconditions](02-I-Interfaces.md#Ri-ensures)
 * [I.9: If an interface is a template, document its parameters using concepts](02-I-Interfaces.md#Ri-concepts)
 * [I.10: Use exceptions to signal a failure to perform a required task](02-I-Interfaces.md#Ri-except)
-* [I.11: Never transfer ownership by a raw pointer (`T*`)](02-I-Interfaces.md#Ri-raw)
+* [I.11: Never transfer ownership by a raw pointer (`T*`) or reference (`T&`)](02-I-Interfaces.md#Ri-raw)
 * [I.12: Declare a pointer that must not be null as `not_null`](02-I-Interfaces.md#Ri-nullptr)
 * [I.13: Do not pass an array as a single pointer](02-I-Interfaces.md#Ri-array)
 * [I.22: Avoid complex initialization of global objects](02-I-Interfaces.md#Ri-global-init)
@@ -648,7 +648,7 @@ We don't consider "performance" a valid reason not to use exceptions.
 * (Not enforceable) This is a philosophical guideline that is infeasible to check directly.
 * Look for `errno`.
 
-### <a name="Ri-raw"></a>I.11: Never transfer ownership by a raw pointer (`T*`)
+### <a name="Ri-raw"></a>I.11: Never transfer ownership by a raw pointer (`T*`) or reference (`T&`)
 
 ##### Reason
 

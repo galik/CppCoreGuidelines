@@ -75,7 +75,7 @@ Statement rules:
 * [ES.84: Don't (try to) declare a local variable with no name](07-ES-Expressions%20and%20Statements.md#Res-noname)
 * [ES.85: Make empty statements visible](07-ES-Expressions%20and%20Statements.md#Res-empty)
 * [ES.86: Avoid modifying loop control variables inside the body of raw for-loops](07-ES-Expressions%20and%20Statements.md#Res-loop-counter)
-* [ES.87: Don't add redundant `==` or `!=` to conditions](#Res-if)
+* [ES.87: Don't add redundant `==` or `!=` to conditions](07-ES-Expressions%20and%20Statements.md#Res-if)
 
 Arithmetic rules:
 
@@ -805,7 +805,7 @@ Many such errors are introduced during maintenance years after the initial imple
 
 ##### Exception
 
-It you are declaring an object that is just about to be initialized from input, initializing it would cause a double initialization.
+If you are declaring an object that is just about to be initialized from input, initializing it would cause a double initialization.
 However, beware that this may leave uninitialized data beyond the input -- and that has been a fertile source of errors and security breaches:
 
 ```cpp
@@ -1978,11 +1978,11 @@ for (int i = 0; i < 10; ++i) {
 Flag variables that are potentially updated (have a non-`const` use) in both the loop control iteration-expression and the loop body.
 
 
-### <a name="es-if"></a>ES.87: Don't add redundant `==` or `!=` to conditions
+### <a name="Res-if"></a>ES.87: Don't add redundant `==` or `!=` to conditions
 
 ##### Reason
 
-Doing so avoids verbosity and eliminats some opportunities for mistakes.
+Doing so avoids verbosity and eliminates some opportunities for mistakes.
 Helps make style consistent and conventional.
 
 ##### Example
