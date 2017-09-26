@@ -7310,7 +7310,7 @@ public:
 
 class Circle : public Shape {   // pure interface
 public:
-    int radius() = 0;
+    virtual int radius() = 0;
     // ...
 };
 
@@ -7322,13 +7322,13 @@ class Impl::Shape : public Shape { // implementation
 public:
     // constructors, destructor
     // ...
-    virtual Point center() const { /* ... */ }
-    virtual Color color() const { /* ... */ }
+    Point center() const override { /* ... */ }
+    Color color() const override { /* ... */ }
 
-    virtual void rotate(int) { /* ... */ }
-    virtual void move(Point p) { /* ... */ }
+    void rotate(int) override { /* ... */ }
+    void move(Point p) override { /* ... */ }
 
-    virtual void redraw() { /* ... */ }
+    void redraw() override { /* ... */ }
 
     // ...
 };
@@ -7342,7 +7342,7 @@ class Impl::Circle : public Circle, public Impl::Shape {   // implementation
 public:
     // constructors, destructor
 
-    int radius() { /* ... */ }
+    int radius() override { /* ... */ }
     // ...
 };
 
