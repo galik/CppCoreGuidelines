@@ -4250,6 +4250,49 @@ Note that `std::addressof()` always yields a built-in pointer.
 
 Tricky. Warn if `&` is user-defined without also defining `->` for the result type.
 
+### <a name="Ro-overload"></a>C.167: Use an operator for an operation with its conventional meaning
+
+##### Reason
+
+Readability. Convention. Reusability. Support for generic code
+
+##### Example
+
+```cpp
+void cout_my_class(const My_class& c) // confusing, not conventional,not generic
+{
+    std::cout << /* class members here */;
+}
+
+std::ostream& operator<<(std::ostream& os, const my_class& c) // OK
+{
+    return os << /* class members here */;
+}
+
+```
+By itself, `cout_my_class` would be OK, but it is not usable/composable with code that rely on the `<<` convention for output:
+
+```cpp
+My_class var { /* ... */ };
+// ...
+cout << "var = " << var << '\n';
+
+```
+##### Note
+
+There are strong and vigorous conventions for the meaning most operators, such as
+
+* comparisons (`==`, `!=`, `<`, `<=`, `>`, and `>=`),
+* arithmetic operations (`+`, `-`, `*`, `/`, and `%`)
+* access operations (`.`, `->`, unary `*`, and `[]`)
+* assignment (`=`)
+
+Don't define those unconventionally and don't invent your own names for them.
+
+##### Enforcement
+
+Tricky. Requires semantic insight.
+
 ### <a name="Ro-namespace"></a>C.168: Define overloaded operators in the namespace of their operands
 
 ##### Reason
@@ -4322,49 +4365,6 @@ This is a special case of the rule that [helper functions should be defined in t
 ##### Enforcement
 
 * Flag operator definitions that are not it the namespace of their operands
-
-### <a name="Ro-overload"></a>C.167: Use an operator for an operation with its conventional meaning
-
-##### Reason
-
-Readability. Convention. Reusability. Support for generic code
-
-##### Example
-
-```cpp
-void cout_my_class(const My_class& c) // confusing, not conventional,not generic
-{
-    std::cout << /* class members here */;
-}
-
-std::ostream& operator<<(std::ostream& os, const my_class& c) // OK
-{
-    return os << /* class members here */;
-}
-
-```
-By itself, `cout_my_class` would be OK, but it is not usable/composable with code that rely on the `<<` convention for output:
-
-```cpp
-My_class var { /* ... */ };
-// ...
-cout << "var = " << var << '\n';
-
-```
-##### Note
-
-There are strong and vigorous conventions for the meaning most operators, such as
-
-* comparisons (`==`, `!=`, `<`, `<=`, `>`, and `>=`),
-* arithmetic operations (`+`, `-`, `*`, `/`, and `%`)
-* access operations (`.`, `->`, unary `*`, and `[]`)
-* assignment (`=`)
-
-Don't define those unconventionally and don't invent your own names for them.
-
-##### Enforcement
-
-Tricky. Requires semantic insight.
 
 ### <a name="Ro-lambda"></a>C.170: If you feel like overloading a lambda, use a generic lambda
 
