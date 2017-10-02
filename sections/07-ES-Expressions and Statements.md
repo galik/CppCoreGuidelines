@@ -1991,13 +1991,14 @@ By definition, a condition in an `if`-statement, `while`-statement, or a `for`-s
 A numeric value is compared to `0` and a pointer value to `nullptr`.
 
 ```cpp
-if (p) { ... }          // means "if `p` is not `nullptr`, good
-if (p!=0) { ... }       // means "if `p` is not `nullptr`, redundant `!=0`; bad: don't use 0 for pointers
-if (p!=nullptr) { ... } // means "if `p` is not `nullptr`, redundant `!=nullptr`, not recommended
+// These all mean "if `p` is not `nullptr`"
+if (p) { ... }            // good
+if (p != 0) { ... }       // redundant `!=0`; bad: don't use 0 for pointers
+if (p != nullptr) { ... } // redundant `!=nullptr`, not recommended
 
 ```
 Often, `if (p)` is read as "if `p` is valid" which is a direct expression of the programmers intent,
-whereas `if (p!=nullptr)` would be a long-winded workaround.
+whereas `if (p != nullptr)` would be a long-winded workaround.
 
 ##### Example
 
@@ -2006,7 +2007,7 @@ This rule is especially useful when a declaration is used as a condition
 ```cpp
 if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute is ps points to a kind of Circle, good
 
-if (auto pc = dynamic_cast<Circle>(ps); pc!=nullptr) { ... } // not recommended
+if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // not recommended
 
 ```
 ##### Example
@@ -2015,7 +2016,7 @@ Note that implicit conversions to bool are applied in conditions.
 For example:
 
 ```cpp
-for (string s; cin>>s; ) v.push_back(s);
+for (string s; cin >> s; ) v.push_back(s);
 
 ```
 This invokes `istream`'s `operator bool()`.
@@ -2025,7 +2026,7 @@ This invokes `istream`'s `operator bool()`.
 It has been noted that
 
 ```cpp
-if(strcmp(p1,p2)) { ... }   // are the two C-style strings equal? (mistake!)
+if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
 
 ```
 is a common beginners error.
@@ -2033,7 +2034,7 @@ If you use C-style strings, you must know the `<cstring>` functions well.
 Being verbose and writing 
 
 ```cpp
-if(strcmp(p1,p2)!=0) { ... }   // are the two C-style strings equal? (mistake!)
+if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
 
 ```
 would not save you.
@@ -2043,9 +2044,10 @@ would not save you.
 The opposite condition is most easily expressed using a negation:
 
 ```cpp
-if (!p) { ... }         // means "if `p` is`nullptr`, good
-if (p==0) { ... }       // means "if `p` is `nullptr`, redundant `!=0`; bad: don't use `0` for pointers
-if (p==nullptr) { ... } // means "if `p` is `nullptr`, redundant `==nullptr`, not recommended
+// These all mean "if `p` is `nullptr`"
+if (!p) { ... }           // good
+if (p == 0) { ... }       // redundant `!= 0`; bad: don't use `0` for pointers
+if (p == nullptr) { ... } // redundant `== nullptr`, not recommended
 
 ```
 ##### Enforcement
