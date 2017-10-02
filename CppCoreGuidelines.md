@@ -8,7 +8,7 @@ Editors:
 * [Bjarne Stroustrup](http://www.stroustrup.com)
 * [Herb Sutter](http://herbsutter.com/)
 
-This document is a very early draft. It is inkorrekt, incompleat, and pÂµÃoorly formatted.
+This document is an early draft. It's known to be incomplet, incorrekt, and has lots of b**a**d **fo**rm~att~ing.
 Had it been an open-source (code) project, this would have been release 0.8.
 Copying, use, modification, and creation of derivative works from this project is licensed under an MIT-style license.
 Contributing to this project requires agreeing to a Contributor License. See the accompanying [LICENSE](LICENSE) file for details.
@@ -11167,12 +11167,13 @@ Helps make style consistent and conventional.
 By definition, a condition in an `if`-statement, `while`-statement, or a `for`-statement selects between `true` and `false`.
 A numeric value is compared to `0` and a pointer value to `nullptr`.
 
-    if (p) { ... }          // means "if `p` is not `nullptr`, good
-    if (p!=0) { ... }       // means "if `p` is not `nullptr`, redundant `!=0`; bad: don't use 0 for pointers
-    if (p!=nullptr) { ... } // means "if `p` is not `nullptr`, redundant `!=nullptr`, not recommended
+    // These all mean "if `p` is not `nullptr`"
+    if (p) { ... }            // good
+    if (p != 0) { ... }       // redundant `!=0`; bad: don't use 0 for pointers
+    if (p != nullptr) { ... } // redundant `!=nullptr`, not recommended
 
 Often, `if (p)` is read as "if `p` is valid" which is a direct expression of the programmers intent,
-whereas `if (p!=nullptr)` would be a long-winded workaround.
+whereas `if (p != nullptr)` would be a long-winded workaround.
 
 ##### Example
 
@@ -11180,14 +11181,14 @@ This rule is especially useful when a declaration is used as a condition
 
     if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute is ps points to a kind of Circle, good
 
-    if (auto pc = dynamic_cast<Circle>(ps); pc!=nullptr) { ... } // not recommended
+    if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // not recommended
 
 ##### Example
 
 Note that implicit conversions to bool are applied in conditions.
 For example:
 
-    for (string s; cin>>s; ) v.push_back(s);
+    for (string s; cin >> s; ) v.push_back(s);
 
 This invokes `istream`'s `operator bool()`.
 
@@ -11195,13 +11196,13 @@ This invokes `istream`'s `operator bool()`.
 
 It has been noted that
 
-    if(strcmp(p1,p2)) { ... }   // are the two C-style strings equal? (mistake!)
+    if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
 
 is a common beginners error.
 If you use C-style strings, you must know the `<cstring>` functions well.
 Being verbose and writing 
 
-    if(strcmp(p1,p2)!=0) { ... }   // are the two C-style strings equal? (mistake!)
+    if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
 
 would not save you.
 
@@ -11209,9 +11210,10 @@ would not save you.
 
 The opposite condition is most easily expressed using a negation:
 
-    if (!p) { ... }         // means "if `p` is`nullptr`, good
-    if (p==0) { ... }       // means "if `p` is `nullptr`, redundant `!=0`; bad: don't use `0` for pointers
-    if (p==nullptr) { ... } // means "if `p` is `nullptr`, redundant `==nullptr`, not recommended
+    // These all mean "if `p` is `nullptr`"
+    if (!p) { ... }           // good
+    if (p == 0) { ... }       // redundant `!= 0`; bad: don't use `0` for pointers
+    if (p == nullptr) { ... } // redundant `== nullptr`, not recommended
 
 ##### Enforcement
 
