@@ -12656,7 +12656,7 @@ void f(int x, long y, double d)
 ```
 ##### Note
 
-The guideline support library offers a `narrow` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
+The guideline support library offers a `narrow_cast` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
 
 ```cpp
 i = narrow_cast<int>(d);   // OK (you asked for it): narrowing: i becomes 7
