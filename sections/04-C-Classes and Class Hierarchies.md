@@ -293,7 +293,7 @@ All of this decreases readability and complicates maintenance.
 
 ##### Note
 
-Prefer to place the interface first in a class [see](21-NL-Naming%20and%20layout%20rules.md#Rl-order).
+Prefer to place the interface first in a class, [see NL.16](21-NL-Naming%20and%20layout%20rules.md#Rl-order).
 
 ##### Enforcement
 
