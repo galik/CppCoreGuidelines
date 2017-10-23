@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-October 5, 2017
+October 23, 2017
 
 
 Editors:
@@ -1076,7 +1076,7 @@ X waste(const char* p)
     x.ch = 'a';
     x.s = string(n);    // give x.s space for *p
     for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
-    delete buf;
+    delete[] buf;
     return x;
 }
 
@@ -1810,8 +1810,8 @@ Iter find(Iter first, Iter last, Val v)
 ```
 ##### Note
 
-Soon (maybe in 2017), most compilers will be able to check `requires` clauses once the `//` is removed.
-For now, the concept TS is supported only in GCC 6.1.
+Soon (maybe in 2018), most compilers will be able to check `requires` clauses once the `//` is removed.
+For now, the concept TS is supported only in GCC 6.1 and later.
 
 **See also**: [Generic programming](#SS-GP) and [concepts](#SS-t-concepts).
 
@@ -4535,7 +4535,7 @@ and enforce that relation (invariant) through constructors and member functions.
 For example:
 
 ```cpp
-struct Distance {
+class Distance {
 public:
     // ...
     double meters() const { return magnitude*unit; }
@@ -14574,7 +14574,13 @@ Application concepts are easier to reason about.
 ##### Example
 
 ```cpp
-???
+void some_fun() {
+    std::string  msg, msg2;
+    std::thread publisher([&] { msg = "Hello"; });       // bad (less expressive and more error-prone)
+    auto pubtask = std::async([&] { msg2 = "Hello"; });  // OK
+    // ...
+    publisher.join();
+}
 
 ```
 ##### Note
@@ -17644,11 +17650,11 @@ template<Addable N> auto algo(const N& a, const N& b) // use two numbers
 
 int x = 7;
 int y = 9;
-auto z = plus(x, y);   // z = 16
+auto z = algo(x, y);   // z = 16
 
 string xx = "7";
 string yy = "9";
-auto zz = plus(xx, yy);   // zz = "79"
+auto zz = algo(xx, yy);   // zz = "79"
 
 ```
 Maybe the concatenation was expected. More likely, it was an accident. Defining minus equivalently would give dramatically different sets of accepted types.
@@ -17676,11 +17682,11 @@ template<Number N> auto algo(const N& a, const N& b) // use two numbers
 
 int x = 7;
 int y = 9;
-auto z = plus(x, y);   // z = 18
+auto z = algo(x, y);   // z = 18
 
 string xx = "7";
 string yy = "9";
-auto zz = plus(xx, yy);   // error: string is not a Number
+auto zz = algo(xx, yy);   // error: string is not a Number
 
 ```
 ##### Note
