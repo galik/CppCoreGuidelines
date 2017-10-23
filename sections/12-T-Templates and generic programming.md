@@ -539,11 +539,11 @@ template<Addable N> auto algo(const N& a, const N& b) // use two numbers
 
 int x = 7;
 int y = 9;
-auto z = plus(x, y);   // z = 16
+auto z = algo(x, y);   // z = 16
 
 string xx = "7";
 string yy = "9";
-auto zz = plus(xx, yy);   // zz = "79"
+auto zz = algo(xx, yy);   // zz = "79"
 
 ```
 Maybe the concatenation was expected. More likely, it was an accident. Defining minus equivalently would give dramatically different sets of accepted types.
@@ -571,11 +571,11 @@ template<Number N> auto algo(const N& a, const N& b) // use two numbers
 
 int x = 7;
 int y = 9;
-auto z = plus(x, y);   // z = 18
+auto z = algo(x, y);   // z = 18
 
 string xx = "7";
 string yy = "9";
-auto zz = plus(xx, yy);   // error: string is not a Number
+auto zz = algo(xx, yy);   // error: string is not a Number
 
 ```
 ##### Note

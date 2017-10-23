@@ -640,7 +640,7 @@ X waste(const char* p)
     x.ch = 'a';
     x.s = string(n);    // give x.s space for *p
     for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
-    delete buf;
+    delete[] buf;
     return x;
 }
 

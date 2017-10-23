@@ -257,7 +257,13 @@ Application concepts are easier to reason about.
 ##### Example
 
 ```cpp
-???
+void some_fun() {
+    std::string  msg, msg2;
+    std::thread publisher([&] { msg = "Hello"; });       // bad (less expressive and more error-prone)
+    auto pubtask = std::async([&] { msg2 = "Hello"; });  // OK
+    // ...
+    publisher.join();
+}
 
 ```
 ##### Note

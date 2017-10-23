@@ -326,7 +326,7 @@ and enforce that relation (invariant) through constructors and member functions.
 For example:
 
 ```cpp
-struct Distance {
+class Distance {
 public:
     // ...
     double meters() const { return magnitude*unit; }
