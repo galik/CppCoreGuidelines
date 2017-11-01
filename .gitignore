@@ -3,3 +3,5 @@ scripts/nodesjs/build
 node_modules
 _site
 contrib/add-github-syntax-highlights
+scripts/python/__pycache__
+scripts/python/*.pyc
