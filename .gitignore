@@ -1,6 +1,8 @@
-scripts/build
-scripts/nodesjs/build
-node_modules
-_site
 contrib/add-github-syntax-highlights
 contrib/extract-sections
+node_modules
+scripts/build
+scripts/nodesjs/build
+scripts/python/*.pyc
+scripts/python/__pycache__
+_site
