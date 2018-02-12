@@ -84,6 +84,7 @@ clib
 Cline99
 ClosePort
 cm3
+cnt
 CommonMark
 *compiletime
 composability
@@ -407,6 +408,7 @@ Productinfo
 proto
 ps
 ptr
+ptrdiff
 Ptr
 ptr2
 ptr's
@@ -468,6 +470,7 @@ RVO
 s1
 s1's
 s2
+s3
 Sarkar
 scanf
 Sd
@@ -508,6 +511,7 @@ STL
 stmt
 str
 strdup
+stringlike
 strlen
 Str15
 Stroustrup

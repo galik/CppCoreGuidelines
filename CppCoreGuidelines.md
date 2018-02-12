@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-October 23, 2017
+January 22, 2018
 
 
 Editors:
@@ -82,7 +82,7 @@ You can sample rules for specific language features:
 * `concept`:
 [rules](#SS-concepts) --
 [in generic programming](#Rt-raise) --
-[template arguments](#RT-concepts) --
+[template arguments](#Rt-concepts) --
 [semantics](#Rt-low)
 * constructor:
 [invariant](#Rc-struct) --
@@ -480,14 +480,16 @@ What is expressed in code has defined semantics and can (in principle) be checke
 The first declaration of `month` is explicit about returning a `Month` and about not modifying the state of the `Date` object.
 The second version leaves the reader guessing and opens more possibilities for uncaught bugs.
 
-##### Example
+##### Example; bad
+
+This loop is a restricted form of `std::find`:
 
     void f(vector<string>& v)
     {
         string val;
         cin >> val;
         // ...
-        int index = -1;                    // bad
+        int index = -1;                    // bad, plus should use gsl::index
         for (int i = 0; i < v.size(); ++i) {
             if (v[i] == val) {
                 index = i;
@@ -497,7 +499,8 @@ The second version leaves the reader guessing and opens more possibilities for u
         // ...
     }
 
-That loop is a restricted form of `std::find`.
+##### Example; good
+
 A much clearer expression of intent would be:
 
     void f(vector<string>& v)
@@ -579,7 +582,7 @@ Unless the intent of some code is stated (e.g., in names or comments), it is imp
 
 ##### Example
 
-    int i = 0;
+    gsl::index i = 0;
     while (i < v.size()) {
         // ... do something with v[i] ...
     }
@@ -679,7 +682,7 @@ You don't need to write error handlers for errors caught at compile time.
     for (Int i = 1; i; i <<= 1)
         ++bits;
     if (bits < 32)
-        cerr << "Int too small\n"
+        cerr << "Int too small\n";
 
 This example fails to achieve what it is trying to achieve (because overflow is undefined) and should be replaced with a simple `static_assert`:
 
@@ -1020,7 +1023,7 @@ Time and space that you spend well to achieve a goal (e.g., speed of development
         X x;
         x.ch = 'a';
         x.s = string(n);    // give x.s space for *p
-        for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
+        for (gsl::index i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
         delete[] buf;
         return x;
     }
@@ -1108,7 +1111,7 @@ Instead, we could use `vector`:
 ##### Note
 
 The standards library and the GSL are examples of this philosophy.
-For example, instead of messing with the arrays, unions, cast, tricky lifetime issues, `gsl::owner`, etc.
+For example, instead of messing with the arrays, unions, cast, tricky lifetime issues, `gsl::owner`, etc.,
 that are needed to implement key abstractions, such as `vector`, `span`, `lock_guard`, and `future`, we use the libraries
 designed and implemented by people with more time and expertise than we usually have.
 Similarly, we can and should design and implement more specialized libraries, rather than leaving the users (often ourselves)
@@ -1140,7 +1143,7 @@ See
 * [Concurrency tools](#Rconc-tools)
 * [Testing tools](???)
 
-There are many other kinds of tools, such as source code depositories, build tools, etc.,
+There are many other kinds of tools, such as source code repositories, build tools, etc.,
 but those are beyond the scope of these guidelines.
 
 ##### Note
@@ -1190,7 +1193,7 @@ Having good (easy-to-understand, encouraging efficient use, not error-prone, sup
 Interface rule summary:
 
 * [I.1: Make interfaces explicit](#Ri-explicit)
-* [I.2: Avoid global variables](#Ri-global)
+* [I.2: Avoid non-`const` global variables](#Ri-global)
 * [I.3: Avoid singletons](#Ri-singleton)
 * [I.4: Make interfaces precisely and strongly typed](#Ri-typed)
 * [I.5: State preconditions (if any)](#Ri-pre)
@@ -1249,7 +1252,7 @@ Reporting through non-local variables (e.g., `errno`) is easily ignored. For exa
     // don't: no test of printf's return value
     fprintf(connection, "logging: %d %d %d\n", x, y, s);
 
-What if the connection goes down so that no logging output is produced? See I.??.
+What if the connection goes down so that no logging output is produced? See I.???.
 
 **Alternative**: Throw an exception. An exception cannot be ignored.
 
@@ -1264,7 +1267,7 @@ Functions can be template functions and sets of functions can be classes or clas
 * (Simple) A function should not make control-flow decisions based on the values of variables declared at namespace scope.
 * (Simple) A function should not write to variables declared at namespace scope.
 
-### <a name="Ri-global"></a>I.2: Avoid global variables
+### <a name="Ri-global"></a>I.2: Avoid non-`const` global variables
 
 ##### Reason
 
@@ -1697,7 +1700,7 @@ Use the ISO Concepts TS style of requirements specification. For example:
 ##### Note
 
 Soon (maybe in 2018), most compilers will be able to check `requires` clauses once the `//` is removed.
-For now, the concept TS is supported only in GCC 6.1 and later.
+Concepts are supported in GCC 6.1 and later.
 
 **See also**: [Generic programming](#SS-GP) and [concepts](#SS-t-concepts).
 
@@ -1736,7 +1739,7 @@ Many traditional interface functions (e.g., UNIX signal handlers) use error code
 
 ##### Alternative
 
-If you can't use exceptions (e.g. because your code is full of old-style raw-pointer use or because there are hard-real-time constraints), consider using a style that returns a pair of values:
+If you can't use exceptions (e.g., because your code is full of old-style raw-pointer use or because there are hard-real-time constraints), consider using a style that returns a pair of values:
 
     int val;
     int error_code;
@@ -1789,7 +1792,7 @@ Consider:
         return res;
     }
 
-Who deletes the returned `X`? The problem would be harder to spot if compute returned a reference.
+Who deletes the returned `X`? The problem would be harder to spot if `compute` returned a reference.
 Consider returning the result by value (use move semantics if the result is large):
 
     vector<double> compute(args)  // good
@@ -2219,7 +2222,7 @@ We might write
 
 This violated the rule [against uninitialized variables](#Res-always),
 the rule against [ignoring ownership](#Ri-raw),
-and the rule [against magic constants](#Res-magic) .
+and the rule [against magic constants](#Res-magic).
 In particular, someone has to remember to somewhere write
 
     if (owned) delete inp;
@@ -2240,7 +2243,7 @@ So, we write a class
         Istream() { }
         Istream(zstring p) :owned{true}, inp{new ifstream{p}} {}            // read from file
         Istream(zstring p, Opt) :owned{true}, inp{new istringstream{p}} {}  // read from command line
-        ~Itream() { if (owned) delete inp; }
+        ~Istream() { if (owned) delete inp; }
         operator istream& () { return *inp; }
     private:
         bool owned = false;
@@ -2253,7 +2256,7 @@ Presumably, a bit of checking for potential errors would be added in real code.
 ##### Enforcement
 
 * Hard, it is hard to decide what rule-breaking code is essential
-* flag rule suppression that enable rule-violations to cross interfaces
+* Flag rule suppression that enable rule-violations to cross interfaces
 
 # <a name="S-functions"></a>F: Functions
 
@@ -2314,7 +2317,7 @@ Other function rules:
 * [F.54: If you capture `this`, capture all variables explicitly (no default capture)](#Rf-this-capture)
 * [F.55: Don't use `va_arg` arguments](#F-varargs)
 
-Functions have strong similarities to lambdas and function objects so see also Section ???.
+Functions have strong similarities to lambdas and function objects so see also [C.lambdas: Function objects and lambdas](#SS-lambdas).
 
 ## <a name="SS-fct-def"></a>F.def: Function definitions
 
@@ -2997,9 +3000,9 @@ Such older advice is now obsolete; it does not add value, and it interferes with
     vector<int> g(const vector<int>& vx)
     {
         // ...
-        f() = vx;   // prevented by the "const"
+        fct() = vx;   // prevented by the "const"
         // ...
-        return f(); // expensive copy: move semantics suppressed by the "const"
+        return fct(); // expensive copy: move semantics suppressed by the "const"
     }
 
 The argument for adding `const` to a return value is that it prevents (very rare) accidental access to a temporary.
@@ -3260,7 +3263,7 @@ A `span` represents a range of elements, but how do we manipulate elements of th
         for (int x : s) cout << x << '\n';
 
         // C-style traversal (potentially checked)
-        for (int i = 0; i < s.size(); ++i) cout << s[i] << '\n';
+        for (gsl::index i = 0; i < s.size(); ++i) cout << s[i] << '\n';
 
         // random access (potentially checked)
         s[7] = 9;
@@ -3565,7 +3568,7 @@ The language guarantees that a `T&` refers to an object, so that testing for `nu
         array<wheel, 4> w;
         // ...
     public:
-        wheel& get_wheel(size_t i) { Expects(i < 4); return w[i]; }
+        wheel& get_wheel(int i) { Expects(i < w.size()); return w[i]; }
         // ...
     };
 
@@ -3835,9 +3838,9 @@ It's confusing. Writing `[=]` in a member function appears to capture by value, 
             // [=,this] and [&,this] are not much better, and confusing
 
             x = 42;
-            lambda(); // calls use(42);
+            lambda(); // calls use(0, 42);
             x = 43;
-            lambda(); // calls use(43);
+            lambda(); // calls use(0, 43);
 
             // ...
 
@@ -4180,7 +4183,7 @@ Flag classes declared with `struct` if there is a `private` or `protected` membe
 
 Encapsulation.
 Information hiding.
-Minimize the chance of untended access.
+Minimize the chance of unintended access.
 This simplifies maintenance.
 
 ##### Example
@@ -5081,7 +5084,7 @@ If you really have to, look at [factory functions](#Rc-factory).
 
 One reason people have used `init()` functions rather than doing the initialization work in a constructor has been to avoid code replication.
 [Delegating constructors](#Rc-delegating) and [default member initialization](#Rc-in-class-initializer) do that better.
-Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](#Res-init)
+Another reason has been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](#Res-init)
 
 ##### Enforcement
 
@@ -5687,9 +5690,9 @@ After a copy `x` and `y` can be independent objects (value semantics, the way no
     class X2 {  // OK: pointer semantics
     public:
         X2();
-        X2(const X&) = default; // shallow copy
+        X2(const X2&) = default; // shallow copy
         ~X2() = default;
-        void modify();          // change the value of X
+        void modify();          // change the pointed-to value
         // ...
     private:
         T* p;
@@ -5968,6 +5971,7 @@ To prevent slicing, because the normal copy operations will copy only the base p
 ##### Example
 
     class B { // GOOD: base class suppresses copying
+    public:
         B(const B&) = delete;
         B& operator=(const B&) = delete;
         virtual unique_ptr<B> clone() { return /* B object */; }
@@ -6088,6 +6092,8 @@ A `unique_ptr` can be moved, but not copied. To achieve that its copy operations
         auto pi2 {pi};      // error: no move constructor from lvalue
         auto pi3 {make()};  // OK, move: the result of make() is an rvalue
     }
+
+Note that deleted methods should be public.
 
 ##### Enforcement
 
@@ -6530,6 +6536,7 @@ Such as on an ABI (link) boundary.
 ##### Example
 
     struct Device {
+        virtual ~Device() = default;
         virtual void write(span<const char> outbuf) = 0;
         virtual void read(span<char> inbuf) = 0;
     };
@@ -6847,6 +6854,25 @@ Since each implementation derived from its interface as well as its implementati
     Impl::Smiley -> Impl::Circle -> Impl::Shape
 
 As mentioned, this is just one way to construct a dual hierarchy.
+
+The implementation hierarchy can be used directly, rather than through the abstract interface.
+
+    void work_with_shape(Shape&);
+
+    int user()
+    {
+        Impl::Smiley my_smiley{ /* args */ };   // create concrete shape
+        // ...
+        my_smiley.some_member();        // use implementation class directly
+        // ...
+        work_with_shape(my_smiley);     // use implementation through abstract interface
+        // ...
+    }
+
+This can be useful when the implementation class has members that are not offered in the abstract interface
+or if direct use of a member offers optimization opportunities (e.g., if an implementation member function is `final`)
+
+##### Note
 
 Another (related) technique for separating interface and implementation is [Pimpl](#Ri-pimpl).
 
@@ -9128,7 +9154,35 @@ be able to destroy a cyclic structure.
 
 ##### Example
 
-    ???
+    #include <memory>
+
+    class bar;
+
+    class foo
+    {
+    public:
+      explicit foo(const std::shared_ptr<bar>& forward_reference)
+        : forward_reference_(forward_reference)
+      { }
+    private:
+      std::shared_ptr<bar> forward_reference_;
+    };
+
+    class bar
+    {
+    public:
+      explicit bar(const std::weak_ptr<foo>& back_reference)
+        : back_reference_(back_reference)
+      { }
+      void do_something()
+      {
+        if (auto shared_back_reference = back_reference_.lock()) {
+          // Use *shared_back_reference
+        }
+      }
+    private:
+      std::weak_ptr<foo> back_reference_;
+    };
 
 ##### Note
 
@@ -9475,7 +9529,7 @@ Arithmetic rules:
 * [ES.104: Don't underflow](#Res-underflow)
 * [ES.105: Don't divide by zero](#Res-zero)
 * [ES.106: Don't try to avoid negative values by using `unsigned`](#Res-nonnegative)
-* [ES.107: Don't use `unsigned` for subscripts](#Res-subscripts)
+* [ES.107: Don't use `unsigned` for subscripts, prefer `gsl::index`](#Res-subscripts)
 
 ### <a name="Res-lib"></a>ES.1: Prefer the standard library to other libraries and to "handcrafted code"
 
@@ -9671,7 +9725,7 @@ Conventional short, local names increase readability:
     template<typename T>    // good
     void print(ostream& os, const vector<T>& v)
     {
-        for (int i = 0; i < v.size(); ++i)
+        for (gsl::index i = 0; i < v.size(); ++i)
             os << v[i] << '\n';
     }
 
@@ -9680,9 +9734,9 @@ An index is conventionally called `i` and there is no hint about the meaning of 
     template<typename Element_type>   // bad: verbose, hard to read
     void print(ostream& target_stream, const vector<Element_type>& current_vector)
     {
-        for (int current_element_index = 0;
-                current_element_index < current_vector.size();
-                ++current_element_index
+        for (gsl::index current_element_index = 0;
+             current_element_index < current_vector.size();
+             ++current_element_index
         )
         target_stream << current_vector[current_element_index] << '\n';
     }
@@ -9857,7 +9911,6 @@ Flag variable and constant declarations with multiple declarators (e.g., `int* p
 Consider:
 
     auto p = v.begin();   // vector<int>::iterator
-    auto s = v.size();
     auto h = t.future();
     auto q = make_unique<int[]>(s);
     auto f = [](int x){ return x + 10; };
@@ -10045,11 +10098,6 @@ This cannot trivially be rewritten to initialize `i` and `j` with initializers.
 Note that for types with a default constructor, attempting to postpone initialization simply leads to a default initialization followed by an assignment.
 A popular reason for such examples is "efficiency", but a compiler that can detect whether we made a used-before-set error can also eliminate any redundant double initialization.
 
-At the cost of repeating `cond` we could write:
-
-    widget i = (cond) ? f1() : f3();
-    widget j = (cond) ? f2() : f4();
-
 Assuming that there is a logical connection between `i` and `j`, that connection should probably be expressed in code:
 
     pair<widget, widget> make_related_widgets(bool x)
@@ -10057,25 +10105,13 @@ Assuming that there is a logical connection between `i` and `j`, that connection
         return (x) ? {f1(), f2()} : {f3(), f4() };
     }
 
-    auto init = make_related_widgets(cond);
-    widget i = init.first;
-    widget j = init.second;
+    auto [i, j] = make_related_widgets(cond);    // C++17
 
-Obviously, what we really would like is a construct that initialized n variables from a `tuple`. For example:
+##### Note
 
-    auto [i, j] = make_related_widgets(cond);    // C++17, not C++14
-
-Today, we might approximate that using `tie()`:
-
-    widget i;       // bad: uninitialized variable
-    widget j;
-    tie(i, j) = make_related_widgets(cond);
-
-This may be seen as an example of the *immediately initialize from input* exception below.
-
-Creating optimal and equivalent code from all of these examples should be well within the capabilities of modern C++ compilers
-(but don't make performance claims without measuring; a compiler may very well not generate optimal code for every example and
-there may be language rules preventing some optimization that you would have liked in a particular case).
+Complex initialization has been popular with clever programmers for decades.
+It has also been a major source of errors and complexity.
+Many such errors are introduced during maintenance years after the initial implementation.
 
 ##### Example
 
@@ -10099,12 +10135,6 @@ This rule covers member variables.
 The compiler will flag the uninitialized `cm3` because it is a `const`, but it will not catch the lack of initialization of `m3`.
 Usually, a rare spurious member initialization is worth the absence of errors from lack of initialization and often an optimizer
 can eliminate a redundant initialization (e.g., an initialization that occurs immediately before an assignment).
-
-##### Note
-
-Complex initialization has been popular with clever programmers for decades.
-It has also been a major source of errors and complexity.
-Many such errors are introduced during maintenance years after the initial implementation.
 
 ##### Exception
 
@@ -11826,7 +11856,7 @@ Unfortunately, most invalid pointer problems are harder to spot and harder to fi
 
 There is a huge amount of such code.
 Most works -- after lots of testing -- but in isolation it is impossible to tell whether `p` could be the `nullptr`.
-Consequently, it this is also a major source of errors.
+Consequently, this is also a major source of errors.
 There are many approaches to dealing with this potential problem:
 
     void f1(int* p) // deal with nullptr
@@ -11947,7 +11977,7 @@ Readability. Error prevention. Efficiency.
 
 ##### Example
 
-    for (int i = 0; i < v.size(); ++i)   // bad
+    for (gsl::index i = 0; i < v.size(); ++i)   // bad
             cout << v[i] << '\n';
 
     for (auto p = v.begin(); p != v.end(); ++p)   // bad
@@ -11956,13 +11986,13 @@ Readability. Error prevention. Efficiency.
     for (auto& x : v)    // OK
         cout << x << '\n';
 
-    for (int i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
+    for (gsl::index i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
         cout << v[i] + v[i - 1] << '\n';
 
-    for (int i = 0; i < v.size(); ++i) // possible side effect: can't be a range-for
+    for (gsl::index i = 0; i < v.size(); ++i) // possible side effect: can't be a range-for
         cout << f(v, &v[i]) << '\n';
 
-    for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
+    for (gsl::index i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
         if (i % 2 == 0)
             continue;   // skip even elements
         else
@@ -11999,7 +12029,7 @@ Readability: the complete logic of the loop is visible "up front". The scope of 
 
 ##### Example
 
-    for (int i = 0; i < vec.size(); i++) {
+    for (gsl::index i = 0; i < vec.size(); i++) {
         // do work
     }
 
@@ -12190,8 +12220,9 @@ If you really need to break out a loop, a `break` is typically better than alter
         break;
     case Warning:
         write_event_log();
+        // Bad - implicit fallthrough
     case Error:
-        display_error_window(); // Bad
+        display_error_window();
         break;
     }
 
@@ -12205,7 +12236,7 @@ It is easy to overlook the fallthrough. Be explicit:
         write_event_log();
         // fallthrough
     case Error:
-        display_error_window(); // Bad
+        display_error_window();
         break;
     }
 
@@ -12219,7 +12250,7 @@ In C++17, use a `[[fallthrough]]` annotation:
         write_event_log();
         [[fallthrough]];        // C++17
     case Error:
-        display_error_window(); // Bad
+        display_error_window();
         break;
     }
 
@@ -12429,6 +12460,23 @@ For example:
 
 This invokes `istream`'s `operator bool()`.
 
+##### Note
+
+Explicit comparison of an integer to `0` is in general not redundant.
+The reason is that (as opposed to pointers and Booleans) an integer often has more than two reasonable values.
+Furthermore `0` (zero) is often used to indicate success.
+Consequently, it is best to be specific about the comparison.
+
+    void f(int i)
+    {
+        if (i)            // suspect
+        // ...
+        if (i == success) // possibly better
+        // ...
+    }
+
+Always remember that an integer can have more that two values.
+
 ##### Example, bad
 
 It has been noted that
@@ -12441,7 +12489,7 @@ Being verbose and writing
 
     if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
 
-would not save you.
+would not in itself save you.
 
 ##### Note
 
@@ -12480,11 +12528,13 @@ It is harder to spot the problem in more realistic examples.
 ##### Note
 
 Unfortunately, C++ uses signed integers for array subscripts and the standard library uses unsigned integers for container subscripts.
-This precludes consistency.
+This precludes consistency. Use `gsl::index` for subscripts; [see ES.107](#Res-subscripts).
 
 ##### Enforcement
 
-Compilers already know and sometimes warn.
+* Compilers already know and sometimes warn.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
 
 ### <a name="Res-unsigned"></a>ES.101: Use unsigned types for bit manipulation
 
@@ -12551,25 +12601,29 @@ is going to be surprising for many programmers.
 ##### Example
 
 The standard library uses unsigned types for subscripts.
-The build-in array uses signed types for subscripts.
+The built-in array uses signed types for subscripts.
 This makes surprises (and bugs) inevitable.
 
     int a[10];
     for (int i = 0; i < 10; ++i) a[i] = i;
     vector<int> v(10);
-    // compares signed to unsigned; some compilers warn
-    for (int i = 0; v.size() < 10; ++i) v[i] = i;
+    // compares signed to unsigned; some compilers warn, but we should not
+    for (gsl::index i = 0; v.size() < 10; ++i) v[i] = i;
 
     int a2[-2];         // error: negative size
 
     // OK, but the number of ints (4294967294) is so large that we should get an exception
     vector<int> v2(-2);
 
+ Use `gsl::index` for subscripts; [see ES.107](#Res-subscripts).
+
 ##### Enforcement
 
 * Flag mixed signed and unsigned arithmetic
 * Flag results of unsigned arithmetic assigned to or printed as signed.
 * Flag unsigned literals (e.g. `-2`) used as container subscripts.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
 
 ### <a name="Res-overflow"></a>ES.103: Don't overflow
 
@@ -12733,33 +12787,47 @@ For example
 Hard: there is a lot of code using `unsigned` and we don't offer a practical positive number type.
 
 
-### <a name="Res-subscripts"></a>ES.107: Don't use `unsigned` for subscripts
+### <a name="Res-subscripts"></a>ES.107: Don't use `unsigned` for subscripts, prefer `gsl::index`
 
 ##### Reason
 
 To avoid signed/unsigned confusion.
 To enable better optimization.
 To enable better error detection.
+To avoid the pitfalls with `auto` and `int`.
 
 ##### Example, bad
 
-    vector<int> vec {1, 2, 3, 4, 5};
+    vector<int> vec = /*...*/;
 
-    for (int i = 0; i < vec.size(); i += 2)                    // mix int and unsigned
+    for (int i = 0; i < vec.size(); i += 2)                    // may not be big enough
         cout << vec[i] << '\n';
     for (unsigned i = 0; i < vec.size(); i += 2)               // risk wraparound
         cout << vec[i] << '\n';
+    for (auto i = 0; i < vec.size(); i += 2)                   // may not be big enough
+        cout << vec[i] << '\n';
     for (vector<int>::size_type i = 0; i < vec.size(); i += 2) // verbose
         cout << vec[i] << '\n';
-    for (auto i = 0; i < vec.size(); i += 2)                   // mix int and unsigned
+    for (auto i = vec.size()-1; i >= 0; i -= 2)                // bug
+        cout << vec[i] << '\n';
+    for (int i = vec.size()-1; i >= 0; i -= 2)                 // may not be big enough
+        cout << vec[i] << '\n';
+
+##### Example, good
+
+    vector<int> vec = /*...*/;
+
+    for (gsl::index i = 0; i < vec.size(); i += 2)             // ok
+        cout << vec[i] << '\n';
+    for (gsl::index i = vec.size()-1; i >= 0; i -= 2)          // ok
         cout << vec[i] << '\n';
 
 ##### Note
 
 The built-in array uses signed subscripts.
 The standard-library containers use unsigned subscripts.
-Thus, no perfect and fully compatible solution is possible.
-Given the known problems with unsigned and signed/unsigned mixtures, better stick to (signed) integers.
+Thus, no perfect and fully compatible solution is possible (unless and until the standard-library containers change to use signed subscripts someday in the future).
+Given the known problems with unsigned and signed/unsigned mixtures, better stick to (signed) integers of a sufficient size, which is guaranteed by `gsl::index`.
 
 ##### Example
 
@@ -12767,7 +12835,7 @@ Given the known problems with unsigned and signed/unsigned mixtures, better stic
     struct My_container {
     public:
         // ...
-        T& operator[](int i);    // not unsigned
+        T& operator[](gsl::index i);    // not unsigned
         // ...
     };
 
@@ -12785,7 +12853,11 @@ Alternatives for users
 
 ##### Enforcement
 
-Very tricky as long as the standard-library containers get it wrong.
+* Very tricky as long as the standard-library containers get it wrong.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
+
+
 
 # <a name="S-performance"></a>Per: Performance
 
@@ -13093,7 +13165,82 @@ Type violations, weak types (e.g. `void*`s), and low-level code (e.g., manipulat
 
 ### <a name="Rper-Comp"></a>Per.11: Move computation from run time to compile time
 
-???
+##### Reason
+
+To decrease code size and run time.
+To avoid data races by using constants.
+To catch errors at compile time (and thus eliminate the need for error-handling code).
+
+##### Example
+
+    double square(double d) { return d*d; }
+    static double s2 = square(2);    // old-style: dynamic initialization
+
+    constexpr double ntimes(double d, int n)   // assume 0 <= n
+    {
+            double m = 1;
+            while (n--) m *= d;
+            return m;
+    }
+    constexpr double s3 {ntimes(2, 3)};  // modern-style: compile-time initialization
+
+Code like the initialization of `s2` isn't uncommon, especially for initialization that's a bit more complicated than `square()`.
+However, compared to the initialization of `s3` there are two problems:
+
+* we suffer the overhead of a function call at run time
+* `s2` just might be accessed by another thread before the initialization happens.
+
+Note: you can't have a data race on a constant.
+
+##### Example
+
+Consider a popular technique for providing a handle for storing small objects in the handle itself and larger ones on the heap.
+
+    constexpr int on_stack_max = 20;
+
+    template<typename T>
+    struct Scoped {     // store a T in Scoped
+            // ...
+        T obj;
+    };
+
+    template<typename T>
+    struct On_heap {    // store a T on the free store
+            // ...
+            T* objp;
+    };
+
+    template<typename T>
+    using Handle = typename std::conditional<(sizeof(T) <= on_stack_max),
+                        Scoped<T>,      // first alternative
+                        On_heap<T>      // second alternative
+                   >::type;
+
+    void f()
+    {
+        Handle<double> v1;                   // the double goes on the stack
+        Handle<std::array<double, 200>> v2;  // the array goes on the free store
+        // ...
+    }
+
+Assume that `Scoped` and `On_heap` provide compatible user interfaces.
+Here we compute the optimal type to use at compile time.
+There are similar techniques for selecting the optimal function to call.
+
+##### Note
+
+The ideal is {not} to try execute everything at compile time.
+Obviously, most computations depend on inputs so they can't be moved to compile time,
+but beyond that logical constraint is the fact that complex compile-time computation can seriously increase compile times
+and complicate debugging.
+It is even possible to slow down code by compile-time computation.
+This is admittedly rare, but by factoring out a general computation into separate optimal sub-calculations it is possible to render the instruction cache less effective.
+
+##### Enforcement
+
+* Look for simple functions that might be constexpr (but are not).
+* Look for functions called with all constant-expression arguments.
+* Look for macros that could be constexpr.
 
 ### <a name="Rper-alias"></a>Per.12: Eliminate redundant aliases
 
@@ -13383,6 +13530,7 @@ Making `surface_readings` be `const` (with respect to this function) allow reaso
 
 Immutable data can be safely and efficiently shared.
 No locking is needed: You can't have a data race on a constant.
+See also [CP.mess: Message Passing](#SScp-mess) and [CP.31: prefer pass by value](#C#Rconc-data-by-value).
 
 ##### Enforcement
 
@@ -13830,7 +13978,7 @@ This implies that we cannot safely refer to local objects in `use()` from the th
 
 ##### Note
 
-Make "immortal threads" globals, put them in an enclosing scope, or put them on the on the free store rather than `detach()`.
+Make "immortal threads" globals, put them in an enclosing scope, or put them on the free store rather than `detach()`.
 [don't `detach`](#Rconc-detached_thread).
 
 ##### Note
@@ -14681,7 +14829,7 @@ C++ implementations tend to be optimized based on the assumption that exceptions
     int find_index(vector<string>& vec, const string& x)
     {
         try {
-            for (int i = 0; i < vec.size(); ++i)
+            for (gsl::index i = 0; i < vec.size(); ++i)
                 if (vec[i] == x) throw i;  // found x
         } catch (int i) {
             return i;
@@ -15764,9 +15912,9 @@ Templates can also be used for meta-programming; that is, programs that compose 
 A central notion in generic programming is "concepts"; that is, requirements on template arguments presented as compile-time predicates.
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them.
+If you use GCC 6.1 or later, you can uncomment them.
 
 Template use rule summary:
 
@@ -15921,9 +16069,9 @@ is to efficiently generalize operations/algorithms over a set of types with simi
 
 The `requires` in the comments are uses of `concepts`.
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them.
+If you use GCC 6.1 or later, you can uncomment them.
 
 ##### Enforcement
 
@@ -16114,9 +16262,9 @@ or equivalently and more succinctly:
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them:
+If you use GCC 6.1 or later, you can uncomment them:
 
     template<typename Iter, typename Val>
         requires Input_iterator<Iter>
@@ -16219,9 +16367,9 @@ The shorter versions better match the way we speak. Note that many templates don
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use a compiler that supports concepts (e.g., GCC 6.1), you can remove the `//`.
+If you use a compiler that supports concepts (e.g., GCC 6.1 or later), you can remove the `//`.
 
 ##### Enforcement
 
@@ -16235,7 +16383,7 @@ Concepts are meant to represent fundamental concepts in an application domain (h
 Similarly throwing together a set of syntactic constraints to be used for a the arguments for a single class or algorithm is not what concepts were designed for
 and will not give the full benefits of the mechanism.
 
-Obviously, defining concepts will be most useful for code that can use an implementation (e.g., GCC 6.1),
+Obviously, defining concepts will be most useful for code that can use an implementation (e.g., GCC 6.1 or later),
 but defining concepts is in itself a useful design technique and help catch conceptual errors and clean up the concepts (sic!) of an implementation.
 
 ### <a name="Rt-low"></a>T.20: Avoid "concepts" without meaningful semantics
@@ -16281,7 +16429,7 @@ The ability to specify a meaningful semantics is a defining characteristic of a 
                      && has_multiply<T>
                      && has_divide<T>;
 
-    template<Number N> auto algo(const N& a, const N& b) // use two numbers
+    template<Number N> auto algo(const N& a, const N& b)
     {
         // ...
         return a + b;
@@ -16289,7 +16437,7 @@ The ability to specify a meaningful semantics is a defining characteristic of a 
 
     int x = 7;
     int y = 9;
-    auto z = algo(x, y);   // z = 18
+    auto z = algo(x, y);   // z = 16
 
     string xx = "7";
     string yy = "9";
@@ -16305,7 +16453,7 @@ Concepts with multiple operations have far lower chance of accidentally matching
 * Flag uses of `enable_if` that appears to simulate single-operation `concepts`.
 
 
-### <a name="RT-operations"></a>T.21: Require a complete set of operations for a concept
+### <a name="Rt-complete"></a>T.21: Require a complete set of operations for a concept
 
 ##### Reason
 
@@ -16391,7 +16539,7 @@ Ideally, that rule should be language supported by giving you comparison operato
 
 ##### Enforcement
 
-* Flag classes the support "odd" subsets of a set of operators, e.g., `==` but not `!=` or `+` but not `-`.
+* Flag classes that support "odd" subsets of a set of operators, e.g., `==` but not `!=` or `+` but not `-`.
   Yes, `std::string` is "odd", but it's too late to change that.
 
 
@@ -17859,6 +18007,7 @@ If you intend for a class to match a concept, verifying that early saves users p
 ##### Example
 
     class X {
+    public:
         X() = delete;
         X(const X&) = default;
         X(X&&) = default;
@@ -18547,6 +18696,13 @@ For a variable-length array, use `std::vector`, which additionally can change it
 
 Use `gsl::span` for non-owning references into a container.
 
+##### Note
+
+Comparing the performance of a fixed-sized array allocated on the stack against a `vector` with its elements on the free store is bogus.
+You could just as well compare a `std::array` on the stack against the result of a `malloc()` accessed through a pointer.
+For most code, even the difference between stack allocation and free-store allocation doesn't matter, but the convenience and safety of `vector` does.
+People working with code for which that difference matters are quite capable of choosing between `array` and `vector`.
+
 ##### Enforcement
 
 * Flag declaration of a C array inside a function or class that also declares an STL container (to avoid excessive noisy warnings on legacy non-STL code). To fix: At least change the C array to a `std::array`.
@@ -19055,7 +19211,7 @@ Synchronizing `iostreams` with `printf-style` I/O can be costly.
 
 ### <a name="Rio-endl"></a>SL.io.50: Avoid `endl`
 
-### Reason
+##### Reason
 
 The `endl` manipulator is mostly equivalent to `'\n'` and `"\n"`;
 as most commonly used it simply slows down output by doing redundant `flush()`s.
@@ -19861,12 +20017,13 @@ for example, `Expects(p != nullptr)` will become `[[expects: p != nullptr]]`.
 
 ## <a name="SS-utilities"></a>GSL.util: Utilities
 
-* `finally`       // `finally(f)` makes a `final_action{f}` with a destructor that invokes `f`
-* `narrow_cast`   // `narrow_cast<T>(x)` is `static_cast<T>(x)`
-* `narrow`        // `narrow<T>(x)` is `static_cast<T>(x)` if `static_cast<T>(x) == x` or it throws `narrowing_error`
-* `[[implicit]]`  // "Marker" to put on single-argument constructors to explicitly make them non-explicit.
-* `move_owner`    // `p = move_owner(q)` means `p = q` but ???
+* `finally`        // `finally(f)` makes a `final_action{f}` with a destructor that invokes `f`
+* `narrow_cast`    // `narrow_cast<T>(x)` is `static_cast<T>(x)`
+* `narrow`         // `narrow<T>(x)` is `static_cast<T>(x)` if `static_cast<T>(x) == x` or it throws `narrowing_error`
+* `[[implicit]]`   // "Marker" to put on single-argument constructors to explicitly make them non-explicit.
+* `move_owner`     // `p = move_owner(q)` means `p = q` but ???
 * `joining_thread` // a RAII style version of `std::thread` that joins.
+* `index`          // a type to use for all container and array indexing (currently an alias for `ptrdiff_t`)
 
 ## <a name="SS-gsl-concepts"></a>GSL.concept: Concepts
 
@@ -19919,7 +20076,7 @@ Naming and layout rules:
 * [NL.2: State intent in comments](#Rl-comments-intent)
 * [NL.3: Keep comments crisp](#Rl-comments-crisp)
 * [NL.4: Maintain a consistent indentation style](#Rl-indent)
-* [NL.5: Don't encode type information in names](#Rl-name-type)
+* [NL.5: Avoid encoding type information in names](#Rl-name-type)
 * [NL.7: Make the length of a name roughly proportional to the length of its scope](#Rl-name-length)
 * [NL.8: Use a consistent naming style](#Rl-name)
 * [NL.9: Use `ALL_CAPS` for macro names only](#Rl-all-caps)
@@ -20026,7 +20183,7 @@ Always indenting the statement after `if (...)`, `for (...)`, and `while (...)` 
 
 Use a tool.
 
-### <a name="Rl-name-type"></a>NL.5: Don't encode type information in names
+### <a name="Rl-name-type"></a>NL.5: Avoid encoding type information in names
 
 ##### Rationale
 
@@ -20039,8 +20196,16 @@ Minimize unintentional conversions.
     void print_int(int i);
     void print_string(const char*);
 
-    print_int(1);   // OK
-    print_int(x);   // conversion to int if x is a double
+    print_int(1);          // repetitive, manual type matching
+    print_string("xyzzy"); // repetitive, manual type matching
+
+##### Example, good
+
+    void print(int i);
+    void print(string_view);    // also works on any string-like sequence
+
+    print(1);              // clear, automatic type matching
+    print("xyzzy");        // clear, automatic type matching
 
 ##### Note
 
@@ -20050,7 +20215,22 @@ Names with types encoded are either verbose or cryptic.
     prints  // print a C-style string
     printi  // print an int
 
-PS. Hungarian notation is evil (at least in a strongly statically-typed language).
+Requiring techniques like Hungarian notation to encode a type in a name is needed in C, but is generally unnecessary and actively harmful in a strongly statically-typed language like C++, because the annotations get out of date (the warts are just like comments and rot just like them) and they interfere with good use of the language (use the same name and overload resolution instead).
+
+##### Note
+
+Some styles use very general (not type-specific) prefixes to denote the general use of a variable.
+
+    auto p = new User();
+    auto p = make_unique<User>();
+    // note: "p" is not being used to say "raw pointer to type User,"
+    //       just generally to say "this is an indirection"
+
+    auto cntHits = calc_total_of_hits(/*...*/);
+    // note: "cnt" is not being used to encode a type,
+    //       just generally to say "this is a count of something"
+
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ##### Note
 
@@ -20061,7 +20241,7 @@ Some styles distinguishes members from local variable, and/or from global variab
         S(int m) :m_{abs(m)} { }
     };
 
-This is not evil.
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ##### Note
 
@@ -20069,13 +20249,13 @@ Like C++, some styles distinguishes types from non-types.
 For example, by capitalizing type names, but not the names of functions and variables.
 
     typename<typename T>
-    class Hash_tbl {   // maps string to T
+    class HashTable {   // maps string to T
         // ...
     };
 
-    Hash_tbl<int> index;
+    HashTable<int> index;
 
-This is not evil.
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ### <a name="Rl-name-length"></a>NL.7: Make the length of a name roughly proportional to the length of its scope
 
@@ -20279,10 +20459,6 @@ When declaring a class use the following order
 
 Use the `public` before `protected` before `private` order.
 
-Private types and functions can be placed with private data.
-
-Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed among blocks of declarations with different access (e.g. `private`).
-
 ##### Example
 
     class X {
@@ -20294,9 +20470,33 @@ Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed a
         // implementation details
     };
 
-##### Note
+##### Example
 
-The use of macros to declare groups of members often violates any ordering rules.
+Sometimes, the default order of members conflicts with a desire to separate the public interface from implementation details.
+In such cases, private types and functions can be placed with private data.
+
+    class X {
+    public:
+        // interface
+    protected:
+        // unchecked function for use by derived class implementations
+    private:
+        // implementation details (types, functions, and data)
+    };
+
+##### Example, bad
+
+Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed among blocks of declarations with different access (e.g. `private`).
+
+    class X {   // bad
+    public:
+        void f();
+    public:
+        int g();
+        // ...
+    };
+
+The use of macros to declare groups of members often leads to violation of any ordering rules.
 However, macros obscures what is being expressed anyway.
 
 ##### Enforcement
