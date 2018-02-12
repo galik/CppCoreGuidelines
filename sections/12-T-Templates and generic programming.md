@@ -15,9 +15,9 @@ Templates can also be used for meta-programming; that is, programs that compose 
 A central notion in generic programming is "concepts"; that is, requirements on template arguments presented as compile-time predicates.
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them.
+If you use GCC 6.1 or later, you can uncomment them.
 
 Template use rule summary:
 
@@ -38,7 +38,7 @@ Concept use rule summary:
 Concept definition rule summary:
 
 * [T.20: Avoid "concepts" without meaningful semantics](12-T-Templates%20and%20generic%20programming.md#Rt-low)
-* [T.21: Require a complete set of operations for a concept](#Rt-complete)
+* [T.21: Require a complete set of operations for a concept](12-T-Templates%20and%20generic%20programming.md#Rt-complete)
 * [T.22: Specify axioms for concepts](12-T-Templates%20and%20generic%20programming.md#Rt-axiom)
 * [T.23: Differentiate a refined concept from its more general case by adding new use patterns](12-T-Templates%20and%20generic%20programming.md#Rt-refine)
 * [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](12-T-Templates%20and%20generic%20programming.md#Rt-tag)
@@ -176,9 +176,9 @@ is to efficiently generalize operations/algorithms over a set of types with simi
 
 The `requires` in the comments are uses of `concepts`.
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them.
+If you use GCC 6.1 or later, you can uncomment them.
 
 ##### Enforcement
 
@@ -337,7 +337,7 @@ Concept use rule summary:
 Concept definition rule summary:
 
 * [T.20: Avoid "concepts" without meaningful semantics](12-T-Templates%20and%20generic%20programming.md#Rt-low)
-* [T.21: Require a complete set of operations for a concept](#Rt-complete)
+* [T.21: Require a complete set of operations for a concept](12-T-Templates%20and%20generic%20programming.md#Rt-complete)
 * [T.22: Specify axioms for concepts](12-T-Templates%20and%20generic%20programming.md#Rt-axiom)
 * [T.23: Differentiate a refined concept from its more general case by adding new use patterns](12-T-Templates%20and%20generic%20programming.md#Rt-refine)
 * [T.24: Use tag classes or traits to differentiate concepts that differ only in semantics](12-T-Templates%20and%20generic%20programming.md#Rt-tag)
@@ -383,9 +383,9 @@ Iter find(Iter b, Iter e, Val v)
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use GCC 6.1, you can uncomment them:
+If you use GCC 6.1 or later, you can uncomment them:
 
 ```cpp
 template<typename Iter, typename Val>
@@ -498,9 +498,9 @@ The shorter versions better match the way we speak. Note that many templates don
 
 "Concepts" are defined in an ISO Technical specification: [concepts](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 A draft of a set of standard-library concepts can be found in another ISO TS: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
-Currently (July 2016), concepts are supported only in GCC 6.1.
+Concepts are supported in GCC 6.1 and later.
 Consequently, we comment out uses of concepts in examples; that is, we use them as formalized comments only.
-If you use a compiler that supports concepts (e.g., GCC 6.1), you can remove the `//`.
+If you use a compiler that supports concepts (e.g., GCC 6.1 or later), you can remove the `//`.
 
 ##### Enforcement
 
@@ -514,7 +514,7 @@ Concepts are meant to represent fundamental concepts in an application domain (h
 Similarly throwing together a set of syntactic constraints to be used for a the arguments for a single class or algorithm is not what concepts were designed for
 and will not give the full benefits of the mechanism.
 
-Obviously, defining concepts will be most useful for code that can use an implementation (e.g., GCC 6.1),
+Obviously, defining concepts will be most useful for code that can use an implementation (e.g., GCC 6.1 or later),
 but defining concepts is in itself a useful design technique and help catch conceptual errors and clean up the concepts (sic!) of an implementation.
 
 ### <a name="Rt-low"></a>T.20: Avoid "concepts" without meaningful semantics
@@ -563,7 +563,7 @@ concept Number = has_plus<T>
                  && has_multiply<T>
                  && has_divide<T>;
 
-template<Number N> auto algo(const N& a, const N& b) // use two numbers
+template<Number N> auto algo(const N& a, const N& b)
 {
     // ...
     return a + b;
@@ -571,7 +571,7 @@ template<Number N> auto algo(const N& a, const N& b) // use two numbers
 
 int x = 7;
 int y = 9;
-auto z = algo(x, y);   // z = 18
+auto z = algo(x, y);   // z = 16
 
 string xx = "7";
 string yy = "9";
@@ -588,7 +588,7 @@ Concepts with multiple operations have far lower chance of accidentally matching
 * Flag uses of `enable_if` that appears to simulate single-operation `concepts`.
 
 
-### <a name="RT-operations"></a>T.21: Require a complete set of operations for a concept
+### <a name="Rt-complete"></a>T.21: Require a complete set of operations for a concept
 
 ##### Reason
 
@@ -680,7 +680,7 @@ Ideally, that rule should be language supported by giving you comparison operato
 
 ##### Enforcement
 
-* Flag classes the support "odd" subsets of a set of operators, e.g., `==` but not `!=` or `+` but not `-`.
+* Flag classes that support "odd" subsets of a set of operators, e.g., `==` but not `!=` or `+` but not `-`.
   Yes, `std::string` is "odd", but it's too late to change that.
 
 
@@ -2279,6 +2279,7 @@ If you intend for a class to match a concept, verifying that early saves users p
 
 ```cpp
 class X {
+public:
     X() = delete;
     X(const X&) = default;
     X(X&&) = default;

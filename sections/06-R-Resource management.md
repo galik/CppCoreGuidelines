@@ -664,7 +664,35 @@ be able to destroy a cyclic structure.
 ##### Example
 
 ```cpp
-???
+#include <memory>
+
+class bar;
+
+class foo
+{
+public:
+  explicit foo(const std::shared_ptr<bar>& forward_reference)
+    : forward_reference_(forward_reference)
+  { }
+private:
+  std::shared_ptr<bar> forward_reference_;
+};
+
+class bar
+{
+public:
+  explicit bar(const std::weak_ptr<foo>& back_reference)
+    : back_reference_(back_reference)
+  { }
+  void do_something()
+  {
+    if (auto shared_back_reference = back_reference_.lock()) {
+      // Use *shared_back_reference
+    }
+  }
+private:
+  std::weak_ptr<foo> back_reference_;
+};
 
 ```
 ##### Note

@@ -17,7 +17,7 @@ Naming and layout rules:
 * [NL.2: State intent in comments](21-NL-Naming%20and%20layout%20rules.md#Rl-comments-intent)
 * [NL.3: Keep comments crisp](21-NL-Naming%20and%20layout%20rules.md#Rl-comments-crisp)
 * [NL.4: Maintain a consistent indentation style](21-NL-Naming%20and%20layout%20rules.md#Rl-indent)
-* [NL.5: Don't encode type information in names](21-NL-Naming%20and%20layout%20rules.md#Rl-name-type)
+* [NL.5: Avoid encoding type information in names](21-NL-Naming%20and%20layout%20rules.md#Rl-name-type)
 * [NL.7: Make the length of a name roughly proportional to the length of its scope](21-NL-Naming%20and%20layout%20rules.md#Rl-name-length)
 * [NL.8: Use a consistent naming style](21-NL-Naming%20and%20layout%20rules.md#Rl-name)
 * [NL.9: Use `ALL_CAPS` for macro names only](21-NL-Naming%20and%20layout%20rules.md#Rl-all-caps)
@@ -132,7 +132,7 @@ if (i < 0)
 
 Use a tool.
 
-### <a name="Rl-name-type"></a>NL.5: Don't encode type information in names
+### <a name="Rl-name-type"></a>NL.5: Avoid encoding type information in names
 
 ##### Rationale
 
@@ -146,8 +146,18 @@ Minimize unintentional conversions.
 void print_int(int i);
 void print_string(const char*);
 
-print_int(1);   // OK
-print_int(x);   // conversion to int if x is a double
+print_int(1);          // repetitive, manual type matching
+print_string("xyzzy"); // repetitive, manual type matching
+
+```
+##### Example, good
+
+```cpp
+void print(int i);
+void print(string_view);    // also works on any string-like sequence
+
+print(1);              // clear, automatic type matching
+print("xyzzy");        // clear, automatic type matching
 
 ```
 ##### Note
@@ -160,7 +170,24 @@ prints  // print a C-style string
 printi  // print an int
 
 ```
-PS. Hungarian notation is evil (at least in a strongly statically-typed language).
+Requiring techniques like Hungarian notation to encode a type in a name is needed in C, but is generally unnecessary and actively harmful in a strongly statically-typed language like C++, because the annotations get out of date (the warts are just like comments and rot just like them) and they interfere with good use of the language (use the same name and overload resolution instead).
+
+##### Note
+
+Some styles use very general (not type-specific) prefixes to denote the general use of a variable.
+
+```cpp
+auto p = new User();
+auto p = make_unique<User>();
+// note: "p" is not being used to say "raw pointer to type User,"
+//       just generally to say "this is an indirection"
+
+auto cntHits = calc_total_of_hits(/*...*/);
+// note: "cnt" is not being used to encode a type,
+//       just generally to say "this is a count of something"
+
+```
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ##### Note
 
@@ -173,7 +200,7 @@ struct S {
 };
 
 ```
-This is not evil.
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ##### Note
 
@@ -182,14 +209,14 @@ For example, by capitalizing type names, but not the names of functions and vari
 
 ```cpp
 typename<typename T>
-class Hash_tbl {   // maps string to T
+class HashTable {   // maps string to T
     // ...
 };
 
-Hash_tbl<int> index;
+HashTable<int> index;
 
 ```
-This is not evil.
+This is not harmful and does not fall under this guideline because it does not encode type information.
 
 ### <a name="Rl-name-length"></a>NL.7: Make the length of a name roughly proportional to the length of its scope
 
@@ -409,10 +436,6 @@ When declaring a class use the following order
 
 Use the `public` before `protected` before `private` order.
 
-Private types and functions can be placed with private data.
-
-Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed among blocks of declarations with different access (e.g. `private`).
-
 ##### Example
 
 ```cpp
@@ -426,9 +449,37 @@ private:
 };
 
 ```
-##### Note
+##### Example
 
-The use of macros to declare groups of members often violates any ordering rules.
+Sometimes, the default order of members conflicts with a desire to separate the public interface from implementation details.
+In such cases, private types and functions can be placed with private data.
+
+```cpp
+class X {
+public:
+    // interface
+protected:
+    // unchecked function for use by derived class implementations
+private:
+    // implementation details (types, functions, and data)
+};
+
+```
+##### Example, bad
+
+Avoid multiple blocks of declarations of one access (e.g., `public`) dispersed among blocks of declarations with different access (e.g. `private`).
+
+```cpp
+class X {   // bad
+public:
+    void f();
+public:
+    int g();
+    // ...
+};
+
+```
+The use of macros to declare groups of members often leads to violation of any ordering rules.
 However, macros obscures what is being expressed anyway.
 
 ##### Enforcement

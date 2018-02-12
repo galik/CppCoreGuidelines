@@ -305,7 +305,7 @@ Flag classes declared with `struct` if there is a `private` or `protected` membe
 
 Encapsulation.
 Information hiding.
-Minimize the chance of untended access.
+Minimize the chance of unintended access.
 This simplifies maintenance.
 
 ##### Example
@@ -1258,7 +1258,7 @@ If you really have to, look at [factory functions](04-C-Classes%20and%20Class%20
 
 One reason people have used `init()` functions rather than doing the initialization work in a constructor has been to avoid code replication.
 [Delegating constructors](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-delegating) and [default member initialization](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-in-class-initializer) do that better.
-Another reason is been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](07-ES-Expressions%20and%20Statements.md#Res-init)
+Another reason has been to delay initialization until an object is needed; the solution to that is often [not to declare a variable until it can be properly initialized](07-ES-Expressions%20and%20Statements.md#Res-init)
 
 ##### Enforcement
 
@@ -1923,9 +1923,9 @@ if (x == y) throw Bad{};   // assume value semantics
 class X2 {  // OK: pointer semantics
 public:
     X2();
-    X2(const X&) = default; // shallow copy
+    X2(const X2&) = default; // shallow copy
     ~X2() = default;
-    void modify();          // change the value of X
+    void modify();          // change the pointed-to value
     // ...
 private:
     T* p;
@@ -2226,6 +2226,7 @@ auto b = make_unique<B>(d);
 
 ```cpp
 class B { // GOOD: base class suppresses copying
+public:
     B(const B&) = delete;
     B& operator=(const B&) = delete;
     virtual unique_ptr<B> clone() { return /* B object */; }
@@ -2356,6 +2357,8 @@ void f()
 }
 
 ```
+Note that deleted methods should be public.
+
 ##### Enforcement
 
 The elimination of a default operation is (should be) based on the desired semantics of the class. Consider such classes suspect, but maintain a "positive list" of classes where a human has asserted that the semantics is correct.
@@ -2824,6 +2827,7 @@ Such as on an ABI (link) boundary.
 
 ```cpp
 struct Device {
+    virtual ~Device() = default;
     virtual void write(span<const char> outbuf) = 0;
     virtual void read(span<char> inbuf) = 0;
 };
@@ -3168,6 +3172,27 @@ Impl::Smiley -> Impl::Circle -> Impl::Shape
 
 ```
 As mentioned, this is just one way to construct a dual hierarchy.
+
+The implementation hierarchy can be used directly, rather than through the abstract interface.
+
+```cpp
+void work_with_shape(Shape&);
+
+int user()
+{
+    Impl::Smiley my_smiley{ /* args */ };   // create concrete shape
+    // ...
+    my_smiley.some_member();        // use implementation class directly
+    // ...
+    work_with_shape(my_smiley);     // use implementation through abstract interface
+    // ...
+}
+
+```
+This can be useful when the implementation class has members that are not offered in the abstract interface
+or if direct use of a member offers optimization opportunities (e.g., if an implementation member function is `final`)
+
+##### Note
 
 Another (related) technique for separating interface and implementation is [Pimpl](02-I-Interfaces.md#Ri-pimpl).
 

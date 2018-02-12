@@ -141,7 +141,7 @@ C++ implementations tend to be optimized based on the assumption that exceptions
 int find_index(vector<string>& vec, const string& x)
 {
     try {
-        for (int i = 0; i < vec.size(); ++i)
+        for (gsl::index i = 0; i < vec.size(); ++i)
             if (vec[i] == x) throw i;  // found x
     } catch (int i) {
         return i;

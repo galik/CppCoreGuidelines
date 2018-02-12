@@ -10,7 +10,7 @@ Having good (easy-to-understand, encouraging efficient use, not error-prone, sup
 Interface rule summary:
 
 * [I.1: Make interfaces explicit](02-I-Interfaces.md#Ri-explicit)
-* [I.2: Avoid global variables](02-I-Interfaces.md#Ri-global)
+* [I.2: Avoid non-`const` global variables](02-I-Interfaces.md#Ri-global)
 * [I.3: Avoid singletons](02-I-Interfaces.md#Ri-singleton)
 * [I.4: Make interfaces precisely and strongly typed](02-I-Interfaces.md#Ri-typed)
 * [I.5: State preconditions (if any)](02-I-Interfaces.md#Ri-pre)
@@ -73,7 +73,7 @@ Reporting through non-local variables (e.g., `errno`) is easily ignored. For exa
 fprintf(connection, "logging: %d %d %d\n", x, y, s);
 
 ```
-What if the connection goes down so that no logging output is produced? See I.??.
+What if the connection goes down so that no logging output is produced? See I.???.
 
 **Alternative**: Throw an exception. An exception cannot be ignored.
 
@@ -88,7 +88,7 @@ Functions can be template functions and sets of functions can be classes or clas
 * (Simple) A function should not make control-flow decisions based on the values of variables declared at namespace scope.
 * (Simple) A function should not write to variables declared at namespace scope.
 
-### <a name="Ri-global"></a>I.2: Avoid global variables
+### <a name="Ri-global"></a>I.2: Avoid non-`const` global variables
 
 ##### Reason
 
@@ -567,7 +567,7 @@ Iter find(Iter first, Iter last, Val v)
 ##### Note
 
 Soon (maybe in 2018), most compilers will be able to check `requires` clauses once the `//` is removed.
-For now, the concept TS is supported only in GCC 6.1 and later.
+Concepts are supported in GCC 6.1 and later.
 
 **See also**: [Generic programming](12-T-Templates%20and%20generic%20programming.md#SS-GP) and [concepts](#SS-t-concepts).
 
@@ -608,7 +608,7 @@ Many traditional interface functions (e.g., UNIX signal handlers) use error code
 
 ##### Alternative
 
-If you can't use exceptions (e.g. because your code is full of old-style raw-pointer use or because there are hard-real-time constraints), consider using a style that returns a pair of values:
+If you can't use exceptions (e.g., because your code is full of old-style raw-pointer use or because there are hard-real-time constraints), consider using a style that returns a pair of values:
 
 ```cpp
 int val;
@@ -667,7 +667,7 @@ X* compute(args)    // don't
 }
 
 ```
-Who deletes the returned `X`? The problem would be harder to spot if compute returned a reference.
+Who deletes the returned `X`? The problem would be harder to spot if `compute` returned a reference.
 Consider returning the result by value (use move semantics if the result is large):
 
 ```cpp
@@ -1147,7 +1147,7 @@ istream& in = *inp;
 ```
 This violated the rule [against uninitialized variables](07-ES-Expressions%20and%20Statements.md#Res-always),
 the rule against [ignoring ownership](02-I-Interfaces.md#Ri-raw),
-and the rule [against magic constants](07-ES-Expressions%20and%20Statements.md#Res-magic) .
+and the rule [against magic constants](07-ES-Expressions%20and%20Statements.md#Res-magic).
 In particular, someone has to remember to somewhere write
 
 ```cpp
@@ -1171,7 +1171,7 @@ public:
     Istream() { }
     Istream(zstring p) :owned{true}, inp{new ifstream{p}} {}            // read from file
     Istream(zstring p, Opt) :owned{true}, inp{new istringstream{p}} {}  // read from command line
-    ~Itream() { if (owned) delete inp; }
+    ~Istream() { if (owned) delete inp; }
     operator istream& () { return *inp; }
 private:
     bool owned = false;
@@ -1185,7 +1185,7 @@ Presumably, a bit of checking for potential errors would be added in real code.
 ##### Enforcement
 
 * Hard, it is hard to decide what rule-breaking code is essential
-* flag rule suppression that enable rule-violations to cross interfaces
+* Flag rule suppression that enable rule-violations to cross interfaces
 
 
 

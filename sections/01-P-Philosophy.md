@@ -48,7 +48,9 @@ public:
 The first declaration of `month` is explicit about returning a `Month` and about not modifying the state of the `Date` object.
 The second version leaves the reader guessing and opens more possibilities for uncaught bugs.
 
-##### Example
+##### Example; bad
+
+This loop is a restricted form of `std::find`:
 
 ```cpp
 void f(vector<string>& v)
@@ -56,7 +58,7 @@ void f(vector<string>& v)
     string val;
     cin >> val;
     // ...
-    int index = -1;                    // bad
+    int index = -1;                    // bad, plus should use gsl::index
     for (int i = 0; i < v.size(); ++i) {
         if (v[i] == val) {
             index = i;
@@ -67,7 +69,8 @@ void f(vector<string>& v)
 }
 
 ```
-That loop is a restricted form of `std::find`.
+##### Example; good
+
 A much clearer expression of intent would be:
 
 ```cpp
@@ -156,7 +159,7 @@ Unless the intent of some code is stated (e.g., in names or comments), it is imp
 ##### Example
 
 ```cpp
-int i = 0;
+gsl::index i = 0;
 while (i < v.size()) {
     // ... do something with v[i] ...
 }
@@ -266,7 +269,7 @@ int bits = 0;         // don't: avoidable code
 for (Int i = 1; i; i <<= 1)
     ++bits;
 if (bits < 32)
-    cerr << "Int too small\n"
+    cerr << "Int too small\n";
 
 ```
 This example fails to achieve what it is trying to achieve (because overflow is undefined) and should be replaced with a simple `static_assert`:
@@ -639,7 +642,7 @@ X waste(const char* p)
     X x;
     x.ch = 'a';
     x.s = string(n);    // give x.s space for *p
-    for (int i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
+    for (gsl::index i = 0; i < x.s.size(); ++i) x.s[i] = buf[i];  // copy buf into x.s
     delete[] buf;
     return x;
 }
@@ -734,7 +737,7 @@ for (int x; cin >> x; ) {
 ##### Note
 
 The standards library and the GSL are examples of this philosophy.
-For example, instead of messing with the arrays, unions, cast, tricky lifetime issues, `gsl::owner`, etc.
+For example, instead of messing with the arrays, unions, cast, tricky lifetime issues, `gsl::owner`, etc.,
 that are needed to implement key abstractions, such as `vector`, `span`, `lock_guard`, and `future`, we use the libraries
 designed and implemented by people with more time and expertise than we usually have.
 Similarly, we can and should design and implement more specialized libraries, rather than leaving the users (often ourselves)
@@ -766,7 +769,7 @@ See
 * [Concurrency tools](09-CP-Concurrency%20and%20Parallelism.md#Rconc-tools)
 * [Testing tools](???)
 
-There are many other kinds of tools, such as source code depositories, build tools, etc.,
+There are many other kinds of tools, such as source code repositories, build tools, etc.,
 but those are beyond the scope of these guidelines.
 
 ##### Note

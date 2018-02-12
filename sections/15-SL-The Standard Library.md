@@ -121,6 +121,13 @@ std::vector<int> w(initial_size);   // ok
 
 Use `gsl::span` for non-owning references into a container.
 
+##### Note
+
+Comparing the performance of a fixed-sized array allocated on the stack against a `vector` with its elements on the free store is bogus.
+You could just as well compare a `std::array` on the stack against the result of a `malloc()` accessed through a pointer.
+For most code, even the difference between stack allocation and free-store allocation doesn't matter, but the convenience and safety of `vector` does.
+People working with code for which that difference matters are quite capable of choosing between `array` and `vector`.
+
 ##### Enforcement
 
 * Flag declaration of a C array inside a function or class that also declares an STL container (to avoid excessive noisy warnings on legacy non-STL code). To fix: At least change the C array to a `std::array`.
@@ -669,7 +676,7 @@ int main()
 
 ### <a name="Rio-endl"></a>SL.io.50: Avoid `endl`
 
-### Reason
+##### Reason
 
 The `endl` manipulator is mostly equivalent to `'\n'` and `"\n"`;
 as most commonly used it simply slows down output by doing redundant `flush()`s.

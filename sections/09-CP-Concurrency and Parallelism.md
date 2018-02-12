@@ -240,6 +240,7 @@ Making `surface_readings` be `const` (with respect to this function) allow reaso
 
 Immutable data can be safely and efficiently shared.
 No locking is needed: You can't have a data race on a constant.
+See also [CP.mess: Message Passing](09-CP-Concurrency%20and%20Parallelism.md#SScp-mess) and [CP.31: prefer pass by value](#C#Rconc-data-by-value).
 
 ##### Enforcement
 
@@ -723,7 +724,7 @@ This implies that we cannot safely refer to local objects in `use()` from the th
 
 ##### Note
 
-Make "immortal threads" globals, put them in an enclosing scope, or put them on the on the free store rather than `detach()`.
+Make "immortal threads" globals, put them in an enclosing scope, or put them on the free store rather than `detach()`.
 [don't `detach`](09-CP-Concurrency%20and%20Parallelism.md#Rconc-detached_thread).
 
 ##### Note

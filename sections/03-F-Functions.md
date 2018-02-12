@@ -61,7 +61,7 @@ Other function rules:
 * [F.54: If you capture `this`, capture all variables explicitly (no default capture)](03-F-Functions.md#Rf-this-capture)
 * [F.55: Don't use `va_arg` arguments](03-F-Functions.md#F-varargs)
 
-Functions have strong similarities to lambdas and function objects so see also Section ???.
+Functions have strong similarities to lambdas and function objects so see also [C.lambdas: Function objects and lambdas](04-C-Classes%20and%20Class%20Hierarchies.md#SS-lambdas).
 
 ## <a name="SS-fct-def"></a>F.def: Function definitions
 
@@ -799,9 +799,9 @@ const vector<int> fct();    // bad: that "const" is more trouble than it is wort
 vector<int> g(const vector<int>& vx)
 {
     // ...
-    f() = vx;   // prevented by the "const"
+    fct() = vx;   // prevented by the "const"
     // ...
-    return f(); // expensive copy: move semantics suppressed by the "const"
+    return fct(); // expensive copy: move semantics suppressed by the "const"
 }
 
 ```
@@ -1090,7 +1090,7 @@ void f(span<int> s)
     for (int x : s) cout << x << '\n';
 
     // C-style traversal (potentially checked)
-    for (int i = 0; i < s.size(); ++i) cout << s[i] << '\n';
+    for (gsl::index i = 0; i < s.size(); ++i) cout << s[i] << '\n';
 
     // random access (potentially checked)
     s[7] = 9;
@@ -1417,7 +1417,7 @@ class Car
     array<wheel, 4> w;
     // ...
 public:
-    wheel& get_wheel(size_t i) { Expects(i < 4); return w[i]; }
+    wheel& get_wheel(int i) { Expects(i < w.size()); return w[i]; }
     // ...
 };
 
@@ -1715,9 +1715,9 @@ class My_class {
         // [=,this] and [&,this] are not much better, and confusing
 
         x = 42;
-        lambda(); // calls use(42);
+        lambda(); // calls use(0, 42);
         x = 43;
-        lambda(); // calls use(43);
+        lambda(); // calls use(0, 43);
 
         // ...
 

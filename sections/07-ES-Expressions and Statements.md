@@ -86,7 +86,7 @@ Arithmetic rules:
 * [ES.104: Don't underflow](07-ES-Expressions%20and%20Statements.md#Res-underflow)
 * [ES.105: Don't divide by zero](07-ES-Expressions%20and%20Statements.md#Res-zero)
 * [ES.106: Don't try to avoid negative values by using `unsigned`](07-ES-Expressions%20and%20Statements.md#Res-nonnegative)
-* [ES.107: Don't use `unsigned` for subscripts](07-ES-Expressions%20and%20Statements.md#Res-subscripts)
+* [ES.107: Don't use `unsigned` for subscripts, prefer `gsl::index`](07-ES-Expressions%20and%20Statements.md#Res-subscripts)
 
 ### <a name="Res-lib"></a>ES.1: Prefer the standard library to other libraries and to "handcrafted code"
 
@@ -303,7 +303,7 @@ Conventional short, local names increase readability:
 template<typename T>    // good
 void print(ostream& os, const vector<T>& v)
 {
-    for (int i = 0; i < v.size(); ++i)
+    for (gsl::index i = 0; i < v.size(); ++i)
         os << v[i] << '\n';
 }
 
@@ -314,9 +314,9 @@ An index is conventionally called `i` and there is no hint about the meaning of 
 template<typename Element_type>   // bad: verbose, hard to read
 void print(ostream& target_stream, const vector<Element_type>& current_vector)
 {
-    for (int current_element_index = 0;
-            current_element_index < current_vector.size();
-            ++current_element_index
+    for (gsl::index current_element_index = 0;
+         current_element_index < current_vector.size();
+         ++current_element_index
     )
     target_stream << current_vector[current_element_index] << '\n';
 }
@@ -521,7 +521,6 @@ Consider:
 
 ```cpp
 auto p = v.begin();   // vector<int>::iterator
-auto s = v.size();
 auto h = t.future();
 auto q = make_unique<int[]>(s);
 auto f = [](int x){ return x + 10; };
@@ -732,13 +731,6 @@ This cannot trivially be rewritten to initialize `i` and `j` with initializers.
 Note that for types with a default constructor, attempting to postpone initialization simply leads to a default initialization followed by an assignment.
 A popular reason for such examples is "efficiency", but a compiler that can detect whether we made a used-before-set error can also eliminate any redundant double initialization.
 
-At the cost of repeating `cond` we could write:
-
-```cpp
-widget i = (cond) ? f1() : f3();
-widget j = (cond) ? f2() : f4();
-
-```
 Assuming that there is a logical connection between `i` and `j`, that connection should probably be expressed in code:
 
 ```cpp
@@ -747,30 +739,14 @@ pair<widget, widget> make_related_widgets(bool x)
     return (x) ? {f1(), f2()} : {f3(), f4() };
 }
 
-auto init = make_related_widgets(cond);
-widget i = init.first;
-widget j = init.second;
+auto [i, j] = make_related_widgets(cond);    // C++17
 
 ```
-Obviously, what we really would like is a construct that initialized n variables from a `tuple`. For example:
+##### Note
 
-```cpp
-auto [i, j] = make_related_widgets(cond);    // C++17, not C++14
-
-```
-Today, we might approximate that using `tie()`:
-
-```cpp
-widget i;       // bad: uninitialized variable
-widget j;
-tie(i, j) = make_related_widgets(cond);
-
-```
-This may be seen as an example of the *immediately initialize from input* exception below.
-
-Creating optimal and equivalent code from all of these examples should be well within the capabilities of modern C++ compilers
-(but don't make performance claims without measuring; a compiler may very well not generate optimal code for every example and
-there may be language rules preventing some optimization that you would have liked in a particular case).
+Complex initialization has been popular with clever programmers for decades.
+It has also been a major source of errors and complexity.
+Many such errors are introduced during maintenance years after the initial implementation.
 
 ##### Example
 
@@ -796,12 +772,6 @@ private:
 The compiler will flag the uninitialized `cm3` because it is a `const`, but it will not catch the lack of initialization of `m3`.
 Usually, a rare spurious member initialization is worth the absence of errors from lack of initialization and often an optimizer
 can eliminate a redundant initialization (e.g., an initialization that occurs immediately before an assignment).
-
-##### Note
-
-Complex initialization has been popular with clever programmers for decades.
-It has also been a major source of errors and complexity.
-Many such errors are introduced during maintenance years after the initial implementation.
 
 ##### Exception
 
@@ -1429,630 +1399,6 @@ This is basically the way `printf` is implemented.
 
 * Flag definitions of C-style variadic functions.
 * Flag `#include <cstdarg>` and `#include <stdarg.h>`
-
-
-## ES.stmt: Statements
-
-Statements control the flow of control (except for function calls and exception throws, which are expressions).
-
-### <a name="Res-switch-if"></a>ES.70: Prefer a `switch`-statement to an `if`-statement when there is a choice
-
-##### Reason
-
-* Readability.
-* Efficiency: A `switch` compares against constants and is usually better optimized than a series of tests in an `if`-`then`-`else` chain.
-* A `switch` enables some heuristic consistency checking. For example, have all values of an `enum` been covered? If not, is there a `default`?
-
-##### Example
-
-```cpp
-void use(int n)
-{
-    switch (n) {   // good
-    case 0:   // ...
-    case 7:   // ...
-    }
-}
-
-```
-rather than:
-
-```cpp
-void use2(int n)
-{
-    if (n == 0)   // bad: if-then-else chain comparing against a set of constants
-        // ...
-    else if (n == 7)
-        // ...
-}
-
-```
-##### Enforcement
-
-Flag `if`-`then`-`else` chains that check against constants (only).
-
-### <a name="Res-for-range"></a>ES.71: Prefer a range-`for`-statement to a `for`-statement when there is a choice
-
-##### Reason
-
-Readability. Error prevention. Efficiency.
-
-##### Example
-
-```cpp
-for (int i = 0; i < v.size(); ++i)   // bad
-        cout << v[i] << '\n';
-
-for (auto p = v.begin(); p != v.end(); ++p)   // bad
-    cout << *p << '\n';
-
-for (auto& x : v)    // OK
-    cout << x << '\n';
-
-for (int i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
-    cout << v[i] + v[i - 1] << '\n';
-
-for (int i = 0; i < v.size(); ++i) // possible side effect: can't be a range-for
-    cout << f(v, &v[i]) << '\n';
-
-for (int i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
-    if (i % 2 == 0)
-        continue;   // skip even elements
-    else
-        cout << v[i] << '\n';
-}
-
-```
-A human or a good static analyzer may determine that there really isn't a side effect on `v` in `f(v, &v[i])` so that the loop can be rewritten.
-
-"Messing with the loop variable" in the body of a loop is typically best avoided.
-
-##### Note
-
-Don't use expensive copies of the loop variable of a range-`for` loop:
-
-```cpp
-for (string s : vs) // ...
-
-```
-This will copy each elements of `vs` into `s`. Better:
-
-```cpp
-for (string& s : vs) // ...
-
-```
-Better still, if the loop variable isn't modified or copied:
-
-```cpp
-for (const string& s : vs) // ...
-
-```
-##### Enforcement
-
-Look at loops, if a traditional loop just looks at each element of a sequence, and there are no side effects on what it does with the elements, rewrite the loop to a ranged-`for` loop.
-
-### <a name="Res-for-while"></a>ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable
-
-##### Reason
-
-Readability: the complete logic of the loop is visible "up front". The scope of the loop variable can be limited.
-
-##### Example
-
-```cpp
-for (int i = 0; i < vec.size(); i++) {
-    // do work
-}
-
-```
-##### Example, bad
-
-```cpp
-int i = 0;
-while (i < vec.size()) {
-    // do work
-    i++;
-}
-
-```
-##### Enforcement
-
-???
-
-### <a name="Res-while-for"></a>ES.73: Prefer a `while`-statement to a `for`-statement when there is no obvious loop variable
-
-##### Reason
-
-Readability.
-
-##### Example
-
-```cpp
-int events = 0;
-for (; wait_for_event(); ++events) {  // bad, confusing
-    // ...
-}
-
-```
-The "event loop" is misleading because the `events` counter has nothing to do with the loop condition (`wait_for_event()`).
-Better
-
-```cpp
-int events = 0;
-while (wait_for_event()) {      // better
-    ++events;
-    // ...
-}
-
-```
-##### Enforcement
-
-Flag actions in `for`-initializers and `for`-increments that do not relate to the `for`-condition.
-
-### <a name="Res-for-init"></a>ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement
-
-##### Reason
-
-Limit the loop variable visibility to the scope of the loop.
-Avoid using the loop variable for other purposes after the loop.
-
-##### Example
-
-```cpp
-for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
-    // ...
-}
-
-```
-##### Example, don't
-
-```cpp
-int j;                            // BAD: j is visible outside the loop
-for (j = 0; j < 100; ++j) {
-    // ...
-}
-// j is still visible here and isn't needed
-
-```
-**See also**: [Don't use a variable for two unrelated purposes](07-ES-Expressions%20and%20Statements.md#Res-recycle)
-
-##### Example
-
-```cpp
-for (string s; cin >> s; ) {
-    cout << s << '\n';
-}
-
-```
-##### Enforcement
-
-Warn when a variable modified inside the `for`-statement is declared outside the loop and not being used outside the loop.
-
-**Discussion**: Scoping the loop variable to the loop body also helps code optimizers greatly. Recognizing that the induction variable
-is only accessible in the loop body unblocks optimizations such as hoisting, strength reduction, loop-invariant code motion, etc.
-
-### <a name="Res-do"></a>ES.75: Avoid `do`-statements
-
-##### Reason
-
-Readability, avoidance of errors.
-The termination condition is at the end (where it can be overlooked) and the condition is not checked the first time through.
-
-##### Example
-
-```cpp
-int x;
-do {
-    cin >> x;
-    // ...
-} while (x < 0);
-
-```
-##### Note
-
-Yes, there are genuine examples where a `do`-statement is a clear statement of a solution, but also many bugs.
-
-##### Enforcement
-
-Flag `do`-statements.
-
-### <a name="Res-goto"></a>ES.76: Avoid `goto`
-
-##### Reason
-
-Readability, avoidance of errors. There are better control structures for humans; `goto` is for machine generated code.
-
-##### Exception
-
-Breaking out of a nested loop.
-In that case, always jump forwards.
-
-```cpp
-for (int i = 0; i < imax; ++i)
-    for (int j = 0; j < jmax; ++j) {
-        if (a[i][j] > elem_max) goto finished;
-        // ...
-    }
-finished:
-// ...
-
-```
-##### Example, bad
-
-There is a fair amount of use of the C goto-exit idiom:
-
-```cpp
-void f()
-{
-    // ...
-        goto exit;
-    // ...
-        goto exit;
-    // ...
-exit:
-    // ... common cleanup code ...
-}
-
-```
-This is an ad-hoc simulation of destructors.
-Declare your resources with handles with destructors that clean up.
-If for some reason you cannot handle all cleanup with destructors for the variables used,
-consider `gsl::finally()` as a cleaner and more reliable alternative to `goto exit`
-
-##### Enforcement
-
-* Flag `goto`. Better still flag all `goto`s that do not jump from a nested loop to the statement immediately after a nest of loops.
-
-### <a name="Res-continue"></a>ES.77: Minimize the use of `break` and `continue` in loops
-
-##### Reason
-
- In a non-trivial loop body, it is easy to overlook a `break` or a `continue`.
-
- A `break` in a loop has a dramatically different meaning than a `break` in a `switch`-statement
- (and you can have `switch`-statement in a loop and a loop in a `switch`-case).
-
-##### Example
-
-```cpp
-???
-
-```
-##### Alternative
-
-Often, a loop that requires a `break` is a good candidate for a function (algorithm), in which case the `break` becomes a `return`.
-
-```cpp
-???
-
-```
-Often. a loop that uses `continue` can equivalently and as clearly be expressed by an `if`-statement.
-
-```cpp
-???
-
-```
-##### Note
-
-If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](07-ES-Expressions%20and%20Statements.md#Res-loop-counter) or a [`goto`](07-ES-Expressions%20and%20Statements.md#Res-goto):
-
-
-##### Enforcement
-
-???
-
-### <a name="Res-break"></a>ES.78: Always end a non-empty `case` with a `break`
-
-##### Reason
-
- Accidentally leaving out a `break` is a fairly common bug.
- A deliberate fallthrough is a maintenance hazard.
-
-##### Example
-
-```cpp
-switch (eventType) {
-case Information:
-    update_status_bar();
-    break;
-case Warning:
-    write_event_log();
-case Error:
-    display_error_window(); // Bad
-    break;
-}
-
-```
-It is easy to overlook the fallthrough. Be explicit:
-
-```cpp
-switch (eventType) {
-case Information:
-    update_status_bar();
-    break;
-case Warning:
-    write_event_log();
-    // fallthrough
-case Error:
-    display_error_window(); // Bad
-    break;
-}
-
-```
-In C++17, use a `[[fallthrough]]` annotation:
-
-```cpp
-switch (eventType) {
-case Information:
-    update_status_bar();
-    break;
-case Warning:
-    write_event_log();
-    [[fallthrough]];        // C++17
-case Error:
-    display_error_window(); // Bad
-    break;
-}
-
-```
-##### Note
-
-Multiple case labels of a single statement is OK:
-
-```cpp
-switch (x) {
-case 'a':
-case 'b':
-case 'f':
-    do_something(x);
-    break;
-}
-
-```
-##### Enforcement
-
-Flag all fallthroughs from non-empty `case`s.
-
-### <a name="Res-default"></a>ES.79: Use `default` to handle common cases (only)
-
-##### Reason
-
- Code clarity.
- Improved opportunities for error detection.
-
-##### Example
-
-```cpp
-enum E { a, b, c , d };
-
-void f1(E x)
-{
-    switch (x) {
-    case a:
-        do_something();
-        break;
-    case b:
-        do_something_else();
-        break;
-    default:
-        take_the_default_action();
-        break;
-    }
-}
-
-```
-Here it is clear that there is a default action and that cases `a` and `b` are special.
-
-##### Example
-
-But what if there is no default action and you mean to handle only specific cases?
-In that case, have an empty default or else it is impossible to know if you meant to handle all cases:
-
-```cpp
-void f2(E x)
-{
-    switch (x) {
-    case a:
-        do_something();
-        break;
-    case b:
-        do_something_else();
-        break;
-    default:
-        // do nothing for the rest of the cases
-        break;
-    }
-}
-
-```
-If you leave out the `default`, a maintainer and/or a compiler may reasonably assume that you intended to handle all cases:
-
-```cpp
-void f2(E x)
-{
-    switch (x) {
-    case a:
-        do_something();
-        break;
-    case b:
-    case c:
-        do_something_else();
-        break;
-    }
-}
-
-```
-Did you forget case `d` or deliberately leave it out?
-Forgetting a case typically happens when a case is added to an enumeration and the person doing so fails to add it to every
-switch over the enumerators.
-
-##### Enforcement
-
-Flag `switch`-statements over an enumeration that don't handle all enumerators and do not have a `default`.
-This may yield too many false positives in some code bases; if so, flag only `switch`es that handle most but not all cases
-(that was the strategy of the very first C++ compiler).
-
-### <a name="Res-noname"></a>ES.84: Don't (try to) declare a local variable with no name
-
-##### Reason
-
-There is no such thing.
-What looks to a human like a variable without a name is to the compiler a statement consisting of a temporary that immediately goes out of scope.
-To avoid unpleasant surprises.
-
-##### Example, bad
-
-```cpp
-void f()
-{
-    lock<mutex>{mx};   // Bad
-    // ...
-}
-
-```
-This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
-This is not an uncommon mistake.
-In particular, this particular example can lead to hard-to find race conditions.
-There are exceedingly clever uses of this "idiom", but they are far rarer than the mistakes.
-
-##### Note
-
-Unnamed function arguments are fine.
-
-##### Enforcement
-
-Flag statements that are just a temporary
-
-### <a name="Res-empty"></a>ES.85: Make empty statements visible
-
-##### Reason
-
-Readability.
-
-##### Example
-
-```cpp
-for (i = 0; i < max; ++i);   // BAD: the empty statement is easily overlooked
-v[i] = f(v[i]);
-
-for (auto x : v) {           // better
-    // nothing
-}
-v[i] = f(v[i]);
-
-```
-##### Enforcement
-
-Flag empty statements that are not blocks and don't contain comments.
-
-### <a name="Res-loop-counter"></a>ES.86: Avoid modifying loop control variables inside the body of raw for-loops
-
-##### Reason
-
-The loop control up front should enable correct reasoning about what is happening inside the loop. Modifying loop counters in both the iteration-expression and inside the body of the loop is a perennial source of surprises and bugs.
-
-##### Example
-
-```cpp
-for (int i = 0; i < 10; ++i) {
-    // no updates to i -- ok
-}
-
-for (int i = 0; i < 10; ++i) {
-    //
-    if (/* something */) ++i; // BAD
-    //
-}
-
-bool skip = false;
-for (int i = 0; i < 10; ++i) {
-    if (skip) { skip = false; continue; }
-    //
-    if (/* something */) skip = true;  // Better: using two variable for two concepts.
-    //
-}
-
-```
-##### Enforcement
-
-Flag variables that are potentially updated (have a non-`const` use) in both the loop control iteration-expression and the loop body.
-
-
-### <a name="Res-if"></a>ES.87: Don't add redundant `==` or `!=` to conditions
-
-##### Reason
-
-Doing so avoids verbosity and eliminates some opportunities for mistakes.
-Helps make style consistent and conventional.
-
-##### Example
-
-By definition, a condition in an `if`-statement, `while`-statement, or a `for`-statement selects between `true` and `false`.
-A numeric value is compared to `0` and a pointer value to `nullptr`.
-
-```cpp
-// These all mean "if `p` is not `nullptr`"
-if (p) { ... }            // good
-if (p != 0) { ... }       // redundant `!=0`; bad: don't use 0 for pointers
-if (p != nullptr) { ... } // redundant `!=nullptr`, not recommended
-
-```
-Often, `if (p)` is read as "if `p` is valid" which is a direct expression of the programmers intent,
-whereas `if (p != nullptr)` would be a long-winded workaround.
-
-##### Example
-
-This rule is especially useful when a declaration is used as a condition
-
-```cpp
-if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute is ps points to a kind of Circle, good
-
-if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // not recommended
-
-```
-##### Example
-
-Note that implicit conversions to bool are applied in conditions.
-For example:
-
-```cpp
-for (string s; cin >> s; ) v.push_back(s);
-
-```
-This invokes `istream`'s `operator bool()`.
-
-##### Example, bad
-
-It has been noted that
-
-```cpp
-if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
-
-```
-is a common beginners error.
-If you use C-style strings, you must know the `<cstring>` functions well.
-Being verbose and writing 
-
-```cpp
-if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
-
-```
-would not save you.
-
-##### Note
-
-The opposite condition is most easily expressed using a negation:
-
-```cpp
-// These all mean "if `p` is `nullptr`"
-if (!p) { ... }           // good
-if (p == 0) { ... }       // redundant `!= 0`; bad: don't use `0` for pointers
-if (p == nullptr) { ... } // redundant `== nullptr`, not recommended
-
-```
-##### Enforcement
-
-Easy, just check for redundant use of `!=` and `==` in conditions.
 
 
 ## ES.expr: Expressions
@@ -3343,7 +2689,7 @@ void f(int* p)
 ```
 There is a huge amount of such code.
 Most works -- after lots of testing -- but in isolation it is impossible to tell whether `p` could be the `nullptr`.
-Consequently, it this is also a major source of errors.
+Consequently, this is also a major source of errors.
 There are many approaches to dealing with this potential problem:
 
 ```cpp
@@ -3431,6 +2777,652 @@ This rule is part of the [lifetime profile](#Pro.lifetime)
 * Flag a dereference of a pointer that may have been invalidated by a `delete`
 * Flag a dereference to a pointer to a container element that may have been invalidated by dereference
 
+
+## ES.stmt: Statements
+
+Statements control the flow of control (except for function calls and exception throws, which are expressions).
+
+### <a name="Res-switch-if"></a>ES.70: Prefer a `switch`-statement to an `if`-statement when there is a choice
+
+##### Reason
+
+* Readability.
+* Efficiency: A `switch` compares against constants and is usually better optimized than a series of tests in an `if`-`then`-`else` chain.
+* A `switch` enables some heuristic consistency checking. For example, have all values of an `enum` been covered? If not, is there a `default`?
+
+##### Example
+
+```cpp
+void use(int n)
+{
+    switch (n) {   // good
+    case 0:   // ...
+    case 7:   // ...
+    }
+}
+
+```
+rather than:
+
+```cpp
+void use2(int n)
+{
+    if (n == 0)   // bad: if-then-else chain comparing against a set of constants
+        // ...
+    else if (n == 7)
+        // ...
+}
+
+```
+##### Enforcement
+
+Flag `if`-`then`-`else` chains that check against constants (only).
+
+### <a name="Res-for-range"></a>ES.71: Prefer a range-`for`-statement to a `for`-statement when there is a choice
+
+##### Reason
+
+Readability. Error prevention. Efficiency.
+
+##### Example
+
+```cpp
+for (gsl::index i = 0; i < v.size(); ++i)   // bad
+        cout << v[i] << '\n';
+
+for (auto p = v.begin(); p != v.end(); ++p)   // bad
+    cout << *p << '\n';
+
+for (auto& x : v)    // OK
+    cout << x << '\n';
+
+for (gsl::index i = 1; i < v.size(); ++i) // touches two elements: can't be a range-for
+    cout << v[i] + v[i - 1] << '\n';
+
+for (gsl::index i = 0; i < v.size(); ++i) // possible side effect: can't be a range-for
+    cout << f(v, &v[i]) << '\n';
+
+for (gsl::index i = 0; i < v.size(); ++i) { // body messes with loop variable: can't be a range-for
+    if (i % 2 == 0)
+        continue;   // skip even elements
+    else
+        cout << v[i] << '\n';
+}
+
+```
+A human or a good static analyzer may determine that there really isn't a side effect on `v` in `f(v, &v[i])` so that the loop can be rewritten.
+
+"Messing with the loop variable" in the body of a loop is typically best avoided.
+
+##### Note
+
+Don't use expensive copies of the loop variable of a range-`for` loop:
+
+```cpp
+for (string s : vs) // ...
+
+```
+This will copy each elements of `vs` into `s`. Better:
+
+```cpp
+for (string& s : vs) // ...
+
+```
+Better still, if the loop variable isn't modified or copied:
+
+```cpp
+for (const string& s : vs) // ...
+
+```
+##### Enforcement
+
+Look at loops, if a traditional loop just looks at each element of a sequence, and there are no side effects on what it does with the elements, rewrite the loop to a ranged-`for` loop.
+
+### <a name="Res-for-while"></a>ES.72: Prefer a `for`-statement to a `while`-statement when there is an obvious loop variable
+
+##### Reason
+
+Readability: the complete logic of the loop is visible "up front". The scope of the loop variable can be limited.
+
+##### Example
+
+```cpp
+for (gsl::index i = 0; i < vec.size(); i++) {
+    // do work
+}
+
+```
+##### Example, bad
+
+```cpp
+int i = 0;
+while (i < vec.size()) {
+    // do work
+    i++;
+}
+
+```
+##### Enforcement
+
+???
+
+### <a name="Res-while-for"></a>ES.73: Prefer a `while`-statement to a `for`-statement when there is no obvious loop variable
+
+##### Reason
+
+Readability.
+
+##### Example
+
+```cpp
+int events = 0;
+for (; wait_for_event(); ++events) {  // bad, confusing
+    // ...
+}
+
+```
+The "event loop" is misleading because the `events` counter has nothing to do with the loop condition (`wait_for_event()`).
+Better
+
+```cpp
+int events = 0;
+while (wait_for_event()) {      // better
+    ++events;
+    // ...
+}
+
+```
+##### Enforcement
+
+Flag actions in `for`-initializers and `for`-increments that do not relate to the `for`-condition.
+
+### <a name="Res-for-init"></a>ES.74: Prefer to declare a loop variable in the initializer part of a `for`-statement
+
+##### Reason
+
+Limit the loop variable visibility to the scope of the loop.
+Avoid using the loop variable for other purposes after the loop.
+
+##### Example
+
+```cpp
+for (int i = 0; i < 100; ++i) {   // GOOD: i var is visible only inside the loop
+    // ...
+}
+
+```
+##### Example, don't
+
+```cpp
+int j;                            // BAD: j is visible outside the loop
+for (j = 0; j < 100; ++j) {
+    // ...
+}
+// j is still visible here and isn't needed
+
+```
+**See also**: [Don't use a variable for two unrelated purposes](07-ES-Expressions%20and%20Statements.md#Res-recycle)
+
+##### Example
+
+```cpp
+for (string s; cin >> s; ) {
+    cout << s << '\n';
+}
+
+```
+##### Enforcement
+
+Warn when a variable modified inside the `for`-statement is declared outside the loop and not being used outside the loop.
+
+**Discussion**: Scoping the loop variable to the loop body also helps code optimizers greatly. Recognizing that the induction variable
+is only accessible in the loop body unblocks optimizations such as hoisting, strength reduction, loop-invariant code motion, etc.
+
+### <a name="Res-do"></a>ES.75: Avoid `do`-statements
+
+##### Reason
+
+Readability, avoidance of errors.
+The termination condition is at the end (where it can be overlooked) and the condition is not checked the first time through.
+
+##### Example
+
+```cpp
+int x;
+do {
+    cin >> x;
+    // ...
+} while (x < 0);
+
+```
+##### Note
+
+Yes, there are genuine examples where a `do`-statement is a clear statement of a solution, but also many bugs.
+
+##### Enforcement
+
+Flag `do`-statements.
+
+### <a name="Res-goto"></a>ES.76: Avoid `goto`
+
+##### Reason
+
+Readability, avoidance of errors. There are better control structures for humans; `goto` is for machine generated code.
+
+##### Exception
+
+Breaking out of a nested loop.
+In that case, always jump forwards.
+
+```cpp
+for (int i = 0; i < imax; ++i)
+    for (int j = 0; j < jmax; ++j) {
+        if (a[i][j] > elem_max) goto finished;
+        // ...
+    }
+finished:
+// ...
+
+```
+##### Example, bad
+
+There is a fair amount of use of the C goto-exit idiom:
+
+```cpp
+void f()
+{
+    // ...
+        goto exit;
+    // ...
+        goto exit;
+    // ...
+exit:
+    // ... common cleanup code ...
+}
+
+```
+This is an ad-hoc simulation of destructors.
+Declare your resources with handles with destructors that clean up.
+If for some reason you cannot handle all cleanup with destructors for the variables used,
+consider `gsl::finally()` as a cleaner and more reliable alternative to `goto exit`
+
+##### Enforcement
+
+* Flag `goto`. Better still flag all `goto`s that do not jump from a nested loop to the statement immediately after a nest of loops.
+
+### <a name="Res-continue"></a>ES.77: Minimize the use of `break` and `continue` in loops
+
+##### Reason
+
+ In a non-trivial loop body, it is easy to overlook a `break` or a `continue`.
+
+ A `break` in a loop has a dramatically different meaning than a `break` in a `switch`-statement
+ (and you can have `switch`-statement in a loop and a loop in a `switch`-case).
+
+##### Example
+
+```cpp
+???
+
+```
+##### Alternative
+
+Often, a loop that requires a `break` is a good candidate for a function (algorithm), in which case the `break` becomes a `return`.
+
+```cpp
+???
+
+```
+Often. a loop that uses `continue` can equivalently and as clearly be expressed by an `if`-statement.
+
+```cpp
+???
+
+```
+##### Note
+
+If you really need to break out a loop, a `break` is typically better than alternatives such as [modifying the loop variable](07-ES-Expressions%20and%20Statements.md#Res-loop-counter) or a [`goto`](07-ES-Expressions%20and%20Statements.md#Res-goto):
+
+
+##### Enforcement
+
+???
+
+### <a name="Res-break"></a>ES.78: Always end a non-empty `case` with a `break`
+
+##### Reason
+
+ Accidentally leaving out a `break` is a fairly common bug.
+ A deliberate fallthrough is a maintenance hazard.
+
+##### Example
+
+```cpp
+switch (eventType) {
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    // Bad - implicit fallthrough
+case Error:
+    display_error_window();
+    break;
+}
+
+```
+It is easy to overlook the fallthrough. Be explicit:
+
+```cpp
+switch (eventType) {
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    // fallthrough
+case Error:
+    display_error_window();
+    break;
+}
+
+```
+In C++17, use a `[[fallthrough]]` annotation:
+
+```cpp
+switch (eventType) {
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    [[fallthrough]];        // C++17
+case Error:
+    display_error_window();
+    break;
+}
+
+```
+##### Note
+
+Multiple case labels of a single statement is OK:
+
+```cpp
+switch (x) {
+case 'a':
+case 'b':
+case 'f':
+    do_something(x);
+    break;
+}
+
+```
+##### Enforcement
+
+Flag all fallthroughs from non-empty `case`s.
+
+### <a name="Res-default"></a>ES.79: Use `default` to handle common cases (only)
+
+##### Reason
+
+ Code clarity.
+ Improved opportunities for error detection.
+
+##### Example
+
+```cpp
+enum E { a, b, c , d };
+
+void f1(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        take_the_default_action();
+        break;
+    }
+}
+
+```
+Here it is clear that there is a default action and that cases `a` and `b` are special.
+
+##### Example
+
+But what if there is no default action and you mean to handle only specific cases?
+In that case, have an empty default or else it is impossible to know if you meant to handle all cases:
+
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        // do nothing for the rest of the cases
+        break;
+    }
+}
+
+```
+If you leave out the `default`, a maintainer and/or a compiler may reasonably assume that you intended to handle all cases:
+
+```cpp
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+    case c:
+        do_something_else();
+        break;
+    }
+}
+
+```
+Did you forget case `d` or deliberately leave it out?
+Forgetting a case typically happens when a case is added to an enumeration and the person doing so fails to add it to every
+switch over the enumerators.
+
+##### Enforcement
+
+Flag `switch`-statements over an enumeration that don't handle all enumerators and do not have a `default`.
+This may yield too many false positives in some code bases; if so, flag only `switch`es that handle most but not all cases
+(that was the strategy of the very first C++ compiler).
+
+### <a name="Res-noname"></a>ES.84: Don't (try to) declare a local variable with no name
+
+##### Reason
+
+There is no such thing.
+What looks to a human like a variable without a name is to the compiler a statement consisting of a temporary that immediately goes out of scope.
+To avoid unpleasant surprises.
+
+##### Example, bad
+
+```cpp
+void f()
+{
+    lock<mutex>{mx};   // Bad
+    // ...
+}
+
+```
+This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
+This is not an uncommon mistake.
+In particular, this particular example can lead to hard-to find race conditions.
+There are exceedingly clever uses of this "idiom", but they are far rarer than the mistakes.
+
+##### Note
+
+Unnamed function arguments are fine.
+
+##### Enforcement
+
+Flag statements that are just a temporary
+
+### <a name="Res-empty"></a>ES.85: Make empty statements visible
+
+##### Reason
+
+Readability.
+
+##### Example
+
+```cpp
+for (i = 0; i < max; ++i);   // BAD: the empty statement is easily overlooked
+v[i] = f(v[i]);
+
+for (auto x : v) {           // better
+    // nothing
+}
+v[i] = f(v[i]);
+
+```
+##### Enforcement
+
+Flag empty statements that are not blocks and don't contain comments.
+
+### <a name="Res-loop-counter"></a>ES.86: Avoid modifying loop control variables inside the body of raw for-loops
+
+##### Reason
+
+The loop control up front should enable correct reasoning about what is happening inside the loop. Modifying loop counters in both the iteration-expression and inside the body of the loop is a perennial source of surprises and bugs.
+
+##### Example
+
+```cpp
+for (int i = 0; i < 10; ++i) {
+    // no updates to i -- ok
+}
+
+for (int i = 0; i < 10; ++i) {
+    //
+    if (/* something */) ++i; // BAD
+    //
+}
+
+bool skip = false;
+for (int i = 0; i < 10; ++i) {
+    if (skip) { skip = false; continue; }
+    //
+    if (/* something */) skip = true;  // Better: using two variable for two concepts.
+    //
+}
+
+```
+##### Enforcement
+
+Flag variables that are potentially updated (have a non-`const` use) in both the loop control iteration-expression and the loop body.
+
+
+### <a name="Res-if"></a>ES.87: Don't add redundant `==` or `!=` to conditions
+
+##### Reason
+
+Doing so avoids verbosity and eliminates some opportunities for mistakes.
+Helps make style consistent and conventional.
+
+##### Example
+
+By definition, a condition in an `if`-statement, `while`-statement, or a `for`-statement selects between `true` and `false`.
+A numeric value is compared to `0` and a pointer value to `nullptr`.
+
+```cpp
+// These all mean "if `p` is not `nullptr`"
+if (p) { ... }            // good
+if (p != 0) { ... }       // redundant `!=0`; bad: don't use 0 for pointers
+if (p != nullptr) { ... } // redundant `!=nullptr`, not recommended
+
+```
+Often, `if (p)` is read as "if `p` is valid" which is a direct expression of the programmers intent,
+whereas `if (p != nullptr)` would be a long-winded workaround.
+
+##### Example
+
+This rule is especially useful when a declaration is used as a condition
+
+```cpp
+if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute is ps points to a kind of Circle, good
+
+if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // not recommended
+
+```
+##### Example
+
+Note that implicit conversions to bool are applied in conditions.
+For example:
+
+```cpp
+for (string s; cin >> s; ) v.push_back(s);
+
+```
+This invokes `istream`'s `operator bool()`.
+
+##### Note
+
+Explicit comparison of an integer to `0` is in general not redundant.
+The reason is that (as opposed to pointers and Booleans) an integer often has more than two reasonable values.
+Furthermore `0` (zero) is often used to indicate success.
+Consequently, it is best to be specific about the comparison.
+
+```cpp
+void f(int i)
+{
+    if (i)            // suspect
+    // ...
+    if (i == success) // possibly better
+    // ...
+}
+
+```
+Always remember that an integer can have more that two values.
+
+##### Example, bad
+
+It has been noted that
+
+```cpp
+if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
+
+```
+is a common beginners error.
+If you use C-style strings, you must know the `<cstring>` functions well.
+Being verbose and writing 
+
+```cpp
+if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
+
+```
+would not in itself save you.
+
+##### Note
+
+The opposite condition is most easily expressed using a negation:
+
+```cpp
+// These all mean "if `p` is `nullptr`"
+if (!p) { ... }           // good
+if (p == 0) { ... }       // redundant `!= 0`; bad: don't use `0` for pointers
+if (p == nullptr) { ... } // redundant `== nullptr`, not recommended
+
+```
+##### Enforcement
+
+Easy, just check for redundant use of `!=` and `==` in conditions.
+
+
+
 ## <a name="SS-numbers"></a>Arithmetic
 
 ### <a name="Res-mix"></a>ES.100: Don't mix signed and unsigned arithmetic
@@ -3455,11 +3447,13 @@ It is harder to spot the problem in more realistic examples.
 ##### Note
 
 Unfortunately, C++ uses signed integers for array subscripts and the standard library uses unsigned integers for container subscripts.
-This precludes consistency.
+This precludes consistency. Use `gsl::index` for subscripts; [see ES.107](07-ES-Expressions%20and%20Statements.md#Res-subscripts).
 
 ##### Enforcement
 
-Compilers already know and sometimes warn.
+* Compilers already know and sometimes warn.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
 
 ### <a name="Res-unsigned"></a>ES.101: Use unsigned types for bit manipulation
 
@@ -3530,20 +3524,22 @@ is going to be surprising for many programmers.
 ##### Example
 
 The standard library uses unsigned types for subscripts.
-The build-in array uses signed types for subscripts.
+The built-in array uses signed types for subscripts.
 This makes surprises (and bugs) inevitable.
 
 ```cpp
 int a[10];
 for (int i = 0; i < 10; ++i) a[i] = i;
 vector<int> v(10);
-// compares signed to unsigned; some compilers warn
-for (int i = 0; v.size() < 10; ++i) v[i] = i;
+// compares signed to unsigned; some compilers warn, but we should not
+for (gsl::index i = 0; v.size() < 10; ++i) v[i] = i;
 
 int a2[-2];         // error: negative size
 
 // OK, but the number of ints (4294967294) is so large that we should get an exception
 vector<int> v2(-2);
+
+ `gsl::index` for subscripts; [see ES.107](07-ES-Expressions%20and%20Statements.md#Res-subscripts).
 
 ```
 ##### Enforcement
@@ -3551,6 +3547,8 @@ vector<int> v2(-2);
 * Flag mixed signed and unsigned arithmetic
 * Flag results of unsigned arithmetic assigned to or printed as signed.
 * Flag unsigned literals (e.g. `-2`) used as container subscripts.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
 
 ### <a name="Res-overflow"></a>ES.103: Don't overflow
 
@@ -3734,26 +3732,42 @@ int r2 = f(-2);  // throws
 Hard: there is a lot of code using `unsigned` and we don't offer a practical positive number type.
 
 
-### <a name="Res-subscripts"></a>ES.107: Don't use `unsigned` for subscripts
+### <a name="Res-subscripts"></a>ES.107: Don't use `unsigned` for subscripts, prefer `gsl::index`
 
 ##### Reason
 
 To avoid signed/unsigned confusion.
 To enable better optimization.
 To enable better error detection.
+To avoid the pitfalls with `auto` and `int`.
 
 ##### Example, bad
 
 ```cpp
-vector<int> vec {1, 2, 3, 4, 5};
+vector<int> vec = /*...*/;
 
-for (int i = 0; i < vec.size(); i += 2)                    // mix int and unsigned
+for (int i = 0; i < vec.size(); i += 2)                    // may not be big enough
     cout << vec[i] << '\n';
 for (unsigned i = 0; i < vec.size(); i += 2)               // risk wraparound
     cout << vec[i] << '\n';
+for (auto i = 0; i < vec.size(); i += 2)                   // may not be big enough
+    cout << vec[i] << '\n';
 for (vector<int>::size_type i = 0; i < vec.size(); i += 2) // verbose
     cout << vec[i] << '\n';
-for (auto i = 0; i < vec.size(); i += 2)                   // mix int and unsigned
+for (auto i = vec.size()-1; i >= 0; i -= 2)                // bug
+    cout << vec[i] << '\n';
+for (int i = vec.size()-1; i >= 0; i -= 2)                 // may not be big enough
+    cout << vec[i] << '\n';
+
+```
+##### Example, good
+
+```cpp
+vector<int> vec = /*...*/;
+
+for (gsl::index i = 0; i < vec.size(); i += 2)             // ok
+    cout << vec[i] << '\n';
+for (gsl::index i = vec.size()-1; i >= 0; i -= 2)          // ok
     cout << vec[i] << '\n';
 
 ```
@@ -3761,8 +3775,8 @@ for (auto i = 0; i < vec.size(); i += 2)                   // mix int and unsign
 
 The built-in array uses signed subscripts.
 The standard-library containers use unsigned subscripts.
-Thus, no perfect and fully compatible solution is possible.
-Given the known problems with unsigned and signed/unsigned mixtures, better stick to (signed) integers.
+Thus, no perfect and fully compatible solution is possible (unless and until the standard-library containers change to use signed subscripts someday in the future).
+Given the known problems with unsigned and signed/unsigned mixtures, better stick to (signed) integers of a sufficient size, which is guaranteed by `gsl::index`.
 
 ##### Example
 
@@ -3771,7 +3785,7 @@ template<typename T>
 struct My_container {
 public:
     // ...
-    T& operator[](int i);    // not unsigned
+    T& operator[](gsl::index i);    // not unsigned
     // ...
 };
 
@@ -3792,7 +3806,11 @@ Alternatives for users
 
 ##### Enforcement
 
-Very tricky as long as the standard-library containers get it wrong.
+* Very tricky as long as the standard-library containers get it wrong.
+* (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
+
+
+
 
 
 
