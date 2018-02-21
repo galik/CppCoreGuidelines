@@ -13,14 +13,14 @@ So, it is likely that this library section of the guidelines will eventually gro
 
 << ??? We need another level of rule numbering ??? >>
 
-C++ Standard library component summary:
+C++ Standard Library component summary:
 
 * [SL.con: Containers](15-SL-The%20Standard%20Library.md#SS-con)
 * [SL.str: String](15-SL-The%20Standard%20Library.md#SS-string)
 * [SL.io: Iostream](15-SL-The%20Standard%20Library.md#SS-io)
 * [SL.regex: Regex](15-SL-The%20Standard%20Library.md#SS-regex)
 * [SL.chrono: Time](15-SL-The%20Standard%20Library.md#SS-chrono)
-* [SL.C: The C standard library](15-SL-The%20Standard%20Library.md#SS-clib)
+* [SL.C: The C Standard Library](15-SL-The%20Standard%20Library.md#SS-clib)
 
 Standard-library rule summary:
 
@@ -251,7 +251,7 @@ Text manipulation is a huge topic.
 This section primarily tries to clarify `std::string`'s relation to `char*`, `zstring`, `string_view`, and `gsl::string_span`.
 The important issue of non-ASCII character sets and encodings (e.g., `wchar_t`, Unicode, and UTF-8) will be covered elsewhere.
 
-See also [regular expressions](15-SL-The%20Standard%20Library.md#SS-regex).
+**See also**: [regular expressions](15-SL-The%20Standard%20Library.md#SS-regex)
 
 Here, we use "sequence of characters" or "string" to refer to a sequence of characters meant to be read as text (somehow, eventually).
 We don't consider
@@ -268,7 +268,7 @@ String summary:
 * [SL.str.11: Use `gsl::string_span` rather than `std::string_view` when you need to mutate a string](15-SL-The%20Standard%20Library.md#Rstr-span)
 * [SL.str.12: Use the `s` suffix for string literals meant to be standard-library `string`s](15-SL-The%20Standard%20Library.md#Rstr-s)
 
-See also
+**See also**:
 
 * [F.24 span](03-F-Functions.md#Rf-range)
 * [F.25 zstring](03-F-Functions.md#Rf-zstring)
@@ -710,11 +710,11 @@ It supports a variety of regular expression pattern conventions.
 outputting time in various units.
 It provides clocks for registering `time_points`.
 
-## <a name="SS-clib"></a>SL.C: The C standard library
+## <a name="SS-clib"></a>SL.C: The C Standard Library
 
 ???
 
-C standard library rule summary:
+C Standard Library rule summary:
 
 * [S.C.1: Don't use setjmp/longjmp](15-SL-The%20Standard%20Library.md#Rclib-jmp)
 * [???](#???)

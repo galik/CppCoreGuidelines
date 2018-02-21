@@ -181,9 +181,12 @@ However
 
 * that only works for one file (at one level): Use that technique in a header included with other headers and the vulnerability reappears.
 * a namespace (an "implementation namespace") can protect against many context dependencies.
-* full protection and flexibility require [modules](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4592.pdf).
-[See also](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0141r0.pdf).
+* full protection and flexibility require modules.
 
+**See also**:
+
+* [Working Draft, Extensions to C++ for Modules](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4592.pdf)
+* [Modules, Componentization, and Transition](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0141r0.pdf)
 
 ##### Enforcement
 

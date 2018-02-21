@@ -64,8 +64,8 @@ Unfortunately, compilers cannot catch all such errors and unfortunately, the bug
 
 ##### Alternative
 
-* [Always initialize an object](07-ES-Expressions%20and%20Statements.md#Res-always)
-* [ES.21: Don't introduce a variable (or constant) before you need to use it](07-ES-Expressions%20and%20Statements.md#Res-introduce)
+* [Always initialize an object](07-ES-Expressions%20and%20statements.md#Res-always)
+* [ES.21: Don't introduce a variable (or constant) before you need to use it](07-ES-Expressions%20and%20statements.md#Res-introduce)
 
 ### <a name="Rnr-single-return"></a>NR.2: Don't: Have only a single `return`-statement in a function
 
@@ -298,7 +298,7 @@ and spot the bug.
 ```
 ##### Alternative
 
-* [Make member data `public` or (preferably) `private`](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-protected)
+* [Make member data `public` or (preferably) `private`](04-C-Classes%20and%20class%20hierarchies.md#Rh-protected)
 
 
 

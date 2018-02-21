@@ -12,7 +12,7 @@ C rule summary:
 
 * [CPL.1: Prefer C++ to C](13-CPL-C-style%20programming.md#Rcpl-C)
 * [CPL.2: If you must use C, use the common subset of C and C++, and compile the C code as C++](13-CPL-C-style%20programming.md#Rcpl-subset)
-* [CPL.3: If you must use C for interfaces, use C++ in the code using such interfaces](13-CPL-C-style%20programming.md#Rcpl-interface)
+* [CPL.3: If you must use C for interfaces, use C++ in the calling code using such interfaces](13-CPL-C-style%20programming.md#Rcpl-interface)
 
 ### <a name="Rcpl-C"></a>CPL.1: Prefer C++ to C
 

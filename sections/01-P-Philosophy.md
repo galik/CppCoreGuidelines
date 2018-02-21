@@ -138,7 +138,7 @@ portability will be impacted.
 ##### Note
 
 Using valid ISO C++ does not guarantee portability (let alone correctness).
-Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](07-ES-Expressions%20and%20Statements.md#Res-order))
+Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](07-ES-Expressions%20and%20statements.md#Res-order))
 and be aware of constructs with implementation defined meaning (e.g., `sizeof(int)`).
 
 ##### Note
@@ -148,7 +148,7 @@ In such cases, control their (dis)use with an extension of these Coding Guidelin
 
 ##### Enforcement
 
-Use an up-to-date C++ compiler (currently C++11 or C++14) with a set of options that do not accept extensions.
+Use an up-to-date C++ compiler (currently C++17, C++14, or C++11) with a set of options that do not accept extensions.
 
 ### <a name="Rp-what"></a>P.3: Express intent
 
@@ -179,7 +179,7 @@ Now, there is no explicit mention of the iteration mechanism, and the loop opera
 for (auto& x : v) { /* modify x */ }
 
 ```
-For more details about for-statements, see [ES.71](07-ES-Expressions%20and%20Statements.md#Res-for-range).
+For more details about for-statements, see [ES.71](07-ES-Expressions%20and%20statements.md#Res-for-range).
 Sometimes better still, use a named algorithm:
 
 ```cpp
@@ -192,7 +192,7 @@ The last variant makes it clear that we are not interested in the order in which
 A programmer should be familiar with
 
 * [The guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl)
-* [The ISO C++ standard library](15-SL-The%20Standard%20Library.md#S-stdlib)
+* [The ISO C++ Standard Library](15-SL-The%20Standard%20Library.md#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
 ##### Note
@@ -595,9 +595,9 @@ However, relying on abstractions that implicitly clean up can be as simple, and 
 
 ##### Note
 
-Enforcing [the lifetime profile](#In.force) eliminates leaks.
+Enforcing [the lifetime profile](00-In-Introduction.md#SS-force) eliminates leaks.
 When combined with resource safety provided by [RAII](06-R-Resource%20management.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
-Combine this with enforcement of [the type and bounds profiles](#In.force) and you get complete type- and resource-safety, guaranteed by tools.
+Combine this with enforcement of [the type and bounds profiles](00-In-Introduction.md#SS-force) and you get complete type- and resource-safety, guaranteed by tools.
 
 ##### Enforcement
 
@@ -693,7 +693,7 @@ Something immutable cannot change unexpectedly.
 Sometimes immutability enables better optimization.
 You can't have a data race on a constant.
 
-See [Con: Constants and Immutability](11-Con-Constants%20and%20Immutability.md#S-const)
+See [Con: Constants and immutability](11-Con-Constants%20and%20immutability.md#S-const)
 
 ### <a name="Rp-library"></a>P.11: Encapsulate messy constructs, rather than spreading through the code
 
@@ -766,7 +766,7 @@ Run a static analyzer to verify that your code follows the guidelines you want i
 See
 
 * [Static analysis tools](???)
-* [Concurrency tools](09-CP-Concurrency%20and%20Parallelism.md#Rconc-tools)
+* [Concurrency tools](09-CP-Concurrency%20and%20parallelism.md#Rconc-tools)
 * [Testing tools](???)
 
 There are many other kinds of tools, such as source code repositories, build tools, etc.,
@@ -804,7 +804,7 @@ You need a reason not to use the standard library (or whatever foundational libr
 
 By default use
 
-* The [ISO C++ standard library](15-SL-The%20Standard%20Library.md#S-stdlib)
+* The [ISO C++ Standard Library](15-SL-The%20Standard%20Library.md#S-stdlib)
 * The [Guidelines Support Library](20-GSL-Guideline%20support%20library.md#S-gsl)
 
 ##### Note

@@ -26,7 +26,7 @@ Summary of GSL components:
 
 We plan for a "ISO C++ standard style" semi-formal specification of the GSL.
 
-We rely on the ISO C++ standard library and hope for parts of the GSL to be absorbed into the standard library.
+We rely on the ISO C++ Standard Library and hope for parts of the GSL to be absorbed into the standard library.
 
 ## <a name="SS-views"></a>GSL.view: Views
 

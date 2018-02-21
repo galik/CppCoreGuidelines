@@ -327,7 +327,7 @@ enum bad { BAD, WORSE, HORRIBLE }; // BAD
 
 ##### Reason
 
-The use of underscores to separate parts of a name is the original C and C++ style and used in the C++ standard library.
+The use of underscores to separate parts of a name is the original C and C++ style and used in the C++ Standard Library.
 If you prefer CamelCase, you have to choose among different flavors of camelCase.
 
 ##### Note
@@ -413,7 +413,7 @@ auto interval = 100ms;  // using <chrono>
 ```
 ##### Note
 
-Literals should not be sprinkled all over the code as ["magic constants"](07-ES-Expressions%20and%20Statements.md#Res-magic),
+Literals should not be sprinkled all over the code as ["magic constants"](07-ES-Expressions%20and%20statements.md#Res-magic),
 but it is still a good idea to make them readable where they are defined.
 It is easy to make a typo in a long string of integers.
 
@@ -624,7 +624,7 @@ Minimizing confusion with the declarator syntax.
 
 ##### Note
 
-For details, see [ES.10](07-ES-Expressions%20and%20Statements.md#Res-name-one).
+For details, see [ES.10](07-ES-Expressions%20and%20statements.md#Res-name-one).
 
 
 ### <a name="Rl-void"></a>NL.25: Don't use `void` as an argument type

@@ -30,13 +30,13 @@ Interface rule summary:
 * [I.27: For stable library ABI, consider the Pimpl idiom](02-I-Interfaces.md#Ri-pimpl)
 * [I.30: Encapsulate rule violations](02-I-Interfaces.md#Ri-encapsulate)
 
-See also
+**See also**:
 
 * [F: Functions](03-F-Functions.md#S-functions)
-* [C.concrete: Concrete types](04-C-Classes%20and%20Class%20Hierarchies.md#SS-concrete)
-* [C.hier: Class hierarchies](04-C-Classes%20and%20Class%20Hierarchies.md#SS-hier)
-* [C.over: Overloading and overloaded operators](04-C-Classes%20and%20Class%20Hierarchies.md#SS-overload)
-* [C.con: Containers and other resource handles](04-C-Classes%20and%20Class%20Hierarchies.md#SS-containers)
+* [C.concrete: Concrete types](04-C-Classes%20and%20class%20hierarchies.md#SS-concrete)
+* [C.hier: Class hierarchies](04-C-Classes%20and%20class%20hierarchies.md#SS-hier)
+* [C.over: Overloading and overloaded operators](04-C-Classes%20and%20class%20hierarchies.md#SS-overload)
+* [C.con: Containers and other resource handles](04-C-Classes%20and%20class%20hierarchies.md#SS-containers)
 * [E: Error handling](10-E-Error%20handling.md#S-errors)
 * [T: Templates and generic programming](12-T-Templates%20and%20generic%20programming.md#S-templates)
 
@@ -394,7 +394,7 @@ Once language support becomes available (e.g., see the [contract proposal](http:
 
 ##### Note
 
-No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](07-ES-Expressions%20and%20Statements.md#Res-nonnegative).
+No, using `unsigned` is not a good way to sidestep the problem of [ensuring that a value is nonnegative](07-ES-Expressions%20and%20statements.md#Res-nonnegative).
 
 ##### Enforcement
 
@@ -569,7 +569,7 @@ Iter find(Iter first, Iter last, Val v)
 Soon (maybe in 2018), most compilers will be able to check `requires` clauses once the `//` is removed.
 Concepts are supported in GCC 6.1 and later.
 
-**See also**: [Generic programming](12-T-Templates%20and%20generic%20programming.md#SS-GP) and [concepts](#SS-t-concepts).
+**See also**: [Generic programming](12-T-Templates%20and%20generic%20programming.md#SS-GP) and [concepts](12-T-Templates%20and%20generic%20programming.md#SS-concepts).
 
 ##### Enforcement
 
@@ -707,7 +707,7 @@ caller, so that its lifetime is handled by the caller. Viewed another way:
 ownership transferring APIs are relatively rare compared to pointer-passing APIs,
 so the default is "no ownership transfer."
 
-**See also**: [Argument passing](03-F-Functions.md#Rf-conventional), [use of smart pointer arguments](06-R-Resource%20management.md#Rr-smartptrparam), and [value return](#Rf-T-return).
+**See also**: [Argument passing](03-F-Functions.md#Rf-conventional), [use of smart pointer arguments](06-R-Resource%20management.md#Rr-smartptrparam), and [value return](03-F-Functions.md#Rf-value-return).
 
 ##### Enforcement
 
@@ -1145,9 +1145,9 @@ case file:          owned = true;  inp = new ifstream{argv[2]};      break;
 istream& in = *inp;
 
 ```
-This violated the rule [against uninitialized variables](07-ES-Expressions%20and%20Statements.md#Res-always),
+This violated the rule [against uninitialized variables](07-ES-Expressions%20and%20statements.md#Res-always),
 the rule against [ignoring ownership](02-I-Interfaces.md#Ri-raw),
-and the rule [against magic constants](07-ES-Expressions%20and%20Statements.md#Res-magic).
+and the rule [against magic constants](07-ES-Expressions%20and%20statements.md#Res-magic).
 In particular, someone has to remember to somewhere write
 
 ```cpp

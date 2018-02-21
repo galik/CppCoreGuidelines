@@ -1341,7 +1341,8 @@ Templates typically appear in header files so their context dependencies are mor
 Having a template operate only on its arguments would be one way of reducing the number of dependencies to a minimum, but that would generally be unmanageable.
 For example, an algorithm usually uses other algorithms and invoke operations that does not exclusively operate on arguments.
 And don't get us started on macros!
-See also [T.69](12-T-Templates%20and%20generic%20programming.md#Rt-customization)
+
+**See also**: [T.69](12-T-Templates%20and%20generic%20programming.md#Rt-customization)
 
 ##### Enforcement
 

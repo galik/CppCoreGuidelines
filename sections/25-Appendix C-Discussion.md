@@ -185,7 +185,7 @@ In general, however, avoid concrete base classes (see Item 35). For example, `un
 
 ### <a name="Sd-never-fail"></a>Discussion: Destructors, deallocation, and swap must never fail
 
-Never allow an error to be reported from a destructor, a resource deallocation function (e.g., `operator delete`), or a `swap` function using `throw`. It is nearly impossible to write useful code if these operations can fail, and even if something does go wrong it nearly never makes any sense to retry. Specifically, types whose destructors may throw an exception are flatly forbidden from use with the C++ standard library. Most destructors are now implicitly `noexcept` by default.
+Never allow an error to be reported from a destructor, a resource deallocation function (e.g., `operator delete`), or a `swap` function using `throw`. It is nearly impossible to write useful code if these operations can fail, and even if something does go wrong it nearly never makes any sense to retry. Specifically, types whose destructors may throw an exception are flatly forbidden from use with the C++ Standard Library. Most destructors are now implicitly `noexcept` by default.
 
 ##### Example
 
@@ -534,7 +534,9 @@ template<typename T> class Vector {
 
 ##### Reason
 
-To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime. See also [F.20, the general item about "out" output values](03-F-Functions.md#Rf-out).
+To simplify code and eliminate a need for explicit memory management. To bring an object into a surrounding scope, thereby extending its lifetime.
+
+**See also**: [F.20, the general item about "out" output values](03-F-Functions.md#Rf-out)
 
 ##### Example
 
@@ -582,7 +584,7 @@ Now `Named` has a default constructor, a destructor, and efficient copy and move
 
 ##### Enforcement
 
-In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04-C-Classes%20and%20Class%20Hierarchies.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
+In general, a tool cannot know if a class is a resource handle. However, if a class has some of [the default operations](04-C-Classes%20and%20class%20hierarchies.md#SS-ctor), it should have all, and if a class has a member that is a resource handle, it should be considered as resource handle.
 
 ### <a name="Cr-list"></a>Discussion: If a class is a container, give it an initializer-list constructor
 

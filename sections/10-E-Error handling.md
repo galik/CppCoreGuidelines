@@ -102,7 +102,7 @@ However, that's a bit circular because "what is exceptional?"
 Examples:
 
 * A precondition that cannot be met
-* A constructor that cannot construct an object (failure to establish its class's [invariant](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-struct))
+* A constructor that cannot construct an object (failure to establish its class's [invariant](04-C-Classes%20and%20class%20hierarchies.md#Rc-struct))
 * An out-of-range error (e.g., `v[v.size()] = 7`)
 * Inability to acquire a resource (e.g., the network is down)
 
@@ -166,7 +166,7 @@ To use an object it must be in a valid state (defined formally or informally by 
 
 ##### Note
 
-An [invariant](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-struct) is logical condition for the members of an object that a constructor must establish for the public member functions to assume.
+An [invariant](04-C-Classes%20and%20class%20hierarchies.md#Rc-struct) is logical condition for the members of an object that a constructor must establish for the public member functions to assume.
 
 ##### Enforcement
 
@@ -200,7 +200,7 @@ The class invariant - here stated as a comment - is established by the construct
 `new` throws if it cannot allocate the required memory.
 The operators, notably the subscript operator, relies on the invariant.
 
-**See also**: [If a constructor cannot construct a valid object, throw an exception](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-throw)
+**See also**: [If a constructor cannot construct a valid object, throw an exception](04-C-Classes%20and%20class%20hierarchies.md#Rc-throw)
 
 ##### Enforcement
 
@@ -324,7 +324,7 @@ void f()
 Obviously, this increases the size of the code, doesn't allow for implicit propagation of "exceptions" (`valid()` checks), and `valid()` checks can be forgotten.
 Prefer to use exceptions.
 
-**See also**: [Use of `noexcept`](#Se-noexcept).
+**See also**: [Use of `noexcept`](#Se-noexcept)
 
 ##### Enforcement
 
@@ -336,7 +336,7 @@ Prefer to use exceptions.
 
 To avoid interface errors.
 
-**See also**: [precondition rule](02-I-Interfaces.md#Ri-pre).
+**See also**: [precondition rule](02-I-Interfaces.md#Ri-pre)
 
 ### <a name="Re-postcondition"></a>E.8: State your postconditions
 
@@ -344,7 +344,7 @@ To avoid interface errors.
 
 To avoid interface errors.
 
-**See also**: [postcondition rule](02-I-Interfaces.md#Ri-post).
+**See also**: [postcondition rule](02-I-Interfaces.md#Ri-post)
 
 ### <a name="Re-noexcept"></a>E.12: Use `noexcept` when exiting a function because of a `throw` is impossible or unacceptable
 
@@ -366,7 +366,7 @@ By declaring `compute` to be `noexcept`, we give the compiler and human readers 
 
 ##### Note
 
-Many standard-library functions are `noexcept` including all the standard-library functions "inherited" from the C standard library.
+Many standard-library functions are `noexcept` including all the standard-library functions "inherited" from the C Standard Library.
 
 ##### Example
 
@@ -552,7 +552,7 @@ of - typically better still - a `const` reference:
 catch (const exception& e) { /* ... */ }
 
 ```
-Most handlers do not modify their exception and in general we [recommend use of `const`](07-ES-Expressions%20and%20Statements.md#Res-const).
+Most handlers do not modify their exception and in general we [recommend use of `const`](07-ES-Expressions%20and%20statements.md#Res-const).
 
 ##### Enforcement
 
@@ -595,7 +595,7 @@ The standard library assumes that destructors, deallocation functions (e.g., `op
 
 Deallocation functions, including `operator delete`, must be `noexcept`. `swap` functions must be `noexcept`.
 Most destructors are implicitly `noexcept` by default.
-Also, [make move operations `noexcept`](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-move-noexcept).
+Also, [make move operations `noexcept`](04-C-Classes%20and%20class%20hierarchies.md#Rc-move-noexcept).
 
 ##### Enforcement
 
@@ -770,7 +770,7 @@ error_indicator func(zstring arg)
 ```
 The problem is of course that the caller now has to remember to test the return value.
 
-**See also**: [Discussion](#Sd-???).
+**See also**: [Discussion](#Sd-???)
 
 ##### Enforcement
 
@@ -782,7 +782,7 @@ Possible (only) for specific versions of this idea: e.g., test for systematic te
 
 If you can't do a good job at recovering, at least you can get out before too much consequential damage is done.
 
-See also [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii).
+**See also**: [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii)
 
 ##### Note
 
@@ -829,7 +829,7 @@ Awkward
 
 Systematic use of any error-handling strategy minimizes the chance of forgetting to handle an error.
 
-See also [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii).
+**See also**: [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii)
 
 ##### Note
 
@@ -983,9 +983,9 @@ Also, the larger the program becomes the harder it is to apply an error-indicato
 
 We [prefer exception-based error handling](10-E-Error%20handling.md#Re-throw) and recommend [keeping functions short](03-F-Functions.md#Rf-single).
 
-**See also**: [Discussion](#Sd-???).
+**See also**: [Discussion](#Sd-???)
 
-**See also**: [Returning multiple values](03-F-Functions.md#Rf-out-multi).
+**See also**: [Returning multiple values](03-F-Functions.md#Rf-out-multi)
 
 ##### Enforcement
 
@@ -998,7 +998,7 @@ Awkward.
 Global state is hard to manage and it is easy to forget to check it.
 When did you last test the return value of `printf()`?
 
-See also [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii).
+**See also**: [Simulating RAII](10-E-Error%20handling.md#Re-no-throw-raii)
 
 ##### Example, bad
 

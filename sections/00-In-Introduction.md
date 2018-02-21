@@ -4,7 +4,7 @@
 
 # <a name="S-introduction"></a>In: Introduction
 
-This is a set of core guidelines for modern C++, C++14, taking likely future enhancements and ISO Technical Specifications (TSs) into account.
+This is a set of core guidelines for modern C++, C++17, C++14, and C++11, taking likely future enhancements and ISO Technical Specifications (TSs) into account.
 The aim is to help C++ programmers to write simpler, more efficient, more maintainable code.
 
 Introduction summary:
@@ -22,7 +22,7 @@ All C++ programmers. This includes [programmers who might consider C](13-CPL-C-s
 
 ## <a name="SS-aims"></a>In.aims: Aims
 
-The purpose of this document is to help developers to adopt modern C++ (C++11, C++14, and soon C++17) and to achieve a more uniform style across code bases.
+The purpose of this document is to help developers to adopt modern C++ (C++17, C++14, and C++11) and to achieve a more uniform style across code bases.
 
 We do not suffer the delusion that every one of these rules can be effectively applied to every code base. Upgrading old systems is hard. However, we do believe that a program that uses a rule is less error-prone and more maintainable than one that does not. Often, rules also lead to faster/easier initial development.
 As far as we can tell, these rules lead to code that performs as well or better than older, more conventional techniques; they are meant to follow the zero-overhead principle ("what you don't use, you don't pay for" or "when you use an abstraction mechanism appropriately, you get at least as good performance as if you had handcoded using lower-level language constructs").
@@ -144,7 +144,7 @@ Tools that implement these rules shall respect the following syntax to explicitl
 [[gsl::suppress(tag)]]
 
 ```
-where "tag" is the anchor name of the item where the Enforcement rule appears (e.g., for [C.134](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-public) it is "Rh-public"), the
+where "tag" is the anchor name of the item where the Enforcement rule appears (e.g., for [C.134](04-C-Classes%20and%20class%20hierarchies.md#Rh-public) it is "Rh-public"), the
 name of a profile group-of-rules ("type", "bounds", or "lifetime"),
 or a specific rule in a profile ([type.4](19-Pro-Profiles.md#Pro-type-cstylecast), or [bounds.2](#Pro-bounds-arrayindex)).
 
@@ -185,31 +185,32 @@ Recommended information sources can be found in [the references](18-RF-Reference
 * [P: Philosophy](01-P-Philosophy.md#S-philosophy)
 * [I: Interfaces](02-I-Interfaces.md#S-interfaces)
 * [F: Functions](03-F-Functions.md#S-functions)
-* [C: Classes and class hierarchies](04-C-Classes%20and%20Class%20Hierarchies.md#S-class)
+* [C: Classes and class hierarchies](04-C-Classes%20and%20class%20hierarchies.md#S-class)
 * [Enum: Enumerations](05-Enum-Enumerations.md#S-enum)
 * [R: Resource management](06-R-Resource%20management.md#S-resource)
-* [ES: Expressions and statements](07-ES-Expressions%20and%20Statements.md#S-expr)
+* [ES: Expressions and statements](07-ES-Expressions%20and%20statements.md#S-expr)
+* [Per: Performance](08-Per-Performance.md#S-performance)
+* [CP: Concurrency and parallelism](09-CP-Concurrency%20and%20parallelism.md#S-concurrency)
 * [E: Error handling](10-E-Error%20handling.md#S-errors)
-* [Con: Constants and immutability](11-Con-Constants%20and%20Immutability.md#S-const)
+* [Con: Constants and immutability](11-Con-Constants%20and%20immutability.md#S-const)
 * [T: Templates and generic programming](12-T-Templates%20and%20generic%20programming.md#S-templates)
-* [CP: Concurrency](09-CP-Concurrency%20and%20Parallelism.md#S-concurrency)
-* [SL: The Standard library](15-SL-The%20Standard%20Library.md#S-stdlib)
-* [SF: Source files](14-SF-Source%20files.md#S-source)
 * [CPL: C-style programming](13-CPL-C-style%20programming.md#S-cpl)
-* [Pro: Profiles](19-Pro-Profiles.md#S-profile)
-* [GSL: Guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl)
-* [FAQ: Answers to frequently asked questions](22-FAQ-Answers%20to%20frequently%20asked%20questions.md#S-faq)
+* [SF: Source files](14-SF-Source%20files.md#S-source)
+* [SL: The Standard Library](15-SL-The%20Standard%20Library.md#S-stdlib)
 
 Supporting sections:
 
-* [NL: Naming and layout](21-NL-Naming%20and%20layout%20rules.md#S-naming)
-* [Per: Performance](08-Per-Performance.md#S-performance)
-* [N: Non-Rules and myths](17-NR-Non-Rules%20and%20myths.md#S-not)
+* [A: Architectural ideas](16-A-Architectural%20ideas.md#S-A)
+* [NR: Non-Rules and myths](17-NR-Non-Rules%20and%20myths.md#S-not)
 * [RF: References](18-RF-References.md#S-references)
+* [Pro: Profiles](19-Pro-Profiles.md#S-profile)
+* [GSL: Guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+* [NL: Naming and layout rules](21-NL-Naming%20and%20layout%20rules.md#S-naming)
+* [FAQ: Answers to frequently asked questions](22-FAQ-Answers%20to%20frequently%20asked%20questions.md#S-faq)
 * [Appendix A: Libraries](23-Appendix%20A-Libraries.md#S-libraries)
 * [Appendix B: Modernizing code](24-Appendix%20B-Modernizing%20code.md#S-modernizing)
 * [Appendix C: Discussion](25-Appendix%20C-Discussion.md#S-discussion)
-* [Appendix D: Tools support](26-Appendix%20D-Supporting%20tools.md#S-tools)
+* [Appendix D: Supporting tools](26-Appendix%20D-Supporting%20tools.md#S-tools)
 * [Glossary](26-Appendix%20D-Supporting%20tools.md#S-glossary)
 * [To-do: Unclassified proto-rules](27-To-do-Unclassified%20proto-rules.md#S-unclassified)
 

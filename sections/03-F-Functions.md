@@ -37,20 +37,20 @@ Parameter passing expression rules:
 Parameter passing semantic rules:
 
 * [F.22: Use `T*` or `owner<T*>` to designate a single object](03-F-Functions.md#Rf-ptr)
-* [F.23: Use a `not_null<T>` to indicate "null" is not a valid value](03-F-Functions.md#Rf-nullptr)
+* [F.23: Use a `not_null<T>` to indicate that "null" is not a valid value](03-F-Functions.md#Rf-nullptr)
 * [F.24: Use a `span<T>` or a `span_p<T>` to designate a half-open sequence](03-F-Functions.md#Rf-range)
 * [F.25: Use a `zstring` or a `not_null<zstring>` to designate a C-style string](03-F-Functions.md#Rf-zstring)
 * [F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed](03-F-Functions.md#Rf-unique_ptr)
 * [F.27: Use a `shared_ptr<T>` to share ownership](03-F-Functions.md#Rf-shared_ptr)
 
-Value return semantic rules:
+<a name="Rf-value-return"></a>Value return semantic rules:
 
 * [F.42: Return a `T*` to indicate a position (only)](03-F-Functions.md#Rf-return-ptr)
 * [F.43: Never (directly or indirectly) return a pointer or a reference to a local object](03-F-Functions.md#Rf-dangle)
-* [F.44: Return a `T&` when copy is undesirable and "returning no object" isn't an option](03-F-Functions.md#Rf-return-ref)
+* [F.44: Return a `T&` when copy is undesirable and "returning no object" isn't needed](03-F-Functions.md#Rf-return-ref)
 * [F.45: Don't return a `T&&`](03-F-Functions.md#Rf-return-ref-ref)
 * [F.46: `int` is the return type for `main()`](03-F-Functions.md#Rf-main)
-* [F.47: Return `T&` from assignment operators.](03-F-Functions.md#Rf-assignment-op)
+* [F.47: Return `T&` from assignment operators](03-F-Functions.md#Rf-assignment-op)
 
 Other function rules:
 
@@ -61,7 +61,9 @@ Other function rules:
 * [F.54: If you capture `this`, capture all variables explicitly (no default capture)](03-F-Functions.md#Rf-this-capture)
 * [F.55: Don't use `va_arg` arguments](03-F-Functions.md#F-varargs)
 
-Functions have strong similarities to lambdas and function objects so see also [C.lambdas: Function objects and lambdas](04-C-Classes%20and%20Class%20Hierarchies.md#SS-lambdas).
+Functions have strong similarities to lambdas and function objects.
+
+**See also**: [C.lambdas: Function objects and lambdas](04-C-Classes%20and%20class%20hierarchies.md#SS-lambdas)
 
 ## <a name="SS-fct-def"></a>F.def: Function definitions
 
@@ -118,12 +120,12 @@ The shortest code is not always the best for performance or maintainability.
 
 Loop bodies, including lambdas used as loop bodies, rarely need to be named.
 However, large loop bodies (e.g., dozens of lines or dozens of pages) can be a problem.
-The rule [Keep functions short](03-F-Functions.md#Rf-single) implies "Keep loop bodies short."
+The rule [Keep functions short and simple](03-F-Functions.md#Rf-single) implies "Keep loop bodies short."
 Similarly, lambdas used as callback arguments are sometimes non-trivial, yet unlikely to be reusable.
 
 ##### Enforcement
 
-* See [Keep functions short](03-F-Functions.md#Rf-single)
+* See [Keep functions short and simple](03-F-Functions.md#Rf-single)
 * Flag identical and very similar lambdas used in different places.
 
 ### <a name="Rf-logical"></a>F.2: A function should perform a single logical operation
@@ -406,7 +408,7 @@ If an exception is not supposed to be thrown, the program cannot be assumed to c
 ##### Example
 
 Put `noexcept` on every function written completely in C or in any other language without exceptions.
-The C++ standard library does that implicitly for all functions in the C standard library.
+The C++ Standard Library does that implicitly for all functions in the C Standard Library.
 
 ##### Note
 
@@ -505,9 +507,10 @@ See further in [R.30](06-R-Resource%20management.md#Rr-smartptrparam).
 
 We can catch dangling pointers statically, so we don't need to rely on resource management to avoid violations from dangling pointers.
 
-**See also**: [when to prefer `T*` and when to prefer `T&`](03-F-Functions.md#Rf-ptr-ref).
+**See also**:
 
-**See also**: Discussion of [smart pointer use](06-R-Resource%20management.md#Rr-summary-smartptrs).
+* [Prefer `T*` over `T&` when "no argument" is a valid option](03-F-Functions.md#Rf-ptr-ref)
+* [Smart pointer rule summary](06-R-Resource%20management.md#Rr-summary-smartptrs)
 
 ##### Enforcement
 
@@ -721,7 +724,7 @@ void sink(vector<int>&& v) {   // sink takes ownership of whatever the argument 
 
 ```
 Note that the `std::move(v)` makes it possible for `store_somewhere()` to leave `v` in a moved-from state.
-[That could be dangerous](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-move-semantic).
+[That could be dangerous](04-C-Classes%20and%20class%20hierarchies.md#Rc-move-semantic).
 
 
 ##### Exception
@@ -1008,7 +1011,7 @@ void use2(span<int> p, zstring s, owner<int*> q)
 
 **Also**: Assume that a `T*` obtained from a smart pointer to `T` (e.g., `unique_ptr<T>`) points to a single element.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl).
+**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
 
 ##### Enforcement
 
@@ -1106,7 +1109,7 @@ A `span<T>` object does not own its elements and is so small that it can be pass
 
 Passing a `span` object as an argument is exactly as efficient as passing a pair of pointer arguments or passing a pointer and an integer count.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl).
+**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
 
 ##### Enforcement
 
@@ -1141,7 +1144,7 @@ int length(not_null<zstring> p);
 
 `zstring` do not represent ownership.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl).
+**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
 
 ### <a name="Rf-unique_ptr"></a>F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed
 
@@ -1149,7 +1152,7 @@ int length(not_null<zstring> p);
 
 Using `unique_ptr` is the cheapest way to pass a pointer safely.
 
-See also [C.50](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
+**See also**: [C.50](04-C-Classes%20and%20class%20hierarchies.md#Rc-factory) regarding when to return a `shared_ptr` from a factory.
 
 ##### Example
 
@@ -1276,7 +1279,7 @@ A reference is often a superior alternative to a pointer [if there is no need to
 
 Do not return a pointer to something that is not in the caller's scope; see [F.43](03-F-Functions.md#Rf-dangle).
 
-**See also**: [discussion of dangling pointer prevention](#???).
+**See also**: [discussion of dangling pointer prevention](#???)
 
 ##### Enforcement
 
@@ -1607,7 +1610,7 @@ void print(zstring);
 ##### See also
 
 
-[Default arguments for virtual functions](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-virtual-default-arg)
+[Default arguments for virtual functions](04-C-Classes%20and%20class%20hierarchies.md#Rh-virtual-default-arg)
 
 ##### Enforcement
 

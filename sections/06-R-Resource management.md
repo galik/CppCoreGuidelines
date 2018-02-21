@@ -115,7 +115,7 @@ public:
 
 Where a resource is "ill-behaved" in that it isn't represented as a class with a destructor, wrap it in a class or use [`finally`](10-E-Error%20handling.md#Re-finally)
 
-**See also**: [RAII](06-R-Resource%20management.md#Rr-raii).
+**See also**: [RAII](06-R-Resource%20management.md#Rr-raii)
 
 ### <a name="Rr-use-ptr"></a>R.2: In interfaces, use raw pointers to denote individual objects (only)
 

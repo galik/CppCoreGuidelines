@@ -73,25 +73,25 @@ An implementation of this profile shall recognize the following patterns in sour
 
 Type safety profile summary:
 
-* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts):  
-<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20Statements.md#Res-casts-named).  
-<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20Statements.md#Res-casts-named).  
-<a name="Pro-type-identitycast">c. </a>Don't cast between pointer types where the source type and the target type are the same; A strict version of [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts).
-<a name="Pro-type-implicitpointercast">d. </a>Don't cast between pointer types when the conversion could be implicit; A strict version of [Avoid casts](07-ES-Expressions%20and%20Statements.md#Res-casts).
+* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts):  
+<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).  
+<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).  
+<a name="Pro-type-identitycast">c. </a>Don't cast between pointer types where the source type and the target type are the same; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts).
+<a name="Pro-type-implicitpointercast">d. </a>Don't cast between pointer types when the conversion could be implicit; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` to downcast:
-[Use `dynamic_cast` instead](04-C-Classes%20and%20Class%20Hierarchies.md#Rh-dynamic_cast).
+[Use `dynamic_cast` instead](04-C-Classes%20and%20class%20hierarchies.md#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Don't use `const_cast` to cast away `const` (i.e., at all):
-[Don't cast away const](07-ES-Expressions%20and%20Statements.md#Res-casts-const).
+[Don't cast away const](07-ES-Expressions%20and%20statements.md#Res-casts-const).
 * <a name="Pro-type-cstylecast"></a>Type.4: Don't use C-style `(T)expression` or functional `T(expression)` casts:
-Prefer [construction](07-ES-Expressions%20and%20Statements.md#Res-construct) or [named casts](#Res-cast-named).
+Prefer [construction](07-ES-Expressions%20and%20statements.md#Res-construct) or [named casts](#Res-cast-named).
 * <a name="Pro-type-init"></a>Type.5: Don't use a variable before it has been initialized:
-[always initialize](07-ES-Expressions%20and%20Statements.md#Res-always).
+[always initialize](07-ES-Expressions%20and%20statements.md#Res-always).
 * <a name="Pro-type-memberinit"></a>Type.6: Always initialize a member variable:
-[always initialize](07-ES-Expressions%20and%20Statements.md#Res-always),
-possibly using [default constructors](04-C-Classes%20and%20Class%20Hierarchies.md#Rc-default0) or
+[always initialize](07-ES-Expressions%20and%20statements.md#Res-always),
+possibly using [default constructors](04-C-Classes%20and%20class%20hierarchies.md#Rc-default0) or
 [default member initializers](#Rc-in-class-initializers).
 * <a name="Pro-type-unon"></a>Type.7: Avoid naked union:
-[Use `variant` instead](04-C-Classes%20and%20Class%20Hierarchies.md#Ru-naked).
+[Use `variant` instead](04-C-Classes%20and%20class%20hierarchies.md#Ru-naked).
 * <a name="Pro-type-varargs"></a>Type.8: Avoid varargs:
 [Don't use `va_arg` arguments](03-F-Functions.md#F-varargs).
 
@@ -144,7 +144,7 @@ See /docs folder for the initial design. The detailed formal rules are in progre
 Lifetime safety profile summary:
 
 * <a href="Pro-lifetime-invalid-deref"></a>Lifetime.1: Don't dereference a possibly invalid pointer:
-[detect or avoid](07-ES-Expressions%20and%20Statements.md#Res-deref).
+[detect or avoid](07-ES-Expressions%20and%20statements.md#Res-deref).
 
 ##### Impact
 
