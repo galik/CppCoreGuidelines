@@ -87,6 +87,7 @@ cm3
 cnt
 CommonMark
 *compiletime
+componentization
 composability
 composable
 conceptsTS
@@ -354,6 +355,7 @@ NR
 nullness
 nullptr
 NVI
+ofstream
 ok
 oo
 OO
