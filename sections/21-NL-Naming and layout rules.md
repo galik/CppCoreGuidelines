@@ -83,7 +83,7 @@ void stable_sort(Sortable& c)
 ```
 ##### Note
 
-If the comment and the code disagrees, both are likely to be wrong.
+If the comment and the code disagree, both are likely to be wrong.
 
 ### <a name="Rl-comments-crisp"></a>NL.3: Keep comments crisp
 

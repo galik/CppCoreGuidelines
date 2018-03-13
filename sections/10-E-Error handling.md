@@ -801,7 +801,7 @@ void f(int n)
 {
     // ...
     p = static_cast<X*>(malloc(n, X));
-    if (p == nullptr) abort();     // abort if memory is exhausted
+    if (!p) abort();     // abort if memory is exhausted
     // ...
 }
 

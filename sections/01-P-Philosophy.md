@@ -287,7 +287,7 @@ Or better still just use the type system and replace `Int` with `int32_t`.
 void read(int* p, int n);   // read max n integers into *p
 
 int a[100];
-read(a, 1000);    // bad
+read(a, 1000);    // bad, off the end
 
 ```
 better
@@ -633,10 +633,10 @@ struct X {
 
 X waste(const char* p)
 {
-    if (p == nullptr) throw Nullptr_error{};
+    if (!p) throw Nullptr_error{};
     int n = strlen(p);
     auto buf = new char[n];
-    if (buf == nullptr) throw Allocation_error{};
+    if (!buf) throw Allocation_error{};
     for (int i = 0; i < n; ++i) buf[i] = p[i];
     // ... manipulate buffer ...
     X x;

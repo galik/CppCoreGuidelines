@@ -1035,7 +1035,7 @@ Consider:
 int length(Record* p);
 
 ```
-When I call `length(p)` should I test for `p == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
+When I call `length(p)` should I check if `p` is `nullptr` first? Should the implementation of `length()` check if `p` is `nullptr`?
 
 ```cpp
 // it is the caller's job to make sure p != nullptr
@@ -1130,7 +1130,7 @@ Consider:
 int length(const char* p);
 
 ```
-When I call `length(s)` should I test for `s == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
+When I call `length(s)` should I check if `s` is `nullptr` first? Should the implementation of `length()` check if `p` is `nullptr`?
 
 ```cpp
 // the implementor of length() must assume that p == nullptr is possible
@@ -1225,7 +1225,7 @@ Sometimes having `nullptr` as an alternative to indicated "no object" is useful,
 ```cpp
 string zstring_to_string(zstring p) // zstring is a char*; that is a C-style string
 {
-    if (p == nullptr) return string{};    // p might be nullptr; remember to check
+    if (!p) return string{};    // p might be nullptr; remember to check
     return string{p};
 }
 
@@ -1260,7 +1260,7 @@ Returning a `T*` to transfer ownership is a misuse.
 ```cpp
 Node* find(Node* t, const string& s)  // find s in a binary tree of Nodes
 {
-    if (t == nullptr || t->name == s) return t;
+    if (!t || t->name == s) return t;
     if ((auto p = find(t->left, s))) return p;
     if ((auto p = find(t->right, s))) return p;
     return nullptr;

@@ -345,7 +345,7 @@ Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but 
 
 ##### Note
 
-Prefer a formal specification of requirements, such as `Expects(p != nullptr);`.
+Prefer a formal specification of requirements, such as `Expects(p);`.
 If that is infeasible, use English text in comments, such as `// the sequence [p:q) is ordered using <`.
 
 ##### Note

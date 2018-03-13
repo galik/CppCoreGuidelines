@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-February 12, 2018
+March 9, 2018
 
 
 Editors:
@@ -724,7 +724,7 @@ Or better still just use the type system and replace `Int` with `int32_t`.
 void read(int* p, int n);   // read max n integers into *p
 
 int a[100];
-read(a, 1000);    // bad
+read(a, 1000);    // bad, off the end
 
 ```
 better
@@ -1070,10 +1070,10 @@ struct X {
 
 X waste(const char* p)
 {
-    if (p == nullptr) throw Nullptr_error{};
+    if (!p) throw Nullptr_error{};
     int n = strlen(p);
     auto buf = new char[n];
-    if (buf == nullptr) throw Allocation_error{};
+    if (!buf) throw Allocation_error{};
     for (int i = 0; i < n; ++i) buf[i] = p[i];
     // ... manipulate buffer ...
     X x;
@@ -1593,7 +1593,7 @@ Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but 
 
 ##### Note
 
-Prefer a formal specification of requirements, such as `Expects(p != nullptr);`.
+Prefer a formal specification of requirements, such as `Expects(p);`.
 If that is infeasible, use English text in comments, such as `// the sequence [p:q) is ordered using <`.
 
 ##### Note
@@ -3468,7 +3468,7 @@ Consider:
 int length(Record* p);
 
 ```
-When I call `length(p)` should I test for `p == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
+When I call `length(p)` should I check if `p` is `nullptr` first? Should the implementation of `length()` check if `p` is `nullptr`?
 
 ```cpp
 // it is the caller's job to make sure p != nullptr
@@ -3563,7 +3563,7 @@ Consider:
 int length(const char* p);
 
 ```
-When I call `length(s)` should I test for `s == nullptr` first? Should the implementation of `length()` test for `p == nullptr`?
+When I call `length(s)` should I check if `s` is `nullptr` first? Should the implementation of `length()` check if `p` is `nullptr`?
 
 ```cpp
 // the implementor of length() must assume that p == nullptr is possible
@@ -3658,7 +3658,7 @@ Sometimes having `nullptr` as an alternative to indicated "no object" is useful,
 ```cpp
 string zstring_to_string(zstring p) // zstring is a char*; that is a C-style string
 {
-    if (p == nullptr) return string{};    // p might be nullptr; remember to check
+    if (!p) return string{};    // p might be nullptr; remember to check
     return string{p};
 }
 
@@ -3693,7 +3693,7 @@ Returning a `T*` to transfer ownership is a misuse.
 ```cpp
 Node* find(Node* t, const string& s)  // find s in a binary tree of Nodes
 {
-    if (t == nullptr || t->name == s) return t;
+    if (!t || t->name == s) return t;
     if ((auto p = find(t->left, s))) return p;
     if ((auto p = find(t->right, s))) return p;
     return nullptr;
@@ -4404,8 +4404,9 @@ An overload set may have some members that do not directly access `private` data
 
 ```cpp
 class Foobar {
-    void foo(int x)    { /* manipulate private data */ }
-    void foo(double x) { foo(std::round(x)); }
+public:
+    void foo(long x)    { /* manipulate private data */ }
+    void foo(double x) { foo(std::lround(x)); }
     // ...
 private:
     // ...
@@ -5405,7 +5406,7 @@ public:
     X2(const string& name)
         :f{fopen(name.c_str(), "r")}
     {
-        if (f == nullptr) throw runtime_error{"could not open" + name};
+        if (!f) throw runtime_error{"could not open" + name};
         // ...
     }
 
@@ -11392,7 +11393,7 @@ It nicely encapsulates local initialization, including cleaning up scratch varia
 
 ```cpp
 widget x;   // should be const, but:
-for (auto i = 2; i <= N; ++i) {             // this could be some
+for (auto i = 2; i <= N; ++i) {          // this could be some
     x += some_obj.do_something_with(i);  // arbitrarily long code
 }                                        // needed to initialize x
 // from here, x should be const, but we can't say so in code in this style
@@ -11544,7 +11545,7 @@ void error(int severity ...)
     for (;;) {
         // treat the next var as a char*; no checking: a cast in disguise
         char* p = va_arg(ap, char*);
-        if (p == nullptr) break;
+        if (!p) break;
         cerr << p << ' ';
     }
 
@@ -11764,13 +11765,13 @@ void f(int* p, int count)
 ```cpp
 void f(span<int> a) // BETTER: use span in the function declaration
 {
-    if (a.length() < 2) return;
+    if (a.size() < 2) return;
 
     int n = a[0];      // OK
 
     span<int> q = a.subspan(1); // OK
 
-    if (a.length() < 6) return;
+    if (a.size() < 6) return;
 
     a[4] = 1;          // OK
 
@@ -11929,8 +11930,8 @@ void f2()
     int a[5];
     span<int> av = a;
 
-    g(av.data(), av.length());   // OK, if you have no choice
-    g1(a);                       // OK -- no decay here, instead use implicit span ctor
+    g(av.data(), av.size());   // OK, if you have no choice
+    g1(a);                     // OK -- no decay here, instead use implicit span ctor
 }
 
 ```
@@ -12899,7 +12900,7 @@ There are many approaches to dealing with this potential problem:
 ```cpp
 void f1(int* p) // deal with nullptr
 {
-    if (p == nullptr) {
+    if (!p) {
         // deal with nullptr (allocate, return, throw, make p point to something, whatever
     }
     int x = *p;
@@ -12916,7 +12917,7 @@ There are two potential problems with testing for `nullptr`:
 ```cpp
 void f2(int* p) // state that p is not supposed to be nullptr
 {
-    assert(p != nullptr);
+    assert(p);
     int x = *p;
 }
 
@@ -12926,7 +12927,7 @@ This would work even better if/when C++ gets direct support for contracts:
 
 ```cpp
 void f3(int* p) // state that p is not supposed to be nullptr
-    [[expects: p != nullptr]]
+    [[expects: p]]
 {
     int x = *p;
 }
@@ -13617,7 +13618,7 @@ The opposite condition is most easily expressed using a negation:
 ```cpp
 // These all mean "if `p` is `nullptr`"
 if (!p) { ... }           // good
-if (p == 0) { ... }       // redundant `!= 0`; bad: don't use `0` for pointers
+if (p == 0) { ... }       // redundant `== 0`; bad: don't use `0` for pointers
 if (p == nullptr) { ... } // redundant `== nullptr`, not recommended
 
 ```
@@ -16781,7 +16782,7 @@ void f(int n)
 {
     // ...
     p = static_cast<X*>(malloc(n, X));
-    if (p == nullptr) abort();     // abort if memory is exhausted
+    if (!p) abort();     // abort if memory is exhausted
     // ...
 }
 
@@ -21080,7 +21081,7 @@ Of course many simple functions will naturally have just one `return` because of
 ```cpp
 int index(const char* p)
 {
-    if (p == nullptr) return -1;  // error indicator: alternatively "throw nullptr_error{}"
+    if (!p) return -1;  // error indicator: alternatively "throw nullptr_error{}"
     // ... do a lookup to find the index for p
     return i;
 }
@@ -21092,7 +21093,7 @@ If we applied the rule, we'd get something like
 int index2(const char* p)
 {
     int i;
-    if (p == nullptr)
+    if (!p)
         i = -1;  // error indicator
     else {
         // ... do a lookup to find the index for p
@@ -21690,7 +21691,7 @@ Use `not_null<zstring>` for C-style strings that cannot be `nullptr`. ??? Do we 
 These assertions are currently macros (yuck!) and must appear in function definitions (only)
 pending standard committee decisions on contracts and assertion syntax.
 See [the contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf); using the attribute syntax,
-for example, `Expects(p != nullptr)` will become `[[expects: p != nullptr]]`.
+for example, `Expects(p)` will become `[[expects: p]]`.
 
 ## <a name="SS-utilities"></a>GSL.util: Utilities
 
@@ -21819,7 +21820,7 @@ void stable_sort(Sortable& c)
 ```
 ##### Note
 
-If the comment and the code disagrees, both are likely to be wrong.
+If the comment and the code disagree, both are likely to be wrong.
 
 ### <a name="Rl-comments-crisp"></a>NL.3: Keep comments crisp
 

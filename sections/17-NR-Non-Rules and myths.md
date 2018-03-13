@@ -116,7 +116,7 @@ Of course many simple functions will naturally have just one `return` because of
 ```cpp
 int index(const char* p)
 {
-    if (p == nullptr) return -1;  // error indicator: alternatively "throw nullptr_error{}"
+    if (!p) return -1;  // error indicator: alternatively "throw nullptr_error{}"
     // ... do a lookup to find the index for p
     return i;
 }
@@ -128,7 +128,7 @@ If we applied the rule, we'd get something like
 int index2(const char* p)
 {
     int i;
-    if (p == nullptr)
+    if (!p)
         i = -1;  // error indicator
     else {
         // ... do a lookup to find the index for p

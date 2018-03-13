@@ -101,7 +101,7 @@ Use `not_null<zstring>` for C-style strings that cannot be `nullptr`. ??? Do we 
 These assertions are currently macros (yuck!) and must appear in function definitions (only)
 pending standard committee decisions on contracts and assertion syntax.
 See [the contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf); using the attribute syntax,
-for example, `Expects(p != nullptr)` will become `[[expects: p != nullptr]]`.
+for example, `Expects(p)` will become `[[expects: p]]`.
 
 ## <a name="SS-utilities"></a>GSL.util: Utilities
 
