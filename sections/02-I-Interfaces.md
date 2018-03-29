@@ -437,7 +437,7 @@ void f()    // problematic
 {
     char buffer[MAX];
     // ...
-    memset(buffer, 0, MAX);
+    memset(buffer, 0, sizeof(buffer));
 }
 
 ```
@@ -448,7 +448,7 @@ void f()    // better
 {
     char buffer[MAX];
     // ...
-    memset(buffer, 0, MAX);
+    memset(buffer, 0, sizeof(buffer));
     Ensures(buffer[0] == 0);
 }
 
