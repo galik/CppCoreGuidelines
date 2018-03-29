@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-March 9, 2018
+March 26, 2018
 
 
 Editors:
@@ -1685,7 +1685,7 @@ void f()    // problematic
 {
     char buffer[MAX];
     // ...
-    memset(buffer, 0, MAX);
+    memset(buffer, 0, sizeof(buffer));
 }
 
 ```
@@ -1696,7 +1696,7 @@ void f()    // better
 {
     char buffer[MAX];
     // ...
-    memset(buffer, 0, MAX);
+    memset(buffer, 0, sizeof(buffer));
     Ensures(buffer[0] == 0);
 }
 
@@ -4829,7 +4829,21 @@ For example, a class with a (pointer, size) pair of member and a destructor that
 
 ##### Reason
 
-The semantics of the special functions are closely related, so if one needs to be non-default, the odds are that others need modification too.
+The *special member functions* are the default constructor, copy constructor,
+copy assignment operator, move constructor, move assignment operator, and
+destructor.
+
+The semantics of the special functions are closely related, so if one needs to be declared, the odds are that others need consideration too.
+
+Declaring any special member function except a default constructor,
+even as `=default` or `=delete`, will suppress the implicit declaration
+of a move constructor and move assignment operator.
+Declaring a move constructor or move assignment operator, even as
+`=default` or `=delete`, will cause an implicitly generated copy constructor
+or implicitly generated copy assignment operator to be defined as deleted.
+So as soon as any of the special functions is declared, the others should
+all be declared to avoid unwanted effects like turning all potential moves
+into more expensive copies, or making a class move-only.
 
 ##### Example, bad
 
@@ -4863,6 +4877,43 @@ This is known as "the rule of five" or "the rule of six", depending on whether y
 
 If you want a default implementation of a default operation (while defining another), write `=default` to show you're doing so intentionally for that function.
 If you don't want a default operation, suppress it with `=delete`.
+
+##### Example, good
+
+When a destructor needs to be declared just to make it `virtual`, it can be
+defined as defaulted. To avoid suppressing the implicit move operations
+they must also be declared, and then to avoid the class becoming move-only
+(and not copyable) the copy operations must be declared:
+
+```cpp
+class AbstractBase {
+public:
+  virtual ~AbstractBase() = default;
+  AbstractBase(const AbstractBase&) = default;
+  AbstractBase& operator=(const AbstractBase&) = default;
+  AbstractBase(AbstractBase&&) = default;
+  AbstractBase& operator=(AbstractBase&&) = default;
+};
+
+```
+Alternatively to prevent slicing as per [C.67](#Rc-copy-virtual),
+the copy and move operations can all be deleted:
+
+```cpp
+class ClonableBase {
+public:
+  virtual unique_ptr<ClonableBase> clone() const;
+  virtual ~ClonableBase() = default;
+  ClonableBase(const ClonableBase&) = delete;
+  ClonableBase& operator=(const ClonableBase&) = delete;
+  ClonableBase(ClonableBase&&) = delete;
+  ClonableBase& operator=(ClonableBase&&) = delete;
+};
+
+```
+Defining only the move operations or only the copy operations would have the
+same effect here, but stating the intent explicitly for each special member
+makes it more obvious to the reader.
 
 ##### Note
 
@@ -5743,6 +5794,10 @@ Complex z = 10.7;   // unsurprising conversion
 
 ```
 **See also**: [Discussion of implicit conversions](#Ro-conversion)
+
+##### Note
+
+Copy and move constructors should not be made explicit because they do not perform conversions. Explicit copy/move constructors make passing and returning by value difficult.
 
 ##### Enforcement
 
@@ -7232,7 +7287,7 @@ public:
     virtual void redraw();
 
     // ...
-public:
+private:
     Point cent;
     Color col;
 };
@@ -16444,7 +16499,7 @@ void your_code()
         my_code();
         // ...
     }
-    catch(Bufferpool_exhausted) {
+    catch(const Bufferpool_exhausted&) {
         // ...
     }
 }
@@ -16494,7 +16549,7 @@ void your_code()   // Don't
         my_code();
         // ...
     }
-    catch(runtime_error) {   // runtime_error means "input buffer too small"
+    catch(const runtime_error&) {   // runtime_error means "input buffer too small"
         // ...
     }
 }
@@ -16539,6 +16594,10 @@ catch (const exception& e) { /* ... */ }
 
 ```
 Most handlers do not modify their exception and in general we [recommend use of `const`](#Res-const).
+
+##### Note
+
+To rethrow a caught exception use `throw;` not `throw e;`. Using `throw e;` would throw a new copy of `e` (sliced to the static type `std::exception`) instead of rethrowing the original exception of type `std::runtime_error`. (But keep [Don't try to catch every exception in every function](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Re-not-always) and [Minimize the use of explicit `try`/`catch`](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Re-catch) in mind.)
 
 ##### Enforcement
 
@@ -19212,7 +19271,7 @@ The syntax and techniques needed are pretty horrendous.
 ##### Reason
 
 Template metaprogramming is hard to get right, slows down compilation, and is often very hard to maintain.
-However, there are real-world examples where template metaprogramming provides better performance that any alternative short of expert-level assembly code.
+However, there are real-world examples where template metaprogramming provides better performance than any alternative short of expert-level assembly code.
 Also, there are real-world examples where template metaprogramming expresses the fundamental ideas better than run-time code.
 For example, if you really need AST manipulation at compile time (e.g., for optional matrix operation folding) there may be no other way in C++.
 
