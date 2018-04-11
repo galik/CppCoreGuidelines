@@ -144,7 +144,7 @@ You can sample rules for specific language features:
 [when to use](#SS-lambdas)
 * operator:
 [conventional](#Ro-conventional) --
-[avoid conversion operators](#Ro-conventional) --
+[avoid conversion operators](#Ro-conversion) --
 [and lambdas](#Ro-lambda)
 * `public`, `private`, and `protected`:
 [information hiding](#Rc-private) --
@@ -3194,6 +3194,8 @@ better
 
 **See also**: [Support library](#S-gsl)
 
+**See also**: [Do not pass an array as a single pointer](#Ri-array)
+
 ##### Enforcement
 
 * (Simple) ((Bounds)) Warn for any arithmetic operation on an expression of pointer type that results in a value of pointer type.
@@ -4221,7 +4223,7 @@ For example:
         // ...
     private:
         double magnitude;
-        double unit;    // 1 is meters, 1000 is kilometers, 0.0001 is millimeters, etc.
+        double unit;    // 1 is meters, 1000 is kilometers, 0.001 is millimeters, etc.
     };
 
 ##### Note
@@ -5379,7 +5381,7 @@ If you really want an implicit conversion from the constructor argument type to 
 
 ##### Note
 
-Copy and move constructors should not be made explicit because they do not perform conversions. Explicit copy/move constructors make passing and returning by value difficult.
+Copy and move constructors should not be made `explicit` because they do not perform conversions. Explicit copy/move constructors make passing and returning by value difficult.
 
 ##### Enforcement
 
@@ -17564,7 +17566,7 @@ Assume that `Apple` and `Pear` are two kinds of `Fruit`s.
     void maul(Fruit* p)
     {
         *p = Pear{};     // put a Pear into *p
-        p[1] = Pear{};   // put a Pear into p[2]
+        p[1] = Pear{};   // put a Pear into p[1]
     }
 
     Apple aa [] = { an_apple, another_apple };   // aa contains Apples (obviously!)
@@ -17578,7 +17580,7 @@ If `sizeof(Apple) != sizeof(Pear)` the access to `aa[1]` will not be aligned to 
 We have a type violation and possibly (probably) a memory corruption.
 Never write such code.
 
-Note that `maul()` violates the a `T*` points to an individual object [Rule](#???).
+Note that `maul()` violates the a [`T*` points to an individual object rule](#Rf-ptr).
 
 **Alternative**: Use a proper (templatized) container:
 
@@ -17594,7 +17596,7 @@ Note that `maul()` violates the a `T*` points to an individual object [Rule](#??
 
     Apple& a0 = &va[0];   // a Pear?
 
-Note that the assignment in `maul2()` violated the no-slicing [Rule](#???).
+Note that the assignment in `maul2()` violated the [no-slicing rule](#Res-slice).
 
 ##### Enforcement
 
@@ -18207,6 +18209,7 @@ Source file rule summary:
 * [SF.8: Use `#include` guards for all `.h` files](#Rs-guards)
 * [SF.9: Avoid cyclic dependencies among source files](#Rs-cycles)
 * [SF.10: Avoid dependencies on implicitly `#include`d names](#Rs-implicit)
+* [SF.11: Header files should be self-contained](#Rs-contained)
 
 * [SF.20: Use `namespace`s to express logical structure](#Rs-namespace)
 * [SF.21: Don't use an unnamed (anonymous) namespace in a header](#Rs-unnamed)
@@ -18613,6 +18616,27 @@ This rule against implicit inclusion is not meant to prevent such deliberate agg
 
 Enforcement would require some knowledge about what in a header is meant to be "exported" to users and what is there to enable implementation.
 No really good solution is possible until we have modules.
+
+### <a name="Rs-contained"></a>SF.11: Header files should be self-contained
+
+##### Reason
+
+Usability, headers should be simple to use and work when included on their own.
+Headers should encapsulate the functionality they provide.
+Avoid clients of a header having to manage that header's dependencies.
+
+##### Example
+
+    #include "helpers.h"
+    // helpers.h depends on std::string and includes <string>
+
+##### Note
+
+Failing to follow this results in difficult to diagnose errors for clients of a header.
+
+##### Enforcement
+
+A test should verify that the header file itself compiles or that a cpp file which only includes the header file compiles.
 
 ### <a name="Rs-namespace"></a>SF.20: Use `namespace`s to express logical structure
 
