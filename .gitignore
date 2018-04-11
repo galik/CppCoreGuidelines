@@ -4,5 +4,11 @@ node_modules
 scripts/build
 scripts/nodesjs/build
 scripts/python/*.pyc
+<<<<<<< HEAD
 scripts/python/__pycache__
 _site
+=======
+
+# VS Code
+.vs/
+>>>>>>> master
