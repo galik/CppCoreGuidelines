@@ -13,7 +13,7 @@ Clang-tidy has a set of rules that specifically enforce the C++ Core Guidelines.
 
 ### <a name="St-cppcorecheck"></a>Tools: [CppCoreCheck](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-the-cpp-core-guidelines-checkers)
 
-The Microsoft compiler's C++ code analysis contains a set of rules specifically aimed at enforcement of the C++ Core Guidelines. 
+The Microsoft compiler's C++ code analysis contains a set of rules specifically aimed at enforcement of the C++ Core Guidelines.
 
 # <a name="S-glossary"></a>Glossary
 
@@ -29,7 +29,7 @@ More information on many topics about C++ can be found on the [Standard C++ Foun
 * *address*: a value that allows us to find an object in a computer's memory.
 * *algorithm*: a procedure or formula for solving a problem; a finite series of computational steps to produce a result.
 * *alias*: an alternative way of referring to an object; often a name, pointer, or reference.
-* *API*: Application Programming Interface, a set of methods that form the communication between various software components. Contrast with ABI.
+* *API*: Application Programming Interface, a set of functions that form the communication between various software components. Contrast with ABI.
 * *application*: a program or a collection of programs that is considered an entity by its users.
 * *approximation*: something (e.g., a value or a design) that is close to the perfect or ideal (value or design).
   Often an approximation is a result of trade-offs among ideals.

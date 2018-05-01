@@ -73,9 +73,9 @@ An implementation of this profile shall recognize the following patterns in sour
 
 Type safety profile summary:
 
-* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts):  
-<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).  
-<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).  
+* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts):
+<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).
+<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts) and [prefer named casts](07-ES-Expressions%20and%20statements.md#Res-casts-named).
 <a name="Pro-type-identitycast">c. </a>Don't cast between pointer types where the source type and the target type are the same; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts).
 <a name="Pro-type-implicitpointercast">d. </a>Don't cast between pointer types when the conversion could be implicit; A strict version of [Avoid casts](07-ES-Expressions%20and%20statements.md#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` to downcast:

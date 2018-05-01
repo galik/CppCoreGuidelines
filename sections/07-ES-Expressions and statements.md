@@ -1953,7 +1953,7 @@ Surprised? I'm just glad I didn't crash the program.
 
 ##### Note
 
-Programmers who write casts typically assume that they know what they are doing, 
+Programmers who write casts typically assume that they know what they are doing,
 or that writing a cast makes the program "easier to read".
 In fact, they often disable the general rules for using values.
 Overload resolution and template instantiation usually pick the right function if there is a right function to pick.
@@ -3398,7 +3398,7 @@ if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
 ```
 is a common beginners error.
 If you use C-style strings, you must know the `<cstring>` functions well.
-Being verbose and writing 
+Being verbose and writing
 
 ```cpp
 if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
@@ -3532,7 +3532,7 @@ int a[10];
 for (int i = 0; i < 10; ++i) a[i] = i;
 vector<int> v(10);
 // compares signed to unsigned; some compilers warn, but we should not
-for (gsl::index i = 0; v.size() < 10; ++i) v[i] = i;
+for (gsl::index i = 0; i < v.size(); ++i) v[i] = i;
 
 int a2[-2];         // error: negative size
 

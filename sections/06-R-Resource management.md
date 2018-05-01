@@ -802,7 +802,7 @@ Using `unique_ptr` in this way both documents and enforces the function call's o
 ##### Example
 
 ```cpp
-void sink(unique_ptr<widget>); // consumes the widget
+void sink(unique_ptr<widget>); // takes ownership of the widget
 
 void uses(widget*);            // just uses the widget
 

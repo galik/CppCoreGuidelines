@@ -19,7 +19,7 @@ The rules are designed to help avoid several kinds of errors:
 * Resource leaks (including memory leaks)
 * Bounds errors
 * Lifetime errors (e.g., accessing an object after is has been `delete`d)
-* Complexity errors (logical errors make likely by overly complex expression of ideas)
+* Complexity errors (logical errors made likely by overly complex expression of ideas)
 * Interface errors (e.g., an unexpected value is passed through an interface)
 
 Error-handling rule summary:
@@ -518,7 +518,7 @@ void your_code()   // Don't
 
 ##### Enforcement
 
-Catch `throw` and `catch` of a built-in type. Maybe warn about `throw` and `catch` using an standard-library `exception` type. Obviously, exceptions derived from the `std::exception` hierarchy is fine.
+Catch `throw` and `catch` of a built-in type. Maybe warn about `throw` and `catch` using a standard-library `exception` type. Obviously, exceptions derived from the `std::exception` hierarchy are fine.
 
 ### <a name="Re-exception-ref"></a>E.15: Catch exceptions from a hierarchy by reference
 

@@ -28,7 +28,7 @@ Parameter passing expression rules:
 * [F.15: Prefer simple and conventional ways of passing information](03-F-Functions.md#Rf-conventional)
 * [F.16: For "in" parameters, pass cheaply-copied types by value and others by reference to `const`](03-F-Functions.md#Rf-in)
 * [F.17: For "in-out" parameters, pass by reference to non-`const`](03-F-Functions.md#Rf-inout)
-* [F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter](03-F-Functions.md#Rf-consume)
+* [F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter](03-F-Functions.md#Rf-consume)
 * [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](03-F-Functions.md#Rf-forward)
 * [F.20: For "out" output values, prefer return values to output parameters](03-F-Functions.md#Rf-out)
 * [F.21: To return multiple "out" values, prefer returning a tuple or struct](03-F-Functions.md#Rf-out-multi)
@@ -616,7 +616,7 @@ For advanced uses (only), where you really need to optimize for rvalues passed t
 
 * If the function is going to unconditionally move from the argument, take it by `&&`. See [F.18](03-F-Functions.md#Rf-consume).
 * If the function is going to keep a copy of the argument, in addition to passing by `const&` (for lvalues),
-  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "consume"; see [F.18](03-F-Functions.md#Rf-consume).
+  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "will-move-from"; see [F.18](03-F-Functions.md#Rf-consume).
 * In special cases, such as multiple "input + copy" parameters, consider using perfect forwarding. See [F.19](03-F-Functions.md#Rf-forward).
 
 ##### Example
@@ -627,7 +627,7 @@ int multiply(int, int); // just input ints, pass by value
 // suffix is input-only but not as cheap as an int, pass by const&
 string& concatenate(string&, const string& suffix);
 
-void sink(unique_ptr<widget>);  // input only, and consumes the widget
+void sink(unique_ptr<widget>);  // input only, and moves ownership of the widget
 
 ```
 Avoid "esoteric techniques" such as:
@@ -707,7 +707,7 @@ A bad logic error can happen if the writer of `g()` incorrectly assumes the size
 * (Moderate) ((Foundation)) Warn about functions regarding reference to non-`const` parameters that do *not* write to them.
 * (Simple) ((Foundation)) Warn when a non-`const` parameter being passed by reference is `move`d.
 
-### <a name="Rf-consume"></a>F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter
+### <a name="Rf-consume"></a>F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter
 
 ##### Reason
 

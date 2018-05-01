@@ -462,9 +462,9 @@ Hard.
 ##### Example (using TS concepts)
 
 ```cpp
-vector<string> v;
+vector<string> v{ "abc", "xyz" };
 auto& x = v.front();     // bad
-String& s = v.begin();   // good (String is a GSL concept)
+String& s = v.front();   // good (String is a GSL concept)
 
 ```
 ##### Enforcement
@@ -1678,8 +1678,8 @@ public:
     // ...
 };
 
-vector<int> vi;
-vector<string> vs;
+Vector<int> vi;
+Vector<string> vs;
 
 ```
 It is probably a dumb idea to define a `sort` as a member function of a container, but it is not unheard of and it makes a good example of what not to do.

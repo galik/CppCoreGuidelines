@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-March 26, 2018
+April 16, 2018
 
 
 Editors:
@@ -8,7 +8,7 @@ Editors:
 * [Bjarne Stroustrup](http://www.stroustrup.com)
 * [Herb Sutter](http://herbsutter.com/)
 
-This document is an early draft. It's known to be incomplet, incorrekt, and has lots of b**a**d **for**~mat~ting.
+This is a living document under continuous improvement.
 Had it been an open-source (code) project, this would have been release 0.8.
 Copying, use, modification, and creation of derivative works from this project is licensed under an MIT-style license.
 Contributing to this project requires agreeing to a Contributor License. See the accompanying [LICENSE](LICENSE) file for details.
@@ -21,7 +21,7 @@ The list of contributors is [here](#SS-ack).
 
 Problems:
 
-* The sets of rules have not been thoroughly checked for completeness, consistency, or enforceability.
+* The sets of rules have not been completely checked for completeness, consistency, or enforceability.
 * Triple question marks (???) mark known missing information
 * Update reference sections; many pre-C++11 sources are too old.
 * For a more-or-less up-to-date to-do list see: [To-do: Unclassified proto-rules](#S-unclassified)
@@ -2461,7 +2461,7 @@ Parameter passing expression rules:
 * [F.15: Prefer simple and conventional ways of passing information](#Rf-conventional)
 * [F.16: For "in" parameters, pass cheaply-copied types by value and others by reference to `const`](#Rf-in)
 * [F.17: For "in-out" parameters, pass by reference to non-`const`](#Rf-inout)
-* [F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter](#Rf-consume)
+* [F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter](#Rf-consume)
 * [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](#Rf-forward)
 * [F.20: For "out" output values, prefer return values to output parameters](#Rf-out)
 * [F.21: To return multiple "out" values, prefer returning a tuple or struct](#Rf-out-multi)
@@ -3049,7 +3049,7 @@ For advanced uses (only), where you really need to optimize for rvalues passed t
 
 * If the function is going to unconditionally move from the argument, take it by `&&`. See [F.18](#Rf-consume).
 * If the function is going to keep a copy of the argument, in addition to passing by `const&` (for lvalues),
-  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "consume"; see [F.18](#Rf-consume).
+  add an overload that passes the parameter by `&&` (for rvalues) and in the body `std::move`s it to its destination. Essentially this overloads a "will-move-from"; see [F.18](#Rf-consume).
 * In special cases, such as multiple "input + copy" parameters, consider using perfect forwarding. See [F.19](#Rf-forward).
 
 ##### Example
@@ -3060,7 +3060,7 @@ int multiply(int, int); // just input ints, pass by value
 // suffix is input-only but not as cheap as an int, pass by const&
 string& concatenate(string&, const string& suffix);
 
-void sink(unique_ptr<widget>);  // input only, and consumes the widget
+void sink(unique_ptr<widget>);  // input only, and moves ownership of the widget
 
 ```
 Avoid "esoteric techniques" such as:
@@ -3140,7 +3140,7 @@ A bad logic error can happen if the writer of `g()` incorrectly assumes the size
 * (Moderate) ((Foundation)) Warn about functions regarding reference to non-`const` parameters that do *not* write to them.
 * (Simple) ((Foundation)) Warn when a non-`const` parameter being passed by reference is `move`d.
 
-### <a name="Rf-consume"></a>F.18: For "consume" parameters, pass by `X&&` and `std::move` the parameter
+### <a name="Rf-consume"></a>F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter
 
 ##### Reason
 
@@ -5451,7 +5451,7 @@ Leaving behind an invalid object is asking for trouble.
 
 ```cpp
 class X2 {
-    FILE* f;   // call init() before any other function
+    FILE* f;
     // ...
 public:
     X2(const string& name)
@@ -5477,7 +5477,7 @@ void f()
 
 ```cpp
 class X3 {     // bad: the constructor leaves a non-valid object behind
-    FILE* f;   // call init() before any other function
+    FILE* f;   // call is_valid() before any other function
     bool valid;
     // ...
 public:
@@ -5698,7 +5698,7 @@ private:
 ```
 This is nice and general, but setting a `Vector0` to empty after an error involves an allocation, which may fail.
 Also, having a default `Vector` represented as `{new T[0], 0, 0}` seems wasteful.
-For example, `Vector0 v(100)` costs 100 allocations.
+For example, `Vector0<int> v[100]` costs 100 allocations.
 
 ##### Example
 
@@ -6636,7 +6636,7 @@ void f()
 }
 
 ```
-Note that deleted methods should be public.
+Note that deleted functions should be public.
 
 ##### Enforcement
 
@@ -8134,7 +8134,7 @@ Contrast with [C.147](#Rh-ptr-cast), where failure is an error, and should not b
 
 ##### Example
 
-The example below describes the `add` method of a `Shape_owner` that takes ownership of constructed `Shape` objects. The objects are also sorted into views, according to their geometric attributes.
+The example below describes the `add` function of a `Shape_owner` that takes ownership of constructed `Shape` objects. The objects are also sorted into views, according to their geometric attributes.
 In this example, `Shape` does not inherit from `Geometric_attributes`. Only its subclasses do.
 
 ```cpp
@@ -10082,7 +10082,7 @@ Using `unique_ptr` in this way both documents and enforces the function call's o
 ##### Example
 
 ```cpp
-void sink(unique_ptr<widget>); // consumes the widget
+void sink(unique_ptr<widget>); // takes ownership of the widget
 
 void uses(widget*);            // just uses the widget
 
@@ -12213,7 +12213,7 @@ Surprised? I'm just glad I didn't crash the program.
 
 ##### Note
 
-Programmers who write casts typically assume that they know what they are doing, 
+Programmers who write casts typically assume that they know what they are doing,
 or that writing a cast makes the program "easier to read".
 In fact, they often disable the general rules for using values.
 Overload resolution and template instantiation usually pick the right function if there is a right function to pick.
@@ -13658,7 +13658,7 @@ if(strcmp(p1, p2)) { ... }   // are the two C-style strings equal? (mistake!)
 ```
 is a common beginners error.
 If you use C-style strings, you must know the `<cstring>` functions well.
-Being verbose and writing 
+Being verbose and writing
 
 ```cpp
 if(strcmp(p1, p2) != 0) { ... }   // are the two C-style strings equal? (mistake!)
@@ -13792,7 +13792,7 @@ int a[10];
 for (int i = 0; i < 10; ++i) a[i] = i;
 vector<int> v(10);
 // compares signed to unsigned; some compilers warn, but we should not
-for (gsl::index i = 0; v.size() < 10; ++i) v[i] = i;
+for (gsl::index i = 0; i < v.size(); ++i) v[i] = i;
 
 int a2[-2];         // error: negative size
 
@@ -16055,7 +16055,7 @@ The rules are designed to help avoid several kinds of errors:
 * Resource leaks (including memory leaks)
 * Bounds errors
 * Lifetime errors (e.g., accessing an object after is has been `delete`d)
-* Complexity errors (logical errors make likely by overly complex expression of ideas)
+* Complexity errors (logical errors made likely by overly complex expression of ideas)
 * Interface errors (e.g., an unexpected value is passed through an interface)
 
 Error-handling rule summary:
@@ -16554,7 +16554,7 @@ void your_code()   // Don't
 
 ##### Enforcement
 
-Catch `throw` and `catch` of a built-in type. Maybe warn about `throw` and `catch` using an standard-library `exception` type. Obviously, exceptions derived from the `std::exception` hierarchy is fine.
+Catch `throw` and `catch` of a built-in type. Maybe warn about `throw` and `catch` using a standard-library `exception` type. Obviously, exceptions derived from the `std::exception` hierarchy are fine.
 
 ### <a name="Re-exception-ref"></a>E.15: Catch exceptions from a hierarchy by reference
 
@@ -17798,9 +17798,9 @@ Hard.
 ##### Example (using TS concepts)
 
 ```cpp
-vector<string> v;
+vector<string> v{ "abc", "xyz" };
 auto& x = v.front();     // bad
-String& s = v.begin();   // good (String is a GSL concept)
+String& s = v.front();   // good (String is a GSL concept)
 
 ```
 ##### Enforcement
@@ -19014,8 +19014,8 @@ public:
     // ...
 };
 
-vector<int> vi;
-vector<string> vs;
+Vector<int> vi;
+Vector<string> vs;
 
 ```
 It is probably a dumb idea to define a `sort` as a member function of a container, but it is not unheard of and it makes a good example of what not to do.
@@ -20771,14 +20771,14 @@ Direct expression of an idea minimizes mistakes.
 ```cpp
 auto pp1 = make_pair("Tokyo", 9.00);         // {C-style string,double} intended?
 pair<string, double> pp2 = {"Tokyo", 9.00};  // a bit verbose
-auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++17
+auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++14
 pair pp4 = {"Tokyo"s, 9.00};                 // {std::string,double}    // C++17
 
 
 ```
 ##### Note
 
-C++17
+C++14
 
 ##### Enforcement
 
@@ -21567,9 +21567,9 @@ An implementation of this profile shall recognize the following patterns in sour
 
 Type safety profile summary:
 
-* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](#Res-casts):  
-<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](#Res-casts) and [prefer named casts](#Res-casts-named).  
-<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](#Res-casts) and [prefer named casts](#Res-casts-named).  
+* <a name="Pro-type-avoidcasts"></a>Type.1: [Avoid casts](#Res-casts):
+<a name="Pro-type-reinterpretcast">a. </a>Don't use `reinterpret_cast`; A strict version of [Avoid casts](#Res-casts) and [prefer named casts](#Res-casts-named).
+<a name="Pro-type-arithmeticcast">b. </a>Don't use `static_cast` for arithmetic types; A strict version of [Avoid casts](#Res-casts) and [prefer named casts](#Res-casts-named).
 <a name="Pro-type-identitycast">c. </a>Don't cast between pointer types where the source type and the target type are the same; A strict version of [Avoid casts](#Res-casts).
 <a name="Pro-type-implicitpointercast">d. </a>Don't cast between pointer types when the conversion could be implicit; A strict version of [Avoid casts](#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Don't use `static_cast` to downcast:
@@ -21817,7 +21817,7 @@ Naming and layout rules:
 * [NL.7: Make the length of a name roughly proportional to the length of its scope](#Rl-name-length)
 * [NL.8: Use a consistent naming style](#Rl-name)
 * [NL.9: Use `ALL_CAPS` for macro names only](#Rl-all-caps)
-* [NL.10: Avoid CamelCase](#Rl-camel)
+* [NL.10: Prefer `underscore_style` names](#Rl-camel)
 * [NL.11: Make literals readable](#Rl-literals)
 * [NL.15: Use spaces sparingly](#Rl-space)
 * [NL.16: Use a conventional class member declaration order](#Rl-order)
@@ -22119,12 +22119,11 @@ enum bad { BAD, WORSE, HORRIBLE }; // BAD
 * Flag macros with lower-case letters
 * Flag `ALL_CAPS` non-macro names
 
-### <a name="Rl-camel"></a>NL.10: Avoid CamelCase
+### <a name="Rl-camel"></a>NL.10: Prefer `underscore_style` names
 
 ##### Reason
 
 The use of underscores to separate parts of a name is the original C and C++ style and used in the C++ Standard Library.
-If you prefer CamelCase, you have to choose among different flavors of camelCase.
 
 ##### Note
 
@@ -23242,7 +23241,7 @@ Clang-tidy has a set of rules that specifically enforce the C++ Core Guidelines.
 
 ### <a name="St-cppcorecheck"></a>Tools: [CppCoreCheck](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-the-cpp-core-guidelines-checkers)
 
-The Microsoft compiler's C++ code analysis contains a set of rules specifically aimed at enforcement of the C++ Core Guidelines. 
+The Microsoft compiler's C++ code analysis contains a set of rules specifically aimed at enforcement of the C++ Core Guidelines.
 
 # <a name="S-glossary"></a>Glossary
 
@@ -23258,7 +23257,7 @@ More information on many topics about C++ can be found on the [Standard C++ Foun
 * *address*: a value that allows us to find an object in a computer's memory.
 * *algorithm*: a procedure or formula for solving a problem; a finite series of computational steps to produce a result.
 * *alias*: an alternative way of referring to an object; often a name, pointer, or reference.
-* *API*: Application Programming Interface, a set of methods that form the communication between various software components. Contrast with ABI.
+* *API*: Application Programming Interface, a set of functions that form the communication between various software components. Contrast with ABI.
 * *application*: a program or a collection of programs that is considered an entity by its users.
 * *approximation*: something (e.g., a value or a design) that is close to the perfect or ideal (value or design).
   Often an approximation is a result of trade-offs among ideals.

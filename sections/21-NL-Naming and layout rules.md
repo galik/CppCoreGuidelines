@@ -21,7 +21,7 @@ Naming and layout rules:
 * [NL.7: Make the length of a name roughly proportional to the length of its scope](21-NL-Naming%20and%20layout%20rules.md#Rl-name-length)
 * [NL.8: Use a consistent naming style](21-NL-Naming%20and%20layout%20rules.md#Rl-name)
 * [NL.9: Use `ALL_CAPS` for macro names only](21-NL-Naming%20and%20layout%20rules.md#Rl-all-caps)
-* [NL.10: Avoid CamelCase](21-NL-Naming%20and%20layout%20rules.md#Rl-camel)
+* [NL.10: Prefer `underscore_style` names](21-NL-Naming%20and%20layout%20rules.md#Rl-camel)
 * [NL.11: Make literals readable](21-NL-Naming%20and%20layout%20rules.md#Rl-literals)
 * [NL.15: Use spaces sparingly](21-NL-Naming%20and%20layout%20rules.md#Rl-space)
 * [NL.16: Use a conventional class member declaration order](21-NL-Naming%20and%20layout%20rules.md#Rl-order)
@@ -323,12 +323,11 @@ enum bad { BAD, WORSE, HORRIBLE }; // BAD
 * Flag macros with lower-case letters
 * Flag `ALL_CAPS` non-macro names
 
-### <a name="Rl-camel"></a>NL.10: Avoid CamelCase
+### <a name="Rl-camel"></a>NL.10: Prefer `underscore_style` names
 
 ##### Reason
 
 The use of underscores to separate parts of a name is the original C and C++ style and used in the C++ Standard Library.
-If you prefer CamelCase, you have to choose among different flavors of camelCase.
 
 ##### Note
 

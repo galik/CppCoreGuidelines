@@ -1235,7 +1235,7 @@ Leaving behind an invalid object is asking for trouble.
 
 ```cpp
 class X2 {
-    FILE* f;   // call init() before any other function
+    FILE* f;
     // ...
 public:
     X2(const string& name)
@@ -1261,7 +1261,7 @@ void f()
 
 ```cpp
 class X3 {     // bad: the constructor leaves a non-valid object behind
-    FILE* f;   // call init() before any other function
+    FILE* f;   // call is_valid() before any other function
     bool valid;
     // ...
 public:
@@ -1482,7 +1482,7 @@ private:
 ```
 This is nice and general, but setting a `Vector0` to empty after an error involves an allocation, which may fail.
 Also, having a default `Vector` represented as `{new T[0], 0, 0}` seems wasteful.
-For example, `Vector0 v(100)` costs 100 allocations.
+For example, `Vector0<int> v[100]` costs 100 allocations.
 
 ##### Example
 
@@ -2420,7 +2420,7 @@ void f()
 }
 
 ```
-Note that deleted methods should be public.
+Note that deleted functions should be public.
 
 ##### Enforcement
 
@@ -3918,7 +3918,7 @@ Contrast with [C.147](04-C-Classes%20and%20class%20hierarchies.md#Rh-ptr-cast), 
 
 ##### Example
 
-The example below describes the `add` method of a `Shape_owner` that takes ownership of constructed `Shape` objects. The objects are also sorted into views, according to their geometric attributes.
+The example below describes the `add` function of a `Shape_owner` that takes ownership of constructed `Shape` objects. The objects are also sorted into views, according to their geometric attributes.
 In this example, `Shape` does not inherit from `Geometric_attributes`. Only its subclasses do.
 
 ```cpp
