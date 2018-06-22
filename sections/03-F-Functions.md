@@ -31,7 +31,7 @@ Parameter passing expression rules:
 * [F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter](03-F-Functions.md#Rf-consume)
 * [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](03-F-Functions.md#Rf-forward)
 * [F.20: For "out" output values, prefer return values to output parameters](03-F-Functions.md#Rf-out)
-* [F.21: To return multiple "out" values, prefer returning a tuple or struct](03-F-Functions.md#Rf-out-multi)
+* [F.21: To return multiple "out" values, prefer returning a struct or tuple](03-F-Functions.md#Rf-out-multi)
 * [F.60: Prefer `T*` over `T&` when "no argument" is a valid option](03-F-Functions.md#Rf-ptr-ref)
 
 Parameter passing semantic rules:
@@ -51,6 +51,7 @@ Parameter passing semantic rules:
 * [F.45: Don't return a `T&&`](03-F-Functions.md#Rf-return-ref-ref)
 * [F.46: `int` is the return type for `main()`](03-F-Functions.md#Rf-main)
 * [F.47: Return `T&` from assignment operators](03-F-Functions.md#Rf-assignment-op)
+* [F.48: Don't `return std::move(local)`](03-F-Functions.md#Rf-return-move-local)
 
 Other function rules:
 
@@ -837,13 +838,14 @@ void val(int&);       // Bad: Is val reading its argument
 * Flag reference to non-`const` parameters that are not read before being written to and are a type that could be cheaply returned; they should be "out" return values.
 * Flag returning a `const` value. To fix: Remove `const` to return a non-`const` value instead.
 
-### <a name="Rf-out-multi"></a>F.21: To return multiple "out" values, prefer returning a tuple or struct
+### <a name="Rf-out-multi"></a>F.21: To return multiple "out" values, prefer returning a struct or tuple
 
 ##### Reason
 
 A return value is self-documenting as an "output-only" value.
 Note that C++ does have multiple return values, by convention of using a `tuple` (including `pair`),
 possibly with the extra convenience of `tie` at the call site.
+Prefer using a named struct where there are semantics to the returned value. Otherwise, a nameless `tuple` is useful in generic code.
 
 ##### Example
 
@@ -1537,6 +1539,38 @@ class Foo
 
 This should be enforced by tooling by checking the return type (and return
 value) of any assignment operator.
+
+
+### <a name="Rf-return-move-local"></a>F.48: Don't `return std::move(local)`
+
+##### Reason
+
+With guaranteed copy elision, it is now almost always a pessimization to expressly use `std::move` in a return statement.
+
+##### Example; bad
+
+```cpp
+S f()
+{
+  S result;
+  return std::move(result);
+}
+
+```
+##### Example; good
+
+```cpp
+S f()
+{
+  S result;
+  return result;
+}
+
+```
+##### Enforcement
+
+This should be enforced by tooling by checking the return expression .
+
 
 ### <a name="Rf-capture-vs-overload"></a>F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)
 

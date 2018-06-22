@@ -813,12 +813,12 @@ Defining "small amount" precisely is impossible.
 
 ```cpp
 string modify1(string);
-void modify2(shared_ptr<string>);
+void modify2(string&);
 
 void fct(string& s)
 {
     auto res = async(modify1, s);
-    async(modify2, &s);
+    async(modify2, s);
 }
 
 ```
@@ -829,7 +829,7 @@ If the string is short (say 10 characters), the call of `modify1` can be surpris
 essentially all the cost is in the `thread` switch. If the string is long (say 1,000,000 characters), copying it twice
 is probably not a good idea.
 
-Note that this argument has nothing to do with `sync` as such. It applies equally to considerations about whether to use
+Note that this argument has nothing to do with `async` as such. It applies equally to considerations about whether to use
 message passing or shared memory.
 
 ##### Enforcement
@@ -853,7 +853,7 @@ safe way to ensure proper deletion.
 ```
 ##### Note
 
-* A static object (e.g. a global) can be shared because it is not owned in the sense that some thread is responsible for it's deletion.
+* A static object (e.g. a global) can be shared because it is not owned in the sense that some thread is responsible for its deletion.
 * An object on free store that is never to be deleted can be shared.
 * An object owned by one thread can be safely shared with another as long as that second thread doesn't outlive the owner.
 

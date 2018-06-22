@@ -134,6 +134,10 @@ You cannot have a race condition on immutable data.
 
 **References**: See the [rules for calling functions](03-F-Functions.md#SS-call).
 
+##### Note
+
+The rule is "avoid", not "don't use." Of course there will be (rare) exceptions, such as `cin`, `cout`, and `cerr`.
+
 ##### Enforcement
 
 (Simple) Report all non-`const` variables declared at namespace scope.
@@ -1033,11 +1037,13 @@ This will force every derived class to compute a center -- even if that's non-tr
 ```cpp
 class Shape {    // better: Shape is a pure interface
 public:
-    virtual Point center() const = 0;   // pure virtual function
+    virtual Point center() const = 0;   // pure virtual functions
     virtual void draw() const = 0;
     virtual void rotate(int) = 0;
     // ...
     // ... no data members ...
+    // ...
+    virtual ~Shape() = default;
 };
 
 ```

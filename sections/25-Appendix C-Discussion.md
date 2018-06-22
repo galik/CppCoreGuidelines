@@ -33,7 +33,7 @@ If the class definition and the constructor body are in separate files, the long
 
 **References**:
 
-[\[Cline99\]](28-Bibliography.md#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](28-Bibliography.md#Koenig97) §4, [\[Lakos96\]](28-Bibliography.md#Lakos96) §10.3.5, [\[Meyers97\]](28-Bibliography.md#Meyers97) §13, [\[Murray93\]](28-Bibliography.md#Murray93) §2.1.3, [\[Sutter00\]](28-Bibliography.md#Sutter00) §47
+[\[Cline99\]](28-Bibliography.md#Cline99) §22.03-11, [\[Dewhurst03\]](28-Bibliography.md#Dewhurst03) §52-53, [\[Koenig97\]](28-Bibliography.md#Koenig97) §4, [\[Lakos96\]](28-Bibliography.md#Lakos96) §10.3.5, [\[Meyers97\]](28-Bibliography.md#Meyers97) §13, [\[Murray93\]](28-Bibliography.md#Murray93) §2.1.3, [\[Sutter00\]](28-Bibliography.md#Sutter00) §47
 
 ### <a name="Sd-init"></a>Discussion: Use of `=`, `{}`, and `()` as initializers
 

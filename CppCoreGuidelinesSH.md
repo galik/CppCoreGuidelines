@@ -1382,6 +1382,10 @@ You cannot have a race condition on immutable data.
 
 **References**: See the [rules for calling functions](#SS-call).
 
+##### Note
+
+The rule is "avoid", not "don't use." Of course there will be (rare) exceptions, such as `cin`, `cout`, and `cerr`.
+
 ##### Enforcement
 
 (Simple) Report all non-`const` variables declared at namespace scope.
@@ -2281,11 +2285,13 @@ This will force every derived class to compute a center -- even if that's non-tr
 ```cpp
 class Shape {    // better: Shape is a pure interface
 public:
-    virtual Point center() const = 0;   // pure virtual function
+    virtual Point center() const = 0;   // pure virtual functions
     virtual void draw() const = 0;
     virtual void rotate(int) = 0;
     // ...
     // ... no data members ...
+    // ...
+    virtual ~Shape() = default;
 };
 
 ```
@@ -2464,7 +2470,7 @@ Parameter passing expression rules:
 * [F.18: For "will-move-from" parameters, pass by `X&&` and `std::move` the parameter](#Rf-consume)
 * [F.19: For "forward" parameters, pass by `TP&&` and only `std::forward` the parameter](#Rf-forward)
 * [F.20: For "out" output values, prefer return values to output parameters](#Rf-out)
-* [F.21: To return multiple "out" values, prefer returning a tuple or struct](#Rf-out-multi)
+* [F.21: To return multiple "out" values, prefer returning a struct or tuple](#Rf-out-multi)
 * [F.60: Prefer `T*` over `T&` when "no argument" is a valid option](#Rf-ptr-ref)
 
 Parameter passing semantic rules:
@@ -2484,6 +2490,7 @@ Parameter passing semantic rules:
 * [F.45: Don't return a `T&&`](#Rf-return-ref-ref)
 * [F.46: `int` is the return type for `main()`](#Rf-main)
 * [F.47: Return `T&` from assignment operators](#Rf-assignment-op)
+* [F.48: Don't `return std::move(local)`](#Rf-return-move-local)
 
 Other function rules:
 
@@ -3270,13 +3277,14 @@ void val(int&);       // Bad: Is val reading its argument
 * Flag reference to non-`const` parameters that are not read before being written to and are a type that could be cheaply returned; they should be "out" return values.
 * Flag returning a `const` value. To fix: Remove `const` to return a non-`const` value instead.
 
-### <a name="Rf-out-multi"></a>F.21: To return multiple "out" values, prefer returning a tuple or struct
+### <a name="Rf-out-multi"></a>F.21: To return multiple "out" values, prefer returning a struct or tuple
 
 ##### Reason
 
 A return value is self-documenting as an "output-only" value.
 Note that C++ does have multiple return values, by convention of using a `tuple` (including `pair`),
 possibly with the extra convenience of `tie` at the call site.
+Prefer using a named struct where there are semantics to the returned value. Otherwise, a nameless `tuple` is useful in generic code.
 
 ##### Example
 
@@ -3970,6 +3978,38 @@ class Foo
 
 This should be enforced by tooling by checking the return type (and return
 value) of any assignment operator.
+
+
+### <a name="Rf-return-move-local"></a>F.48: Don't `return std::move(local)`
+
+##### Reason
+
+With guaranteed copy elision, it is now almost always a pessimization to expressly use `std::move` in a return statement.
+
+##### Example; bad
+
+```cpp
+S f()
+{
+  S result;
+  return std::move(result);
+}
+
+```
+##### Example; good
+
+```cpp
+S f()
+{
+  S result;
+  return result;
+}
+
+```
+##### Enforcement
+
+This should be enforced by tooling by checking the return expression .
+
 
 ### <a name="Rf-capture-vs-overload"></a>F.50: Use a lambda when a function won't do (to capture local variables, or to write a local function)
 
@@ -9230,9 +9270,9 @@ The default is the easiest to read and write.
 enum class Direction : char { n, s, e, w,
                               ne, nw, se, sw };  // underlying type saves space
 
-enum class Web_color : int { red   = 0xFF0000,
-                             green = 0x00FF00,
-                             blue  = 0x0000FF };  // underlying type is redundant
+enum class Web_color : int32_t { red   = 0xFF0000,
+                                 green = 0x00FF00,
+                                 blue  = 0x0000FF };  // underlying type is redundant
 
 ```
 ##### Note
@@ -9435,7 +9475,7 @@ Use `zstring` rather than `char*` to indicate that you rely on that convention.
 ##### Note
 
 Many current uses of pointers to a single element could be references.
-However, where `nullptr` is a possible value, a reference may not be an reasonable alternative.
+However, where `nullptr` is a possible value, a reference may not be a reasonable alternative.
 
 ##### Enforcement
 
@@ -14326,7 +14366,7 @@ template <class ForwardIterator, class T>
 ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& val);
 
 ```
-`lower_bound` returns an iterator to the first match if any, otherwise `last`.
+`lower_bound` returns an iterator to the first match if any, otherwise to the first element greater than `val`, or `last` if no such element is found.
 
 However, `lower_bound` still doesn't return enough information for all uses, so the standard library also offers
 
@@ -15354,12 +15394,12 @@ Defining "small amount" precisely is impossible.
 
 ```cpp
 string modify1(string);
-void modify2(shared_ptr<string>);
+void modify2(string&);
 
 void fct(string& s)
 {
     auto res = async(modify1, s);
-    async(modify2, &s);
+    async(modify2, s);
 }
 
 ```
@@ -15370,7 +15410,7 @@ If the string is short (say 10 characters), the call of `modify1` can be surpris
 essentially all the cost is in the `thread` switch. If the string is long (say 1,000,000 characters), copying it twice
 is probably not a good idea.
 
-Note that this argument has nothing to do with `sync` as such. It applies equally to considerations about whether to use
+Note that this argument has nothing to do with `async` as such. It applies equally to considerations about whether to use
 message passing or shared memory.
 
 ##### Enforcement
@@ -15394,7 +15434,7 @@ safe way to ensure proper deletion.
 ```
 ##### Note
 
-* A static object (e.g. a global) can be shared because it is not owned in the sense that some thread is responsible for it's deletion.
+* A static object (e.g. a global) can be shared because it is not owned in the sense that some thread is responsible for its deletion.
 * An object on free store that is never to be deleted can be shared.
 * An object owned by one thread can be safely shared with another as long as that second thread doesn't outlive the owner.
 
@@ -22655,7 +22695,7 @@ If the class definition and the constructor body are in separate files, the long
 
 **References**:
 
-[\[Cline99\]](#Cline99) §22.03-11, [\[Dewhurst03\]](Dewhurst03) §52-53, [\[Koenig97\]](#Koenig97) §4, [\[Lakos96\]](#Lakos96) §10.3.5, [\[Meyers97\]](#Meyers97) §13, [\[Murray93\]](#Murray93) §2.1.3, [\[Sutter00\]](#Sutter00) §47
+[\[Cline99\]](#Cline99) §22.03-11, [\[Dewhurst03\]](#Dewhurst03) §52-53, [\[Koenig97\]](#Koenig97) §4, [\[Lakos96\]](#Lakos96) §10.3.5, [\[Meyers97\]](#Meyers97) §13, [\[Murray93\]](#Murray93) §2.1.3, [\[Sutter00\]](#Sutter00) §47
 
 ### <a name="Sd-init"></a>Discussion: Use of `=`, `{}`, and `()` as initializers
 
