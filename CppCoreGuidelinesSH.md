@@ -13688,7 +13688,7 @@ void f(int i)
 }
 
 ```
-Always remember that an integer can have more that two values.
+Always remember that an integer can have more than two values.
 
 ##### Example, bad
 
