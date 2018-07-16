@@ -2770,7 +2770,7 @@ void f()
 ```
 ##### Enforcement
 
-This rule is part of the [lifetime profile](#Pro.lifetime)
+This rule is part of the [lifetime safety profile](19-Pro-Profiles.md#SS-lifetime)
 
 * Flag a dereference of a pointer that points to an object that has gone out of scope
 * Flag a dereference of a pointer that may have been invalidated by assigning a `nullptr`

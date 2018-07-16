@@ -595,7 +595,7 @@ However, relying on abstractions that implicitly clean up can be as simple, and 
 
 ##### Note
 
-Enforcing [the lifetime profile](00-In-Introduction.md#SS-force) eliminates leaks.
+Enforcing [the lifetime safety profile](19-Pro-Profiles.md#SS-lifetime) eliminates leaks.
 When combined with resource safety provided by [RAII](06-R-Resource%20management.md#Rr-raii), it eliminates the need for "garbage collection" (by generating no garbage).
 Combine this with enforcement of [the type and bounds profiles](00-In-Introduction.md#SS-force) and you get complete type- and resource-safety, guaranteed by tools.
 
