@@ -1570,7 +1570,7 @@ void f(span<int> a) // BETTER: use span in the function declaration
 
     a[4] = 1;          // OK
 
-    a[count - 1] = 2;  // OK
+    a[a.size() - 1] = 2;  // OK
 
     use(a.data(), 3);  // OK
 }
@@ -1865,7 +1865,7 @@ void f(int x, long y, double d)
 ```
 ##### Note
 
-The guideline support library offers a `narrow_cast` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
+The guidelines support library offers a `narrow_cast` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
 
 ```cpp
 i = narrow_cast<int>(d);   // OK (you asked for it): narrowing: i becomes 7
@@ -2541,7 +2541,7 @@ void use(char ch, int i, double d, char* p, long long lng)
     int y1 = int(ch);     // OK, but redundant
     int y2 = int(d);      // bad: double->int narrowing; use a cast if you need to
     int y3 = int(p);      // bad: pointer to->int; use a reinterpret_cast if you really need to
-    int y4 = int(lng);    // bad: long->int narrowing; use a cast if you need to
+    int y4 = int(lng);    // bad: long long->int narrowing; use a cast if you need to
 
     int z1 = (int)ch;     // OK, but redundant
     int z2 = (int)d;      // bad: double->int narrowing; use a cast if you need to
@@ -2796,8 +2796,15 @@ Statements control the flow of control (except for function calls and exception 
 void use(int n)
 {
     switch (n) {   // good
-    case 0:   // ...
-    case 7:   // ...
+    case 0:
+        // ...
+        break;
+    case 7:
+        // ...
+        break;
+    default:
+        // ...
+        break;
     }
 }
 

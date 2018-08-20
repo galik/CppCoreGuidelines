@@ -345,7 +345,7 @@ double sqrt(double x) { Expects(x >= 0); /* ... */ }
 ```
 Ideally, that `Expects(x >= 0)` should be part of the interface of `sqrt()` but that's not easily done. For now, we place it in the definition (function body).
 
-**References**: `Expects()` is described in [GSL](20-GSL-Guideline%20support%20library.md#S-gsl).
+**References**: `Expects()` is described in [GSL](20-GSL-Guidelines%20support%20library.md#S-gsl).
 
 ##### Note
 
@@ -688,7 +688,7 @@ However, that is less elegant and often less efficient than returning the object
 so use smart pointers only if reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from the [guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl):
+In that case, mark owning pointers using `owner` from the [guidelines support library](20-GSL-Guidelines%20support%20library.md#S-gsl):
 
 ```cpp
 owner<X*> compute(args)    // It is now clear that ownership is transferred
@@ -742,7 +742,7 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl).
+`not_null` is defined in the [guidelines support library](20-GSL-Guidelines%20support%20library.md#S-gsl).
 
 ##### Note
 

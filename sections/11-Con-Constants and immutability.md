@@ -94,7 +94,7 @@ void f(int* p);   // old code: f() does not modify `*p`
 void f(const int* p) { f(const_cast<int*>(p)); } // wrapper
 
 ```
-Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be be modified,
+Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be modified,
 e.g. because it is in a library that you cannot modify.
 
 ##### Note

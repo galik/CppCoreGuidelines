@@ -35,7 +35,7 @@ Take the time to understand the implications of a guideline rule on your program
 
 These guidelines are designed according to the "subset of superset" principle ([Stroustrup05](28-Bibliography.md#Stroustrup05)).
 They do not simply define a subset of C++ to be used (for reliability, safety, performance, or whatever).
-Instead, they strongly recommend the use of a few simple "extensions" ([library components](20-GSL-Guideline%20support%20library.md#S-gsl))
+Instead, they strongly recommend the use of a few simple "extensions" ([library components](20-GSL-Guidelines%20support%20library.md#S-gsl))
 that make the use of the most error-prone features of C++ redundant, so that they can be banned (in our set of rules).
 
 The rules emphasize static type safety and resource safety.
@@ -204,7 +204,7 @@ Supporting sections:
 * [NR: Non-Rules and myths](17-NR-Non-Rules%20and%20myths.md#S-not)
 * [RF: References](18-RF-References.md#S-references)
 * [Pro: Profiles](19-Pro-Profiles.md#S-profile)
-* [GSL: Guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+* [GSL: Guidelines support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 * [NL: Naming and layout rules](21-NL-Naming%20and%20layout%20rules.md#S-naming)
 * [FAQ: Answers to frequently asked questions](22-FAQ-Answers%20to%20frequently%20asked%20questions.md#S-faq)
 * [Appendix A: Libraries](23-Appendix%20A-Libraries.md#S-libraries)

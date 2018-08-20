@@ -1013,7 +1013,7 @@ void use2(span<int> p, zstring s, owner<int*> q)
 
 **Also**: Assume that a `T*` obtained from a smart pointer to `T` (e.g., `unique_ptr<T>`) points to a single element.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+**See also**: [Support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
 ##### Enforcement
 
@@ -1111,7 +1111,7 @@ A `span<T>` object does not own its elements and is so small that it can be pass
 
 Passing a `span` object as an argument is exactly as efficient as passing a pair of pointer arguments or passing a pointer and an integer count.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+**See also**: [Support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
 ##### Enforcement
 
@@ -1146,7 +1146,7 @@ int length(not_null<zstring> p);
 
 `zstring` do not represent ownership.
 
-**See also**: [Support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+**See also**: [Support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
 ### <a name="Rf-unique_ptr"></a>F.26: Use a `unique_ptr<T>` to transfer ownership where a pointer is needed
 

@@ -246,7 +246,7 @@ class Container {
 };
 
 Container c(10, sizeof(double));
-((double*) c.elem)[] = 9.9;
+((double*) c.elem)[7] = 9.9;
 
 ```
 This doesn't directly express the intent of the programmer and hides the structure of the program from the type system and optimizer.

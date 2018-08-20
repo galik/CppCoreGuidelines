@@ -88,7 +88,7 @@ A well-designed library expresses intent (what is to be done, rather than just h
 
 A C++ programmer should know the basics of the standard library, and use it where appropriate.
 Any programmer should know the basics of the foundation libraries of the project being worked on, and use them appropriately.
-Any programmer using these guidelines should know the [guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl), and use it appropriately.
+Any programmer using these guidelines should know the [guidelines support library](20-GSL-Guidelines%20support%20library.md#S-gsl), and use it appropriately.
 
 ##### Example
 
@@ -191,7 +191,7 @@ The last variant makes it clear that we are not interested in the order in which
 
 A programmer should be familiar with
 
-* [The guideline support library](20-GSL-Guideline%20support%20library.md#S-gsl)
+* [The guidelines support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 * [The ISO C++ Standard Library](15-SL-The%20Standard%20Library.md#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
@@ -603,7 +603,7 @@ Combine this with enforcement of [the type and bounds profiles](00-In-Introducti
 
 * Look at pointers: Classify them into non-owners (the default) and owners.
   Where feasible, replace owners with standard-library resource handles (as in the example above).
-  Alternatively, mark an owner as such using `owner` from [the GSL](20-GSL-Guideline%20support%20library.md#S-gsl).
+  Alternatively, mark an owner as such using `owner` from [the GSL](20-GSL-Guidelines%20support%20library.md#S-gsl).
 * Look for naked `new` and `delete`
 * Look for known resource allocating functions returning raw pointers (such as `fopen`, `malloc`, and `strdup`)
 
@@ -805,7 +805,7 @@ You need a reason not to use the standard library (or whatever foundational libr
 By default use
 
 * The [ISO C++ Standard Library](15-SL-The%20Standard%20Library.md#S-stdlib)
-* The [Guidelines Support Library](20-GSL-Guideline%20support%20library.md#S-gsl)
+* The [Guidelines Support Library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
 ##### Note
 
