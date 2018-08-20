@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-April 16, 2018
+August 13, 2018
 
 
 Editors:
@@ -51,7 +51,7 @@ Supporting sections:
 * [NR: Non-Rules and myths](#S-not)
 * [RF: References](#S-references)
 * [Pro: Profiles](#S-profile)
-* [GSL: Guideline support library](#S-gsl)
+* [GSL: Guidelines support library](#S-gsl)
 * [NL: Naming and layout rules](#S-naming)
 * [FAQ: Answers to frequently asked questions](#S-faq)
 * [Appendix A: Libraries](#S-libraries)
@@ -66,8 +66,8 @@ You can sample rules for specific language features:
 * assignment:
 [regular types](#Rc-regular) --
 [prefer initialization](#Rc-initialize) --
-[copy](#Rc-copy-semantics) --
-[move](#Rc-move-semantics) --
+[copy](#Rc-copy-semantic) --
+[move](#Rc-move-semantic) --
 [other operations](#Rc-matched) --
 [default](#Rc-eqdefault)
 * `class`:
@@ -422,7 +422,7 @@ Supporting sections:
 * [NR: Non-Rules and myths](#S-not)
 * [RF: References](#S-references)
 * [Pro: Profiles](#S-profile)
-* [GSL: Guideline support library](#S-gsl)
+* [GSL: Guidelines support library](#S-gsl)
 * [NL: Naming and layout rules](#S-naming)
 * [FAQ: Answers to frequently asked questions](#S-faq)
 * [Appendix A: Libraries](#S-libraries)
@@ -517,7 +517,7 @@ A well-designed library expresses intent (what is to be done, rather than just h
 
 A C++ programmer should know the basics of the standard library, and use it where appropriate.
 Any programmer should know the basics of the foundation libraries of the project being worked on, and use them appropriately.
-Any programmer using these guidelines should know the [guideline support library](#S-gsl), and use it appropriately.
+Any programmer using these guidelines should know the [guidelines support library](#S-gsl), and use it appropriately.
 
 ##### Example
 
@@ -608,7 +608,7 @@ The last variant makes it clear that we are not interested in the order in which
 
 A programmer should be familiar with
 
-* [The guideline support library](#S-gsl)
+* [The guidelines support library](#S-gsl)
 * [The ISO C++ Standard Library](#S-stdlib)
 * Whatever foundation libraries are used for the current project(s)
 
@@ -1812,7 +1812,7 @@ However, that is less elegant and often less efficient than returning the object
 so use smart pointers only if reference semantics are needed.
 
 **Alternative**: Sometimes older code can't be modified because of ABI compatibility requirements or lack of resources.
-In that case, mark owning pointers using `owner` from the [guideline support library](#S-gsl):
+In that case, mark owning pointers using `owner` from the [guidelines support library](#S-gsl):
 
     owner<X*> compute(args)    // It is now clear that ownership is transferred
     {
@@ -1862,7 +1862,7 @@ By stating the intent in source, implementers and tools can provide better diagn
 
 ##### Note
 
-`not_null` is defined in the [guideline support library](#S-gsl).
+`not_null` is defined in the [guidelines support library](#S-gsl).
 
 ##### Note
 
@@ -4468,7 +4468,7 @@ Copy and move rules:
 * [C.64: A move operation should move and leave its source in a valid state](#Rc-move-semantic)
 * [C.65: Make move assignment safe for self-assignment](#Rc-move-self)
 * [C.66: Make move operations `noexcept`](#Rc-move-noexcept)
-* [C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired](#Rc-copy-virtual)
+* [C.67: A polymorphic class should suppress copying](#Rc-copy-virtual)
 
 Other default operations rules:
 
@@ -6046,59 +6046,68 @@ This `Vector2` is not just inefficient, but since a vector copy requires allocat
 
 (Simple) A move operation should be marked `noexcept`.
 
-### <a name="Rc-copy-virtual"></a>C.67: A base class should suppress copying, and provide a virtual `clone` instead if "copying" is desired
+### <a name="Rc-copy-virtual"></a>C.67: A polymorphic class should suppress copying
 
 ##### Reason
 
-To prevent slicing, because the normal copy operations will copy only the base portion of a derived object.
+A *polymorphic class* is a class that defines or inherits at least one virtual function. It is likely that it will be used as a base class for other derived classes with polymorphic behavior. If it is accidentally passed by value, with the implicitly generated copy constructor and assignment, we risk slicing: only the base portion of a derived object will be copied, and the polymorphic behavior will be corrupted.
 
 ##### Example, bad
 
-    class B { // BAD: base class doesn't suppress copying
-        int data;
+    class B { // BAD: polymorphic base class doesn't suppress copying
+    public:
+        virtual char m() { return 'B'; }
         // ... nothing about copy operations, so uses default ...
     };
 
     class D : public B {
-        string more_data; // add a data member
+    public:
+        char m() override { return 'D'; }
         // ...
     };
 
-    auto d = make_unique<D>();
+    void f(B& b) {
+        auto b2 = b; // oops, slices the object; b2.m() will return 'B'
+    }
 
-    // oops, slices the object; gets only d.data but drops d.more_data
-    auto b = make_unique<B>(d);
+    D d;
+    f(d);
 
 ##### Example
 
-    class B { // GOOD: base class suppresses copying
+    class B { // GOOD: polymorphic class suppresses copying
     public:
         B(const B&) = delete;
         B& operator=(const B&) = delete;
-        virtual unique_ptr<B> clone() { return /* B object */; }
+        virtual char m() { return 'B'; }
         // ...
     };
 
     class D : public B {
-        string more_data; // add a data member
-        unique_ptr<B> clone() override { return /* D object */; }
+    public:
+        char m() override { return 'D'; }
         // ...
     };
 
-    auto d = make_unique<D>();
-    auto b = d.clone(); // ok, deep clone
+    void f(B& b) {
+        auto b2 = b; // ok, compiler will detect inadvertent copying, and protest
+    }
+
+    D d;
+    f(d);
 
 ##### Note
 
-It's good to return a smart pointer, but unlike with raw pointers the return type cannot be covariant (for example, `D::clone` can't return a `unique_ptr<D>`. Don't let this tempt you into returning an owning raw pointer; this is a minor drawback compared to the major robustness benefit delivered by the owning smart pointer.
+If you need to create deep copies of polymorphic objects, use `clone()` functions: see [C.130](#Rh-copy).
 
 ##### Exception
 
-If you need covariant return types, return an `owner<derived*>`. See [C.130](#Rh-copy).
+Classes that represent exception objects need both to be polymorphic and copy-constructible.
 
 ##### Enforcement
 
-A class with any virtual function should not have a copy constructor or copy assignment operator (compiler-generated or handwritten).
+* Flag a polymorphic class with a non-deleted copy operation.
+* Flag an assignment of polymorphic class objects.
 
 ## C.other: Other default operation rules
 
@@ -6496,7 +6505,7 @@ Designing rules for classes in a hierarchy summary:
 * [C.127: A class with a virtual function should have a virtual or protected destructor](#Rh-dtor)
 * [C.128: Virtual functions should specify exactly one of `virtual`, `override`, or `final`](#Rh-override)
 * [C.129: When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance](#Rh-kind)
-* [C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead](#Rh-copy)
+* [C.130: For making deep copies of polymorphic classes prefer a virtual `clone` function instead of copy construction/assignment](#Rh-copy)
 * [C.131: Avoid trivial getters and setters](#Rh-get)
 * [C.132: Don't make a function `virtual` without reason](#Rh-virtual)
 * [C.133: Avoid `protected` data](#Rh-protected)
@@ -6991,35 +7000,32 @@ at the cost of the functionality being available only to users of the hierarchy.
 * ???
 
 
-### <a name="Rh-copy"></a>C.130: Redefine or prohibit copying for a base class; prefer a virtual `clone` function instead
+### <a name="Rh-copy"></a>C.130: For making deep copies of polymorphic classes prefer a virtual `clone` function instead of copy construction/assignment
 
 ##### Reason
 
-Copying a base is usually slicing. If you really need copy semantics, copy deeply: Provide a virtual `clone` function that will copy the actual most-derived type and return an owning pointer to the new object, and then in derived classes return the derived type (use a covariant return type).
+Copying a polymorphic class is discouraged due to the slicing problem, see [C.67](#Rc-copy-virtual). If you really need copy semantics, copy deeply: Provide a virtual `clone` function that will copy the actual most-derived type and return an owning pointer to the new object, and then in derived classes return the derived type (use a covariant return type).
 
 ##### Example
 
-    class Base {
+    class B {
     public:
-        virtual owner<Base*> clone() = 0;
-        virtual ~Base() = 0;
+        virtual owner<B*> clone() = 0;
+        virtual ~B() = 0;
 
-        Base(const Base&) = delete;
-        Base& operator=(const Base&) = delete;
+        B(const B&) = delete;
+        B& operator=(const B&) = delete;
     };
 
-    class Derived : public Base {
+    class D : public B {
     public:
-        owner<Derived*> clone() override;
-        virtual ~Derived() override;
+        owner<D*> clone() override;
+        virtual ~D() override;
     };
 
-Note that because of language rules, the covariant return type cannot be a smart pointer. See also [C.67](#Rc-copy-virtual).
+Generally, it is recommended to use smart pointers to represent ownership (see [R.20](#Rr-owner)). However, because of language rules, the covariant return type cannot be a smart pointer: `D::clone` can't return a `unique_ptr<D>` while `B::clone` returns `unique_ptr<B>`. Therefore, you either need to consistently return `unique_ptr<B>` in all overrides, or use `owner<>` utility from the [Guidelines Support Library](#SS-views).
 
-##### Enforcement
 
-* Flag a class with a virtual function and a non-user-defined copy operation.
-* Flag an assignment of base class objects (objects of a class from which another has been derived).
 
 ### <a name="Rh-get"></a>C.131: Avoid trivial getters and setters
 
@@ -7366,7 +7372,7 @@ However, misuses are (or at least have been) far more common.
 Flag uses of `final`.
 
 
-## <a name="Rh-virtual-default-arg"></a>C.140: Do not provide different default arguments for a virtual function and an overrider
+### <a name="Rh-virtual-default-arg"></a>C.140: Do not provide different default arguments for a virtual function and an overrider
 
 ##### Reason
 
@@ -10953,7 +10959,7 @@ Access into an array with known bounds using a constant as a subscript can be va
 
         a[4] = 1;          // OK
 
-        a[count - 1] = 2;  // OK
+        a[a.size() - 1] = 2;  // OK
 
         use(a.data(), 3);  // OK
     }
@@ -11209,7 +11215,7 @@ A key example is basic narrowing:
 
 ##### Note
 
-The guideline support library offers a `narrow_cast` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
+The guidelines support library offers a `narrow_cast` operation for specifying that narrowing is acceptable and a `narrow` ("narrow if") that throws an exception if a narrowing would throw away information:
 
     i = narrow_cast<int>(d);   // OK (you asked for it): narrowing: i becomes 7
     i = narrow<int>(d);        // OK: throws narrowing_error
@@ -11824,7 +11830,7 @@ For built-in types, the construction notation protects against narrowing and rei
         int y1 = int(ch);     // OK, but redundant
         int y2 = int(d);      // bad: double->int narrowing; use a cast if you need to
         int y3 = int(p);      // bad: pointer to->int; use a reinterpret_cast if you really need to
-        int y4 = int(lng);    // bad: long->int narrowing; use a cast if you need to
+        int y4 = int(lng);    // bad: long long->int narrowing; use a cast if you need to
 
         int z1 = (int)ch;     // OK, but redundant
         int z2 = (int)d;      // bad: double->int narrowing; use a cast if you need to
@@ -12051,8 +12057,15 @@ Statements control the flow of control (except for function calls and exception 
     void use(int n)
     {
         switch (n) {   // good
-        case 0:   // ...
-        case 7:   // ...
+        case 0:
+            // ...
+            break;
+        case 7:
+            // ...
+            break;
+        default:
+            // ...
+            break;
         }
     }
 
@@ -15902,7 +15915,7 @@ Example:
     void f(int* p);   // old code: f() does not modify `*p`
     void f(const int* p) { f(const_cast<int*>(p)); } // wrapper
 
-Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be be modified,
+Note that this wrapper solution is a patch that should be used only when the declaration of `f()` cannot be modified,
 e.g. because it is in a library that you cannot modify.
 
 ##### Note
@@ -16244,7 +16257,7 @@ It also avoids brittle or inefficient workarounds. Convention: That's the way th
     };
 
     Container c(10, sizeof(double));
-    ((double*) c.elem)[] = 9.9;
+    ((double*) c.elem)[7] = 9.9;
 
 This doesn't directly express the intent of the programmer and hides the structure of the program from the type system and optimizer.
 
@@ -20052,14 +20065,14 @@ Once completely enforced through a combination of style rules, static analysis, 
 * avoids undefined behavior by enforcing a key C++ language rule
 
 
-# <a name="S-gsl"></a>GSL: Guideline support library
+# <a name="S-gsl"></a>GSL: Guidelines support library
 
 The GSL is a small library of facilities designed to support this set of guidelines.
 Without these facilities, the guidelines would have to be far more restrictive on language details.
 
 The Core Guidelines support library is defined in namespace `gsl` and the names may be aliases for standard library or other well-known library names. Using the (compile-time) indirection through the `gsl` namespace allows for experimentation and for local variants of the support facilities.
 
-The GSL is header only, and can be found at [GSL: Guideline support library](https://github.com/Microsoft/GSL).
+The GSL is header only, and can be found at [GSL: Guidelines support library](https://github.com/Microsoft/GSL).
 The support library facilities are designed to be extremely lightweight (zero-overhead) so that they impose no overhead compared to using conventional alternatives.
 Where desirable, they can be "instrumented" with additional functionality (e.g., checks) for tasks such as debugging.
 
@@ -20872,7 +20885,7 @@ Avoid other HTML tags and other extensions.
 
 Note: We are not yet consistent with this style.
 
-### <a name="Faq-gsl"></a>FAQ.50: What is the GSL (guideline support library)?
+### <a name="Faq-gsl"></a>FAQ.50: What is the GSL (guidelines support library)?
 
 The GSL is the small set of types and aliases specified in these guidelines. As of this writing, their specification herein is too sparse; we plan to add a WG21-style interface specification to ensure that different implementations agree, and to propose as a contribution for possible standardization, subject as usual to whatever the committee decides to accept/improve/alter/reject.
 
@@ -20888,7 +20901,7 @@ We are reluctant to bless one particular implementation because we do not want t
 
 Because we want to use them immediately, and because they are temporary in that we want to retire them as soon as types that fill the same needs exist in the standard library.
 
-### <a name="Faq-gsl-iso"></a>FAQ.54: Has the GSL (guideline support library) been approved by the ISO C++ standards committee?
+### <a name="Faq-gsl-iso"></a>FAQ.54: Has the GSL (guidelines support library) been approved by the ISO C++ standards committee?
 
 No. The GSL exists only to supply a few types and aliases that are not currently in the standard library. If the committee decides on standardized versions (of these or other types that fill the same need) then they can be removed from the GSL.
 
