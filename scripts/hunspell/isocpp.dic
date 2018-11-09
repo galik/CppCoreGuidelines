@@ -64,6 +64,7 @@ Boehm
 bool
 buf
 bufmax
+bY
 C1
 C11
 C2
@@ -76,7 +77,9 @@ CaMelcAse
 CaMeLcAsEvArIaBlE
 Cargill
 Cargill92
+cbegin
 CComPtr
+cend
 cerr
 chrono
 cin
@@ -89,6 +92,7 @@ cm3
 cnt
 CommonMark
 *compiletime
+completers
 componentization
 composability
 composable
@@ -517,6 +521,7 @@ STL
 stmt
 str
 strdup
+stringification
 stringlike
 strlen
 Str15
@@ -588,6 +593,7 @@ UTF
 util
 v's
 v1
+v2
 va
 ValueType
 vararg
@@ -618,6 +624,7 @@ WG21
 'widen'
 x1
 x2
+x22
 xmax
 xor
 Xs
