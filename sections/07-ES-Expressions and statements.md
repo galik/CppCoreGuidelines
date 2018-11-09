@@ -543,7 +543,7 @@ Avoid `auto` for initializer lists and in cases where you know exactly which typ
 
 ```cpp
 auto lst = { 1, 2, 3 };   // lst is an initializer list
-auto x{1};   // x is an int (after correction of the C++14 standard; initializer_list in C++11)
+auto x{1};   // x is an int (in C++17; initializer_list in C++11)
 
 ```
 ##### Note
@@ -811,7 +811,7 @@ cin >> i;
 In the not uncommon case where the input target and the input operation get separated (as they should not) the possibility of used-before-set opens up.
 
 ```cpp
-int i2 = 0;   // better
+int i2 = 0;   // better, assuming that zero is an acceptable value for i2
 // ...
 cin >> i2;
 
@@ -820,8 +820,7 @@ A good optimizer should know about input operations and eliminate the redundant 
 
 ##### Example
 
-Using an `uninitialized` or sentinel value is a symptom of a problem and not a
-solution:
+Using a value representing "uninitialized" is a symptom of a problem and not a solution:
 
 ```cpp
 widget i = uninit;  // bad
@@ -961,13 +960,14 @@ vector<int> v2 {10};   // vector of 1 element with the value 10
 ```
 ##### Note
 
-`{}`-initializers do not allow narrowing conversions.
+`{}`-initializers do not allow narrowing conversions (and that is usually a good thing).
 
 ##### Example
 
 ```cpp
 int x {7.9};   // error: narrowing
 int y = 7.9;   // OK: y becomes 7. Hope for a compiler warning
+int z = gsl::narrow_cast<int>(7.9);  // OK: you asked for it
 
 ```
 ##### Note
@@ -986,6 +986,9 @@ struct S {
 };
 
 ```
+For that reason, `{}`-initialization is often called "uniform initialization"
+(though there unfortunately are a few irregularities left).
+
 ##### Note
 
 Initialization of a variable declared using `auto` with a single value, e.g., `{v}`, had surprising results until C++17.
@@ -996,15 +999,30 @@ auto x1 {7};        // x1 is an int with the value 7
 auto x2 = {7};  // x2 is an initializer_list<int> with an element 7
 
 auto x11 {7, 8};    // error: two initializers
-auto x22 = {7, 8};  // x2 is an initializer_list<int> with elements 7 and 8
+auto x22 = {7, 8};  // x22 is an initializer_list<int> with elements 7 and 8
 
 ```
-So use `={...}` if you really want an `initializer_list<T>`
+Use `={...}` if you really want an `initializer_list<T>`
 
 ```cpp
 auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
 
 ```
+##### Note
+
+`={}` gives copy initialization whereas `{}` gives direct initialization.
+Like the distinction between copy-initialization and direct-initialization itself, this can lead to surprises.
+`{}` accepts `explicit` constructors; `={}` does not`. For example:
+
+```cpp
+struct Z { explicit Z() {} };
+
+Z z1{};     // OK: direct initialization, so we use explicit constructor
+Z z2 = {};  // error: copy initialization, so we cannot use the explicit constructor
+
+```
+Use plain `{}`-initialization unless you specifically wants to disable explicit constructors.
+
 ##### Note
 
 Old habits die hard, so this rule is hard to apply consistently, especially as there are so many cases where `=` is innocent.
@@ -1244,6 +1262,55 @@ This innocuous-looking macro makes a single lower case `c` instead of a `C` into
 ##### Note
 
 This rule does not ban the use of macros for "configuration control" use in `#ifdef`s, etc.
+
+In the future, modules are likely to eliminate the need for macros in configuration control.
+
+##### Note
+
+This rule is meant to also discourage use of `#` for stringification and `##` for concatenation.
+As usual for macros, there are uses that are "mostly harmless", but even these can create problems for tools,
+such as auto completers, static analyzers, and debuggers.
+Often the desire to use fancy macros is a sign of an overly complex design.
+Also, `#` and `##` encourages the definition and use of macros:
+
+```cpp
+#define CAT(a, b) a ## b
+#define STRINGIFY(a) #a
+
+void f(int x, int y)
+{
+    string CAT(x, y) = "asdf";   // BAD: hard for tools to handle (and ugly)
+    string sx2 = STRINGIFY(x);
+    // ...
+}
+
+```
+There are workarounds for low-level string manipulation using macros. For example:
+
+```cpp
+string s = "asdf" "lkjh";   // ordinary string literal concatenation
+
+enum E { a, b };
+
+template<int x>
+constexpr const char* stringify()
+{
+    switch (x) {
+    case a: return "a";
+    case b: return "b";
+    }
+}
+
+void f(int x, int y)
+{
+    string sx = stringify<x>();
+    // ...
+}
+
+```
+This is not as convenient as a macro to define, but as easy to use, has zero overhead, and is typed and scoped.
+
+In the future, static reflection is likely to eliminate the last needs for the preprocessor for program text manipulation.
 
 ##### Enforcement
 

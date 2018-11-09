@@ -30,7 +30,7 @@ in mind:
   you the performance gains you need
 
 It is also important to note that concurrency in C++ is an unfinished
-story. C++11 introduced many core concurrency primitives, C++14 improved on
+story. C++11 introduced many core concurrency primitives, C++14 and C++17 improved on
 them, and it seems that there is much interest in making the writing of
 concurrent programs in C++ even easier. We expect some of the library-related
 guidance here to change significantly over time.

@@ -180,7 +180,7 @@ for (auto& x : v) { /* modify x */ }
 
 ```
 For more details about for-statements, see [ES.71](07-ES-Expressions%20and%20statements.md#Res-for-range).
-Sometimes better still, use a named algorithm:
+Sometimes better still, use a named algorithm. This example uses the `for_each` from the Ranges TS because it directly expresses the intent:
 
 ```cpp
 for_each(v, [](int x) { /* do something with the value of x */ });

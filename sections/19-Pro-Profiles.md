@@ -116,11 +116,11 @@ which cover other unsafe operations that allow bounds violations.
 Bounds safety profile summary:
 
 * <a href="Pro-bounds-arithmetic"></a>Bounds.1: Don't use pointer arithmetic. Use `span` instead:
-[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](07-ES-Expressions%20and%20statements.md#Res-ptr).
 * <a href="Pro-bounds-arrayindex"></a>Bounds.2: Only index into arrays using constant expressions:
-[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](07-ES-Expressions%20and%20statements.md#Res-ptr).
 * <a href="Pro-bounds-decay"></a>Bounds.3: No array-to-pointer decay:
-[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](#Res-simple).
+[Pass pointers to single objects (only)](02-I-Interfaces.md#Ri-array) and [Keep pointer arithmetic simple](07-ES-Expressions%20and%20statements.md#Res-ptr).
 * <a href="Pro-bounds-stdlib"></a>Bounds.4: Don't use standard-library functions and types that are not bounds-checked:
 [Use the standard library in a type-safe manner](15-SL-The%20Standard%20Library.md#Rsl-bounds).
 
@@ -139,7 +139,7 @@ Accessing through a pointer that doesn't point to anything is a major source of 
 and very hard to avoid in many traditional C or C++ styles of programming.
 For example, a pointer may be uninitialized, the `nullptr`, point beyond the range of an array, or to a deleted object.
 
-See /docs folder for the initial design. The detailed formal rules are in progress (as of May 2017).
+[See the current design specification here.](https://github.com/isocpp/CppCoreGuidelines/blob/master/docs/Lifetime.pdf)
 
 Lifetime safety profile summary:
 

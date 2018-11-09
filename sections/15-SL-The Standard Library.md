@@ -153,6 +153,18 @@ If you have a good reason to use another container, use that instead. For exampl
 
 * If you want a dictionary-style lookup container that guarantees O(K) or O(log N) lookups, the container will be larger (more than a few KB) and you perform frequent inserts so that the overhead of maintaining a sorted `vector` is infeasible, go ahead and use an `unordered_map` or `map` instead.
 
+##### Note
+
+To initialize a vector with a number of elements, use `()`-initialization.
+To initialize a vector with a list of elements, use `{}`-initialization.
+
+```cpp
+vector<int> v1(20);  // v1 has 20 elements with the value 0 (vector<int>{})
+vector<int> v2 {20}; // v2 has 1 element with the value 20
+
+```
+[Prefer the {}-initializer syntax](07-ES-Expressions%20and%20statements.md#Res-list).
+
 ##### Enforcement
 
 * Flag a `vector` whose size never changes after construction (such as because it's `const` or because no non-`const` functions are called on it). To fix: Use an `array` instead.
@@ -531,11 +543,8 @@ auto pp3 = make_pair("Tokyo"s, 9.00);        // {std::string,double}    // C++14
 pair pp4 = {"Tokyo"s, 9.00};                 // {std::string,double}    // C++17
 
 
+
 ```
-##### Note
-
-C++14
-
 ##### Enforcement
 
 ???

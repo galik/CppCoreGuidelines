@@ -238,7 +238,7 @@ double simple_func(double val, int flag1, int flag2)
 }
 
 ```
-This is too complex (and long).
+This is too complex.
 How would you know if all possible alternatives have been correctly handled?
 Yes, it breaks other rules also.
 
@@ -250,7 +250,7 @@ double func1_muon(double val, int flag)
     // ???
 }
 
-double funct1_tau(double val, int flag1, int flag2)
+double func1_tau(double val, int flag1, int flag2)
 {
     // ???
 }
@@ -1441,25 +1441,42 @@ Flag functions where no `return` expression could yield `nullptr`
 
 ##### Reason
 
-It's asking to return a reference to a destroyed temporary object. A `&&` is a magnet for temporary objects. This is fine when the reference to the temporary is being passed "downward" to a callee, because the temporary is guaranteed to outlive the function call (see [F.18](03-F-Functions.md#Rf-consume) and [F.19](03-F-Functions.md#Rf-forward)). However, it's not fine when passing such a reference "upward" to a larger caller scope. See also ???.
+It's asking to return a reference to a destroyed temporary object.
+A `&&` is a magnet for temporary objects.
 
+##### Example 
+
+A returned rvalue reference goes out of scope at the end of the full expression to which it is returned:
+
+```cpp
+auto&& x = max(0, 1);   // OK, so far
+foo(x);                 // Undefined behavior
+
+```
+This kind of use is a frequent source of bugs, often incorrectly reported as a compiler bug.
+An implementer of a function should avoid setting such traps for users.
+
+The [lifetime safety profile](19-Pro-Profiles.md#SS-lifetime) will (when completely implemented) catch such problems.
+
+
+##### Example
+
+Returning an rvalue reference is fine when the reference to the temporary is being passed "downward" to a callee;
+then, the temporary is guaranteed to outlive the function call (see [F.18](03-F-Functions.md#Rf-consume) and [F.19](03-F-Functions.md#Rf-forward)).
+However, it's not fine when passing such a reference "upward" to a larger caller scope.
 For passthrough functions that pass in parameters (by ordinary reference or by perfect forwarding) and want to return values, use simple `auto` return type deduction (not `auto&&`).
 
-##### Example, bad
-
-If `F` returns by value, this function returns a reference to a temporary.
+Assume that `F` returns by value:
 
 ```cpp
 template<class F>
 auto&& wrapper(F f)
 {
     log_call(typeid(f)); // or whatever instrumentation
-    return f();
+    return f();          // BAD: returns a reference to a temporary
 }
 
 ```
-##### Example, good
-
 Better:
 
 ```cpp
@@ -1467,8 +1484,9 @@ template<class F>
 auto wrapper(F f)
 {
     log_call(typeid(f)); // or whatever instrumentation
-    return f();
+    return f();          // OK
 }
+
 
 ```
 ##### Exception

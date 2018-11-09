@@ -197,6 +197,8 @@ private:
 };
 
 ```
+##### Exception
+
 Similarly, a set of functions may be designed to be used in a chain:
 
 ```cpp
@@ -462,6 +464,7 @@ The allocation/deallocation overhead is not (that's just the most common case).
 We can use a base class as the interface of a scoped object of a derived class.
 This is done where dynamic allocation is prohibited (e.g. hard-real-time) and to provide a stable interface to some kinds of plug-ins.
 
+
 ##### Enforcement
 
 ???
@@ -493,6 +496,13 @@ if (b1 == b2) error("No!");
 
 ```
 In particular, if a concrete type has an assignment also give it an equals operator so that `a = b` implies `a == b`.
+
+##### Note
+
+Handles for resources that cannot be cloned, e.g., a `scoped_lock` for a `mutex`, resemble concrete types in that they most often are stack-allocated.
+However, objects of such types typically cannot be copied (instead, they can usually be moved),
+so they can't be `regular`; instead, they tend to be `semiregular`.
+Often, such types are referred to as "move-only types".
 
 ##### Enforcement
 
@@ -706,6 +716,26 @@ Compilers enforce much of this rule and ideally warn about any violation.
 ##### Note
 
 Relying on an implicitly generated copy operation in a class with a destructor is deprecated.
+
+##### Note
+
+Writing the six special member functions can be error prone.
+Note their argument types:
+
+```cpp
+class X {
+public:
+    // ...
+    virtual ~X() = default;            // destructor (virtual if X is meant to be a base class)
+    X(const X&) = default;             // copy constructor
+    X& operator=(const X&) = default;  // copy assignment
+    X(X&&) = default;                  // move constructor
+    X& operator=(X&&) = default;       // move assignment
+};
+
+```
+A minor mistake (such as a misspelling, leaving out a `const`, using `&` instead of `&&`, or leaving out a special function) can lead to errors or warnings.
+To avoid the tedium and the possibility of errors, try to follow the [rule of zero](04-C-Classes%20and%20class%20hierarchies.md#Rc-zero).
 
 ##### Enforcement
 
@@ -960,7 +990,7 @@ public:
 
 void use(Smart_ptr3<int> p1)
 {
-    auto p2 = p1;   // error: double deletion
+    auto p2 = p1;   // OK: no double deletion
 }
 
 ```
@@ -1107,6 +1137,25 @@ If a destructor uses operations that may fail, it can catch exceptions and in so
 ##### Note
 
 A destructor (either user-defined or compiler-generated) is implicitly declared `noexcept` (independently of what code is in its body) if all of the members of its class have `noexcept` destructors. By explicitly marking destructors `noexcept`, an author guards against the destructor becoming implicitly `noexcept(false)` through the addition or modification of a class member.
+
+##### Example
+
+Not all destructors are noexcept by default; one throwing member poisons the whole class hierarchy
+
+```cpp
+struct X {
+    Details x;  // happens to have a throwing destructor
+    // ...
+    ~X() { }    // implicitly noexcept(false); aka can throw
+};
+
+```
+So, if in doubt, declare a destructor noexcept.
+
+##### Note
+
+Why not then declare all destructors noexcept?
+Because that would in many cases -- especially simple cases -- be distracting clutter.
 
 ##### Enforcement
 
@@ -1680,7 +1729,7 @@ An initialization explicitly states that initialization, rather than assignment,
 class A {   // Good
     string s1;
 public:
-    A() : s1{"Hello, "} { }    // GOOD: directly construct
+    A(czstring p) : s1{p} { }    // GOOD: directly construct (and the C-sting is explicitly named)
     // ...
 };
 
@@ -1691,7 +1740,7 @@ public:
 class B {   // BAD
     string s1;
 public:
-    B() { s1 = "Hello, "; }   // BAD: default constructor followed by assignment
+    B(const char* p) { s1 = p; }   // BAD: default constructor followed by assignment
     // ...
 };
 
@@ -1699,6 +1748,20 @@ class C {   // UGLY, aka very bad
     int* p;
 public:
     C() { cout << *p; p = new int{10}; }   // accidental use before initialized
+    // ...
+};
+
+```
+##### Example, better still
+
+Instead of those `const char*`s we could use `gsl::string_span or (in C++17) `std::string_view`
+as [a more general way to present arguments to a function](15-SL-The%20Standard%20Library.md#Rstr-view):
+
+```cpp
+class D {   // Good
+    string s1;
+public:
+    A(string_view v) : s1{v} { }    // GOOD: directly construct
     // ...
 };
 
@@ -2707,16 +2770,183 @@ A resource handle is a class that owns a resource; `std::vector` is the typical 
 
 Summary of container rules:
 
-* [C.100: Follow the STL when defining a container](#Rcon-stl)
-* [C.101: Give a container value semantics](#Rcon-val)
-* [C.102: Give a container move operations](#Rcon-move)
-* [C.103: Give a container an initializer list constructor](#Rcon-init)
-* [C.104: Give a container a default constructor that sets it to empty](#Rcon-empty)
-* [C.105: Give a constructor and `Extent` constructor](#Rcon-val)
+* [C.100: Follow the STL when defining a container](04-C-Classes%20and%20class%20hierarchies.md#Rcon-stl)
+* [C.101: Give a container value semantics](04-C-Classes%20and%20class%20hierarchies.md#Rcon-val)
+* [C.102: Give a container move operations](04-C-Classes%20and%20class%20hierarchies.md#Rcon-move)
+* [C.103: Give a container an initializer list constructor](04-C-Classes%20and%20class%20hierarchies.md#Rcon-init)
+* [C.104: Give a container a default constructor that sets it to empty](04-C-Classes%20and%20class%20hierarchies.md#Rcon-empty)
 * ???
-* [C.109: If a resource handle has pointer semantics, provide `*` and `->`](#rcon-ptr)
+* [C.109: If a resource handle has pointer semantics, provide `*` and `->`](04-C-Classes%20and%20class%20hierarchies.md#Rcon-ptr)
 
 **See also**: [Resources](06-R-Resource%20management.md#S-resource)
+
+
+### <a name="Rcon-stl"></a>C.100: Follow the STL when defining a container
+
+##### Reason
+
+The STL containers are familiar to most C++ programmers and a fundamentally sound design.
+
+##### Note
+
+There are of course other fundamentally sound design styles and sometimes reasons to depart from
+the style of the standard library, but in the absence of a solid reason to differ, it is simpler
+and easier for both implementers and users to follow the standard.
+
+In particular, `std::vector` and `std::map` provide useful relatively simple models.
+
+##### Example
+
+```cpp
+// simplified (e.g., no allocators):
+
+template<typename T>
+class Sorted_vector {
+    using value_type = T;
+    // ... iterator types ...
+
+    Sorted_vector() = default;
+    Sorted_vector(initializer_list<T>);    // initializer-list constructor: sort and store
+    Sorted_vector(const Sorted_vector&) = default;
+    Sorted_vector(Sorted_vector&&) = default;
+    Sorted_vector& operator=(const Sorted_vector&) = default;   // copy assignment
+    Sorted_vector& operator=(Sorted_vector&&) = default;        // move assignment
+    ~Sorted_vector() = default;
+
+    Sorted_vector(const std::vector<T>& v);   // store and sort
+    Sorted_vector(std::vector<T>&& v);        // sort and "steal representation"
+
+    const T& operator[](int i) const { return rep[i]; }
+    // no non-const direct access to preserve order
+
+    void push_back(const T&);   // insert in the right place (not necessarily at back)
+    void push_back(T&&);        // insert in the right place (not necessarily at back)
+
+    // ... cbegin(), cend() ...
+private:
+    std::vector<T> rep;  // use a std::vector to hold elements
+};
+
+template<typename T> bool operator==(const T&);
+template<typename T> bool operator!=(const T&);
+// ...
+
+```
+Here, the STL style is followed, but incompletely.
+That's not uncommon.
+Provide only as much functionality as makes sense for a specific container.
+The key is to define the conventional constructors, assignments, destructors, and iterators
+(as meaningful for the specific container) with their conventional semantics.
+From that base, the container can be expanded as needed.
+Here, special constructors from `std::vector` were added.
+
+##### Enforcement
+
+???
+
+### <a name="Rcon-val"></a>C.101: Give a container value semantics
+
+##### Reason
+
+Regular objects are simpler to think and reason about than irregular ones.
+Familiarity.
+
+##### Note
+
+If meaningful, make a container `Regular` (the concept).
+In particular, ensure that an object compares equal to its copy.
+
+##### Example
+
+```cpp
+void f(const Sorted_vector<string>& v)
+{
+    Sorted_vector<string> v2 {v};
+    if (v != v2)
+        cout << "insanity rules!\n";
+    // ...
+}
+
+```
+##### Enforcement
+
+???
+
+### <a name="Rcon-move"></a>C.102: Give a container move operations
+
+##### Reason
+
+Containers tend to get large; without a move constructor and a copy constructor an object can be
+expensive to move around, thus tempting people to pass pointers to it around and getting into
+resource management problems.
+
+##### Example
+
+```cpp
+Sorted_vector<int> read_sorted(istream& is)
+{
+    vector<int> v;
+    cin >> v;   // assume we have a read operation for vectors
+    Sorted_vector<int> sv = v;  // sorts
+    return sv;
+}
+
+A user can reasonably assume that returning a standard-like container is cheap.
+
+```
+##### Enforcement
+
+???
+
+### <a name="Rcon-init"></a>C.103: Give a container an initializer list constructor
+
+##### Reason
+
+People expect to be able to initialize a container with a set of values.
+Familiarity.
+
+##### Example
+
+```cpp
+Sorted_vector<int> sv {1, 3, -1, 7, 0, 0}; // Sorted_vector sorts elements as needed
+
+```
+##### Enforcement
+
+???
+
+### <a name="Rcon-empty"></a>C.104: Give a container a default constructor that sets it to empty
+
+##### Reason
+
+To make it `Regular`.
+
+##### Example
+
+```cpp
+vector<Sorted_sequence<string>> vs(100);    // 100 Sorted_sequences each with the value ""
+
+```
+##### Enforcement
+
+???
+
+### <a name="Rcon-ptr"></a>C.109: If a resource handle has pointer semantics, provide `*` and `->`
+
+##### Reason
+
+That's what is expected from pointers.
+Familiarity.
+
+##### Example
+
+```cpp
+???
+
+```
+##### Enforcement
+
+???
 
 ## <a name="SS-lambdas"></a>C.lambdas: Function objects and lambdas
 
@@ -2995,7 +3225,13 @@ Readability.
 Detection of mistakes.
 Writing explicit `virtual`, `override`, or `final` is self-documenting and enables the compiler to catch mismatch of types and/or names between base and derived classes. However, writing more than one of these three is both redundant and a potential source of errors.
 
-Use `virtual` only when declaring a new virtual function. Use `override` only when declaring an overrider. Use `final` only when declaring a final overrider. If a base class destructor is declared `virtual`, one should avoid declaring derived class destructors  `virtual` or `override`. Some code base and tools might insist on `override` for destructors, but that is not the recommendation of these guidelines.
+It's simple and clear:
+
+* `virtual` means exactly and only "this is a new virtual function."
+* `override` means exactly and only "this is a non-final overrider."
+* `final` means exactly and only "this is a final overrider."
+
+If a base class destructor is declared `virtual`, one should avoid declaring derived class destructors  `virtual` or `override`. Some code base and tools might insist on `override` for destructors, but that is not the recommendation of these guidelines.
 
 ##### Example, bad
 
@@ -3026,6 +3262,13 @@ struct Better : B {
 };
 
 ```
+#### Discussion
+
+We want to eliminate two particular classes of errors:
+
+* **implicit virtual**: the programmer intended the function to be implicitly virtual and it is (but readers of the code can't tell); or the programmer intended the function to be implicitly virtual but it isn't (e.g., because of a subtle parameter list mismatch); or the programmer did not intend the function to be virtual but it is (because it happens to have the same signature as a virtual in the base class)
+* **implicit override**: the programmer intended the function to be implicitly an overrider and it is (but readers of the code can't tell); or the programmer intended the function to be implicitly an overrider but it isn't (e.g., because of a subtle parameter list mismatch); or the programmer did not intend the function to be an overrider but it is (because it happens to have the same signature as a virtual in the base class -- note this problem arises whether or not the function is explicitly declared virtual, because the programmer may have intended to create either a new virtual function or a new nonvirtual function)
+
 ##### Enforcement
 
 * Compare names in base and derived classes and flag uses of the same name that does not override.
@@ -3175,7 +3418,7 @@ public:
     // ...
 };
 
-class Circle : public Shape {   // pure interface
+class Circle : public virtual Shape {   // pure interface
 public:
     virtual int radius() = 0;
     // ...
@@ -3185,7 +3428,7 @@ public:
 To make this interface useful, we must provide its implementation classes (here, named equivalently, but in the `Impl` namespace):
 
 ```cpp
-class Impl::Shape : public Shape { // implementation
+class Impl::Shape : public virtual ::Shape { // implementation
 public:
     // constructors, destructor
     // ...
@@ -3205,7 +3448,7 @@ Now `Shape` is a poor example of a class with an implementation,
 but bear with us because this is just a simple example of a technique aimed at more complex hierarchies.
 
 ```cpp
-class Impl::Circle : public Circle, public Impl::Shape {   // implementation
+class Impl::Circle : public virtual ::Circle, public Impl::Shape {   // implementation
 public:
     // constructors, destructor
 
@@ -3217,12 +3460,12 @@ public:
 And we could extend the hierarchies by adding a Smiley class (:-)):
 
 ```cpp
-class Smiley : public Circle { // pure interface
+class Smiley : public virtual Circle { // pure interface
 public:
     // ...
 };
 
-class Impl::Smiley : public Smiley, public Impl::Circle {   // implementation
+class Impl::Smiley : public virtual ::Smiley, public Impl::Circle {   // implementation
 public:
     // constructors, destructor
     // ...
@@ -4091,7 +4334,7 @@ Overload rule summary:
 * [C.161: Use nonmember functions for symmetric operators](04-C-Classes%20and%20class%20hierarchies.md#Ro-symmetric)
 * [C.162: Overload operations that are roughly equivalent](04-C-Classes%20and%20class%20hierarchies.md#Ro-equivalent)
 * [C.163: Overload only for operations that are roughly equivalent](04-C-Classes%20and%20class%20hierarchies.md#Ro-equivalent-2)
-* [C.164: Avoid conversion operators](04-C-Classes%20and%20class%20hierarchies.md#Ro-conversion)
+* [C.164: Avoid implicit conversion operators](04-C-Classes%20and%20class%20hierarchies.md#Ro-conversion)
 * [C.165: Use `using` for customization points](04-C-Classes%20and%20class%20hierarchies.md#Ro-custom)
 * [C.166: Overload unary `&` only as part of a system of smart pointers and references](04-C-Classes%20and%20class%20hierarchies.md#Ro-address-of)
 * [C.167: Use an operator for an operation with its conventional meaning](04-C-Classes%20and%20class%20hierarchies.md#Ro-overload)
@@ -4214,7 +4457,7 @@ Be particularly careful about common and popular names, such as `open`, `move`, 
 
 ???
 
-### <a name="Ro-conversion"></a>C.164: Avoid conversion operators
+### <a name="Ro-conversion"></a>C.164: Avoid implicit conversion operators
 
 ##### Reason
 
@@ -4227,29 +4470,41 @@ By "serious need" we mean a reason that is fundamental in the application domain
 and frequently needed. Do not introduce implicit conversions (through conversion operators or non-`explicit` constructors)
 just to gain a minor convenience.
 
-##### Example, bad
+##### Example
 
 ```cpp
-class String {   // handle ownership and access to a sequence of characters
+struct S1 {
+    string s;
     // ...
-    String(czstring p); // copy from *p to *(this->elem)
-    // ...
-    operator zstring() { return elem; }
-    // ...
+    operator char*() { return s.data(); }  // BAD, likely to cause surprises
 };
 
-void user(zstring p)
+struct S2 {
+    string s;
+    // ...
+    explicit operator char*() { return s.data(); }
+};
+
+void f(S1 s1, S2 s2)
 {
-    if (*p == "") {
-        String s {"Trouble ahead!"};
-        // ...
-        p = s;
-    }
-    // use p
+    char* x1 = s1;     // OK, but can cause surprises in many contexts
+    char* x2 = s2;     // error (and that's usually a good thing)
+    char* x3 = static_cast<char*>(s2); // we can be explicit (on your head be it)
 }
 
 ```
-The string allocated for `s` and assigned to `p` is destroyed before it can be used.
+The surprising and potentially damaging implicit conversion can occur in arbitrarily hard-to spot contexts, e.g.,
+
+```cpp
+S1 ff();
+
+char* g()
+{
+    return ff();
+}
+
+```
+The string returned by `ff()` is destroyed before the returned pointer into it can be used.
 
 ##### Enforcement
 

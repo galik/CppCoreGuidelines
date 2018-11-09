@@ -949,7 +949,7 @@ std::pair<int, error_indicator> user()
 
 ```
 Simulating RAII can be non-trivial, especially in functions with multiple resources and multiple possible errors.
-A not uncommon technique is to gather cleanup at the end of the function to avoid repetition:
+A not uncommon technique is to gather cleanup at the end of the function to avoid repetition (note the extra scope around `g2` is undesirable but necessary to make the `goto` version compile):
 
 ```cpp
 std::pair<int, error_indicator> user()
@@ -962,6 +962,7 @@ std::pair<int, error_indicator> user()
             goto exit;
     }
 
+    {
     Gadget g2 = make_gadget(17);
     if (!g2.valid()) {
             err = g2_error;
@@ -973,6 +974,7 @@ std::pair<int, error_indicator> user()
         goto exit;
     }
     // ...
+    }
 
 exit:
   if (g1.valid()) cleanup(g1);

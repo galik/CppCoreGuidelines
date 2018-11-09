@@ -8,7 +8,7 @@ Consistent naming and layout are helpful.
 If for no other reason because it minimizes "my style is better than your style" arguments.
 However, there are many, many, different styles around and people are passionate about them (pro and con).
 Also, most real-world projects includes code from many sources, so standardizing on a single style for all code is often impossible.
-We present a set of rules that you might use if you have no better ideas, but the real aim is consistency, rather than any particular rule set.
+After many requests for guidance from users, we present a set of rules that you might use if you have no better ideas, but the real aim is consistency, rather than any particular rule set.
 IDEs and tools can help (as well as hinder).
 
 Naming and layout rules:
@@ -335,6 +335,9 @@ This rule is a default to use only if you have a choice.
 Often, you don't have a choice and must follow an established style for [consistency](21-NL-Naming%20and%20layout%20rules.md#Rl-name).
 The need for consistency beats personal taste.
 
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
+
 ##### Example
 
 [Stroustrup](http://www.stroustrup.com/Programming/PPP-style.pdf):
@@ -379,6 +382,9 @@ int main(int argc, char* argv[])
 ##### Note
 
 Some IDEs have their own opinions and add distracting space.
+
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
 
 ##### Note
 
@@ -434,6 +440,9 @@ When declaring a class use the following order
 * data
 
 Use the `public` before `protected` before `private` order.
+
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
 
 ##### Example
 
@@ -494,6 +503,9 @@ This is the original C and C++ layout. It preserves vertical space well. It dist
 ##### Note
 
 In the context of C++, this style is often called "Stroustrup".
+
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
 
 ##### Example
 
@@ -570,6 +582,11 @@ T &operator[](size_t);   // just strange
 T & operator[](size_t);   // undecided
 
 ```
+##### Note
+
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
+
 ##### Enforcement
 
 Impossible in the face of history.
@@ -675,6 +692,9 @@ We are well aware that you could claim the "bad" examples more logical than the 
 but they also confuse more people, especially novices relying on teaching material using the far more common, conventional OK style.
 
 As ever, remember that the aim of these naming and layout rules is consistency and that aesthetics vary immensely.
+
+This is a recommendation for [when you have no constraints or better ideas](21-NL-Naming%20and%20layout%20rules.md#S-naming).
+Thus rule was added after many requests for guidance.
 
 ##### Enforcement
 

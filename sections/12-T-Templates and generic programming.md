@@ -1380,10 +1380,9 @@ private:
 List<int> lst1;
 List<int, My_allocator> lst2;
 
-???
-
 ```
-This looks innocent enough, but ???
+This looks innocent enough, but now `Link` formally depends on the allocator (even though it doesn't use the allocator). This forces redundant instantiations that can be surprisingly costly in some real-world scenarios.
+Typically, the solution is to make what would have been a nested class non-local, with its own minimal set of template parameters.
 
 ```cpp
 template<typename T>
@@ -1409,9 +1408,11 @@ private:
 List<int> lst1;
 List<int, My_allocator> lst2;
 
-???
-
 ```
+Some people found the idea that the `Link` no longer was hidden inside the list scary, so we named the technique
+[SCARY](http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf).From that academic paper: 
+"The acronym SCARY describes assignments and initializations that are Seemingly erroneous (appearing Constrained by conflicting generic parameters), but Actually work with the Right implementation (unconstrained bY the conflict due to minimized dependencies."
+
 ##### Enforcement
 
 * Flag member types that do not depend on every template argument

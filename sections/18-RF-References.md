@@ -32,7 +32,7 @@ Reference sections:
 
 * [RF.rules: Coding rules](18-RF-References.md#SS-rules)
 * [RF.books: Books with coding guidelines](18-RF-References.md#SS-books)
-* [RF.C++: C++ Programming (C++11/C++14)](18-RF-References.md#SS-Cplusplus)
+* [RF.C++: C++ Programming (C++11/C++14/C++17)](18-RF-References.md#SS-Cplusplus)
 * [RF.web: Websites](18-RF-References.md#SS-web)
 * [RS.video: Videos about "modern C++"](18-RF-References.md#SS-vid)
 * [RF.man: Manuals](18-RF-References.md#SS-man)
@@ -134,7 +134,7 @@ A textbook for beginners and relative novices.
 
 * ISO C++ Standard C++11.
 * ISO C++ Standard C++14.
-* [ISO C++ Standard C++17 CD](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4606.pdf). Committee Draft.
+* [ISO C++ Standard C++17](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4606.pdf). Committee Draft.
 * [Palo Alto "Concepts" TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
 * [ISO C++ Concepts TS](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 * [WG21 Ranges report](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf). Draft.

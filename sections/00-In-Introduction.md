@@ -4,7 +4,7 @@
 
 # <a name="S-introduction"></a>In: Introduction
 
-This is a set of core guidelines for modern C++, C++17, C++14, and C++11, taking likely future enhancements and ISO Technical Specifications (TSs) into account.
+This is a set of core guidelines for modern C++ (currently C++17) taking likely future enhancements and ISO Technical Specifications (TSs) into account.
 The aim is to help C++ programmers to write simpler, more efficient, more maintainable code.
 
 Introduction summary:
@@ -22,7 +22,7 @@ All C++ programmers. This includes [programmers who might consider C](13-CPL-C-s
 
 ## <a name="SS-aims"></a>In.aims: Aims
 
-The purpose of this document is to help developers to adopt modern C++ (C++17, C++14, and C++11) and to achieve a more uniform style across code bases.
+The purpose of this document is to help developers to adopt modern C++ (currently C++17) and to achieve a more uniform style across code bases.
 
 We do not suffer the delusion that every one of these rules can be effectively applied to every code base. Upgrading old systems is hard. However, we do believe that a program that uses a rule is less error-prone and more maintainable than one that does not. Often, rules also lead to faster/easier initial development.
 As far as we can tell, these rules lead to code that performs as well or better than older, more conventional techniques; they are meant to follow the zero-overhead principle ("what you don't use, you don't pay for" or "when you use an abstraction mechanism appropriately, you get at least as good performance as if you had handcoded using lower-level language constructs").
@@ -93,6 +93,12 @@ We value expressiveness and uncompromised performance.
 The rules are not value-neutral.
 They are meant to make code simpler and more correct/safer than most existing C++ code, without loss of performance.
 They are meant to inhibit perfectly valid C++ code that correlates with errors, spurious complexity, and poor performance.
+
+The rules are not precise to the point where a person (or machine) can follow them blindly.
+The enforcement parts try to be that, but we would rather leave a rule or a definition a bit vague
+and open to interpretation than specify something precisely and wrong.
+Sometimes, precision comes only with time and experience.
+Design is not (yet) a form of Math.
 
 The rules are not perfect.
 A rule can do harm by prohibiting something that is useful in a given situation.

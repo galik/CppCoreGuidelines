@@ -274,6 +274,7 @@ Besides destructors and deallocation functions, common error-safety techniques r
 T& T::operator=(const T& other) {
     auto temp = other;
     swap(temp);
+    return *this;
 }
 
 ```
