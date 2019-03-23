@@ -48,7 +48,7 @@ public:
 The first declaration of `month` is explicit about returning a `Month` and about not modifying the state of the `Date` object.
 The second version leaves the reader guessing and opens more possibilities for uncaught bugs.
 
-##### Example; bad
+##### Example, bad
 
 This loop is a restricted form of `std::find`:
 
@@ -69,7 +69,7 @@ void f(vector<string>& v)
 }
 
 ```
-##### Example; good
+##### Example, good
 
 A much clearer expression of intent would be:
 
@@ -683,6 +683,9 @@ After that, we can look at waste related to algorithms and requirements, but tha
 ##### Enforcement
 
 Many more specific rules aim at the overall goals of simplicity and elimination of gratuitous waste.
+
+* Flag an unused return value from a user-defined non-defaulted postfix `operator++` or `operator--` function. Prefer using the prefix form instead. (Note: "User-defined non-defaulted" is intended to reduce noise. Review this enforcement if it's still too noisy in practice.)
+
 
 ### <a name="Rp-mutable"></a>P.10: Prefer immutable data to mutable data
 

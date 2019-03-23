@@ -4,17 +4,16 @@
 
 # <a name="S-concurrency"></a>CP: Concurrency and parallelism
 
-We often want our computers to do many tasks at the same time (or at least make them appear to do them at the same time).
-The reasons for doing so varies (e.g., wanting to wait for many events using only a single processor, processing many data streams simultaneously, or utilizing many hardware facilities)
-and so does the basic facilities for expressing concurrency and parallelism.
-Here, we articulate a few general principles and rules for using the ISO standard C++ facilities for expressing basic concurrency and parallelism.
+We often want our computers to do many tasks at the same time (or at least appear to do them at the same time).
+The reasons for doing so vary (e.g., waiting for many events using only a single processor, processing many data streams simultaneously, or utilizing many hardware facilities)
+and so do the basic facilities for expressing concurrency and parallelism.
+Here, we articulate principles and rules for using the ISO standard C++ facilities for expressing basic concurrency and parallelism.
 
-The core machine support for concurrent and parallel programming is the thread.
-Threads allow you to run multiple instances of your program independently, while sharing
-the same memory. Concurrent programming is tricky for many reasons, most
-importantly that it is undefined behavior to read data in one thread after it
-was written by another thread, if there is no proper synchronization between
-those threads. Making existing single-threaded code execute concurrently can be
+Threads are the machine-level foundation for concurrent and parallel programming.
+Threads allow running multiple sections of a program independently, while sharing
+the same memory. Concurrent programming is tricky,
+because protecting shared data between threads is easier said than done.
+Making existing single-threaded code execute concurrently can be
 as trivial as adding `std::async` or `std::thread` strategically, or it can
 necessitate a full rewrite, depending on whether the original code was written
 in a thread-friendly way.
@@ -22,16 +21,16 @@ in a thread-friendly way.
 The concurrency/parallelism rules in this document are designed with three goals
 in mind:
 
-* To help you write code that is amenable to being used in a threaded
+* To help in writing code that is amenable to being used in a threaded
   environment
 * To show clean, safe ways to use the threading primitives offered by the
   standard library
 * To offer guidance on what to do when concurrency and parallelism aren't giving
-  you the performance gains you need
+  the performance gains needed
 
 It is also important to note that concurrency in C++ is an unfinished
 story. C++11 introduced many core concurrency primitives, C++14 and C++17 improved on
-them, and it seems that there is much interest in making the writing of
+them, and there is much interest in making the writing of
 concurrent programs in C++ even easier. We expect some of the library-related
 guidance here to change significantly over time.
 
@@ -103,7 +102,7 @@ There are several ways that this example could be made safe for a multi-threaded
 Code that is never run in a multi-threaded environment.
 
 Be careful: there are many examples where code that was "known" to never run in a multi-threaded program
-was run as part of a multi-threaded program. Often years later.
+was run as part of a multi-threaded program, often years later.
 Typically, such programs lead to a painful effort to remove data races.
 Therefore, code that is never intended to run in a multi-threaded environment should be clearly labeled as such and ideally come with compile or run-time enforcement mechanisms to catch those usage bugs early.
 
@@ -259,7 +258,7 @@ Application concepts are easier to reason about.
 
 ```cpp
 void some_fun() {
-    std::string  msg, msg2;
+    std::string msg, msg2;
     std::thread publisher([&] { msg = "Hello"; });       // bad: less expressive
                                                          //      and more error-prone
     auto pubtask = std::async([&] { msg2 = "Hello"; });  // OK
@@ -1097,7 +1096,7 @@ Flag all unnamed `lock_guard`s and `unique_lock`s.
 It should be obvious to a reader that the data is to be guarded and how. This decreases the chance of the wrong mutex being locked, or the mutex not being locked.
 
 Using a `synchronized_value<T>` ensures that the data has a mutex, and the right mutex is locked when the data is accessed.
-See the [WG21 proposal](http://wg21.link/p0290)) to add `synchronized_value` to a future TS or revision of the C++ standard.
+See the [WG21 proposal](http://wg21.link/p0290) to add `synchronized_value` to a future TS or revision of the C++ standard.
 
 ##### Example
 
@@ -1143,7 +1142,7 @@ This section looks at passing messages so that a programmer doesn't have to do e
 Message passing rules summary:
 
 * [CP.60: Use a `future` to return a value from a concurrent task](09-CP-Concurrency%20and%20parallelism.md#Rconc-future)
-* [CP.61: Use a `async()` to spawn a concurrent task](09-CP-Concurrency%20and%20parallelism.md#Rconc-async)
+* [CP.61: Use an `async()` to spawn a concurrent task](09-CP-Concurrency%20and%20parallelism.md#Rconc-async)
 * message queues
 * messaging libraries
 
@@ -1157,7 +1156,7 @@ Message passing rules summary:
 ##### Reason
 
 A `future` preserves the usual function call return semantics for asynchronous tasks.
-The is no explicit locking and both correct (value) return and error (exception) return are handled simply.
+There is no explicit locking and both correct (value) return and error (exception) return are handled simply.
 
 ##### Example
 
@@ -1173,12 +1172,12 @@ The is no explicit locking and both correct (value) return and error (exception)
 
 ???
 
-### <a name="Rconc-async"></a>CP.61: Use a `async()` to spawn a concurrent task
+### <a name="Rconc-async"></a>CP.61: Use an `async()` to spawn a concurrent task
 
 ##### Reason
 
 A `future` preserves the usual function call return semantics for asynchronous tasks.
-The is no explicit locking and both correct (value) return and error (exception) return are handled simply.
+There is no explicit locking and both correct (value) return and error (exception) return are handled simply.
 
 ##### Example
 
@@ -1451,7 +1450,7 @@ Unless you are writing the lowest level code manipulating hardware directly, con
 
 ##### Example
 
-Usually C++ code receives `volatile` memory that is owned Elsewhere (hardware or another language):
+Usually C++ code receives `volatile` memory that is owned elsewhere (hardware or another language):
 
 ```cpp
 int volatile* vi = get_hardware_memory_location();
@@ -1466,7 +1465,7 @@ static volatile long vl;
 please_use_this(&vl);   // escape a reference to this to "elsewhere" (not C++)
 
 ```
-##### Example; bad
+##### Example, bad
 
 `volatile` local variables are nearly always wrong -- how can they be shared with other languages or hardware if they're ephemeral?
 The same applies almost as strongly to member variables, for the same reason.

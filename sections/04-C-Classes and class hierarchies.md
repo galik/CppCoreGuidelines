@@ -251,13 +251,13 @@ This is especially important for [overloaded operators](04-C-Classes%20and%20cla
 
 Mixing a type definition and the definition of another entity in the same declaration is confusing and unnecessary.
 
-##### Example; bad
+##### Example, bad
 
 ```cpp
 struct Data { /*...*/ } data{ /*...*/ };
 
 ```
-##### Example; good
+##### Example, good
 
 ```cpp
 struct Data { /*...*/ };
@@ -445,7 +445,7 @@ void use()
     Point1 p12 {p11};    // a copy
 
     auto p21 = make_unique<Point2>(1, 2);   // make an object on the free store
-    auto p22 = p21.clone();                 // make a copy
+    auto p22 = p21->clone();                // make a copy
     // ...
 }
 
@@ -539,7 +539,7 @@ Destructor rules:
 * [C.31: All resources acquired by a class must be released by the class's destructor](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-release)
 * [C.32: If a class has a raw pointer (`T*`) or reference (`T&`), consider whether it might be owning](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-ptr)
 * [C.33: If a class has an owning pointer member, define or `=delete` a destructor](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-ptr2)
-* [C.35: A base class with a virtual function needs a virtual destructor](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-virtual)
+* [C.35: A base class destructor should be either public and virtual, or protected and nonvirtual](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-virtual)
 * [C.36: A destructor may not fail](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-fail)
 * [C.37: Make destructors `noexcept`](04-C-Classes%20and%20class%20hierarchies.md#Rc-dtor-noexcept)
 
@@ -1025,7 +1025,7 @@ See [this in the Discussion section](25-Appendix%20C-Discussion.md#Sd-dtor).
 ##### Example, bad
 
 ```cpp
-struct Base {  // BAD: no virtual destructor
+struct Base {  // BAD: implicitly has a public nonvirtual destructor
     virtual void f();
 };
 
@@ -1049,7 +1049,7 @@ If the interface allows destroying, it should be safe to do so.
 
 ##### Note
 
-A destructor must be nonprivate or it will prevent using the type :
+A destructor must be nonprivate or it will prevent using the type:
 
 ```cpp
 class X {
@@ -1067,6 +1067,7 @@ void use()
 ##### Exception
 
 We can imagine one case where you could want a protected virtual destructor: When an object of a derived type (and only of such a type) should be allowed to destroy *another* object (not itself) through a pointer to base. We haven't seen such a case in practice, though.
+
 
 ##### Enforcement
 
@@ -1729,7 +1730,7 @@ An initialization explicitly states that initialization, rather than assignment,
 class A {   // Good
     string s1;
 public:
-    A(czstring p) : s1{p} { }    // GOOD: directly construct (and the C-sting is explicitly named)
+    A(czstring p) : s1{p} { }    // GOOD: directly construct (and the C-string is explicitly named)
     // ...
 };
 
@@ -1848,13 +1849,13 @@ class Date {   // BAD: repetitive
     Month m;
     int y;
 public:
-    Date(int ii, Month mm, year yy)
-        :i{ii}, m{mm}, y{yy}
-        { if (!valid(i, m, y)) throw Bad_date{}; }
+    Date(int dd, Month mm, year yy)
+        :d{dd}, m{mm}, y{yy}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
 
-    Date(int ii, Month mm)
-        :i{ii}, m{mm} y{current_year()}
-        { if (!valid(i, m, y)) throw Bad_date{}; }
+    Date(int dd, Month mm)
+        :d{dd}, m{mm} y{current_year()}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
     // ...
 };
 
@@ -1869,12 +1870,12 @@ class Date2 {
     Month m;
     int y;
 public:
-    Date2(int ii, Month mm, year yy)
-        :i{ii}, m{mm}, y{yy}
-        { if (!valid(i, m, y)) throw Bad_date{}; }
+    Date2(int dd, Month mm, year yy)
+        :d{dd}, m{mm}, y{yy}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
 
-    Date2(int ii, Month mm)
-        :Date2{ii, mm, current_year()} {}
+    Date2(int dd, Month mm)
+        :Date2{dd, mm, current_year()} {}
     // ...
 };
 
@@ -1944,7 +1945,7 @@ public:
     {
         // GOOD: no need to check for self-assignment (other than performance)
         auto tmp = x;
-        std::swap(*this, tmp);
+        swap(tmp); // see C.83
         return *this;
     }
     // ...
@@ -2255,7 +2256,7 @@ The one-in-a-million argument against `if (this == &a) return *this;` tests from
 
 ##### Note
 
-There is no known general way of avoiding a `if (this == &a) return *this;` test for a move assignment and still get a correct answer (i.e., after `x = x` the value of `x` is unchanged).
+There is no known general way of avoiding an `if (this == &a) return *this;` test for a move assignment and still get a correct answer (i.e., after `x = x` the value of `x` is unchanged).
 
 ##### Note
 
@@ -2663,7 +2664,7 @@ class B {
 If a class has a failure state, like `double`'s `NaN`, there is a temptation to make a comparison against the failure state throw.
 The alternative is to make two failure states compare equal and any valid state compare false against the failure state.
 
-#### Note
+##### Note
 
 This rule applies to all the usual comparison operators: `!=`, `<`, `<=`, `>`, and `>=`.
 
@@ -2716,7 +2717,7 @@ b2 == d;   // compares name and number, ignores d2's and d's character
 ```
 Of course there are ways of making `==` work in a hierarchy, but the naive approaches do not scale
 
-#### Note
+##### Note
 
 This rule applies to all the usual comparison operators: `!=`, `<`, `<=`, `>`, and `>=`.
 
@@ -2827,8 +2828,8 @@ private:
     std::vector<T> rep;  // use a std::vector to hold elements
 };
 
-template<typename T> bool operator==(const T&);
-template<typename T> bool operator!=(const T&);
+template<typename T> bool operator==(const Sorted_vector<T>&, const Sorted_vector<T>&);
+template<typename T> bool operator!=(const Sorted_vector<T>&, const Sorted_vector<T>&);
 // ...
 
 ```
@@ -3062,7 +3063,7 @@ public:
 ```
 Here most overriding classes cannot implement most of the functions required in the interface well.
 Thus the base class becomes an implementation burden.
-Furthermore, the user of `Container` cannot rely on the member functions actually performing a meaningful operations reasonably efficiently;
+Furthermore, the user of `Container` cannot rely on the member functions actually performing meaningful operations reasonably efficiently;
 it may throw an exception instead.
 Thus users have to resort to run-time checking and/or
 not using this (over)general interface in favor of a particular interface found by a run-time type inquiry (e.g., a `dynamic_cast`).
@@ -3150,7 +3151,7 @@ class D2 : public Device {
 
 ```
 A user can now use `D1`s and `D2`s interchangeably through the interface provided by `Device`.
-Furthermore, we can update `D1` and `D2` in a ways that are not binary compatible with older versions as long as all access goes through `Device`.
+Furthermore, we can update `D1` and `D2` in ways that are not binary compatible with older versions as long as all access goes through `Device`.
 
 ##### Enforcement
 
@@ -3271,7 +3272,7 @@ We want to eliminate two particular classes of errors:
 
 ##### Enforcement
 
-* Compare names in base and derived classes and flag uses of the same name that does not override.
+* Compare virtual function names in base and derived classes and flag uses of the same name that does not override.
 * Flag overrides with neither `override` nor `final`.
 * Flag function declarations that use more than one of `virtual`, `override`, and `final`.
 
@@ -3279,8 +3280,8 @@ We want to eliminate two particular classes of errors:
 
 ##### Reason
 
-Implementation details in an interface makes the interface brittle;
-that is, makes its users vulnerable to having to recompile after changes in the implementation.
+Implementation details in an interface make the interface brittle;
+that is, make its users vulnerable to having to recompile after changes in the implementation.
 Data in a base class increases the complexity of implementing the base and can lead to replication of code.
 
 ##### Note
@@ -3477,7 +3478,7 @@ There are now two hierarchies:
 * interface: Smiley -> Circle -> Shape
 * implementation: Impl::Smiley -> Impl::Circle -> Impl::Shape
 
-Since each implementation derived from its interface as well as its implementation base class we get a lattice (DAG):
+Since each implementation is derived from its interface as well as its implementation base class we get a lattice (DAG):
 
 ```cpp
 Smiley     ->         Circle     ->  Shape
@@ -4865,7 +4866,7 @@ cout << v.d << '\n';    // BAD: undefined behavior
 
 Wrap a `union` in a class together with a type field.
 
-The soon-to-be-standard `variant` type (to be found in `<variant>`) does that for you:
+The C++17 `variant` type (found in `<variant>`) does that for you:
 
 ```cpp
 variant<int, double> v;
@@ -4965,10 +4966,10 @@ Value& Value::operator=(const Value& e)   // necessary because of the string var
         i = e.i;
         break;
     case Tag::text:
-        new(&s)(e.s);   // placement new: explicit construct
-        type = e.type;
+        new(&s) string(e.s);   // placement new: explicit construct
     }
 
+    type = e.type;
     return *this;
 }
 

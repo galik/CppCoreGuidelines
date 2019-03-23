@@ -72,7 +72,7 @@ Statement rules:
 * [ES.77: Minimize the use of `break` and `continue` in loops](07-ES-Expressions%20and%20statements.md#Res-continue)
 * [ES.78: Always end a non-empty `case` with a `break`](07-ES-Expressions%20and%20statements.md#Res-break)
 * [ES.79: Use `default` to handle common cases (only)](07-ES-Expressions%20and%20statements.md#Res-default)
-* [ES.84: Don't (try to) declare a local variable with no name](07-ES-Expressions%20and%20statements.md#Res-noname)
+* [ES.84: Don't try to declare a local variable with no name](07-ES-Expressions%20and%20statements.md#Res-noname)
 * [ES.85: Make empty statements visible](07-ES-Expressions%20and%20statements.md#Res-empty)
 * [ES.86: Avoid modifying loop control variables inside the body of raw for-loops](07-ES-Expressions%20and%20statements.md#Res-loop-counter)
 * [ES.87: Don't add redundant `==` or `!=` to conditions](07-ES-Expressions%20and%20statements.md#Res-if)
@@ -268,9 +268,9 @@ void use()
 * Flag loop variables declared before the loop and not used after the loop
 * (hard) Flag loop variables declared before the loop and used after the loop for an unrelated purpose.
 
-##### C++17 example
+##### C++17 and C++20 example
 
-Note: C++17 also adds `if` and `switch` initializer statements. These require C++17 support.
+Note: C++17 and C++20 also add `if`, `switch`, and range-`for` initializer statements. These require C++17 and C++20 support.
 
 ```cpp
 map<int, string> mymap;
@@ -282,7 +282,7 @@ if (auto result = mymap.insert(value); result.second) {
 } // result is destroyed here
 
 ```
-##### C++17 enforcement (if using a C++17 compiler)
+##### C++17 and C++20 enforcement (if using a C++17 or C++20 compiler)
 
 * Flag selection/loop variables declared before the body and not used after the body
 * (hard) Flag selection/loop variables declared before the body and used after the body for an unrelated purpose.
@@ -375,13 +375,13 @@ Check length of local and non-local names. Also take function length into accoun
 
 Code clarity and readability. Too-similar names slow down comprehension and increase the likelihood of error.
 
-##### Example; bad
+##### Example, bad
 
 ```cpp
 if (readable(i1 + l1 + ol + o1 + o0 + ol + o1 + I0 + l0)) surprise();
 
 ```
-##### Example; bad
+##### Example, bad
 
 Do not declare a non-type with the same name as a type in the same scope. This removes the need to disambiguate with a keyword such as `struct` or `enum`. It also removes a source of errors, as `struct X` can implicitly declare `X` if lookup fails.
 
@@ -437,7 +437,7 @@ Flag all uses of ALL CAPS. For older code, accept ALL CAPS for macro names and f
 
 ##### Reason
 
-One-declaration-per line increases readability and avoids mistakes related to
+One declaration per line increases readability and avoids mistakes related to
 the C/C++ grammar. It also leaves room for a more descriptive end-of-line
 comment.
 
@@ -501,7 +501,7 @@ double scalbn(double base, int exponent);
 int a = 7, b = 9, c, d = 10, e = 3;
 
 ```
-In a long list of declarators is is easy to overlook an uninitialized variable.
+In a long list of declarators it is easy to overlook an uninitialized variable.
 
 ##### Enforcement
 
@@ -633,7 +633,7 @@ void S::f(int x)
     if (x) {
         int m = 9;
         // ...
-        m = 99; // assign to member
+        m = 99; // assign to local variable
         // ...
     }
 }
@@ -1021,7 +1021,7 @@ Z z1{};     // OK: direct initialization, so we use explicit constructor
 Z z2 = {};  // error: copy initialization, so we cannot use the explicit constructor
 
 ```
-Use plain `{}`-initialization unless you specifically wants to disable explicit constructors.
+Use plain `{}`-initialization unless you specifically want to disable explicit constructors.
 
 ##### Note
 
@@ -1484,7 +1484,7 @@ Complicated expressions are error-prone.
 // bad: assignment hidden in subexpression
 while ((c = getc()) != -1)
 
-// bad: two non-local variables assigned in a sub-expressions
+// bad: two non-local variables assigned in sub-expressions
 while ((cin >> c1, cin >> c2), c1 == c2)
 
 // better, but possibly still too complicated
@@ -1675,13 +1675,13 @@ void f1(span<int, 10> a, int pos) // A1: Change parameter type to use span
 
 void f2(array<int, 10> arr, int pos) // A2: Add local span and use that
 {
-    span<int> a = {arr, pos};
+    span<int> a = {arr.data(), pos};
     a[pos / 2] = 1; // OK
     a[pos - 1] = 2; // OK
 }
 
 ```
-Use a `at()`:
+Use `at()`:
 
 ```cpp
 void f3(array<int, 10> a, int pos) // ALTERNATIVE B: Use at() for access
@@ -1800,7 +1800,7 @@ void f2()
 ##### Enforcement
 
 * Flag any arithmetic operation on an expression of pointer type that results in a value of pointer type.
-* Flag any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a compile-time constant expression with a value between `0` or and the upper bound of the array.
+* Flag any indexing expression on an expression or variable of array type (either static array or `std::array`) where the indexer is not a compile-time constant expression with a value between `0` and the upper bound of the array.
 * Flag any expression that would rely on implicit conversion of an array type to a pointer type.
 
 This rule is part of the [bounds-safety profile](19-Pro-Profiles.md#SS-bounds).
@@ -2134,9 +2134,9 @@ If the variable is actually declared `const`, the result of "casting away `const
 ##### Example, bad
 
 ```cpp
-void f(const int& i)
+void f(const int& x)
 {
-    const_cast<int&>(i) = 42;   // BAD
+    const_cast<int&>(x) = 42;   // BAD
 }
 
 static int i = 0;
@@ -2284,7 +2284,7 @@ private:
 };
 
 ```
-An alternative solution would to store a pointer to the `cache`:
+An alternative solution would be to store a pointer to the `cache`:
 
 ```cpp
 class X {   // OK, but slightly messier solution
@@ -2468,7 +2468,7 @@ Direct resource management in application code is error-prone and tedious.
 
 ##### Note
 
-also known as "No naked `new`!"
+This is also known as the rule of "No naked `new`!"
 
 ##### Example, bad
 
@@ -2512,8 +2512,8 @@ This example not only violates the [no naked `new` rule](07-ES-Expressions%20and
 
 ##### Enforcement
 
-* if the `new` and the `delete` is in the same scope, mistakes can be flagged.
-* if the `new` and the `delete` are in a constructor/destructor pair, mistakes can be flagged.
+* If the `new` and the `delete` are in the same scope, mistakes can be flagged.
+* If the `new` and the `delete` are in a constructor/destructor pair, mistakes can be flagged.
 
 ### <a name="Res-arr2"></a>ES.62: Don't compare pointers into different arrays
 
@@ -2524,7 +2524,7 @@ The result of doing so is undefined.
 ##### Example, bad
 
 ```cpp
-void f(int n)
+void f()
 {
     int a1[7];
     int a2[9];
@@ -2556,7 +2556,16 @@ class Shape { /* ... */ };
 class Circle : public Shape { /* ... */ Point c; int r; };
 
 Circle c {{0, 0}, 42};
-Shape s {c};    // copy Shape part of Circle
+Shape s {c};    // copy construct only the Shape part of Circle
+s = c;          // or copy assign only the Shape part of Circle
+
+void assign(const Shape& src, Shape& dest) {
+    dest = src;
+}
+Circle c2 {{1, 1}, 43};
+assign(c, c2);   // oops, not the whole state is transferred
+assert(c == c2); // if we supply copying, we should also provide comparison,
+                 // but this will likely return false
 
 ```
 The result will be meaningless because the center and radius will not be copied from `c` into `s`.
@@ -3147,7 +3156,7 @@ Often, a loop that requires a `break` is a good candidate for a function (algori
 ???
 
 ```
-Often. a loop that uses `continue` can equivalently and as clearly be expressed by an `if`-statement.
+Often, a loop that uses `continue` can equivalently and as clearly be expressed by an `if`-statement.
 
 ```cpp
 ???
@@ -3314,13 +3323,12 @@ Flag `switch`-statements over an enumeration that don't handle all enumerators a
 This may yield too many false positives in some code bases; if so, flag only `switch`es that handle most but not all cases
 (that was the strategy of the very first C++ compiler).
 
-### <a name="Res-noname"></a>ES.84: Don't (try to) declare a local variable with no name
+### <a name="Res-noname"></a>ES.84: Don't try to declare a local variable with no name
 
 ##### Reason
 
 There is no such thing.
 What looks to a human like a variable without a name is to the compiler a statement consisting of a temporary that immediately goes out of scope.
-To avoid unpleasant surprises.
 
 ##### Example, bad
 
@@ -3335,7 +3343,6 @@ void f()
 This declares an unnamed `lock` object that immediately goes out of scope at the point of the semicolon.
 This is not an uncommon mistake.
 In particular, this particular example can lead to hard-to find race conditions.
-There are exceedingly clever uses of this "idiom", but they are far rarer than the mistakes.
 
 ##### Note
 
@@ -3343,7 +3350,7 @@ Unnamed function arguments are fine.
 
 ##### Enforcement
 
-Flag statements that are just a temporary
+Flag statements that are just a temporary.
 
 ### <a name="Res-empty"></a>ES.85: Make empty statements visible
 
@@ -3390,7 +3397,7 @@ bool skip = false;
 for (int i = 0; i < 10; ++i) {
     if (skip) { skip = false; continue; }
     //
-    if (/* something */) skip = true;  // Better: using two variable for two concepts.
+    if (/* something */) skip = true;  // Better: using two variables for two concepts.
     //
 }
 
@@ -3427,7 +3434,7 @@ whereas `if (p != nullptr)` would be a long-winded workaround.
 This rule is especially useful when a declaration is used as a condition
 
 ```cpp
-if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute is ps points to a kind of Circle, good
+if (auto pc = dynamic_cast<Circle>(ps)) { ... } // execute if ps points to a kind of Circle, good
 
 if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // not recommended
 
@@ -3620,7 +3627,7 @@ vector<int> v2(-2);
 
 * Flag mixed signed and unsigned arithmetic
 * Flag results of unsigned arithmetic assigned to or printed as signed.
-* Flag unsigned literals (e.g. `-2`) used as container subscripts.
+* Flag negative literals (e.g. `-2`) used as container subscripts.
 * (To avoid noise) Do not flag on a mixed signed/unsigned comparison where one of the arguments is `sizeof` or a call to container `.size()` and the other is `ptrdiff_t`.
 
 
@@ -3702,7 +3709,7 @@ The result is undefined and probably a crash.
 
 This also applies to `%`.
 
-##### Example; bad
+##### Example, bad
 
 ```cpp
 double divide(int a, int b) {
@@ -3711,7 +3718,7 @@ double divide(int a, int b) {
 }
 
 ```
-##### Example; good
+##### Example, good
 
 ```cpp
 double divide(int a, int b) {

@@ -142,7 +142,7 @@ Often, you will be surprised.
 ##### Reason
 
 Because we often need to optimize the initial design.
-Because a design that ignore the possibility of later improvement is hard to change.
+Because a design that ignores the possibility of later improvement is hard to change.
 
 ##### Example
 
@@ -270,7 +270,7 @@ equal_range(ForwardIterator first, ForwardIterator last, const T& val);
 
 ```cpp
 auto r = equal_range(begin(c), end(c), 7);
-for (auto p = r.first(); p != r.second(), ++p)
+for (auto p = r.first; p != r.second; ++p)
     cout << *p << '\n';
 
 ```

@@ -54,7 +54,7 @@ Note that function parameter is a local variable so changes to it are local.
 A member function should be marked `const` unless it changes the object's observable state.
 This gives a more precise statement of design intent, better readability, more errors caught by the compiler, and sometimes more optimization opportunities.
 
-##### Example; bad
+##### Example, bad
 
 ```cpp
 class Point {
@@ -78,7 +78,7 @@ If it doesn't now, it might do so later without forcing recompilation.
 
 ##### Note
 
-There are code/libraries that are offer functions that declare a`T*` even though
+There are code/libraries that offer functions that declare a`T*` even though
 those function do not modify that `T`.
 This is a problem for people modernizing code.
 You can
@@ -101,7 +101,7 @@ e.g. because it is in a library that you cannot modify.
 
 A `const` member function can modify the value of an object that is `mutable` or accessed through a pointer member.
 A common use is to maintain a cache rather than repeatedly do a complicated computation.
-For example, here is a `Date` that caches (mnemonizes) its string representation to simplify repeated uses:
+For example, here is a `Date` that caches (memoizes) its string representation to simplify repeated uses:
 
 ```cpp
 class Date {

@@ -8,8 +8,8 @@ Error handling involves:
 
 * Detecting an error
 * Transmitting information about an error to some handler code
-* Preserve the state of a program in a valid state
-* Avoid resource leaks
+* Preserving a valid state of the program
+* Avoiding resource leaks
 
 It is not possible to recover from all errors. If recovery from an error is not possible, it is important to quickly "get out" in a well-defined way. A strategy for error handling must be simple, or it becomes a source of even worse errors.  Untested and rarely executed error-handling code is itself the source of many bugs.
 
@@ -166,7 +166,7 @@ To use an object it must be in a valid state (defined formally or informally by 
 
 ##### Note
 
-An [invariant](04-C-Classes%20and%20class%20hierarchies.md#Rc-struct) is logical condition for the members of an object that a constructor must establish for the public member functions to assume.
+An [invariant](04-C-Classes%20and%20class%20hierarchies.md#Rc-struct) is a logical condition for the members of an object that a constructor must establish for the public member functions to assume.
 
 ##### Enforcement
 
@@ -694,7 +694,7 @@ void f2(zstring s)
 ```cpp
 void f(int n)
 {
-    void* p = malloc(1, n);
+    void* p = malloc(n);
     auto _ = finally([p] { free(p); });
     // ...
 }
@@ -804,7 +804,7 @@ In such cases, "crashing" is simply leaving error handling to the next level of 
 void f(int n)
 {
     // ...
-    p = static_cast<X*>(malloc(n, X));
+    p = static_cast<X*>(malloc(n * sizeof(X)));
     if (!p) abort();     // abort if memory is exhausted
     // ...
 }
@@ -1009,7 +1009,15 @@ When did you last test the return value of `printf()`?
 ##### Example, bad
 
 ```cpp
-???
+int last_err;
+
+void f(int n)
+{
+    // ...
+    p = static_cast<X*>(malloc(n * sizeof(X)));
+    if (!p) last_err = -1;     // error if memory is exhausted
+    // ...
+}
 
 ```
 ##### Note

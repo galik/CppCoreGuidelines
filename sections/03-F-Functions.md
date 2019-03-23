@@ -328,27 +328,6 @@ void test(int v)
 ```
 ##### Note
 
-`constexpr` functions are pure: they can have no side effects.
-
-```cpp
-int dcount = 0;
-constexpr int double(int v)
-{
-    ++dcount;   // error: attempted side effect from constexpr function
-    return v + v;
-}
-
-```
-This is usually a very good thing.
-
-When given a non-constant argument, a `constexpr` function can throw.
-If you consider exiting by throwing a side effect, a `constexpr` function isn't completely pure;
-if not, this is not an issue.
-??? A question for the committee: can a constructor for an exception thrown by a `constexpr` function modify state?
-"No" would be a nice answer that matches most practice.
-
-##### Note
-
 Don't try to make all functions `constexpr`.
 Most computation is best done at run time.
 
@@ -457,6 +436,7 @@ low-level functions.
 ##### Note
 
 Destructors, `swap` functions, move operations, and default constructors should never throw.
+See also [C.44](04-C-Classes%20and%20class%20hierarchies.md#Rc-default00).
 
 ##### Enforcement
 
@@ -534,16 +514,6 @@ template<class T>
 auto square(T t) { return t * t; }
 
 ```
-##### Note
-
-`constexpr` functions are pure.
-
-When given a non-constant argument, a `constexpr` function can throw.
-If you consider exiting by throwing a side effect, a `constexpr` function isn't completely pure;
-if not, this is not an issue.
-??? A question for the committee: can a constructor for an exception thrown by a `constexpr` function modify state?
-"No" would be a nice answer that matches most practice.
-
 ##### Enforcement
 
 Not possible.
@@ -664,10 +634,10 @@ If you need the notion of an optional value, use a pointer, `std::optional`, or 
 
 ##### Enforcement
 
-* (Simple) ((Foundation)) Warn when a parameter being passed by value has a size greater than `4 * sizeof(int)`.
+* (Simple) ((Foundation)) Warn when a parameter being passed by value has a size greater than `2 * sizeof(void*)`.
   Suggest using a reference to `const` instead.
-* (Simple) ((Foundation)) Warn when a `const` parameter being passed by reference has a size less than `3 * sizeof(int)`. Suggest passing by value instead.
-* (Simple) ((Foundation)) Warn when a `const` parameter being passed by reference is `move`d.
+* (Simple) ((Foundation)) Warn when a parameter passed by reference to `const` has a size less than `2 * sizeof(void*)`. Suggest passing by value instead.
+* (Simple) ((Foundation)) Warn when a parameter passed by reference to `const` is `move`d.
 
 ### <a name="Rf-inout"></a>F.17: For "in-out" parameters, pass by reference to non-`const`
 
@@ -885,7 +855,7 @@ tie(iter, success) = my_set.insert("Hello");   // normal return value
 if (success) do_something_with(iter);
 
 ```
-With C++17 we should be able to use "structured bindings" to declare and initialize the multiple variables:
+With C++17 we are able to use "structured bindings" to declare and initialize the multiple variables:
 
 ```cpp
 if (auto [ iter, success ] = my_set.insert("Hello"); success) do_something_with(iter);
@@ -1144,7 +1114,7 @@ int length(not_null<zstring> p);
 ```
 ##### Note
 
-`zstring` do not represent ownership.
+`zstring` does not represent ownership.
 
 **See also**: [Support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
@@ -1444,7 +1414,7 @@ Flag functions where no `return` expression could yield `nullptr`
 It's asking to return a reference to a destroyed temporary object.
 A `&&` is a magnet for temporary objects.
 
-##### Example 
+##### Example
 
 A returned rvalue reference goes out of scope at the end of the full expression to which it is returned:
 
@@ -1565,7 +1535,7 @@ value) of any assignment operator.
 
 With guaranteed copy elision, it is now almost always a pessimization to expressly use `std::move` in a return statement.
 
-##### Example; bad
+##### Example, bad
 
 ```cpp
 S f()
@@ -1575,7 +1545,7 @@ S f()
 }
 
 ```
-##### Example; good
+##### Example, good
 
 ```cpp
 S f()
@@ -1666,10 +1636,8 @@ void print(zstring);
 
 ##### Enforcement
 
-```cpp
-???
+* Warn on an overload set where the overloads have a common prefix of parameters (e.g., `f(int)`, `f(int, const string&)`, `f(int, const string&, double)`). (Note: Review this enforcement if it's too noisy in practice.)
 
-```
 ### <a name="Rf-reference-capture"></a>F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms
 
 ##### Reason

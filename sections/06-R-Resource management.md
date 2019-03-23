@@ -30,7 +30,7 @@ Here, we ignore such cases.
   * [R.11: Avoid calling `new` and `delete` explicitly](06-R-Resource%20management.md#Rr-newdelete)
   * [R.12: Immediately give the result of an explicit resource allocation to a manager object](06-R-Resource%20management.md#Rr-immediate-alloc)
   * [R.13: Perform at most one explicit resource allocation in a single expression statement](06-R-Resource%20management.md#Rr-single-alloc)
-  * [R.14: ??? array vs. pointer parameter](06-R-Resource%20management.md#Rr-ap)
+  * [R.14: Avoid `[]` parameters, prefer `span`](06-R-Resource%20management.md#Rr-ap)
   * [R.15: Always overload matched allocation/deallocation pairs](06-R-Resource%20management.md#Rr-pair)
 
 * <a name="Rr-summary-smartptrs"></a>Smart pointer rule summary:
@@ -511,23 +511,27 @@ Write your own factory wrapper if there is not one already.
 
 * Flag expressions with multiple explicit resource allocations (problem: how many direct resource allocations can we recognize?)
 
-### <a name="Rr-ap"></a>R.14: ??? array vs. pointer parameter
+### <a name="Rr-ap"></a>R.14: Avoid `[]` parameters, prefer `span`
 
 ##### Reason
 
 An array decays to a pointer, thereby losing its size, opening the opportunity for range errors.
+Use `span` to preserve size information.
 
 ##### Example
 
 ```cpp
-??? what do we recommend: f(int*[]) or f(int**) ???
+void f(int[]);          // not recommended
+
+void f(int*);           // not recommended for multiple objects
+                        // (a pointer should point to a single object, do not subscript)
+
+void f(gsl::span<int>); // good, recommended
 
 ```
-**Alternative**: Use `span` to preserve size information.
-
 ##### Enforcement
 
-Flag `[]` parameters.
+Flag `[]` parameters. Use `span` instead.
 
 ### <a name="Rr-pair"></a>R.15: Always overload matched allocation/deallocation pairs
 
@@ -958,7 +962,7 @@ void my_code()
     f(*g_p);
 
     // BAD: same reason, just passing it as a "this" pointer
-     g_p->func();
+    g_p->func();
 }
 
 ```
