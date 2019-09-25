@@ -564,6 +564,7 @@ tmp
 TMP
 tock
 TODO
+toLower
 toolchains
 TotallyOrdered
 TP
@@ -577,6 +578,7 @@ typesafe
 UB
 u1
 u2
+UDLs
 unaliased
 uncompromised
 underuse
