@@ -985,6 +985,8 @@ void use2(span<int> p, zstring s, owner<int*> q)
 
 **See also**: [Support library](20-GSL-Guidelines%20support%20library.md#S-gsl)
 
+**See also**: [Do not pass an array as a single pointer](02-I-Interfaces.md#Ri-array)
+
 ##### Enforcement
 
 * (Simple) ((Bounds)) Warn for any arithmetic operation on an expression of pointer type that results in a value of pointer type.

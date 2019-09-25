@@ -19,6 +19,7 @@ Source file rule summary:
 * [SF.8: Use `#include` guards for all `.h` files](14-SF-Source%20files.md#Rs-guards)
 * [SF.9: Avoid cyclic dependencies among source files](14-SF-Source%20files.md#Rs-cycles)
 * [SF.10: Avoid dependencies on implicitly `#include`d names](14-SF-Source%20files.md#Rs-implicit)
+* [SF.11: Header files should be self-contained](14-SF-Source%20files.md#Rs-contained)
 
 * [SF.20: Use `namespace`s to express logical structure](14-SF-Source%20files.md#Rs-namespace)
 * [SF.21: Don't use an unnamed (anonymous) namespace in a header](14-SF-Source%20files.md#Rs-unnamed)
@@ -459,6 +460,29 @@ This rule against implicit inclusion is not meant to prevent such deliberate agg
 
 Enforcement would require some knowledge about what in a header is meant to be "exported" to users and what is there to enable implementation.
 No really good solution is possible until we have modules.
+
+### <a name="Rs-contained"></a>SF.11: Header files should be self-contained
+
+##### Reason
+
+Usability, headers should be simple to use and work when included on their own.
+Headers should encapsulate the functionality they provide.
+Avoid clients of a header having to manage that header's dependencies.
+
+##### Example
+
+```cpp
+#include "helpers.h"
+// helpers.h depends on std::string and includes <string>
+
+```
+##### Note
+
+Failing to follow this results in difficult to diagnose errors for clients of a header.
+
+##### Enforcement
+
+A test should verify that the header file itself compiles or that a cpp file which only includes the header file compiles.
 
 ### <a name="Rs-namespace"></a>SF.20: Use `namespace`s to express logical structure
 

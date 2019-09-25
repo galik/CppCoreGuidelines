@@ -1713,7 +1713,7 @@ Assume that `Apple` and `Pear` are two kinds of `Fruit`s.
 void maul(Fruit* p)
 {
     *p = Pear{};     // put a Pear into *p
-    p[1] = Pear{};   // put a Pear into p[2]
+    p[1] = Pear{};   // put a Pear into p[1]
 }
 
 Apple aa [] = { an_apple, another_apple };   // aa contains Apples (obviously!)
@@ -1728,7 +1728,7 @@ If `sizeof(Apple) != sizeof(Pear)` the access to `aa[1]` will not be aligned to 
 We have a type violation and possibly (probably) a memory corruption.
 Never write such code.
 
-Note that `maul()` violates the a `T*` points to an individual object [Rule](#???).
+Note that `maul()` violates the a [`T*` points to an individual object rule](03-F-Functions.md#Rf-ptr).
 
 **Alternative**: Use a proper (templatized) container:
 
@@ -1746,7 +1746,7 @@ maul2(&va[0]);   // you asked for it
 Apple& a0 = &va[0];   // a Pear?
 
 ```
-Note that the assignment in `maul2()` violated the no-slicing [Rule](#???).
+Note that the assignment in `maul2()` violated the [no-slicing rule](07-ES-Expressions%20and%20statements.md#Res-slice).
 
 ##### Enforcement
 

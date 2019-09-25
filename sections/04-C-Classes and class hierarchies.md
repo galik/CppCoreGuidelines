@@ -344,7 +344,7 @@ public:
     // ...
 private:
     double magnitude;
-    double unit;    // 1 is meters, 1000 is kilometers, 0.0001 is millimeters, etc.
+    double unit;    // 1 is meters, 1000 is kilometers, 0.001 is millimeters, etc.
 };
 
 ```
@@ -1631,7 +1631,7 @@ Complex z = 10.7;   // unsurprising conversion
 
 ##### Note
 
-Copy and move constructors should not be made explicit because they do not perform conversions. Explicit copy/move constructors make passing and returning by value difficult.
+Copy and move constructors should not be made `explicit` because they do not perform conversions. Explicit copy/move constructors make passing and returning by value difficult.
 
 ##### Enforcement
 
